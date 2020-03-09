@@ -1,0 +1,207 @@
+<!doctype html>
+<html>
+<head>
+    <title>JIRA Checklist Options</title>
+    <link rel="stylesheet" href="../css/app.css"/>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Options</h1>
+            <ul class="nav nav-tabs" id="optionsTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#general" role="tab" id="general-tab" data-toggle="tab">General</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#developer-items" role="tab" id="list-items-tab" data-toggle="tab">Developer items</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#tester-items" role="tab" id="tester-items-tab" data-toggle="tab">Tester items</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#reviewer-items" role="tab" id="reviewer-items-tab" data-toggle="tab">Reviewer items</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#help-items" role="tab" id="help-items-tab" data-toggle="tab">Help items</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#jenkins" role="tab" id="jenkins-tab" data-toggle="tab">Jenkins</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#about" role="tab" id="about-tab" data-toggle="tab">About</a>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="optionsTabContent">
+                <div class="tab-pane fade show active" id="general" role="tabpanel">
+                    <div class="card-body">
+                        <div class="row">
+                            <label for="boardLink" class="col-form-label col-sm-4">Server URL</label>
+                            <div class="col-sm-6 input-group">
+                                <input id="boardLink" name="option[]" type="url" class="form-control" placeholder="(ends with '.../browse/')" data-option="url" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">/browse/</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <label for="cleanup" class="col-form-label col-sm-4">Delete issues after</label>
+                            <div class="col-sm-6 input-group">
+                                <input id="cleanup" min="1" max="30" type="number" class="form-control" name="option[]" data-option="cleanup" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">days</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <label for="maximumIssues" class="col-form-label col-sm-4">Maximum Issues in progress</label>
+                            <div class="col-sm-6 input-group">
+                                <input id="maximumIssues" min="0" max="18" type="number" class="form-control" name="option[]" data-option="maximumIssues" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">issues</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="my-5"><hr /></div>
+
+                        <div class="row">
+                            <h5 class="col">Available Boards</h5>
+                        </div>
+                        <div data-boards data-draggable></div>
+
+                        <div class="mt-3">
+                            <button type="button" class="btn btn-success" data-add-board>+ Add</button>
+                        </div>
+
+                        <div class="my-5"><hr /></div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="developer-items" role="tabpanel">
+                    <div class="accordion mt-2" data-accordion="developer" id="developerAccordion"></div>
+                </div>
+                <div class="tab-pane" id="tester-items" role="tabpanel">
+                    <div class="accordion mt-2" data-accordion="tester" id="testerAccordion"></div>
+                </div>
+                <div class="tab-pane" id="reviewer-items" role="tabpanel">
+                    <div class="accordion mt-2" data-accordion="reviewer" id="reviewerAccordion"></div>
+                </div>
+                <div class="tab-pane" id="help-items" role="tabpanel">
+                    <div class="accordion mt-2" data-accordion="help" id="helpAccordion"></div>
+                </div>
+                <div class="tab-pane" id="jenkins" role="tabpanel">
+                    <div class="card-body" data-jenkins data-draggable></div>
+                    <div class="mt-2">
+                        <button type="button" class="btn btn-success" data-add-jenkins>+ Add</button>
+                    </div>
+                </div>
+                <div class="tab-pane" id="about" role="tabpanel">
+                    <div class="card-body">
+                        <div class="row mt-1">
+                            <div class="col">
+                                We hope your company, team or/and yourself benefit from our extension and are able to work
+                                with Jira more efficient.
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                If you want to send some 'bugs' to support the extension, it would be highly appreciated.
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" class="col">
+                                <input type="hidden" name="cmd" value="_s-xclick"/>
+                                <input type="hidden" name="hosted_button_id" value="X5XGC2J7M2RZ6"/>
+                                <input type="image" src="https://www.paypalobjects.com/en_US/DK/i/btn/btn_donateCC_LG.gif"
+                                       name="submit" title="PayPal - The safer, easier way to pay online!"
+                                       alt="Donate with PayPal button"/>
+                                <img alt="" src="https://www.paypal.com/en_DE/i/scr/pixel.gif" width="1" height="1"/>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-5">
+                <div class="col">
+                    <button type="button" class="btn btn-primary" data-save="save">Save</button>
+                    <button type="button" class="btn btn-primary ml-2" data-save="export">Save & Export to file</button>
+                    <button type="button" class="btn btn-primary ml-4" data-upload="btn">Import from file</button>
+                    <button type="button" class="btn btn-primary ml-2" data-default="btn">Restore options</button>
+                    <input type="file" class="d-none" data-upload="file" accept="application/json" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<template data-template="board">
+    <div class="row mb-2" draggable="true">
+        <div class="col-1 align-items-center justify-content-center d-flex"><i class="fa fa-bars"></i></div>
+        <div class="col-3">
+            <input type="number" name="boardId[]" min="0" placeholder="The id of the board" class="form-control"/>
+        </div>
+        <div class="col-3">
+            <input type="text" name="boardKey[]" placeholder="The key of the board." class="form-control" />
+        </div>
+        <div class="col-2">
+            <label><input type="checkbox" name="boardDelete[]" /> Delete</label>
+        </div>
+    </div>
+</template>
+<template data-template="cardList">
+    <div class="card">
+        <div class="card-header" data-header="%type%%number%" data-toggle="collapse" data-target='[data-collapse="%type%%number%"]'>
+            <h2 class="mb-0">
+                <button class="btn btn-link" type="button" >%name%</button>
+            </h2>
+        </div>
+
+        <div data-collapse="%type%%number%" class="collapse" data-parent='#%type%Accordion'>
+            <div class="card-body">
+                <div data-type="%type%" data-items="%number%"></div>
+                <div class="row mt-2">
+                    <div class="col">
+                        <button type="button" class="btn btn-success" data-type="%type%" data-add="%number%">+ Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<template data-template="listEntry">
+    <div class="row mt-2">
+        <div class="col-8">
+            <input type="text" name="item[%number%][]" class="form-control" data-item="%number%" />
+        </div>
+        <div class="col-4">
+            <label><input type="checkbox" name="delete[%number%][]" value="%identifier%" data-delete="%number%"/> Delete</label>
+        </div>
+        <input type="hidden" name="identifier[%number%]" value="%identifier%" data-identifier="%number%" />
+    </div>
+</template>
+<template data-template="jenkins">
+    <div class="row mt-2" draggable="true">
+        <div class="col-1 align-items-center justify-content-center d-flex"><i class="fa fa-bars"></i></div>
+        <div class="col-2">
+            <select name="jenkinsType[]" class="form-control">
+                <option>REST Bundles</option>
+                <option>REST API</option>
+                <option>PHP-CI</option>
+            </select>
+        </div>
+        <div class="col-3">
+            <input type="text" name="jenkinsName[]" class="form-control" placeholder="Name of the component (eg: api-alzura)" />
+        </div>
+        <div class="col-4">
+            <input type="text" name="jenkinsJob[]" class="form-control" placeholder="Name of the job (eg: pipeline-unit-api-alzura)" />
+        </div>
+        <div class="col-2">
+            <label><input type="checkbox" name="jenkinsDelete[]" /> Delete</label>
+        </div>
+    </div>
+</template>
+
+<script src='../js/options.js'></script>
+</body>
+</html>

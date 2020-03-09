@@ -1,0 +1,41 @@
+{
+    "name": "jira-dev-checklist",
+    "version": "0.2.0",
+    "description": "",
+    "scripts": {},
+    "devDependencies": {
+        "bootstrap": "^4.4.1",
+        "browserify": "^16.5.0",
+        "cssnano": "^4.1.10",
+        "del": "^5.1.0",
+        "font-awesome": "^4.7.0",
+        "gulp": "^4.0.2",
+        "gulp-better-rollup": "^4.0.1",
+        "gulp-clean-css": "^4.2.0",
+        "gulp-htmlclean": "^2.7.22",
+        "gulp-imagemin": "^7.1.0",
+        "gulp-jsonminify": "^1.1.0",
+        "gulp-newer": "^1.4.0",
+        "gulp-postcss": "^8.0.0",
+        "gulp-rollup": "^2.17.0",
+        "gulp-sass": "^4.0.2",
+        "gulp-terser": "^1.2.0",
+        "gulp-zip": "^5.0.1",
+        "jquery": "^3.4.1",
+        "popper.js": "^1.16",
+        "rollup": "^1.32",
+        "rollup-plugin-commonjs": "^10.1.0",
+        "rollup-plugin-node-resolve": "^5.2.0",
+        "rollup-stream": "^1.24.1",
+        "sweetalert2": "^9.8.2"
+    },
+    "contributors": [
+        "Christian Buchholz",
+        "Patrick Schombara"
+    ],
+    "license": "ISC",
+    "browserslist": [
+        "last 2 versions",
+        "> 2%"
+    ]
+}

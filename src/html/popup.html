@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html class="app--popup">
+<head>
+    <title>Checklist</title>
+    <link rel="stylesheet" href="../css/app.css"/>
+</head>
+<body>
+<div class="app--content my-5" data-content="loader">
+    <div class="d-flex justify-content-center">
+        <div class="spinner-grow text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+</div>
+<div class="app--content disclaimer d-none" data-content="disclaimer">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-2">
+                <button type="button" data-btn="changeView" class="btn"><i class="fa fa-exchange fa-2x"></i></button>
+            </div>
+            <div class="col-7">
+                <h1>Quick select</h1>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col font-weight-bold">Go to</div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-4">
+                <select data-select="board" class="form-control"></select>
+            </div>
+            <div class="col-5">
+                <input id="issue" type="text" class="form-control"/>
+            </div>
+            <div class="col-3">
+                <button type="button" id="buttonIssue" class="btn btn-primary issue">GO!</button>
+            </div>
+        </div>
+        <div class="row mt-4" data-issues>
+            <label class="col font-weight-bold">Issues in progress:</label>
+
+        </div>
+        <div class="row mt-1" data-progress="issueProgress">
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <span class="no-options d-none">Es wurden noch keine Optionen gespeichert!</span>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="row">
+            <div class="col-sm-12">
+                To use the checklist, go to your <a class="jira_url" href="#" target="blank">JIRA board</a> and select
+                the <strong>issue</strong> you're working on.
+            </div>
+        </div>
+    </div>
+</div>
+<div class="app--content d-none" data-content="checklist">
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-2">
+                    <button type="button" data-btn="changeView" class="btn"><i class="fa fa-exchange fa-2x"></i></button>
+                </div>
+                <div class="col-10">
+                    <h1 data-header></h1>
+                </div>
+            </div>
+        </div>
+        <ul class="nav nav-tabs nav-fill" id="listTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" href="#developer" role="tab" id="dev-tab" data-toggle="tab">Developer</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#tester" role="tab" id="tester-tab" data-toggle="tab">Tester</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#reviewer" role="tab" id="reviewer-tab" data-toggle="tab">Reviewer</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#help" role="tab" id="help-tab" data-toggle="tab">Help</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#special" role="tab" id="special-tab" data-toggle="tab">Special</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="listTabContent">
+            <div class="tab-pane fade show active" id="developer" role="tabpanel">
+                <div class="card-body" data-list="developer">
+
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" data-btn="clear" class="btn btn-primary">Clear list</button>
+                            <button type="button" data-btn="comment" data-type="developer" class="btn btn-success"
+                                    disabled="disabled">Finish
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="tester" role="tabpanel">
+                <div class="card-body" data-list="tester">
+
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" data-btn="clear" class="btn btn-primary">Clear list</button>
+                            <button type="button" data-btn="comment" data-type="tester" class="btn btn-success"
+                                    disabled="disabled">Test OK
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="reviewer" role="tabpanel">
+                <div class="card-body" data-list="reviewer">
+
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" data-btn="clear" class="btn btn-primary">Clear list</button>
+                            <button type="button" data-btn="comment" data-type="reviewer" class="btn btn-success"
+                                    disabled="disabled">Review OK
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="help" role="tabpanel">
+                <div class="card-body" data-list="help">
+
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" data-btn="clear" class="btn btn-primary">Clear list</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="special" role="tabpanel">
+                <div class="card-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-8">
+                                Team planing internal:
+                            </div>
+                            <div class="col-4">
+                                <button type="button" class="btn btn-primary btn-sm" data-chat="internal">GO!</button>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-8">
+                                Team planing external:
+                            </div>
+                            <div class="col-4">
+                                <button type="button" class="btn btn-primary btn-sm" data-chat="external">GO!</button>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col">
+                                <h3>Embeddable Build Status</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <input class="form-control" list="jenkinsJobs" />
+                                <datalist id="jenkinsJobs" data-jenkins-jobs>
+
+                                </datalist>
+                            </div>
+                            <div class="col-6">
+                                <input type="number" class="form-control" min="1" data-jenkins-build placeholder="Build number" />
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col">
+                                <input type="url" class="form-control" data-jenkins-url readonly />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<template data-template="list">
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col"><h3 class="collapsible" data-collapse="%number%">%title%</h3></div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <ul data-content="%number%"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script src="../js/app.js"></script>
+</body>
+</html>
