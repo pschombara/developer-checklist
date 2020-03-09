@@ -37,7 +37,18 @@ const html = () => {
 
 const js = async () => {
     gulp.src('src/js/*.js')
-        .pipe(rollup({ plugins: [resolve(), commonjs()] }, 'esm'))
+        .pipe(rollup(
+            {
+                plugins: [resolve(), commonjs()],
+                onwarn: (message) => {
+                    if (message.code === 'CIRCULAR_DEPENDENCY') {
+                        return;
+                    }
+                    console.error(message);
+                }
+            },
+            'esm'
+        ))
         .pipe(terser())
         .pipe(gulp.dest('build/js'));
 
@@ -47,13 +58,11 @@ const js = async () => {
 };
 
 
-const css = (done) => {
+const css = async () => {
     gulp.src(src + 'scss/app.scss')
         .pipe(sass())
         .pipe(postcss([cssnano]))
         .pipe(gulp.dest(build + 'css/'));
-
-    done();
 };
 
 const json = () => {
@@ -77,11 +86,18 @@ exports.js = js;
 exports.css = css;
 exports.html = gulp.series(images, html);
 exports.images = images;
-exports.clean = del.bind(null, [build]);
+exports.clean = del.bind(null, [build, 'jiraDevChecklist.zip']);
 exports.json = json;
 exports.fonts = fonts;
 exports.archive = archive;
 
 exports.build = (done) => {
     gulp.series(exports.clean, gulp.parallel(exports.html, exports.js, exports.css, exports.fonts, exports.json), exports.archive)(done);
+};
+
+exports.watch = () => {
+    gulp.watch([src + 'js/**', src + 'background.js'], { ignoreInitial: false }, js);
+    gulp.watch(src + 'scss/**', { ignoreInitial: false }, css);
+    gulp.watch(src + 'html/**', { ignoreInitial: false }, html);
+    gulp.watch(src + 'images/**', { ignoreInitial: false }, images);
 };

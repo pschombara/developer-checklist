@@ -1,0 +1,6 @@
+/build/
+/node_modules/
+build.crx
+build.pem
+jiraDevChecklist.zip
+.idea
