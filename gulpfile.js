@@ -77,7 +77,7 @@ const fonts = () => {
 };
 
 const archive = () => {
-    return gulp.src(build)
+    return gulp.src(build + '**')
         .pipe(zip('jiraDevChecklist.zip'))
         .pipe(gulp.dest('./'));
 };
