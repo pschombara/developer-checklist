@@ -1,6 +1,8 @@
-import {Toast} from "../sweet.mjs";
-import * as storage from "../storage.mjs";
-import * as validator from './validate.schema.mjs'
+import {Toast, ErrorPrompt} from "../sweet";
+import * as storage from "../storage";
+import {Validator} from "./validator";
+
+const validator = new Validator();
 
 export function exportToJson() {
     let elem = document.createElement('a');
@@ -49,9 +51,10 @@ export function importFromJson(e) {
             let data = JSON.parse(e.target.result);
 
             if (false === validator.validate(data)) {
-                Toast.fire({
+                ErrorPrompt.fire({
                     icon: "error",
-                    title: "JSON is invalid"
+                    title: "JSON is invalid",
+                    html: validator.htmlErrors
                 });
 
                 return;

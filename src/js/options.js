@@ -1,5 +1,6 @@
 import * as options from './modules/options.mjs';
-import {Toast} from "./modules/sweet.mjs";
+import {ErrorPrompt, Toast,} from "./modules/sweet";
+import {validator} from "./modules/options";
 
 (() => {
     const saves = document.querySelectorAll('[data-save]');
@@ -7,10 +8,11 @@ import {Toast} from "./modules/sweet.mjs";
     for (let save of saves) {
         save.addEventListener('click', () => {
             if (false === options.save(save.getAttribute('data-save'))) {
-                Toast.fire({
-                    icon: 'error',
+                ErrorPrompt.fire({
                     title: 'One or more options are invalid!',
+                    html: validator.htmlErrors,
                 });
+
                 return
             }
 

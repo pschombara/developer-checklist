@@ -4,7 +4,8 @@ import * as jenkins from './options/jenkins.mjs';
 import * as jira from './options/jira.mjs';
 import './jquery.mjs';
 import 'bootstrap';
-import * as validator from './options/validate.schema.mjs'
+import {Validator} from "./options/validator";
+
 import {ConfirmationPrompt, SuccessPrompt} from "./sweet.mjs";
 
 // todo replace with options
@@ -19,6 +20,7 @@ const fileUpload = document.querySelector('[data-upload="file"]');
 
 const templateCardList = document.querySelector('[data-template="cardList"]');
 const templateListEntry = document.querySelector('[data-template="listEntry"]');
+export const validator = new Validator();
 
 let options = {};
 
