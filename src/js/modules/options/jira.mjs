@@ -1,4 +1,5 @@
 import * as dragDrop from './drag-drop.mjs';
+import {DragDrop} from "./drag-drop";
 
 const template = document.querySelector('[data-template="board"]');
 
@@ -14,7 +15,8 @@ export function createBoard(id = null, key = '') {
 
     target.appendChild(item);
 
-    item.addEventListener('drag', dragDrop.drag);
+    //item.addEventListener('drag', dragDrop.drag);
+    new DragDrop(item).init();
 }
 
 export function save() {

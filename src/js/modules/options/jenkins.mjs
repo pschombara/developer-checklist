@@ -1,4 +1,4 @@
-import * as dragDrop from './drag-drop.mjs';
+import {DragDrop} from "./drag-drop";
 
 const template = document.querySelector('[data-template="jenkins"]');
 
@@ -15,7 +15,7 @@ export function create(name = '', job = '', type = 'REST API') {
 
     target.appendChild(item);
 
-    item.addEventListener('drag', dragDrop.drag);
+    new DragDrop(item).init();
 }
 
 export function save() {
