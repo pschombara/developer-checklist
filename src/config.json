@@ -418,6 +418,13 @@
             "key": "TYR"
         }
     ],
+    "rocketChat": {
+        "url": "https://rocketchat.saitow.ag",
+        "authToken": "",
+        "userId": "",
+        "internalRoom": "",
+        "externalRoom": ""
+    },
     "url": "https://jira.saitow.ag",
     "cleanup": 2,
     "maximumIssues": 6

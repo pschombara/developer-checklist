@@ -4,9 +4,11 @@ import * as jenkins from './options/jenkins.mjs';
 import * as jira from './options/jira.mjs';
 import './jquery.mjs';
 import 'bootstrap';
-import {Validator} from "./options/validator";
 
-import {ConfirmationPrompt, SuccessPrompt} from "./sweet.mjs";
+import {Validator} from "./options/validator";
+import {ConfirmationPrompt, SuccessPrompt} from "./sweet";
+import {OptionsRocketChat} from "./options/rocket.chat";
+import {Uuid} from "./options/uuid";
 
 // todo replace with options
 const listTypes = ['developer', 'tester', 'reviewer', 'help'];
@@ -22,13 +24,9 @@ const templateCardList = document.querySelector('[data-template="cardList"]');
 const templateListEntry = document.querySelector('[data-template="listEntry"]');
 export const validator = new Validator();
 
-let options = {};
+let rocketChat = new OptionsRocketChat();
 
-export const uuidv4 = () => {
-    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-    );
-};
+let options = {};
 
 const createCardList = (id, title, items, type) => {
     let temp = templateCardList.innerHTML;
@@ -47,7 +45,7 @@ const createCardList = (id, title, items, type) => {
 
     let addBtn = document.querySelector(`[data-type="${type}"][data-add="${id}"]`);
     addBtn.addEventListener('click', () => {
-        createListEntry(document.querySelector(`[data-type="${addBtn.getAttribute('data-type')}"][data-items="${id}"]`), {text: '', id: uuidv4()}, id);
+        createListEntry(document.querySelector(`[data-type="${addBtn.getAttribute('data-type')}"][data-items="${id}"]`), {text: '', id: Uuid.generate()}, id);
     });
 };
 
@@ -93,6 +91,12 @@ const create = () => {
             jira.createBoard(item.id, item.key);
         }
     }
+
+    if (options.hasOwnProperty('rocketChat')) {
+        rocketChat.options = options.rocketChat;
+    }
+
+    rocketChat.init();
 
     for (let type of listTypes) {
         for (let entry of options.lists[type]) {
@@ -166,6 +170,7 @@ export function save(type) {
 
     options.jenkins = jenkins.save();
     options.boards = jira.save();
+    options.rocketChat = rocketChat.options;
 
     for (let type of listTypes) {
         let items = document.querySelectorAll(`[data-type=${type}][data-items]`);

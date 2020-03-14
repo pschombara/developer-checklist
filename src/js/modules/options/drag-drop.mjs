@@ -1,9 +1,9 @@
-import {uuidv4} from '../options';
+import {Uuid} from "./uuid";
 
 export class DragDrop {
     constructor(item) {
         this.item = item;
-        this.item.setAttribute('data-id', uuidv4());
+        this.item.setAttribute('data-id', Uuid.generate());
     }
 
     init() {

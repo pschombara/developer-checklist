@@ -1,44 +1,43 @@
-let options = {
-    url: '',
-    authToken: '',
-    userId: '',
-    internalRoom: '',
-    externalRoom: ''
-};
+import {SuperRocketChat} from "./super/super.rocket.chat";
 
-export function setOptions(overrideOptions) {
-    Object.keys(overrideOptions).forEach((key) => {
-        if (options.hasOwnProperty(key)) {
-            options[key] = overrideOptions[key];
-        }
-    });
+export class RocketChat extends SuperRocketChat
+{
+    constructor() {
+        super();
+    }
+
+    createInternalMessage(identifier) {
+        sendMessage(JSON.stringify({
+            "message": {
+                "rid": this._options.internalRoom,
+                "msg": "@here team planning for issue " + identifier + '!?',
+            }
+        }), this._options);
+    }
+
+    createExternalMessage(identifier) {
+        sendMessage(JSON.stringify({
+            "message": {
+                "rid": this._options.externalRoom,
+                "msg": "@here team planning for issue " + identifier + '!?',
+            }
+        }), this._options);
+    }
 }
 
-export function createInternalMessage(identifier) {
-    send(JSON.stringify({
-        "message": {
-            "rid": options.internalRoom,
-            "msg": "@here team planning for issue " + identifier + '!?',
-        }
-    }));
-}
-
-export function createExternalMessage(identifier) {
-    send(JSON.stringify({
-        "message": {
-            "rid": options.externalRoom,
-            "msg": "@here team planning for issue " + identifier + '!?',
-        }
-    }));
-}
-
-const send = (data) => {
+const sendMessage = (data, options) => {
     let xhttp = new XMLHttpRequest();
 
-    xhttp.open('POST', options.url);
+    xhttp.open('POST', options.url + '/api/v1/chat.sendMessage');
     xhttp.setRequestHeader("X-Auth-Token", options.authToken);
     xhttp.setRequestHeader("X-User-Id", options.userId);
     xhttp.setRequestHeader("Content-Type", "application/json");
+
+    xhttp.onreadystatechange = () => {
+        if (XMLHttpRequest.DONE === xhttp.readyState) {
+            console.log(xhttp.status, xhttp.response);
+        }
+    };
 
     xhttp.send(data);
 };

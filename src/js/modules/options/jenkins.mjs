@@ -1,4 +1,5 @@
 import {DragDrop} from "./drag-drop";
+import {Uuid} from "./uuid";
 
 const template = document.querySelector('[data-template="jenkins"]');
 
@@ -6,7 +7,7 @@ export function create(name = '', job = '', type = 'REST API') {
     let target = document.querySelector('[data-jenkins]');
     let elem = document.createElement('div');
     elem.innerHTML = template.innerHTML;
-
+    elem.innerHTML = elem.innerHTML.replace(new RegExp('%uuid%', 'g'), Uuid.generate());
     let item = elem.children[0];
 
     item.querySelector('[name="jenkinsName[]"]').value = 'string' === typeof name ? name : '';

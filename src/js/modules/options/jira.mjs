@@ -1,12 +1,15 @@
 import * as dragDrop from './drag-drop.mjs';
 import {DragDrop} from "./drag-drop";
+import {Uuid} from "./uuid";
 
 const template = document.querySelector('[data-template="board"]');
 
 export function createBoard(id = null, key = '') {
     let target = document.querySelector('[data-boards]');
     let elem = document.createElement('div');
+
     elem.innerHTML = template.innerHTML;
+    elem.innerHTML = elem.innerHTML.replace(new RegExp('%boardUuid%', 'g'), Uuid.generate());
 
     let item = elem.children[0];
 

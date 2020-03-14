@@ -1,7 +1,8 @@
 import * as storage from './storage.mjs';
 import * as jenkins from './jenkins.mjs';
 import * as jira from './jira.mjs';
-import * as rocketChat from './rocket.chat.mjs';
+import {RocketChat} from "./rocket.chat";
+
 import './jquery.mjs';
 import 'bootstrap';
 
@@ -25,6 +26,8 @@ let identifier = '';
 
 let options = {};
 let checkLists = [];
+
+let rocketChat = new RocketChat();
 
 const checkIsChecked = (items, id) => {
     for (let item of items) {
@@ -81,14 +84,18 @@ const checkOptions = () => {
         missingOptions = false;
     }
 
+    if (options.hasOwnProperty('rocketChat')) {
+        rocketChat.options(options.rocketChat);
+    }
+
     // todo use rocket chat options from options
-    rocketChat.setOptions({
-        url: 'https://rocketchat.saitow.ag/api/v1/chat.sendMessage',
+/*    rocketChat.options({
+        url: 'https://rocketchat.saitow.ag',
         authToken: 'OgX7FXyYVhTEA4yzLIt89ya_aI8avrp2LDO_O0aIFua',
         userId: 'nqjxnBxLfP6vrvAqe',
         internalRoom: 'CkJdMjtN4ycaJ4J3K',
         externalRoom: 'SRbBuubqpvkdhKB4v',
-    });
+    });*/
 };
 
 const initOverview = () => {
