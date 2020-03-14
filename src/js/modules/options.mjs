@@ -96,7 +96,10 @@ const create = () => {
         rocketChat.options = options.rocketChat;
     }
 
-    rocketChat.init();
+    // need user action to request permission
+    document.querySelector('#rocket-chat-tab').addEventListener('click', () => {
+        rocketChat.init();
+    });
 
     for (let type of listTypes) {
         for (let entry of options.lists[type]) {

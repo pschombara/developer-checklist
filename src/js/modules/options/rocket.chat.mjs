@@ -1,4 +1,5 @@
 import {SuperRocketChat} from '../super/super.rocket.chat';
+import {Permissions} from "./permissions";
 
 export class OptionsRocketChat extends SuperRocketChat{
     constructor() {
@@ -24,25 +25,23 @@ export class OptionsRocketChat extends SuperRocketChat{
     init() {
         this.checkOptions();
 
-        let urlTimeout;
-        this._inputs.url.addEventListener('change', () => {
-            if (null !== urlTimeout) {
-                window.clearTimeout(urlTimeout);
-            }
-            urlTimeout = window.setTimeout(() => {
-                this.options.url = this._inputs.url.value;
-                this.checkOptions();
-            }, 300);
+        this._inputs.url.addEventListener('focusout', () => {
+            this.options.url = this._inputs.url.value;
+            this.checkOptions();
         });
+
         this._btn.login.addEventListener('click', () => {
             let formData = new FormData(this._form);
             loginWithCredentials(formData.get('_username'), formData.get('_password'), this.options).then(result => {
                 if ('success' === result.status) {
                     this.options.userId = result.data.userId;
                     this.options.authToken = result.data.authToken;
-                    this.options.authToken = generatePersonalAccessToken(this.options);
+                    generatePersonalAccessToken(this.options).then(result => {
+                        this.options.authToken = result;
+                    });
                     this._btn.user.classList.remove('btn-danger');
                     this._btn.user.classList.add('btn-success');
+                    changeUserBtn(false, this._btn.user);
                 } else {
                     // todo show error message.
                 }
@@ -51,24 +50,60 @@ export class OptionsRocketChat extends SuperRocketChat{
     }
 
     checkOptions() {
-        new Promise(resolve => {
+        let checkUrl = new Promise(resolve => {
             let regexUrl = new RegExp('http(s):\/\/.+');
 
-            if (false === regexUrl.test(url)) {
+            if (false === regexUrl.test(this.options.url)) {
+                this.options.url = '';
                 resolve(false);
             } else {
-                let client = getClient('GET', url + '/api/info');
+                resolve(true);
+            }
+        });
 
-                client.onreadystatechange = () => {
-                    if (XMLHttpRequest.DONE === client.readyState && 200 === client.status) {
+        let checkPermissionAvailable = Permissions.check(this.options.url + '/api/*');
+        let requestPermission = Permissions.request(this.options.url + '/api/*');
+
+        let checkIsRocketChat = new Promise(resolve => {
+            let client = getClient('GET', this.options.url + '/api/info');
+
+            client.onreadystatechange = () => {
+                if (XMLHttpRequest.DONE === client.readyState) {
+                    if (200 === client.status) {
+                        this._inputs.url.value = this.options.url;
                         resolve(true);
+                    } else {
+                        resolve(false);
                     }
-                };
-                client.send();
+                }
+            };
+            client.send();
+        });
+
+        let checkCredentials = checkIsAuthenticated(this.options);
+        let requestChannels = getRoomList(this.options);
+
+        checkUrl.then(result => {
+            if (result) {
+                return checkPermissionAvailable;
+            } else {
+                return false;
             }
         }).then(result => {
             if (result) {
-                return checkIsAuthenticated(this.options);
+                return requestPermission;
+            } else {
+                return false;
+            }
+        }).then(result => {
+            if (result) {
+                return checkIsRocketChat;
+            } else {
+                return false;
+            }
+        }).then(result => {
+            if (result) {
+                return checkCredentials;
             } else {
                 changeUserBtn(false, this._btn.user);
                 this._btn.user.classList.remove('btn-success');
@@ -77,21 +112,27 @@ export class OptionsRocketChat extends SuperRocketChat{
                 this.options.internalRoom = '';
                 removeAllOptions(this._inputs.internal);
                 removeAllOptions(this._inputs.external);
+
+                return false;
             }
         }).then(result => {
-            if (result.success) {
+            if (result) {
                 changeUserBtn(false, this._btn.user);
                 this._btn.user.classList.add('btn-success');
                 this._btn.user.classList.remove('btn-danger');
 
-                return getChannelList(this.options);
+                return requestChannels;
             } else {
                 changeUserBtn(true, this._btn.user);
                 this._btn.user.classList.remove('btn-success');
                 this._btn.user.classList.add('btn-danger');
+
+                return false;
             }
         }).then(result => {
-            console.log(result);
+            if ('object' === typeof result && result.success) {
+
+            }
         });
     }
 }
@@ -138,7 +179,7 @@ const generatePersonalAccessToken = (options) => {
         client.onreadystatechange = () => {
             if (XMLHttpRequest.DONE === client.readyState) {
                 let response = JSON.parse(client.response);
-                resolve('success' === response.status ? response.token : '');
+                resolve(response.success ? response.token : '');
             }
         };
 
@@ -148,7 +189,7 @@ const generatePersonalAccessToken = (options) => {
     });
 };
 
-const getChannelList = (options) => {
+const getRoomList = (options) => {
     return new Promise(resolve => {
         let client = getClient('GET', options.url + '/api/v1/rooms.get');
 
@@ -175,7 +216,8 @@ const checkIsAuthenticated = (options) => {
 
             client.onreadystatechange = () => {
                 if (XMLHttpRequest.DONE === client.readyState) {
-                    resolve(JSON.parse(client.response));
+                    let response = JSON.parse(client.response);
+                    resolve(response.hasOwnProperty('success') ? response.success : false);
                 }
             };
 

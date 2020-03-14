@@ -85,7 +85,7 @@ const checkOptions = () => {
     }
 
     if (options.hasOwnProperty('rocketChat')) {
-        rocketChat.options(options.rocketChat);
+        rocketChat.options = options.rocketChat;
     }
 
     // todo use rocket chat options from options
