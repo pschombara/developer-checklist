@@ -118,16 +118,17 @@
                         </div>
                         <div class="row mt-4">
                             <label for="rc-channel-internal" class="col-form-label col-4">Internal Channel</label>
-                            <select id="rc-channel-internal" class="form-control col-6" disabled>
-                                <option value="-1">---No channel---</option>
-                            </select>
+                            <div class="col-6">
+                                <input class="form-control" list="rc-rooms" id="rc-channel-internal" placeholder="Internal Channel"/>
+                            </div>
                         </div>
                         <div class="row mt-4">
                             <label for="rc-channel-external" class="col-form-label col-4">External Channel</label>
-                            <select id="rc-channel-external" class="form-control col-6" disabled>
-                                <option value="-1">---No channel---</option>
-                            </select>
+                            <div class="col-6">
+                                <input class="form-control" list="rc-rooms" id="rc-channel-external" placeholder="External Channel"/>
+                            </div>
                         </div>
+                        <datalist id="rc-rooms"></datalist>
                     </div>
                 </div>
                 <div class="tab-pane" id="about" role="tabpanel">

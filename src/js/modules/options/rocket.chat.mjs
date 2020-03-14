@@ -50,7 +50,7 @@ export class OptionsRocketChat extends SuperRocketChat{
     }
 
     checkOptions() {
-        let checkUrl = new Promise(resolve => {
+        let checkUrl = () => new Promise(resolve => {
             let regexUrl = new RegExp('http(s):\/\/.+');
 
             if (false === regexUrl.test(this.options.url)) {
@@ -61,49 +61,44 @@ export class OptionsRocketChat extends SuperRocketChat{
             }
         });
 
-        let checkPermissionAvailable = Permissions.check(this.options.url + '/api/*');
-        let requestPermission = Permissions.request(this.options.url + '/api/*');
+        let checkIsRocketChat = () => new Promise(resolve => {
+                let client = getClient('GET', this.options.url + '/api/info');
 
-        let checkIsRocketChat = new Promise(resolve => {
-            let client = getClient('GET', this.options.url + '/api/info');
-
-            client.onreadystatechange = () => {
-                if (XMLHttpRequest.DONE === client.readyState) {
-                    if (200 === client.status) {
-                        this._inputs.url.value = this.options.url;
-                        resolve(true);
-                    } else {
-                        resolve(false);
+                client.onreadystatechange = () => {
+                    if (XMLHttpRequest.DONE === client.readyState) {
+                        if (200 === client.status) {
+                            this._inputs.url.value = this.options.url;
+                            resolve(true);
+                        } else {
+                            resolve(false);
+                        }
                     }
-                }
-            };
-            client.send();
-        });
+                };
 
-        let checkCredentials = checkIsAuthenticated(this.options);
-        let requestChannels = getRoomList(this.options);
+                client.send();
+            });
 
-        checkUrl.then(result => {
+        checkUrl().then(result => {
             if (result) {
-                return checkPermissionAvailable;
+                return Permissions.check(this.options.url + '/api/*');
+            } else {
+                return false;
+            }
+        }).then(result => {
+            if (false === result) {
+                return Permissions.request(this.options.url + '/api/*');
+            } else {
+                return true;
+            }
+        }).then(result => {
+            if (result) {
+                return checkIsRocketChat();
             } else {
                 return false;
             }
         }).then(result => {
             if (result) {
-                return requestPermission;
-            } else {
-                return false;
-            }
-        }).then(result => {
-            if (result) {
-                return checkIsRocketChat;
-            } else {
-                return false;
-            }
-        }).then(result => {
-            if (result) {
-                return checkCredentials;
+                return checkIsAuthenticated(this.options);
             } else {
                 changeUserBtn(false, this._btn.user);
                 this._btn.user.classList.remove('btn-success');
@@ -121,7 +116,7 @@ export class OptionsRocketChat extends SuperRocketChat{
                 this._btn.user.classList.add('btn-success');
                 this._btn.user.classList.remove('btn-danger');
 
-                return requestChannels;
+                return getRoomList(this.options);
             } else {
                 changeUserBtn(true, this._btn.user);
                 this._btn.user.classList.remove('btn-success');
@@ -131,7 +126,7 @@ export class OptionsRocketChat extends SuperRocketChat{
             }
         }).then(result => {
             if ('object' === typeof result && result.success) {
-
+                console.log(result);
             }
         });
     }
