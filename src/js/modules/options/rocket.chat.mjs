@@ -18,6 +18,7 @@ export class OptionsRocketChat extends SuperRocketChat{
 
         this._modal = document.querySelector('#rc-modal-user');
         this._form = document.querySelector('#rc-login');
+        this._datalist = document.querySelector('#rc-rooms');
 
         this._channels = {};
     }
@@ -46,6 +47,24 @@ export class OptionsRocketChat extends SuperRocketChat{
                     // todo show error message.
                 }
             });
+        });
+
+        const getRoomId = (input) => {
+            let option = this._datalist.querySelector(`option[value="${input.value}"]`);
+
+            if (null !== option) {
+                return option.getAttribute('data-id');
+            }
+
+            return '';
+        };
+
+        this._inputs.internal.addEventListener('change', () => {
+            this.options.internalRoom = getRoomId(this._inputs.internal);
+        });
+
+        this._inputs.external.addEventListener('change', () => {
+            this.options.externalRoom = getRoomId(this._inputs.external);
         });
     }
 
@@ -126,7 +145,23 @@ export class OptionsRocketChat extends SuperRocketChat{
             }
         }).then(result => {
             if ('object' === typeof result && result.success) {
-                console.log(result);
+                for (let room of result.update) {
+                    if (room.hasOwnProperty('name') && room.hasOwnProperty('_id')) {
+                        let option = document.createElement('option');
+                        option.value = room.name;
+                        option.setAttribute('data-id', room._id);
+
+                        this._datalist.appendChild(option);
+                    }
+                }
+
+                if ('' !== this.options.internalRoom) {
+                    setDatalistValue(this._datalist, this.options.internalRoom, this._inputs.internal)
+                }
+
+                if ('' !== this.options.externalRoom) {
+                    setDatalistValue(this._datalist, this.options.externalRoom, this._inputs.external)
+                }
             }
         });
     }
@@ -233,4 +268,12 @@ const getClient = (method, url) => {
     xhttp.setRequestHeader("Content-Type", "application/json");
 
     return xhttp;
+};
+
+const setDatalistValue = (datalist, id, input) => {
+    let option = datalist.querySelector(`option[data-id="${id}"]`);
+
+    if (null !== option) {
+        input.value = option.value;
+    }
 };
