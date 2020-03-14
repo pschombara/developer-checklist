@@ -12,8 +12,6 @@ const browser = window.browser ? window.browser : window.chrome;
 
 let clearButtons = document.querySelectorAll('[data-btn="clear"]');
 let jiraCommentButtons = document.querySelectorAll('[data-btn="comment"]');
-let tpInternalButton = document.querySelector('[data-chat="internal"]');
-let tpExternalButton = document.querySelector('[data-chat="external"]');
 
 let overviewInitiated = false;
 let issueInitiated = false;
@@ -209,13 +207,8 @@ const initIssue = () => {
         });
     }
 
-    tpInternalButton.addEventListener('click', () => {
-        rocketChat.createInternalMessage(identifier);
-    });
-
-    tpExternalButton.addEventListener('click', () => {
-        rocketChat.createExternalMessage(identifier);
-    });
+    rocketChat.identifier = identifier;
+    rocketChat.init();
 
     showContent('checklist');
 

@@ -4,42 +4,87 @@ export class RocketChat extends SuperRocketChat
 {
     constructor() {
         super();
+
+        this._btn = {
+            internal: document.querySelector('[data-chat="internal"]'),
+            external: document.querySelector('[data-chat="external"]'),
+        };
+
+        this._identifier = '';
     }
 
-    createInternalMessage(identifier) {
-        sendMessage(JSON.stringify({
-            "message": {
-                "rid": this._options.internalRoom,
-                "msg": "@here team planning for issue " + identifier + '!?',
-            }
-        }), this._options);
+    set identifier(identifier) {
+        this._identifier = identifier;
     }
 
-    createExternalMessage(identifier) {
-        sendMessage(JSON.stringify({
-            "message": {
-                "rid": this._options.externalRoom,
-                "msg": "@here team planning for issue " + identifier + '!?',
-            }
-        }), this._options);
+    init() {
+        if ('' !== this.options.internalRoom) {
+            this._btn.internal.addEventListener('click', () => {
+                sendMessage(JSON.stringify({
+                    "message": {
+                        "rid": this.options.internalRoom,
+                        "msg": "@here team planning for issue " + this._identifier + '!?',
+                    }
+                }), this.options);
+            });
+        } else {
+           this._btn.internal.setAttribute('disabled', 'disabled');
+        }
+
+        if ('' !== this.options.externalRoom) {
+            this._btn.external.addEventListener('click', () => {
+                sendMessage(JSON.stringify({
+                    "message": {
+                        "rid": this.options.externalRoom,
+                        "msg": "@here team planning for issue " + this._identifier + '!?',
+                    }
+                }), this.options);
+            });
+        } else {
+           this._btn.external.setAttribute('disabled', 'disabled');
+        }
     }
 }
 
 const sendMessage = (data, options) => {
-    let xhttp = new XMLHttpRequest();
+    let client = getClient('POST', options.url + '/api/v1/chat.sendMessage', options);
 
-    xhttp.open('POST', options.url + '/api/v1/chat.sendMessage');
-    xhttp.setRequestHeader("X-Auth-Token", options.authToken);
-    xhttp.setRequestHeader("X-User-Id", options.userId);
-    xhttp.setRequestHeader("Content-Type", "application/json");
+    client.onreadystatechange = () => {
+        if (XMLHttpRequest.DONE === client.readyState) {
+            if (200 === client.status) {
+                let response = JSON.parse(client.response);
 
-    xhttp.onreadystatechange = () => {
-        if (XMLHttpRequest.DONE === xhttp.readyState) {
-            console.log(xhttp.status, xhttp.response);
+                // use timeout rest api calls are rate limited
+                setTimeout(() => {addReaction(response.message._id, 'eyes', options)}, 500);
+                setTimeout(() => {addReaction(response.message._id, 'thumbsup', options)}, 1000);
+                setTimeout(() => {addReaction(response.message._id, 'thumbsdown', options)}, 1500);
+            }
+            console.log(client.status, client.response);
         }
     };
 
-    xhttp.send(data);
+    client.send(data);
+};
+
+const addReaction = (messageId, emoji, options) => {
+    let client = getClient('POST', options.url + '/api/v1/chat.react', options);
+
+    client.send(JSON.stringify({
+        messageId: messageId,
+        emoji: emoji,
+        shouldReact: true,
+    }));
+};
+
+const getClient = (method, url, options) => {
+    let xHttp = new XMLHttpRequest();
+
+    xHttp.open('POST', url);
+    xHttp.setRequestHeader("X-Auth-Token", options.authToken);
+    xHttp.setRequestHeader("X-User-Id", options.userId);
+    xHttp.setRequestHeader("Content-Type", "application/json");
+
+    return xHttp;
 };
 
 
