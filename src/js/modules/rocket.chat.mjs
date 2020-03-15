@@ -23,6 +23,8 @@ export class RocketChat extends SuperRocketChat
                 sendMessage(JSON.stringify({
                     "message": {
                         "rid": this.options.internalRoom,
+                        "alias": "Checklist",
+                        "emoji": "heavy_check_mark",
                         "msg": "@here team planning for issue " + this._identifier + '!?',
                     }
                 }), this.options);
@@ -36,7 +38,7 @@ export class RocketChat extends SuperRocketChat
                 sendMessage(JSON.stringify({
                     "message": {
                         "rid": this.options.externalRoom,
-                        "msg": "@here team planning for issue " + this._identifier + '!?',
+                        "msg": "@here team planning for issue " + this._identifier,
                     }
                 }), this.options);
             });

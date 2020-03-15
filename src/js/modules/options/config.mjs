@@ -4,8 +4,13 @@ import {Validator} from "./validator";
 
 const validator = new Validator();
 
-export function exportToJson() {
+export function exportToJson(options) {
     let elem = document.createElement('a');
+
+    // for security reasons reset user id and authToken
+    options.rocketChat.userId = '';
+    options.rocketChat.authToken = '';
+
     elem.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(options)));
     elem.setAttribute('download', 'jira-dev-checklist-options');
     elem.classList.add('d-none');
