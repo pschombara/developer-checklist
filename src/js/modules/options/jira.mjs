@@ -5,7 +5,7 @@ export class Jira {
     constructor() {
         this._options = {
             url: '',
-            cleanUp: 2,
+            cleanup: 2,
             maximumIssues: 6,
             boards: []
         };
@@ -45,7 +45,7 @@ export class Jira {
                 let input = document.querySelector(`[data-option="${key}"]`);
 
                 if (null !== input) {
-                    input.value = options[key];
+                    input.value = this.options[key];
                 }
             }
         });

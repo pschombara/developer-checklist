@@ -100,4 +100,5 @@ exports.watch = () => {
     gulp.watch(src + 'scss/**', { ignoreInitial: false }, css);
     gulp.watch(src + 'html/**', { ignoreInitial: false }, html);
     gulp.watch(src + 'images/**', { ignoreInitial: false }, images);
+    gulp.watch([src + 'config.json', src + 'manifest.json'], {ignoreInitial: false}, json);
 };

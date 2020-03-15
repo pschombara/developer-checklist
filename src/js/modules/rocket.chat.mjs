@@ -11,23 +11,24 @@ export class RocketChat extends SuperRocketChat
         };
 
         this._identifier = '';
+        this._board = '';
     }
 
     set identifier(identifier) {
         this._identifier = identifier;
     }
 
+    set board(board) {
+        this._board = board;
+    }
+
     init() {
         if ('' !== this.options.internalRoom) {
             this._btn.internal.addEventListener('click', () => {
-                sendMessage(JSON.stringify({
-                    "message": {
-                        "rid": this.options.internalRoom,
-                        "alias": "Checklist",
-                        "emoji": "heavy_check_mark",
-                        "msg": "@here team planning for issue " + this._identifier + '!?',
-                    }
-                }), this.options);
+                sendMessage(
+                    getMessage(this.options.internalRoom, this.options.internalMessage, this._identifier, this._board),
+                    this.options
+                );
             });
         } else {
            this._btn.internal.setAttribute('disabled', 'disabled');
@@ -35,18 +36,34 @@ export class RocketChat extends SuperRocketChat
 
         if ('' !== this.options.externalRoom) {
             this._btn.external.addEventListener('click', () => {
-                sendMessage(JSON.stringify({
-                    "message": {
-                        "rid": this.options.externalRoom,
-                        "msg": "@here team planning for issue " + this._identifier,
-                    }
-                }), this.options);
+                sendMessage(
+                    getMessage(this.options.externalRoom, this.options.externalMessage, this._identifier, this._board),
+                    this.options
+                );
             });
         } else {
            this._btn.external.setAttribute('disabled', 'disabled');
         }
     }
 }
+
+const getMessage = (roomId, message, identifier, board) => {
+    if ('' !== board) {
+        let url = `[${identifier}](${board}/browse/${identifier})`;
+        message = message.replace(new RegExp('\{issue\}', 'g'), url);
+    } else {
+        message = message.replace(new RegExp('\{issue\}', 'g'), identifier);
+    }
+
+    return JSON.stringify({
+        message: {
+            rid: roomId,
+            alias: "Checklist",
+            emoji: ":heavy_check_mark:",
+            msg: message
+        }
+    });
+};
 
 const sendMessage = (data, options) => {
     let client = getClient('POST', options.url + '/api/v1/chat.sendMessage', options);

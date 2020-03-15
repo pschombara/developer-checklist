@@ -6,6 +6,8 @@ export class SuperRocketChat {
             userId: '',
             internalRoom: '',
             externalRoom: '',
+            internalMessage: '',
+            externalMessage: ''
         };
     }
 

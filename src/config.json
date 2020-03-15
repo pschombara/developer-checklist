@@ -409,7 +409,9 @@
         "authToken": "",
         "userId": "",
         "internalRoom": "",
-        "externalRoom": ""
+        "externalRoom": "",
+        "internalMessage": "@here team planning for {issue}",
+        "externalMessage": "@here team planning for {issue}"
     },
     "jira": {
         "url": "https://jira.saitow.ag",

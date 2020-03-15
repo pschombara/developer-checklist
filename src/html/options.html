@@ -128,6 +128,18 @@
                                 <input class="form-control" list="rc-rooms" id="rc-channel-external" placeholder="External Channel"/>
                             </div>
                         </div>
+                        <div class="row mt-4">
+                            <label for="rc-message-internal" class="col-form-label col-4">Message for Internal</label>
+                            <div class="col-6">
+                                <input class="form-control" type="text" id="rc-message-internal" placeholder="@here team planning for {issue}" />
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <label for="rc-message-external" class="col-form-label col-4">Message for External</label>
+                            <div class="col-6">
+                                <input class="form-control" type="text" id="rc-message-external" placeholder="@here team planning for {issue}" />
+                            </div>
+                        </div>
                         <datalist id="rc-rooms"></datalist>
                     </div>
                 </div>
@@ -279,7 +291,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" id="rc-modal-dismiss" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" id="rc-btn-login">Login</button>
             </div>
         </div>
