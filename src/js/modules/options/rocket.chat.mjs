@@ -166,8 +166,6 @@ export class OptionsRocketChat extends SuperRocketChat{
                 this._btn.user.classList.add('btn-danger');
                 this.options.externalRoom = '';
                 this.options.internalRoom = '';
-                removeAllOptions(this._inputs.internal);
-                removeAllOptions(this._inputs.external);
 
                 return false;
             }
@@ -192,14 +190,6 @@ export class OptionsRocketChat extends SuperRocketChat{
         });
     }
 }
-
-const removeAllOptions = (selectBox) => {
-    for (let option of selectBox.children) {
-        if ('-1' !== option.value) {
-            selectBox.removeChild(option);
-        }
-    }
-};
 
 const changeUserBtn = (valid, btn) => {
     if (valid) {
