@@ -122,6 +122,8 @@ export class OptionsRocketChat extends SuperRocketChat{
             }
         });
 
+        let hasPermissions = true;
+
         let checkIsRocketChat = () => new Promise(resolve => {
                 let client = getClient('GET', this.options.url + '/api/info');
 
@@ -155,6 +157,7 @@ export class OptionsRocketChat extends SuperRocketChat{
             if (result) {
                 return checkIsRocketChat();
             } else {
+                hasPermissions = false;
                 return false;
             }
         }).then(result => {
@@ -177,7 +180,7 @@ export class OptionsRocketChat extends SuperRocketChat{
 
                 return getRoomList(this.options);
             } else {
-                changeUserBtn(true, this._btn.user);
+                changeUserBtn(hasPermissions, this._btn.user);
                 this._btn.user.classList.remove('btn-success');
                 this._btn.user.classList.add('btn-danger');
 
@@ -285,7 +288,7 @@ const getRoomList = (options) => {
 const checkIsAuthenticated = (options) => {
     return new Promise(resolve => {
         if ('' === options.userId || '' === options.authToken) {
-            resolve({success: false});
+            resolve(false);
         } else {
             let client = getClient('GET', options.url + '/api/v1/me');
 
