@@ -69,7 +69,6 @@ const sendMessage = (data, options) => {
                 setTimeout(() => {addReaction(response.message._id, 'thumbsup', options)}, 1000);
                 setTimeout(() => {addReaction(response.message._id, 'thumbsdown', options)}, 1500);
             }
-            console.log(client.status, client.response);
         }
     };
 
