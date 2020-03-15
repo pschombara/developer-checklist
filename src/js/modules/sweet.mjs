@@ -23,3 +23,7 @@ export const ConfirmationPrompt = Swal.mixin({
 export const SuccessPrompt = Swal.mixin({
     icon: 'success',
 });
+
+export const ErrorPrompt = Swal.mixin({
+    icon: 'error'
+});

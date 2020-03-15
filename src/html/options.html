@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>JIRA Checklist Options</title>
+    <meta charset="UTF-8">
     <link rel="stylesheet" href="../css/app.css"/>
 </head>
 <body>
@@ -27,6 +28,9 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#jenkins" role="tab" id="jenkins-tab" data-toggle="tab">Jenkins</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#rocket-chat" role="tab" id="rocket-chat-tab" data-toggle="tab">RocketChat</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#about" role="tab" id="about-tab" data-toggle="tab">About</a>
@@ -96,6 +100,59 @@
                         <button type="button" class="btn btn-success" data-add-jenkins>+ Add</button>
                     </div>
                 </div>
+                <div class="tab-pane" id="rocket-chat" role="tabpanel">
+                    <div class="card-body">
+                        <div class="row">
+                            <label for="rc-url" class="col-form-label col-4">Rocket-Chat Url</label>
+                            <div class="col-6 input-group">
+                                <input class="form-control" type="text" id="rc-url" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">/api</span>
+                                </div>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-danger" data-rc-user data-toggle="modal" data-target="#rc-modal-user">
+                                        <i class="fa fa-sign-in"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <label for="rc-channel-internal" class="col-form-label col-4">Internal Channel</label>
+                            <div class="col-6">
+                                <input class="form-control" list="rc-rooms" id="rc-channel-internal" placeholder="Internal Channel"/>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <label for="rc-channel-external" class="col-form-label col-4">External Channel</label>
+                            <div class="col-6">
+                                <input class="form-control" list="rc-rooms" id="rc-channel-external" placeholder="External Channel"/>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <label for="rc-message-internal" class="col-form-label col-4">Message for Internal</label>
+                            <div class="col-6 input-group">
+                                <input class="form-control" type="text" id="rc-message-internal" placeholder="@here team planning for {issue}" />
+                                <div class="input-group-append" data-toggle="tooltip" title="Add {issue} as a placeholder for an external link to the issue.">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-lg fa-question"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <label for="rc-message-external" class="col-form-label col-4">Message for External</label>
+                            <div class="col-6 input-group">
+                                <input class="form-control" type="text" id="rc-message-external" placeholder="@here team planning for {issue}" />
+                                <div class="input-group-append" data-toggle="tooltip" title="Add {issue} as a placeholder for an external link to the issue.">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-lg fa-question"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <datalist id="rc-rooms"></datalist>
+                    </div>
+                </div>
                 <div class="tab-pane" id="about" role="tabpanel">
                     <div class="card-body">
                         <div class="row mt-1">
@@ -144,8 +201,9 @@
         <div class="col-3">
             <input type="text" name="boardKey[]" placeholder="The key of the board." class="form-control" />
         </div>
-        <div class="col-2">
-            <label><input type="checkbox" name="boardDelete[]" /> Delete</label>
+        <div class="col-2 custom-control custom-switch">
+            <input class="custom-control-input" type="checkbox" name="boardDelete[]" id="%boardUuid%" />
+            <label class="custom-control-label" for="%boardUuid%">Delete</label>
         </div>
     </div>
 </template>
@@ -196,11 +254,59 @@
         <div class="col-4">
             <input type="text" name="jenkinsJob[]" class="form-control" placeholder="Name of the job (eg: pipeline-unit-api-alzura)" />
         </div>
-        <div class="col-2">
-            <label><input type="checkbox" name="jenkinsDelete[]" /> Delete</label>
+        <div class="col-2 custom-control custom-switch">
+            <input class="custom-control-input" type="checkbox" name="jenkinsDelete[]" id="%uuid%" />
+            <label class="custom-control-label" for="%uuid%">Delete</label>
         </div>
     </div>
 </template>
+
+<div class="modal" tabindex="-1" role="dialog" id="rc-modal-user">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Rocket.Chat Login</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="alert alert-info">
+                            <p>You only have to login once. We generate an API key and store it on our site.</p>
+                            <p>You can remove the API key in your Rocket Chat settings under Personal Access Key.</p>
+                        </div>
+                    </div>
+                </div>
+                <form id="rc-login">
+                    <div class="row">
+                        <label for="rc-user" class="col-form-label col-4">Username</label>
+                        <div class="col-6 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-user"></i></span>
+                            </div>
+                            <input type="text" id="rc-user" class="form-control" name="_username" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label for="rc-password" class="col-form-label col-4">Password</label>
+                        <div class="col-6 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                            </div>
+                            <input type="password" id="rc-password" class="form-control" name="_password" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="rc-modal-dismiss" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="rc-btn-login">Login</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src='../js/options.js'></script>
 </body>

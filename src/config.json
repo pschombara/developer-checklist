@@ -404,21 +404,36 @@
             "type": "PHP-CI"
         }
     ],
-    "boards": [
-        {
-            "id": 115,
-            "key": "WASHB"
-        },
-        {
-            "id": 27,
-            "key": "RVORT"
-        },
-        {
-            "id": 25,
-            "key": "TYR"
-        }
-    ],
-    "url": "https://jira.saitow.ag",
-    "cleanup": 2,
-    "maximumIssues": 6
+    "rocketChat": {
+        "url": "https://rocketchat.saitow.ag",
+        "authToken": "",
+        "userId": "",
+        "internalRoom": "",
+        "externalRoom": "",
+        "internalMessage": "@here team planning for {issue}",
+        "externalMessage": "@here team planning for {issue}"
+    },
+    "jira": {
+        "url": "https://jira.saitow.ag",
+        "cleanup": 2,
+        "maximumIssues": 6,
+        "boards": [
+            {
+                "id": 115,
+                "key": "WASHB"
+            },
+            {
+                "id": 0,
+                "key": "TIC"
+            },
+            {
+                "id": 27,
+                "key": "RVORT"
+            },
+            {
+                "id": 25,
+                "key": "TYR"
+            }
+        ]
+    }
 }

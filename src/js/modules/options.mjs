@@ -1,17 +1,19 @@
 import * as storage from './storage.mjs';
 import * as config from './options/config.mjs';
 import * as jenkins from './options/jenkins.mjs';
-import * as jira from './options/jira.mjs';
 import './jquery.mjs';
 import 'bootstrap';
-import * as validator from './options/validate.schema.mjs'
-import {ConfirmationPrompt, SuccessPrompt} from "./sweet.mjs";
+
+import {Validator} from "./options/validator";
+import {ConfirmationPrompt, SuccessPrompt} from "./sweet";
+import {OptionsRocketChat} from "./options/rocket.chat";
+import {Uuid} from "./options/uuid";
+import {Jira} from "./options/jira";
 
 // todo replace with options
 const listTypes = ['developer', 'tester', 'reviewer', 'help'];
 
 const addJenkins = document.querySelector('[data-add-jenkins]');
-const addBoard = document.querySelector('[data-add-board]');
 
 const btnRestoreOptions = document.querySelector('[data-default="btn"]');
 const btnUpload = document.querySelector('[data-upload="btn"]');
@@ -19,14 +21,12 @@ const fileUpload = document.querySelector('[data-upload="file"]');
 
 const templateCardList = document.querySelector('[data-template="cardList"]');
 const templateListEntry = document.querySelector('[data-template="listEntry"]');
+export const validator = new Validator();
+
+let rocketChat = new OptionsRocketChat();
+let jira = new Jira();
 
 let options = {};
-
-const uuidv4 = () => {
-    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-    );
-};
 
 const createCardList = (id, title, items, type) => {
     let temp = templateCardList.innerHTML;
@@ -45,7 +45,7 @@ const createCardList = (id, title, items, type) => {
 
     let addBtn = document.querySelector(`[data-type="${type}"][data-add="${id}"]`);
     addBtn.addEventListener('click', () => {
-        createListEntry(document.querySelector(`[data-type="${addBtn.getAttribute('data-type')}"][data-items="${id}"]`), {text: '', id: uuidv4()}, id);
+        createListEntry(document.querySelector(`[data-type="${addBtn.getAttribute('data-type')}"][data-items="${id}"]`), {text: '', id: Uuid.generate()}, id);
     });
 };
 
@@ -71,26 +71,26 @@ const createListEntry = (target, item, id) => {
 };
 
 const create = () => {
-    Object.keys(options).map((key) => {
-
-        let input = document.querySelector(`[data-option="${key}"]`);
-
-        if (null !== input) {
-            input.value = options[key];
-        }
-    });
-
     if (options.hasOwnProperty('jenkins')) {
         for (let item of options.jenkins) {
             jenkins.create(item.name, item.job, item.type);
         }
     }
 
-    if (options.hasOwnProperty('boards')) {
-        for (let item of options.boards) {
-            jira.createBoard(item.id, item.key);
-        }
+    if (options.hasOwnProperty('jira')) {
+        jira.options = options.jira;
     }
+
+    jira.init();
+
+    if (options.hasOwnProperty('rocketChat')) {
+        rocketChat.options = options.rocketChat;
+    }
+
+    // need user action to request permission
+    document.querySelector('#rocket-chat-tab').addEventListener('click', () => {
+        rocketChat.init();
+    });
 
     for (let type of listTypes) {
         for (let entry of options.lists[type]) {
@@ -129,7 +129,6 @@ export function init() {
     });
 
     addJenkins.addEventListener('click', jenkins.create);
-    addBoard.addEventListener('click', jira.createBoard);
 
     btnRestoreOptions.addEventListener('click', () => {
         ConfirmationPrompt.fire({
@@ -160,10 +159,10 @@ export function init() {
 }
 
 export function save(type) {
-    saveInputOptions();
-
+    jira.save();
+    options.jira = jira.options;
     options.jenkins = jenkins.save();
-    options.boards = jira.save();
+    options.rocketChat = rocketChat.options;
 
     for (let type of listTypes) {
         let items = document.querySelectorAll(`[data-type=${type}][data-items]`);
@@ -199,7 +198,7 @@ export function save(type) {
     storage.write('options', options);
 
     if ('export' === type) {
-        config.exportToJson();
+        config.exportToJson(options);
     }
 
     return true;

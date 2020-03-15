@@ -1,9 +1,16 @@
-import {Toast} from "../sweet.mjs";
-import * as storage from "../storage.mjs";
-import * as validator from './validate.schema.mjs'
+import {Toast, ErrorPrompt} from "../sweet";
+import * as storage from "../storage";
+import {Validator} from "./validator";
 
-export function exportToJson() {
+const validator = new Validator();
+
+export function exportToJson(options) {
     let elem = document.createElement('a');
+
+    // for security reasons reset user id and authToken
+    options.rocketChat.userId = '';
+    options.rocketChat.authToken = '';
+
     elem.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(options)));
     elem.setAttribute('download', 'jira-dev-checklist-options');
     elem.classList.add('d-none');
@@ -49,9 +56,10 @@ export function importFromJson(e) {
             let data = JSON.parse(e.target.result);
 
             if (false === validator.validate(data)) {
-                Toast.fire({
+                ErrorPrompt.fire({
                     icon: "error",
-                    title: "JSON is invalid"
+                    title: "JSON is invalid",
+                    html: validator.htmlErrors
                 });
 
                 return;

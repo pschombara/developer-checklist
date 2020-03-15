@@ -1,7 +1,8 @@
 import * as storage from './storage.mjs';
 import * as jenkins from './jenkins.mjs';
 import * as jira from './jira.mjs';
-import * as rocketChat from './rocket.chat.mjs';
+import {RocketChat} from "./rocket.chat";
+
 import './jquery.mjs';
 import 'bootstrap';
 
@@ -11,8 +12,6 @@ const browser = window.browser ? window.browser : window.chrome;
 
 let clearButtons = document.querySelectorAll('[data-btn="clear"]');
 let jiraCommentButtons = document.querySelectorAll('[data-btn="comment"]');
-let tpInternalButton = document.querySelector('[data-chat="internal"]');
-let tpExternalButton = document.querySelector('[data-chat="external"]');
 
 let overviewInitiated = false;
 let issueInitiated = false;
@@ -25,6 +24,8 @@ let identifier = '';
 
 let options = {};
 let checkLists = [];
+
+let rocketChat = new RocketChat();
 
 const checkIsChecked = (items, id) => {
     for (let item of items) {
@@ -65,15 +66,13 @@ const sync = (optionsList, issueLists) => {
 };
 
 const checkOptions = () => {
-    if (options.hasOwnProperty('boards')) {
-        jira.createBoards(options.boards);
-    }
+    if (options.hasOwnProperty('jira')) {
+        jira.createBoards(options.jira.boards);
 
-    if (options.hasOwnProperty('url')) {
-        if (0 !== (options.boards[0].id ? options.boards[0].id : 0)) {
-            jiraUrl.href = options.url + `/secure/RapidBoard.jspa?rapidView=${options.boards[0].id}`;
+        if (0 !== (options.jira.boards[0].id ? options.jira.boards[0].id : 0)) {
+            jiraUrl.href = options.jira.url + `/secure/RapidBoard.jspa?rapidView=${options.jira.boards[0].id}`;
         } else {
-            jiraUrl.href = options.url + '/secure/ManageRapidViews.jspa';
+            jiraUrl.href = options.jira.url + '/secure/ManageRapidViews.jspa';
         }
     }
 
@@ -81,14 +80,9 @@ const checkOptions = () => {
         missingOptions = false;
     }
 
-    // todo use rocket chat options from options
-    rocketChat.setOptions({
-        url: 'https://rocketchat.saitow.ag/api/v1/chat.sendMessage',
-        authToken: 'OgX7FXyYVhTEA4yzLIt89ya_aI8avrp2LDO_O0aIFua',
-        userId: 'nqjxnBxLfP6vrvAqe',
-        internalRoom: 'CkJdMjtN4ycaJ4J3K',
-        externalRoom: 'SRbBuubqpvkdhKB4v',
-    });
+    if (options.hasOwnProperty('rocketChat')) {
+        rocketChat.options = options.rocketChat;
+    }
 };
 
 const initOverview = () => {
@@ -102,11 +96,11 @@ const initOverview = () => {
     let select = document.querySelector('[data-select="board"]');
     let issuesProgress = document.querySelector('[data-progress="issueProgress"]');
 
-    if ('' === options.url ? options.url : '') {
+    if ('' === options.jira.url ? options.jira.url : '') {
         buttonIssue.disabled = true;
     } else {
         buttonIssue.addEventListener('click', () => {
-            browser.tabs.create({url: options.url + '/browse/' + select.value + '-' + issue.value});
+            browser.tabs.create({url: options.jira.url + '/browse/' + select.value + '-' + issue.value});
         });
 
         issue.addEventListener('keyup', (e) => {
@@ -126,7 +120,7 @@ const initOverview = () => {
             let issues = 0;
 
             for (let identifier of identifiers) {
-                if (issues >= options.maximumIssues ? options.maximumIssues : 6) {
+                if (issues >= options.jira.maximumIssues ? options.jira.maximumIssues : 6) {
                     break;
                 }
 
@@ -139,7 +133,7 @@ const initOverview = () => {
                 btn.setAttribute('title', identifier.title);
                 btn.setAttribute('data-toggle', 'tooltip');
                 btn.addEventListener('click', () => {
-                    browser.tabs.create({url: options.url + '/browse/' + identifier.key});
+                    browser.tabs.create({url: options.jira.url + '/browse/' + identifier.key});
                 });
 
                 div.appendChild(btn);
@@ -149,7 +143,7 @@ const initOverview = () => {
 
             $('[data-toggle="tooltip"]').tooltip();
 
-            if (0 === options.maximumIssues ? options.maximumIssues : 6) {
+            if (0 === options.jira.maximumIssues ? options.jira.maximumIssues : 6) {
                 document.querySelector('[data-issues]').classList.add('d-none');
             }
         })
@@ -202,13 +196,9 @@ const initIssue = () => {
         });
     }
 
-    tpInternalButton.addEventListener('click', () => {
-        rocketChat.createInternalMessage(identifier);
-    });
-
-    tpExternalButton.addEventListener('click', () => {
-        rocketChat.createExternalMessage(identifier);
-    });
+    rocketChat.board = options.jira.url;
+    rocketChat.identifier = identifier;
+    rocketChat.init();
 
     showContent('checklist');
 
@@ -386,7 +376,7 @@ export function init(url) {
         checkOptions();
         storage.cleanUp();
 
-        if (url.includes(options.url) && issuePattern.test(url)) {
+        if (url.includes(options.jira.url) && issuePattern.test(url)) {
             let match = url.match(issuePattern)[0];
             identifier = match ? match : '';
             initIssue();
