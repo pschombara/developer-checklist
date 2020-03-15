@@ -130,14 +130,24 @@
                         </div>
                         <div class="row mt-4">
                             <label for="rc-message-internal" class="col-form-label col-4">Message for Internal</label>
-                            <div class="col-6">
+                            <div class="col-6 input-group">
                                 <input class="form-control" type="text" id="rc-message-internal" placeholder="@here team planning for {issue}" />
+                                <div class="input-group-append" data-toggle="tooltip" title="Add {issue} as a placeholder for an external link to the issue.">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-lg fa-question"></i>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div class="row mt-4">
                             <label for="rc-message-external" class="col-form-label col-4">Message for External</label>
-                            <div class="col-6">
+                            <div class="col-6 input-group">
                                 <input class="form-control" type="text" id="rc-message-external" placeholder="@here team planning for {issue}" />
+                                <div class="input-group-append" data-toggle="tooltip" title="Add {issue} as a placeholder for an external link to the issue.">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-lg fa-question"></i>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <datalist id="rc-rooms"></datalist>
