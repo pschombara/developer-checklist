@@ -23,27 +23,18 @@ export class RocketChat extends SuperRocketChat
     }
 
     init() {
-        if ('' !== this.options.internalRoom) {
-            this._btn.internal.addEventListener('click', () => {
-                sendMessage(
-                    getMessage(this.options.internalRoom, this.options.internalMessage, this._identifier, this._board),
-                    this.options
-                );
-            });
-        } else {
-           this._btn.internal.setAttribute('disabled', 'disabled');
-        }
+        const attachEventListener = (btn, room, message) => {
+            if ('' !== room && '' !== this.options.userId && '' !== this.options.authToken) {
+                btn.addEventListener('click', () => {
+                   sendMessage(getMessage(room, message, this._identifier, this._board), this._options);
+                });
+            } else {
+                btn.setAttribute('disabled', 'disabled');
+            }
+        };
 
-        if ('' !== this.options.externalRoom) {
-            this._btn.external.addEventListener('click', () => {
-                sendMessage(
-                    getMessage(this.options.externalRoom, this.options.externalMessage, this._identifier, this._board),
-                    this.options
-                );
-            });
-        } else {
-           this._btn.external.setAttribute('disabled', 'disabled');
-        }
+        attachEventListener(this._btn.internal, this.options.internalRoom, this.options.internalMessage);
+        attachEventListener(this._btn.external, this.options.externalRoom, this.options.externalMessage);
     }
 }
 
