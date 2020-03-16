@@ -120,7 +120,7 @@ const initOverview = () => {
             let issues = 0;
 
             for (let identifier of identifiers) {
-                if (issues >= options.jira.maximumIssues ? options.jira.maximumIssues : 6) {
+                if (issues >= (options.jira.maximumIssues ? options.jira.maximumIssues : 6)) {
                     break;
                 }
 
