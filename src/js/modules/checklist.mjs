@@ -143,7 +143,7 @@ const initOverview = () => {
 
             $('[data-toggle="tooltip"]').tooltip();
 
-            if (0 === options.jira.maximumIssues ? options.jira.maximumIssues : 6) {
+            if (0 === (options.jira.maximumIssues ? options.jira.maximumIssues : 6) || 0 === issues) {
                 document.querySelector('[data-issues]').classList.add('d-none');
             }
         })
