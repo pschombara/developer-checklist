@@ -35,8 +35,8 @@ const html = () => {
         .pipe(gulp.dest(out));
 };
 
-const js = async () => {
-    gulp.src('src/js/*.js')
+const js = () => {
+    return gulp.src('src/js/*.js')
         .pipe(rollup(
             {
                 plugins: [resolve(), commonjs()],
@@ -51,15 +51,16 @@ const js = async () => {
         ))
         .pipe(terser())
         .pipe(gulp.dest('build/js'));
+};
 
-    gulp.src(src + 'background.js')
+const backgroundJs = () => {
+    return gulp.src(src + 'background.js')
         .pipe(terser())
         .pipe(gulp.dest(build));
 };
 
-
-const css = async () => {
-    gulp.src(src + 'scss/app.scss')
+const css = () => {
+    return gulp.src(src + 'scss/app.scss')
         .pipe(sass())
         .pipe(postcss([cssnano]))
         .pipe(gulp.dest(build + 'css/'));
@@ -82,7 +83,7 @@ const archive = () => {
         .pipe(gulp.dest('./'));
 };
 
-exports.js = js;
+exports.js = gulp.parallel(js, backgroundJs);
 exports.css = css;
 exports.html = gulp.series(images, html);
 exports.images = images;
