@@ -434,6 +434,20 @@
                 "id": 25,
                 "key": "TYR"
             }
+        ],
+        "comments": [
+            {
+                "type": "developer",
+                "message": "h2. {color:#1e872b}Checklist{color}: All checked and done! (/)"
+            },
+            {
+                "type": "tester",
+                "message":  "h2. {color:#1e872b}Checklist{color}: Test OK! (y)"
+            },
+            {
+                "type": "reviewer",
+                "message":  "h2. {color:#1e872b}Checklist{color}: Review OK! (y)"
+            }
         ]
     }
 }

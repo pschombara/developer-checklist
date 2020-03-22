@@ -7,7 +7,8 @@ export class Jira {
             url: '',
             cleanup: 2,
             maximumIssues: 6,
-            boards: []
+            boards: [],
+            comments: []
         };
 
         this._template = {
@@ -41,6 +42,10 @@ export class Jira {
                 for (let board of this.options.boards) {
                     this.createBoard(board.id, board.key);
                 }
+            } else if ('comments' === key) {
+                for (let comment of this.options.comments) {
+                    this.initComment(comment.type, comment.message);
+                }
             } else {
                 let input = document.querySelector(`[data-option="${key}"]`);
 
@@ -51,6 +56,20 @@ export class Jira {
         });
 
         this._btn.addBoard.addEventListener('click', this.createBoard);
+    }
+
+    initComment(type, key) {
+        switch (type) {
+            case 'tester':
+                document.querySelector('#jira-test-comment').value = key;
+                break;
+            case 'reviewer':
+                document.querySelector('#jira-review-comment').value = key;
+                break;
+            default:
+                document.querySelector('#jira-dev-comment').value = key;
+                break;
+        }
     }
 
     createBoard(id = null, key = '') {
@@ -79,6 +98,21 @@ export class Jira {
                 this.options[option.getAttribute('data-option')] = option.value;
             }
         }
+
+        this.options.comments = [
+            {
+                type: "developer",
+                message: document.querySelector('#jira-dev-comment').value
+            },
+            {
+                type: "tester",
+                message: document.querySelector('#jira-test-comment').value
+            },
+            {
+                type: "reviewer",
+                message: document.querySelector('#jira-review-comment').value
+            }
+        ];
 
         this.options.boards = [];
 
