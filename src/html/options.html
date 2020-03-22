@@ -110,8 +110,13 @@
                                     <span class="input-group-text">/api</span>
                                 </div>
                                 <div class="input-group-append">
-                                    <button type="button" class="btn btn-danger" data-rc-user data-toggle="modal" data-target="#rc-modal-user">
+                                    <button type="button" class="btn btn-outline-danger" data-rc-user data-toggle="modal" data-target="#rc-modal-user">
                                         <i class="fa fa-sign-in"></i>
+                                    </button>
+                                </div>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-danger" data-rc-google data-toggle="modal" data-target="#rc-modal-google">
+                                        <i class="fa fa-google"></i>
                                     </button>
                                 </div>
                             </div>
@@ -301,8 +306,57 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="rc-modal-dismiss" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="rc-btn-login">Login</button>
+                <button type="button" class="btn btn-secondary" data-rc-dismiss="user" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-rc-login="user">Login</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" tabindex="-1" role="dialog" id="rc-modal-google">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Rocket.Chat Login</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="alert alert-info">
+                            <ul>
+                                <li>Goto your Account Settings and personal access token</li>
+                                <li>Add a new access token eg. with name JiraDevChecklist</li>
+                                <li>Copy the user id and access token and paste into this form</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <form id="rc-login-google">
+                    <div class="row">
+                        <label for="rc-user-id" class="col-form-label col-4">User-Id</label>
+                        <div class="col-6 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-user"></i></span>
+                            </div>
+                            <input type="text" id="rc-user-id" class="form-control" name="_username" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label for="rc-api-key" class="col-form-label col-4">API-Key</label>
+                        <div class="col-6 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                            </div>
+                            <input type="password" id="rc-api-key" class="form-control" name="_password" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-rc-dismiss="google" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-rc-login="google">Login</button>
             </div>
         </div>
     </div>
