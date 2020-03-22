@@ -306,6 +306,10 @@ const showContent = (contentType) => {
             content.classList.add('d-none');
         }
     }
+
+    if ('disclaimer' === contentType) {
+        document.querySelector('#issue').focus();
+    }
 };
 
 const save = () => {
