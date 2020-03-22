@@ -58,7 +58,7 @@ export class Jira {
         this._btn.addBoard.addEventListener('click', this.createBoard);
     }
 
-    static initComment(type, key) {
+    initComment(type, key) {
         switch (type) {
             case 'tester':
                 document.querySelector('#jira-test-comment').value = key;
