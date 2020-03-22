@@ -16,11 +16,16 @@ export class OptionsRocketChat extends SuperRocketChat{
 
         this._btn = {
             user: document.querySelector('[data-rc-user]'),
-            login: document.querySelector('#rc-btn-login'),
-            modalDismiss: document.querySelector('#rc-modal-dismiss')
+            google: document.querySelector('[data-rc-google]'),
+            login: document.querySelector('[data-rc-login="user"]'),
+            loginGoogle: document.querySelector('[data-rc-login="google"]'),
         };
 
-        this._form = document.querySelector('#rc-login');
+        this._form = {
+            user: document.querySelector('#rc-login'),
+            google: document.querySelector('#rc-login-google'),
+        };
+
         this._datalist = document.querySelector('#rc-rooms');
     }
 
@@ -36,7 +41,7 @@ export class OptionsRocketChat extends SuperRocketChat{
         });
 
         this._btn.login.addEventListener('click', () => {
-            let formData = new FormData(this._form);
+            let formData = new FormData(this._form.user);
             loginWithCredentials(formData.get('_username'), formData.get('_password'), this.options).then(result => {
                 if ('success' === result.status) {
                     this.options.userId = result.data.userId;
@@ -49,16 +54,42 @@ export class OptionsRocketChat extends SuperRocketChat{
                             }
                         });
                     });
-                    this._btn.user.classList.remove('btn-danger');
-                    this._btn.user.classList.add('btn-success');
-                    changeUserBtn(false, this._btn.user);
+
+                    this.changeBtnClass('btn-outline-success', 'btn-outline-danger');
+                    this.changeBtnDisable(false);
                     this._form.reset();
-                    this._btn.modalDismiss.click();
+                    document.querySelector('[data-rc-dismiss="user"]').click();
                 } else {
                     Toast.fire({
                         icon: 'error',
                         title: 'Authentication failure!'
                     });
+                }
+            });
+        });
+
+        this._btn.loginGoogle.addEventListener('click', () => {
+            let formData = new FormData(this._form.google);
+
+            this.options.userId = formData.get('_username');
+            this.options.authToken = formData.get('_password');
+
+            getRoomList(this.options).then(result => {
+                if ('object' === typeof result) {
+                    if (result.success) {
+                        this.createRooms(result.update);
+
+                        this.changeBtnClass('btn-outline-success', 'btn-outline-danger');
+                        this.changeBtnDisable(false);
+
+                        this._form.google.reset();
+                        document.querySelector('[data-rc-dismiss="google"]').click();
+                    } else if (result.hasOwnProperty('unauthorized')) {
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'Authentication failure!'
+                        });
+                    }
                 }
             });
         });
@@ -164,9 +195,8 @@ export class OptionsRocketChat extends SuperRocketChat{
             if (result) {
                 return checkIsAuthenticated(this.options);
             } else {
-                changeUserBtn(false, this._btn.user);
-                this._btn.user.classList.remove('btn-success');
-                this._btn.user.classList.add('btn-danger');
+                this.changeBtnDisable(false);
+                this.changeBtnClass('btn-outline-danger', 'btn-outline-success');
                 this.options.externalRoom = '';
                 this.options.internalRoom = '';
 
@@ -174,15 +204,13 @@ export class OptionsRocketChat extends SuperRocketChat{
             }
         }).then(result => {
             if (result) {
-                changeUserBtn(false, this._btn.user);
-                this._btn.user.classList.add('btn-success');
-                this._btn.user.classList.remove('btn-danger');
+                this.changeBtnDisable(false);
+                this.changeBtnClass('btn-outline-success', 'btn-outline-danger');
 
                 return getRoomList(this.options);
             } else {
-                changeUserBtn(hasPermissions, this._btn.user);
-                this._btn.user.classList.remove('btn-success');
-                this._btn.user.classList.add('btn-danger');
+                this.changeBtnDisable(hasPermissions);
+                this.changeBtnClass('btn-outline-danger', 'btn-outline-success');
 
                 return false;
             }
@@ -192,15 +220,24 @@ export class OptionsRocketChat extends SuperRocketChat{
             }
         });
     }
-}
 
-const changeUserBtn = (valid, btn) => {
-    if (valid) {
-        btn.removeAttribute('disabled');
-    } else {
-        btn.setAttribute('disabled', 'disabled');
+    changeBtnDisable(valid) {
+        if (valid) {
+            this._btn.user.removeAttribute('disabled');
+            this._btn.google.removeAttribute('disabled');
+        } else {
+            this._btn.user.setAttribute('disabled', 'disabled');
+            this._btn.google.setAttribute('disabled', 'disabled');
+        }
     }
-};
+
+    changeBtnClass (add, remove) {
+            this._btn.user.classList.remove(remove);
+            this._btn.google.classList.remove(remove);
+            this._btn.user.classList.add(add);
+            this._btn.google.classList.add(add);
+    }
+}
 
 const loginWithCredentials = (username, password, options) => {
     return new Promise(resolve => {
@@ -277,7 +314,11 @@ const getRoomList = (options) => {
 
         client.onreadystatechange = () => {
             if (XMLHttpRequest.DONE === client.readyState) {
-                resolve(JSON.parse(client.response));
+                if (401 === client.status) {
+                    resolve({success: false, unauthorized: true});
+                } else {
+                    resolve(JSON.parse(client.response));
+                }
             }
         };
 
