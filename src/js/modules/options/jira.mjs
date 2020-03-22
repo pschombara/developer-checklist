@@ -44,7 +44,7 @@ export class Jira {
                 }
             } else if ('comments' === key) {
                 for (let comment of this.options.comments) {
-                    Jira.initComment(comment.type, comment.message);
+                    this.initComment(comment.type, comment.message);
                 }
             } else {
                 let input = document.querySelector(`[data-option="${key}"]`);
