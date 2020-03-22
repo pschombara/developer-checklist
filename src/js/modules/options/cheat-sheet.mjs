@@ -33,6 +33,5 @@ export function save() {
             });
         }
     }
-    console.log(cheatSheet);
     return cheatSheet;
 }
