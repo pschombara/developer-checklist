@@ -1,5 +1,6 @@
 import * as storage from './storage.mjs';
 import * as jenkins from './jenkins.mjs';
+import * as cheatSheet from './cheat-sheet.mjs';
 import * as jira from './jira.mjs';
 import {RocketChat} from "./rocket.chat";
 
@@ -167,6 +168,7 @@ const initIssue = () => {
     document.querySelector('[data-header]').innerHTML += identifier;
 
     jenkins.init(options.jenkins ? options.jenkins : []);
+    cheatSheet.init(options.cheatSheet ? options.cheatSheet : []);
 
     storage.loadIssue(identifier).then((stored) => {
         for (let type of listTypes) {

@@ -87,6 +87,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="#special" role="tab" id="special-tab" data-toggle="tab">Special</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#cheat-sheet" role="tab" id="cheat-sheet-tab" data-toggle="tab">Cheat Sheet</a>
+            </li>
         </ul>
         <div class="tab-content" id="listTabContent">
             <div class="tab-pane fade show active" id="developer" role="tabpanel">
@@ -188,6 +191,26 @@
                                     <div class="input-group-append">
                                         <button class="btn btn-outline-secondary" type="button" data-copy="jenkins-url"><i class="fa fa-copy"></i></button>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="cheat-sheet" role="tabpanel">
+                <div class="card-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col">
+                                <input class="form-control" list="cheatSheetList"/>
+                                <datalist id="cheatSheetList" data-cheat-sheet-labels></datalist>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col input-group">
+                                <input type="text" class="form-control" data-cheat-sheet-command readonly />
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" data-copy="cheat-sheet"><i class="fa fa-copy"></i></button>
                                 </div>
                             </div>
                         </div>
