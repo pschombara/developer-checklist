@@ -39,18 +39,18 @@ export function getIssueTitle() {
     });
 }
 
-export function createComment(type) {
+export function createComment(type, comments) {
     let code;
 
     switch (type) {
         case 'tester':
-            code = '(' + sendComment + ')("h2. {color:#1e872b}Checklist{color}: Test OK! (y)")';
+            code = '(' + sendComment + ')(' + `"${comments[1].message}"` + ')';
             break;
         case 'reviewer':
-            code = '(' + sendComment + ')("h2. {color:#1e872b}Checklist{color}: Review OK! (y)")';
+            code = '(' + sendComment + ')(' + `"${comments[2].message}"` + ')';
             break;
         default:
-            code = '(' + sendComment + ')("h2. {color:#1e872b}Checklist{color}: All checked and done! (/)")';
+            code = '(' + sendComment + ')(' + `"${comments[0].message}"` + ')';
             break;
     }
 

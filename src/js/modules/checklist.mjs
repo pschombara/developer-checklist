@@ -192,7 +192,7 @@ const initIssue = () => {
 
     for (let btn of jiraCommentButtons) {
         btn.addEventListener('click', () => {
-            jira.createComment(btn.getAttribute('data-type'));
+            jira.createComment(btn.getAttribute('data-type'), options.jira.comments);
         });
     }
 
