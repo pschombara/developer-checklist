@@ -1,6 +1,7 @@
 import * as storage from './storage.mjs';
 import * as config from './options/config.mjs';
 import * as jenkins from './options/jenkins.mjs';
+import * as cheatSheet from './options/cheat-sheet.mjs';
 import './jquery.mjs';
 import 'bootstrap';
 
@@ -14,6 +15,7 @@ import {Jira} from "./options/jira";
 const listTypes = ['developer', 'tester', 'reviewer', 'help'];
 
 const addJenkins = document.querySelector('[data-add-jenkins]');
+const addCheatSheet = document.querySelector('[data-add-cheat-sheet]');
 
 const btnRestoreOptions = document.querySelector('[data-default="btn"]');
 const btnUpload = document.querySelector('[data-upload="btn"]');
@@ -77,6 +79,12 @@ const create = () => {
         }
     }
 
+    if (options.hasOwnProperty('cheatSheet')) {
+        for (let item of options.cheatSheet) {
+            cheatSheet.create(item.label, item.command);
+        }
+    }
+
     if (options.hasOwnProperty('jira')) {
         jira.options = options.jira;
     }
@@ -129,6 +137,7 @@ export function init() {
     });
 
     addJenkins.addEventListener('click', jenkins.create);
+    addCheatSheet.addEventListener('click', cheatSheet.create);
 
     btnRestoreOptions.addEventListener('click', () => {
         ConfirmationPrompt.fire({
@@ -163,6 +172,7 @@ export function save(type) {
     options.jira = jira.options;
     options.jenkins = jenkins.save();
     options.rocketChat = rocketChat.options;
+    options.cheatSheet = cheatSheet.save();
 
     for (let type of listTypes) {
         let items = document.querySelectorAll(`[data-type=${type}][data-items]`);

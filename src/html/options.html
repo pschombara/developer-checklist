@@ -33,6 +33,9 @@
                     <a class="nav-link" href="#rocket-chat" role="tab" id="rocket-chat-tab" data-toggle="tab">RocketChat</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="#cheat-sheet" role="tab" id="cheat-sheet-tab" data-toggle="tab">Cheat Sheet</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="#about" role="tab" id="about-tab" data-toggle="tab">About</a>
                 </li>
             </ul>
@@ -134,10 +137,10 @@
                 <div class="tab-pane" id="help-items" role="tabpanel">
                     <div class="accordion mt-2" data-accordion="help" id="helpAccordion"></div>
                 </div>
-                <div class="tab-pane" id="jenkins" role="tabpanel">
-                    <div class="card-body" data-jenkins data-draggable></div>
+                <div class="tab-pane" id="cheat-sheet" role="tabpanel">
+                    <div class="card-body" data-cheat-sheet data-draggable></div>
                     <div class="mt-2">
-                        <button type="button" class="btn btn-success" data-add-jenkins>+ Add</button>
+                        <button type="button" class="btn btn-success" data-add-cheat-sheet>+ Add</button>
                     </div>
                 </div>
                 <div class="tab-pane" id="rocket-chat" role="tabpanel">
@@ -196,6 +199,12 @@
                             </div>
                         </div>
                         <datalist id="rc-rooms"></datalist>
+                    </div>
+                </div>
+                <div class="tab-pane" id="jenkins" role="tabpanel">
+                    <div class="card-body" data-jenkins data-draggable></div>
+                    <div class="mt-2">
+                        <button type="button" class="btn btn-success" data-add-jenkins>+ Add</button>
                     </div>
                 </div>
                 <div class="tab-pane" id="about" role="tabpanel">
@@ -305,7 +314,21 @@
         </div>
     </div>
 </template>
-
+<template data-template="cheatSheet">
+    <div class="row mt-2" draggable="true">
+        <div class="col-1 align-items-center justify-content-center d-flex"><i class="fa fa-bars"></i></div>
+        <div class="col-3">
+            <input type="text" name="cheatSheetLabel[]" class="form-control" placeholder="Label for the command/link etc." />
+        </div>
+        <div class="col-6">
+            <input type="text" name="cheatSheetCommand[]" class="form-control" placeholder="The actual command/link etc." />
+        </div>
+        <div class="col-2 custom-control custom-switch">
+            <input class="custom-control-input" type="checkbox" name="cheatSheetDelete[]" id="%uuidCheatSheet%" />
+            <label class="custom-control-label" for="%uuidCheatSheet%">Delete</label>
+        </div>
+    </div>
+</template>
 <div class="modal" tabindex="-1" role="dialog" id="rc-modal-user">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

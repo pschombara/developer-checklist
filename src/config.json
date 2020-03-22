@@ -413,6 +413,16 @@
         "internalMessage": "@here team planning for {issue}",
         "externalMessage": "@here team planning for {issue}"
     },
+    "cheatSheet": [
+        {
+            "label": "Behat",
+            "command": "php -d memory_limit=512M vendor/bin/behat"
+        },
+        {
+            "label": "PHP Stan",
+            "command": "vendor/bin/phpstan analyse -c build/conf.d/phpstan.neon src --memory-limit 2G"
+        }
+    ],
     "jira": {
         "url": "https://jira.saitow.ag",
         "cleanup": 2,
