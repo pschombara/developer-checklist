@@ -57,7 +57,7 @@ export class OptionsRocketChat extends SuperRocketChat{
 
                     this.changeBtnClass('btn-outline-success', 'btn-outline-danger');
                     this.changeBtnDisable(false);
-                    this._form.reset();
+                    this._form.user.reset();
                     document.querySelector('[data-rc-dismiss="user"]').click();
                 } else {
                     Toast.fire({
