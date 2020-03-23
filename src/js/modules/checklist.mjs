@@ -142,8 +142,6 @@ const initOverview = () => {
                 issues++;
             }
 
-            $('[data-toggle="tooltip"]').tooltip();
-
             if (0 === (options.jira.maximumIssues ? options.jira.maximumIssues : 6) || 0 === issues) {
                 document.querySelector('[data-issues]').classList.add('d-none');
             }
@@ -371,8 +369,8 @@ const clear = () => {
         element.setAttribute('disabled', 'disabled');
     });
 };
-
 export function init(url) {
+
     if (initiated) {
         return;
     }
@@ -389,6 +387,11 @@ export function init(url) {
         } else {
             initOverview();
         }
+
+        $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="popover"]').popover({
+            trigger: "hover",
+        });
 
         initiated = true;
     });

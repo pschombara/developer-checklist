@@ -8,7 +8,7 @@
         "browserify": "^16.5.0",
         "cssnano": "^4.1.10",
         "del": "^5.1.0",
-        "font-awesome": "^4.7.0",
+        "@fortawesome/fontawesome-free": "^5.13.0",
         "gulp": "^4.0.2",
         "gulp-better-rollup": "^4.0.1",
         "gulp-clean-css": "^4.2.0",

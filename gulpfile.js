@@ -73,8 +73,8 @@ const json = () => {
 };
 
 const fonts = () => {
-    return gulp.src('node_modules/font-awesome/fonts/*')
-        .pipe(gulp.dest(build + 'fonts/'));
+    return gulp.src('node_modules/@fortawesome/fontawesome-free/webfonts/*')
+        .pipe(gulp.dest(build + 'webfonts/'));
 };
 
 const archive = () => {

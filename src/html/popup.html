@@ -17,7 +17,7 @@
     <div class="card-header">
         <div class="row">
             <div class="col-2">
-                <button type="button" data-btn="changeView" class="btn"><i class="fa fa-exchange fa-2x"></i></button>
+                <button type="button" data-btn="changeView" class="btn"><i class="fas fa-exchange-alt fa-2x"></i></button>
             </div>
             <div class="col-7">
                 <h1>Quick select</h1>
@@ -64,7 +64,7 @@
         <div class="card-header">
             <div class="row">
                 <div class="col-2">
-                    <button type="button" data-btn="changeView" class="btn"><i class="fa fa-exchange fa-2x"></i></button>
+                    <button type="button" data-btn="changeView" class="btn"><i class="fas fa-exchange-alt fa-2x"></i></button>
                 </div>
                 <div class="col-10">
                     <h1 data-header></h1>
@@ -72,23 +72,23 @@
             </div>
         </div>
         <ul class="nav nav-tabs nav-fill mt-1" id="listTab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" href="#developer" role="tab" id="dev-tab" data-toggle="tab">Developer</a>
+            <li class="nav-item" data-toggle="popover" data-content="Developer" data-placement="bottom">
+                <a class="nav-link active" href="#developer" role="tab" id="dev-tab" data-toggle="tab"><i class="fas fa-keyboard"></i></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#tester" role="tab" id="tester-tab" data-toggle="tab">Tester</a>
+            <li class="nav-item" data-toggle="popover" data-content="Tester" data-placement="bottom">
+                <a class="nav-link" href="#tester" role="tab" id="tester-tab" data-toggle="tab"><i class="fas fa-gamepad"></i></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#reviewer" role="tab" id="reviewer-tab" data-toggle="tab">Reviewer</a>
+            <li class="nav-item" data-toggle="popover" data-content="Reviewer" data-placement="bottom">
+                <a class="nav-link" href="#reviewer" role="tab" id="reviewer-tab" data-toggle="tab"><i class="fas fa-search"></i></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#help" role="tab" id="help-tab" data-toggle="tab">Help</a>
+            <li class="nav-item" data-toggle="popover" data-content="Help" data-placement="bottom">
+                <a class="nav-link" href="#help" role="tab" id="help-tab" data-toggle="tab"><i class="fas fa-question-circle"></i></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#special" role="tab" id="special-tab" data-toggle="tab">Special</a>
+            <li class="nav-item" data-toggle="popover" data-content="Special" data-placement="bottom">
+                <a class="nav-link" href="#special" role="tab" id="special-tab" data-toggle="tab"><i class="fas fa-toilet-paper"></i></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#cheat-sheet" role="tab" id="cheat-sheet-tab" data-toggle="tab">Cheat Sheet</a>
+            <li class="nav-item" data-toggle="popover" data-content="Cheat Sheet" data-placement="bottom">
+                <a class="nav-link" href="#cheat-sheet" role="tab" id="cheat-sheet-tab" data-toggle="tab"><i class="fas fa-copy"></i></a>
             </li>
         </ul>
         <div class="tab-content" id="listTabContent">
@@ -189,7 +189,7 @@
                                 <div class="input-group">
                                     <input type="url" class="form-control" data-jenkins-url readonly />
                                     <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button" data-copy="jenkins-url"><i class="fa fa-copy"></i></button>
+                                        <button class="btn btn-outline-secondary" type="button" data-copy="jenkins-url"><i class="fas fa-copy"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -210,7 +210,7 @@
                             <div class="col input-group">
                                 <input type="text" class="form-control" data-cheat-sheet-command readonly />
                                 <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button" data-copy="cheat-sheet"><i class="fa fa-copy"></i></button>
+                                    <button class="btn btn-outline-secondary" type="button" data-copy="cheat-sheet"><i class="fas fa-copy"></i></button>
                                 </div>
                             </div>
                         </div>
