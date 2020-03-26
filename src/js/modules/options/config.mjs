@@ -1,8 +1,9 @@
 import {Toast, ErrorPrompt} from "../sweet";
-import * as storage from "../storage";
 import {Validator} from "./validator";
+import {Storage} from "../storage";
 
 const validator = new Validator();
+const storage = new Storage();
 
 export function exportToJson(options) {
     let elem = document.createElement('a');
