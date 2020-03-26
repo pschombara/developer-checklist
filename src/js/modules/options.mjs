@@ -1,4 +1,3 @@
-import * as storage from './storage.mjs';
 import * as config from './options/config.mjs';
 import * as jenkins from './options/jenkins.mjs';
 import * as cheatSheet from './options/cheat-sheet.mjs';
@@ -10,6 +9,7 @@ import {ConfirmationPrompt, SuccessPrompt} from "./sweet";
 import {OptionsRocketChat} from "./options/rocket.chat";
 import {Uuid} from "./options/uuid";
 import {Jira} from "./options/jira";
+import {Storage} from "./storage";
 
 // todo replace with options
 const listTypes = ['developer', 'tester', 'reviewer', 'help'];
@@ -25,8 +25,9 @@ const templateCardList = document.querySelector('[data-template="cardList"]');
 const templateListEntry = document.querySelector('[data-template="listEntry"]');
 export const validator = new Validator();
 
-let rocketChat = new OptionsRocketChat();
-let jira = new Jira();
+const rocketChat = new OptionsRocketChat();
+const jira = new Jira();
+const storage = new Storage();
 
 let options = {};
 
