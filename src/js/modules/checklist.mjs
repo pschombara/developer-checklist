@@ -172,12 +172,16 @@ const initOverview = (cl) => {
     if (cl._missingOptions) {
         document.querySelector('.no-options').classList.remove('d-none');
     }
-};
 
-const initIssue = (cl) => {
     jenkins.init(cl._options.jenkins ? cl._options.jenkins : []);
     cheatSheet.init(cl._options.cheatSheet ? cl._options.cheatSheet : []);
 
+    cl._rocketChat.board = cl._options.jira.url;
+    cl._rocketChat.identifier = cl._identifier;
+    cl._rocketChat.init();
+};
+
+const initIssue = (cl) => {
     cl._storage.loadIssue(cl._identifier).then((stored) => {
         for (let type of cl._listTypes) {
             createList(cl, sync(cl._options.lists[type] ? cl._options.lists[type] : [], stored[type] ? stored[type] : []), type);
@@ -215,10 +219,6 @@ const initIssue = (cl) => {
     for (let tab of cl._checklistTabs) {
         tab.classList.remove('d-none');
     }
-
-    cl._rocketChat.board = cl._options.jira.url;
-    cl._rocketChat.identifier = cl._identifier;
-    cl._rocketChat.init();
 };
 
 const checkSubListFinished = (type, id, collapse, content) => {
