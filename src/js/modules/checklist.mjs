@@ -1,32 +1,53 @@
-import * as storage from './storage.mjs';
 import * as jenkins from './jenkins.mjs';
 import * as cheatSheet from './cheat-sheet.mjs';
 import * as jira from './jira.mjs';
 import {RocketChat} from "./rocket.chat";
+import {Storage} from "./storage";
 
 import './jquery.mjs';
 import 'bootstrap';
 
-// todo replace with options
-const listTypes = ['developer', 'tester', 'reviewer', 'help'];
-const browser = window.browser ? window.browser : window.chrome;
+export class Checklist {
+    constructor() {
+        this._listTypes = ['developer', 'tester', 'reviewer', 'help']; // todo replace with options
+        this._browser = window.browser ? window.browser : window.chrome;
+        this._buttons = {
+            clear: document.querySelectorAll('[data-btn="clear"]'),
+            jiraComment: document.querySelectorAll('[data-btn="comment"]'),
+        };
+        this._header = document.querySelector('[data-header]');
+        this._missingOptions = true;
+        this._jiraUrl = document.querySelectorAll('.jira_url');
+        this._issuePattern = new RegExp('[a-zA-Z]+-\\d+');
+        this._identifier = '';
+        this._options = {};
+        this._checkLists = [];
+        this._rocketChat = new RocketChat();
+        this._storage = new Storage();
+        this._issue = document.querySelector('#issue');
+        this._checklistTabs = document.querySelectorAll('[data-tab-show="checklist"]');
+    }
 
-let clearButtons = document.querySelectorAll('[data-btn="clear"]');
-let jiraCommentButtons = document.querySelectorAll('[data-btn="comment"]');
+    init(url) {
+        this._storage.loadOptions().then((result) => {
+            this._options = result;
+            checkOptions(this);
+            this._storage.cleanUp();
 
-let overviewInitiated = false;
-let issueInitiated = false;
-let initiated = false;
-let missingOptions = true;
+            if (url.includes(this._options.jira.url) && this._issuePattern.test(url)) {
+                let match = url.match(this._issuePattern)[0];
+                this._identifier = match ? match : '';
+            }
 
-let jiraUrl = document.querySelector('.jira_url');
-let issuePattern = new RegExp('\\w+-\\d+');
-let identifier = '';
+            initView(this);
 
-let options = {};
-let checkLists = [];
-
-let rocketChat = new RocketChat();
+            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="popover"]').popover({
+                trigger: "hover",
+            });
+        });
+    }
+}
 
 const checkIsChecked = (items, id) => {
     for (let item of items) {
@@ -66,62 +87,62 @@ const sync = (optionsList, issueLists) => {
     return lists;
 };
 
-const checkOptions = () => {
-    if (options.hasOwnProperty('jira')) {
-        jira.createBoards(options.jira.boards);
+const checkOptions = (cl) => {
+    if (cl._options.hasOwnProperty('jira')) {
+        jira.createBoards(cl._options.jira.boards);
 
-        if (0 !== (options.jira.boards[0].id ? options.jira.boards[0].id : 0)) {
-            jiraUrl.href = options.jira.url + `/secure/RapidBoard.jspa?rapidView=${options.jira.boards[0].id}`;
+        if (0 !== (cl._options.jira.boards[0].id ? cl._options.jira.boards[0].id : 0)) {
+            cl._jiraUrl.href = cl._options.jira.url + `/secure/RapidBoard.jspa?rapidView=${cl._options.jira.boards[0].id}`;
         } else {
-            jiraUrl.href = options.jira.url + '/secure/ManageRapidViews.jspa';
+            cl._jiraUrl.href = cl._options.jira.url + '/secure/ManageRapidViews.jspa';
         }
     }
 
-    if (options.hasOwnProperty('lists')) {
-        missingOptions = false;
+    if (cl._options.hasOwnProperty('lists')) {
+        cl._missingOptions = false;
     }
 
-    if (options.hasOwnProperty('rocketChat')) {
-        rocketChat.options = options.rocketChat;
+    if (cl._options.hasOwnProperty('rocketChat')) {
+        cl._rocketChat.options = cl._options.rocketChat;
     }
 };
 
-const initOverview = () => {
-    if (overviewInitiated) {
-        showContent('disclaimer');
-        return;
+const initView = (cl) => {
+    initOverview(cl);
+
+    if ('' === cl._identifier) {
+        cl._header.innerHTML = 'Checklist';
+    } else {
+        cl._header.innerHTML = cl._identifier;
+
+        initIssue(cl);
     }
 
+    showContent('checklist');
+};
+
+const initOverview = (cl) => {
     let buttonIssue = document.querySelector('#buttonIssue');
-    let issue = document.querySelector('#issue');
     let select = document.querySelector('[data-select="board"]');
     let issuesProgress = document.querySelector('[data-progress="issueProgress"]');
 
-    if ('' === options.jira.url ? options.jira.url : '') {
+    if ('' === cl._options.jira.url ? cl._options.jira.url : '') {
         buttonIssue.disabled = true;
     } else {
         buttonIssue.addEventListener('click', () => {
-            browser.tabs.create({url: options.jira.url + '/browse/' + select.value + '-' + issue.value});
+           cl._browser.tabs.create({url: `${cl._options.jira.url}/browse/${select.value}-${cl._issue.value}`});
         });
 
-        issue.addEventListener('keyup', (e) => {
-            if ('Enter' === e.key) {
-                e.preventDefault();
-                buttonIssue.click();
-            }
+        cl._issue.addEventListener('keyup', (e) => {
+            e.preventDefault();
+            buttonIssue.click();
         });
 
-        if ('' !== identifier) {
-            document.querySelector('[data-content="disclaimer"] [data-btn="changeView"]').addEventListener('click', initIssue);
-        } else {
-            document.querySelector('[data-content="disclaimer"] [data-btn="changeView"]').classList.add('d-none');
-        }
-
-        storage.loadIdentifiers().then((identifiers) => {
+        cl._storage.loadIdentifiers().then((identifiers) => {
             let issues = 0;
 
             for (let identifier of identifiers) {
-                if (issues >= (options.jira.maximumIssues ? options.jira.maximumIssues : 6)) {
+                if (issues >= (cl._options.jira.maximumIssues ? cl._options.jira.maximumIssues : 6)) {
                     break;
                 }
 
@@ -134,7 +155,7 @@ const initOverview = () => {
                 btn.setAttribute('title', identifier.title);
                 btn.setAttribute('data-toggle', 'tooltip');
                 btn.addEventListener('click', () => {
-                    browser.tabs.create({url: options.jira.url + '/browse/' + identifier.key});
+                    browser.tabs.create({url: `${cl._options.jira.url}/browse/${identifier.key}`});
                 });
 
                 div.appendChild(btn);
@@ -142,67 +163,62 @@ const initOverview = () => {
                 issues++;
             }
 
-            if (0 === (options.jira.maximumIssues ? options.jira.maximumIssues : 6) || 0 === issues) {
+            if (0 === (cl._options.jira.maximumIssues ? cl._options.jira.maximumIssues : 6) || 0 === issues) {
                 document.querySelector('[data-issues]').classList.add('d-none');
             }
-        })
+        });
     }
 
-    if (missingOptions) {
+    if (cl._missingOptions) {
         document.querySelector('.no-options').classList.remove('d-none');
     }
 
-    overviewInitiated = true;
+    jenkins.init(cl._options.jenkins ? cl._options.jenkins : []);
+    cheatSheet.init(cl._options.cheatSheet ? cl._options.cheatSheet : []);
 
-    showContent('disclaimer');
+    cl._rocketChat.board = cl._options.jira.url;
+    cl._rocketChat.identifier = cl._identifier;
+    cl._rocketChat.init();
 };
 
-const initIssue = () => {
-    if (issueInitiated) {
-        showContent('checklist');
-        return;
-    }
-
-    document.querySelector('[data-header]').innerHTML += identifier;
-
-    jenkins.init(options.jenkins ? options.jenkins : []);
-    cheatSheet.init(options.cheatSheet ? options.cheatSheet : []);
-
-    storage.loadIssue(identifier).then((stored) => {
-        for (let type of listTypes) {
-            createList(sync(options.lists[type] ? options.lists[type] : [], stored[type] ? stored[type] : []), type);
+const initIssue = (cl) => {
+    cl._storage.loadIssue(cl._identifier).then((stored) => {
+        for (let type of cl._listTypes) {
+            createList(cl, sync(cl._options.lists[type] ? cl._options.lists[type] : [], stored[type] ? stored[type] : []), type);
         }
 
-        save();
+        save(cl);
 
         if (stored.hasOwnProperty('openTab')) {
             document.querySelector(`#${stored.openTab}`).click();
         }
     });
 
-    for (let btn of clearButtons) {
-        btn.addEventListener('click', clear);
-    }
-
-    document.querySelector('[data-content="checklist"] [data-btn="changeView"]').addEventListener('click', initOverview);
-
-    Array.prototype.map.call(document.querySelectorAll('#listTab .nav-item'), (nav) => {
-        $(nav).on('shown.bs.tab', save);
-    });
-
-    for (let btn of jiraCommentButtons) {
+    for (let btn of cl._buttons.clear) {
         btn.addEventListener('click', () => {
-            jira.createComment(btn.getAttribute('data-type'), options.jira.comments);
+            clear(cl);
         });
     }
 
-    rocketChat.board = options.jira.url;
-    rocketChat.identifier = identifier;
-    rocketChat.init();
+    Array.prototype.map.call(document.querySelectorAll('#listTab .nav-item'), (nav) => {
+        $(nav).on('shown.bs.tab', () => {
+            save(cl);
 
-    showContent('checklist');
+            if ('Quick Select' === nav.getAttribute('data-content')) {
+                cl._issue.focus();
+            }
+        });
+    });
 
-    issueInitiated = true;
+    for (let btn of cl._buttons.jiraComment) {
+        btn.addEventListener('click', () => {
+            jira.createComment(btn.getAttribute('data-type'), cl._options.jira.comments);
+        });
+    }
+
+    for (let tab of cl._checklistTabs) {
+        tab.classList.remove('d-none');
+    }
 };
 
 const checkSubListFinished = (type, id, collapse, content) => {
@@ -231,24 +247,24 @@ const checkIfFinished = (type) => {
     }
 };
 
-const checkListEntry = (contentId, id, isChecked, type) => {
-    for (let key in checkLists[type][contentId - 1].items) {
-        if (checkLists[type][contentId - 1].items[key].id === id) {
-            checkLists[type][contentId - 1].items[key].checked = isChecked;
+const checkListEntry = (cl, contentId, id, isChecked, type) => {
+    for (let key in cl._checkLists[type][contentId - 1].items) {
+        if (cl._checkLists[type][contentId - 1].items[key].id === id) {
+            cl._checkLists[type][contentId - 1].items[key].checked = isChecked;
 
-            save();
+            save(cl);
 
             return;
         }
     }
 };
 
-const createList = (loadedLists, type) => {
+const createList = (cl, loadedLists, type) => {
     let lists = document.querySelector(`[data-list="${type}"]`);
     let template = document.querySelector('[data-template="list"]');
-    checkLists[type] = loadedLists;
+    cl._checkLists[type] = loadedLists;
 
-    for (let list of checkLists[type]) {
+    for (let list of cl._checkLists[type]) {
         let temp = template.innerHTML;
 
         temp = temp.replace(new RegExp('%number%', 'g'), list.id);
@@ -264,7 +280,7 @@ const createList = (loadedLists, type) => {
             content.classList.toggle('d-none');
         });
 
-        if (checkLists[type].length > 1) {
+        if (cl._checkLists[type].length > 1) {
             content.classList.add('d-none');
         }
 
@@ -284,7 +300,7 @@ const createList = (loadedLists, type) => {
 
                 checkSubListFinished(type, list.id, collapse, content);
                 checkIfFinished(type);
-                checkListEntry(list.id, item.id, li.classList.contains('checked'), type);
+                checkListEntry(cl, list.id, item.id, li.classList.contains('checked'), type);
             });
 
             content.appendChild(li);
@@ -306,26 +322,22 @@ const showContent = (contentType) => {
             content.classList.add('d-none');
         }
     }
-
-    if ('disclaimer' === contentType) {
-        document.querySelector('#issue').focus();
-    }
 };
 
-const save = () => {
-    reduceLists().then((lists) => {
-        storage.write(identifier, lists);
+const save = (cl) => {
+    reduceLists(cl).then((lists) => {
+        cl._storage.write(cl._identifier, lists);
     });
 };
 
-const reduceLists = () => {
+const reduceLists = (cl) => {
     return new Promise(resolve => {
         let lists = {};
 
-        for (let type of listTypes) {
+        for (let type of cl._listTypes) {
             lists[type] = [];
 
-            for (let content of checkLists[type]) {
+            for (let content of cl._checkLists[type]) {
                 let items = [];
 
                 for (let item of content.items) {
@@ -353,9 +365,9 @@ const reduceLists = () => {
     });
 };
 
-const clear = () => {
-    checkLists = options.lists;
-    save();
+const clear = (cl) => {
+    cl._checkLists = cl._options.lists;
+    save(cl);
 
     document.querySelectorAll('[data-collapse].checked').forEach((element) => {
         element.classList.remove('checked');
@@ -369,30 +381,3 @@ const clear = () => {
         element.setAttribute('disabled', 'disabled');
     });
 };
-export function init(url) {
-
-    if (initiated) {
-        return;
-    }
-
-    storage.loadOptions().then((result) => {
-        options = result;
-        checkOptions();
-        storage.cleanUp();
-
-        if (url.includes(options.jira.url) && issuePattern.test(url)) {
-            let match = url.match(issuePattern)[0];
-            identifier = match ? match : '';
-            initIssue();
-        } else {
-            initOverview();
-        }
-
-        $('[data-toggle="tooltip"]').tooltip();
-        $('[data-toggle="popover"]').popover({
-            trigger: "hover",
-        });
-
-        initiated = true;
-    });
-}

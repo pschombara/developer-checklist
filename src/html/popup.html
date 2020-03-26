@@ -13,86 +13,76 @@
         </div>
     </div>
 </div>
-<div class="app--content disclaimer d-none" data-content="disclaimer">
-    <div class="card-header">
-        <div class="row">
-            <div class="col-2">
-                <button type="button" data-btn="changeView" class="btn"><i class="fas fa-exchange-alt fa-2x"></i></button>
-            </div>
-            <div class="col-7">
-                <h1>Quick select</h1>
-            </div>
-        </div>
-    </div>
-    <div class="card-body">
-        <div class="row">
-            <div class="col font-weight-bold">Go to</div>
-        </div>
-        <div class="row mt-2">
-            <div class="col-4">
-                <select data-select="board" class="form-control"></select>
-            </div>
-            <div class="col-5">
-                <input id="issue" type="text" class="form-control"/>
-            </div>
-            <div class="col-3">
-                <button type="button" id="buttonIssue" class="btn btn-primary issue">GO!</button>
-            </div>
-        </div>
-        <div class="row mt-4" data-issues>
-            <label class="col font-weight-bold">Issues in progress:</label>
-        </div>
-        <div class="row mt-1" data-progress="issueProgress">
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <span class="no-options d-none">Es wurden noch keine Optionen gespeichert!</span>
-            </div>
-        </div>
-    </div>
-    <div class="card-footer">
-        <div class="row">
-            <div class="col-sm-12">
-                To use the checklist, go to your <a class="jira_url" href="#" target="blank">JIRA board</a> and select
-                the <strong>issue</strong> you're working on.
-            </div>
-        </div>
-    </div>
-</div>
 <div class="app--content d-none" data-content="checklist">
     <div class="card">
         <div class="card-header">
-            <div class="row">
-                <div class="col-2">
-                    <button type="button" data-btn="changeView" class="btn"><i class="fas fa-exchange-alt fa-2x"></i></button>
-                </div>
-                <div class="col-10">
+            <div class="row text-center">
+                <div class="col">
                     <h1 data-header></h1>
                 </div>
             </div>
         </div>
         <ul class="nav nav-tabs nav-fill mt-1" id="listTab" role="tablist">
-            <li class="nav-item" data-toggle="popover" data-content="Developer" data-placement="bottom">
-                <a class="nav-link active" href="#developer" role="tab" id="dev-tab" data-toggle="tab"><i class="fas fa-keyboard"></i></a>
+            <li class="nav-item" data-tab-show="all" data-toggle="popover" data-content="Quick Select" data-placement="bottom">
+                <a class="nav-link active" href="#quick-list" role="tab" id="quick-tab" data-toggle="tab"><i class="fas fa-bookmark"></i></a>
             </li>
-            <li class="nav-item" data-toggle="popover" data-content="Tester" data-placement="bottom">
+            <li class="nav-item d-none" data-tab-show="checklist" data-toggle="popover" data-content="Developer" data-placement="bottom">
+                <a class="nav-link" href="#developer" role="tab" id="dev-tab" data-toggle="tab"><i class="fas fa-keyboard"></i></a>
+            </li>
+            <li class="nav-item d-none" data-tab-show="checklist" data-toggle="popover" data-content="Tester" data-placement="bottom">
                 <a class="nav-link" href="#tester" role="tab" id="tester-tab" data-toggle="tab"><i class="fas fa-gamepad"></i></a>
             </li>
-            <li class="nav-item" data-toggle="popover" data-content="Reviewer" data-placement="bottom">
+            <li class="nav-item d-none" data-tab-show="checklist" data-toggle="popover" data-content="Reviewer" data-placement="bottom">
                 <a class="nav-link" href="#reviewer" role="tab" id="reviewer-tab" data-toggle="tab"><i class="fas fa-bug"></i></a>
             </li>
-            <li class="nav-item" data-toggle="popover" data-content="Help" data-placement="bottom">
+            <li class="nav-item d-none" data-tab-show="checklist" data-toggle="popover" data-content="Help" data-placement="bottom">
                 <a class="nav-link" href="#help" role="tab" id="help-tab" data-toggle="tab"><i class="fas fa-question-circle"></i></a>
             </li>
-            <li class="nav-item" data-toggle="popover" data-content="Special" data-placement="bottom">
+            <li class="nav-item" data-tab-show="all" data-toggle="popover" data-content="Special" data-placement="bottom">
                 <a class="nav-link" href="#special" role="tab" id="special-tab" data-toggle="tab"><i class="fas fa-toilet-paper"></i></a>
             </li>
-            <li class="nav-item" data-toggle="popover" data-content="Cheat Sheet" data-placement="bottom">
+            <li class="nav-item" data-tab-show="all" data-toggle="popover" data-content="Cheat Sheet" data-placement="bottom">
                 <a class="nav-link" href="#cheat-sheet" role="tab" id="cheat-sheet-tab" data-toggle="tab"><i class="fas fa-terminal"></i></a>
             </li>
         </ul>
         <div class="tab-content" id="listTabContent">
-            <div class="tab-pane fade show active" id="developer" role="tabpanel">
+            <div class="tab-pane fade show active" id="quick-list" role="tabpanel">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col font-weight-bold">Go to</div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-4">
+                            <select data-select="board" class="form-control"></select>
+                        </div>
+                        <div class="col-5">
+                            <input id="issue" type="text" class="form-control" />
+                        </div>
+                        <div class="col-3">
+                            <button type="button" id="buttonIssue" class="btn btn-primary issue">GO!</button>
+                        </div>
+                    </div>
+                    <div class="row mt-4" data-issues>
+                        <label class="col font-weight-bold">Issues in progress:</label>
+                    </div>
+                    <div class="row mt-1" data-progress="issueProgress">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <span class="no-options d-none">Es wurden noch keine Optionen gespeichert!</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            To use the checklist, go to your <a class="jira_url" href="#" target="blank">JIRA board</a> and select
+                            the <strong>issue</strong> you're working on.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="developer" role="tabpanel">
                 <div class="card-body" data-list="developer">
 
                 </div>
@@ -107,7 +97,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane" id="tester" role="tabpanel">
+            <div class="tab-pane fade" id="tester" role="tabpanel">
                 <div class="card-body" data-list="tester">
 
                 </div>
@@ -122,7 +112,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane" id="reviewer" role="tabpanel">
+            <div class="tab-pane fade" id="reviewer" role="tabpanel">
                 <div class="card-body" data-list="reviewer">
 
                 </div>
@@ -137,7 +127,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane" id="help" role="tabpanel">
+            <div class="tab-pane fade" id="help" role="tabpanel">
                 <div class="card-body" data-list="help">
 
                 </div>
@@ -149,7 +139,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane" id="special" role="tabpanel">
+            <div class="tab-pane fade" id="special" role="tabpanel">
                 <div class="card-body">
                     <div class="container-fluid">
                         <div class="row">
@@ -197,7 +187,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane" id="cheat-sheet" role="tabpanel">
+            <div class="tab-pane fade" id="cheat-sheet" role="tabpanel">
                 <div class="card-body">
                     <div class="container-fluid">
                         <div class="row">
