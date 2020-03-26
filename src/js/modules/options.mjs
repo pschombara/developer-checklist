@@ -109,18 +109,6 @@ const create = () => {
     $('[data-toggle="collapse"]').collapse();
 };
 
-const saveInputOptions = () => {
-    let inputOptions = document.querySelectorAll('[name="option[]"]');
-
-    for (let option of inputOptions) {
-        if ('number' === option.getAttribute('type')) {
-            options[option.getAttribute('data-option')] = parseInt(option.value);
-        } else {
-            options[option.getAttribute('data-option')] = option.value;
-        }
-    }
-};
-
 
 export function init() {
     storage.loadOptions().then(stored => {
@@ -165,6 +153,11 @@ export function init() {
     });
 
     fileUpload.addEventListener('change', config.importFromJson);
+
+    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="popover"]').popover({
+        trigger: 'hover',
+    });
 }
 
 export function save(type) {

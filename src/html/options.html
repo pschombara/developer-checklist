@@ -11,32 +11,32 @@
         <div class="col">
             <h1>Options</h1>
             <ul class="nav nav-tabs" id="optionsTab" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#general" role="tab" id="general-tab" data-toggle="tab">General</a>
+                <li class="nav-item" data-toggle="popover" data-content="Jira" data-placement="bottom">
+                    <a class="nav-link active" href="#general" role="tab" id="general-tab" data-toggle="tab"><i class="fab fa-jira"></i></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#developer-items" role="tab" id="list-items-tab" data-toggle="tab">Developer items</a>
+                <li class="nav-item" data-toggle="popover" data-content="Developer items" data-placement="bottom">
+                    <a class="nav-link" href="#developer-items" role="tab" id="list-items-tab" data-toggle="tab"><i class="fas fa-keyboard"></i></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#tester-items" role="tab" id="tester-items-tab" data-toggle="tab">Tester items</a>
+                <li class="nav-item" data-toggle="popover" data-content="Tester items" data-placement="bottom">
+                    <a class="nav-link" href="#tester-items" role="tab" id="tester-items-tab" data-toggle="tab"><i class="fas fa-gamepad"></i></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#reviewer-items" role="tab" id="reviewer-items-tab" data-toggle="tab">Reviewer items</a>
+                <li class="nav-item" data-toggle="popover" data-content="Reviewer items" data-placement="bottom">
+                    <a class="nav-link" href="#reviewer-items" role="tab" id="reviewer-items-tab" data-toggle="tab"><i class="fas fa-bug"></i></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#help-items" role="tab" id="help-items-tab" data-toggle="tab">Help items</a>
+                <li class="nav-item" data-toggle="popover" data-content="Help items" data-placement="bottom">
+                    <a class="nav-link" href="#help-items" role="tab" id="help-items-tab" data-toggle="tab"><i class="fas fa-question-circle"></i></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#jenkins" role="tab" id="jenkins-tab" data-toggle="tab">Jenkins</a>
+                <li class="nav-item" data-toggle="popover" data-content="Jenkins" data-placement="bottom">
+                    <a class="nav-link" href="#jenkins" role="tab" id="jenkins-tab" data-toggle="tab"><i class="fab fa-jenkins"></i></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#rocket-chat" role="tab" id="rocket-chat-tab" data-toggle="tab">RocketChat</a>
+                <li class="nav-item" data-toggle="popover" data-content="Rocket.Chat" data-placement="bottom">
+                    <a class="nav-link" href="#rocket-chat" role="tab" id="rocket-chat-tab" data-toggle="tab"><i class="fab fa-rocketchat"></i></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#cheat-sheet" role="tab" id="cheat-sheet-tab" data-toggle="tab">Cheat Sheet</a>
+                <li class="nav-item" data-toggle="popover" data-content="Cheat Sheet" data-placement="bottom">
+                    <a class="nav-link" href="#cheat-sheet" role="tab" id="cheat-sheet-tab" data-toggle="tab"><i class="fas fa-terminal"></i></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#about" role="tab" id="about-tab" data-toggle="tab">About</a>
+                <li class="nav-item" data-toggle="popover" data-content="About" data-placement="bottom">
+                    <a class="nav-link" href="#about" role="tab" id="about-tab" data-toggle="tab"><i class="fas fa-info-circle"></i></a>
                 </li>
             </ul>
 
@@ -93,7 +93,7 @@
                                 <input class="form-control" id="jira-dev-comment" placeholder="h2. {color:#1e872b}Checklist{color}: All checked and done! (/)" />
                                 <div class="input-group-append" data-toggle="tooltip" title="You can use Jira syntax to create and style your message!">
                                     <span class="input-group-text">
-                                        <i class="fa fa-lg fa-question"></i>
+                                        <i class="fas fa-lg fa-question"></i>
                                     </span>
                                 </div>
                             </div>
@@ -104,7 +104,7 @@
                                 <input class="form-control" id="jira-test-comment" placeholder="h2. {color:#1e872b}Checklist{color}: Test OK! (y)" />
                                 <div class="input-group-append" data-toggle="tooltip" title="You can use Jira syntax to create and style your message!">
                                     <span class="input-group-text">
-                                        <i class="fa fa-lg fa-question"></i>
+                                        <i class="fas fa-lg fa-question"></i>
                                     </span>
                                 </div>
                             </div>
@@ -115,7 +115,7 @@
                                 <input class="form-control" id="jira-review-comment" placeholder="h2. {color:#1e872b}Checklist{color}: Review OK! (y)" />
                                 <div class="input-group-append" data-toggle="tooltip" title="You can use Jira syntax to create and style your message!">
                                     <span class="input-group-text">
-                                        <i class="fa fa-lg fa-question"></i>
+                                        <i class="fas fa-lg fa-question"></i>
                                     </span>
                                 </div>
                             </div>
@@ -154,12 +154,12 @@
                                 </div>
                                 <div class="input-group-append">
                                     <button type="button" class="btn btn-outline-danger" data-rc-user data-toggle="modal" data-target="#rc-modal-user">
-                                        <i class="fa fa-sign-in"></i>
+                                        <i class="fas fa-sign-in-alt"></i>
                                     </button>
                                 </div>
                                 <div class="input-group-append">
                                     <button type="button" class="btn btn-outline-danger" data-rc-google data-toggle="modal" data-target="#rc-modal-google">
-                                        <i class="fa fa-google"></i>
+                                        <i class="fab fa-google"></i>
                                     </button>
                                 </div>
                             </div>
@@ -182,7 +182,7 @@
                                 <input class="form-control" type="text" id="rc-message-internal" placeholder="@here team planning for {issue}" />
                                 <div class="input-group-append" data-toggle="tooltip" title="Add {issue} as a placeholder for an external link to the issue.">
                                     <span class="input-group-text">
-                                        <i class="fa fa-lg fa-question"></i>
+                                        <i class="fas fa-lg fa-question"></i>
                                     </span>
                                 </div>
                             </div>
@@ -193,7 +193,7 @@
                                 <input class="form-control" type="text" id="rc-message-external" placeholder="@here team planning for {issue}" />
                                 <div class="input-group-append" data-toggle="tooltip" title="Add {issue} as a placeholder for an external link to the issue.">
                                     <span class="input-group-text">
-                                        <i class="fa fa-lg fa-question"></i>
+                                        <i class="fas fa-lg fa-question"></i>
                                     </span>
                                 </div>
                             </div>
@@ -227,7 +227,7 @@
                                 <input type="image" src="https://www.paypalobjects.com/en_US/DK/i/btn/btn_donateCC_LG.gif"
                                        name="submit" title="PayPal - The safer, easier way to pay online!"
                                        alt="Donate with PayPal button"/>
-                                <img alt="" src="https://www.paypal.com/en_DE/i/scr/pixel.gif" width="1" height="1"/>
+                                <img alt="" src="https://www.paypal.com/de_DE/i/scr/pixel.gif" width="1" height="1"/>
                             </form>
                         </div>
                     </div>
@@ -248,7 +248,7 @@
 
 <template data-template="board">
     <div class="row mb-2" draggable="true">
-        <div class="col-1 align-items-center justify-content-center d-flex"><i class="fa fa-bars"></i></div>
+        <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
         <div class="col-3">
             <input type="number" name="boardId[]" min="0" placeholder="The id of the board" class="form-control"/>
         </div>
@@ -294,7 +294,7 @@
 </template>
 <template data-template="jenkins">
     <div class="row mt-2" draggable="true">
-        <div class="col-1 align-items-center justify-content-center d-flex"><i class="fa fa-bars"></i></div>
+        <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
         <div class="col-2">
             <select name="jenkinsType[]" class="form-control">
                 <option>REST Bundles</option>
@@ -316,7 +316,7 @@
 </template>
 <template data-template="cheatSheet">
     <div class="row mt-2" draggable="true">
-        <div class="col-1 align-items-center justify-content-center d-flex"><i class="fa fa-bars"></i></div>
+        <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
         <div class="col-3">
             <input type="text" name="cheatSheetLabel[]" class="form-control" placeholder="Label for the command/link etc." />
         </div>
@@ -352,7 +352,7 @@
                         <label for="rc-user" class="col-form-label col-4">Username</label>
                         <div class="col-6 input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
                             </div>
                             <input type="text" id="rc-user" class="form-control" name="_username" />
                         </div>
@@ -361,7 +361,7 @@
                         <label for="rc-password" class="col-form-label col-4">Password</label>
                         <div class="col-6 input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
                             </div>
                             <input type="password" id="rc-password" class="form-control" name="_password" />
                         </div>
@@ -401,7 +401,7 @@
                         <label for="rc-user-id" class="col-form-label col-4">User-Id</label>
                         <div class="col-6 input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
                             </div>
                             <input type="text" id="rc-user-id" class="form-control" name="_username" />
                         </div>
@@ -410,7 +410,7 @@
                         <label for="rc-api-key" class="col-form-label col-4">API-Key</label>
                         <div class="col-6 input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
                             </div>
                             <input type="password" id="rc-api-key" class="form-control" name="_password" />
                         </div>
