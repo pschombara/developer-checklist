@@ -1,8 +1,8 @@
 import * as jenkins from './jenkins.mjs';
 import * as cheatSheet from './cheat-sheet.mjs';
-import * as jira from './jira.mjs';
 import {RocketChat} from "./rocket.chat";
 import {Storage} from "./storage";
+import {Jira} from "./jira";
 
 import './jquery.mjs';
 import 'bootstrap';
@@ -24,6 +24,7 @@ export class Checklist {
         this._checkLists = [];
         this._rocketChat = new RocketChat();
         this._storage = new Storage();
+        this._jira = new Jira();
         this._issue = document.querySelector('#issue');
         this._checklistTabs = document.querySelectorAll('[data-tab-show="checklist"]');
     }
@@ -89,7 +90,8 @@ const sync = (optionsList, issueLists) => {
 
 const checkOptions = (cl) => {
     if (cl._options.hasOwnProperty('jira')) {
-        jira.createBoards(cl._options.jira.boards);
+        cl._jira.options = cl._options.jira;
+        cl._jira.createBoards();
 
         if (0 !== (cl._options.jira.boards[0].id ? cl._options.jira.boards[0].id : 0)) {
             cl._jiraUrl.href = cl._options.jira.url + `/secure/RapidBoard.jspa?rapidView=${cl._options.jira.boards[0].id}`;
@@ -118,7 +120,7 @@ const initView = (cl) => {
         initIssue(cl);
     }
 
-    showContent('checklist');
+    showContent('checklist', cl);
 };
 
 const initOverview = (cl) => {
@@ -212,7 +214,7 @@ const initIssue = (cl) => {
 
     for (let btn of cl._buttons.jiraComment) {
         btn.addEventListener('click', () => {
-            jira.createComment(btn.getAttribute('data-type'), cl._options.jira.comments);
+            cl._jira.createComment(btn.getAttribute('data-type'));
         });
     }
 
@@ -238,7 +240,7 @@ const checkIfFinished = (type) => {
     }
 
     let listNotFinished = document.querySelectorAll(`[data-list="${type}"] [data-check]:not(.checked)`);
-    let btn = document.querySelector(`[data-type="${type}"][data-btn="comment"]`);
+    let btn = document.querySelector(`#${type} [data-btn="comment"][data-comment="success"]`);
 
     btn.setAttribute('disabled', 'disabled');
 
@@ -312,7 +314,7 @@ const createList = (cl, loadedLists, type) => {
     }
 };
 
-const showContent = (contentType) => {
+const showContent = (contentType, cl) => {
     let contents = document.querySelectorAll('.app--content[data-content]');
 
     for (let content of contents) {
@@ -321,6 +323,10 @@ const showContent = (contentType) => {
         } else {
             content.classList.add('d-none');
         }
+    }
+
+    if (cl._issue.closest('.tab-pane').classList.contains('show')) {
+        cl._issue.focus();
     }
 };
 
@@ -357,7 +363,7 @@ const reduceLists = (cl) => {
         lists.updateDate = Math.floor(Date.now() / 1000);
         lists.openTab = document.querySelector('#listTab .nav-link.active').getAttribute('id');
 
-        jira.getIssueTitle().then((result) => {
+        cl._jira.getIssueTitle().then((result) => {
             lists.title = result;
 
             resolve(lists);

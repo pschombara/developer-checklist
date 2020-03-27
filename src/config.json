@@ -419,6 +419,10 @@
             "command": "php -d memory_limit=512M vendor/bin/behat"
         },
         {
+            "label": "Behat progress",
+            "command": "php -d memory_limit=512M vendor/bin/behat -f progress"
+        },
+        {
             "label": "PHP Stan",
             "command": "vendor/bin/phpstan analyse -c build/conf.d/phpstan.neon src --memory-limit 2G"
         },
@@ -461,19 +465,12 @@
                 "key": "TYR"
             }
         ],
-        "comments": [
-            {
-                "type": "developer",
-                "message": "h2. {color:#1e872b}Checklist{color}: All checked and done! (/)"
-            },
-            {
-                "type": "tester",
-                "message":  "h2. {color:#1e872b}Checklist{color}: Test OK! (y)"
-            },
-            {
-                "type": "reviewer",
-                "message":  "h2. {color:#1e872b}Checklist{color}: Review OK! (y)"
-            }
-        ]
+        "comments": {
+            "develop-success": "h4. {color:#1e872b}Checklist{color}: All checked and done! (/)",
+            "test-success": "h4. Test {color:#1e872b}OK{color} (/)",
+            "test-failed": "h4. Test {color:#de350b}failed{color} (x)",
+            "review-success": "h4. Review {color:#1e872b}OK{color} (/)",
+            "review-failed": "h4. Review {color:#de350b}failed{color} (x)"
+        }
     }
 }

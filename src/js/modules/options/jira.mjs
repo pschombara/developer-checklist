@@ -1,15 +1,10 @@
 import {DragDrop} from "./drag-drop";
 import {Uuid} from "./uuid";
+import {SuperJira} from "../super/super.jira";
 
-export class Jira {
+export class Jira extends SuperJira{
     constructor() {
-        this._options = {
-            url: '',
-            cleanup: 2,
-            maximumIssues: 6,
-            boards: [],
-            comments: []
-        };
+        super();
 
         this._template = {
             boards: document.querySelector('[data-template="board"]'),
@@ -21,19 +16,9 @@ export class Jira {
 
         this._btn = {
             addBoard: document.querySelector('[data-add-board]'),
-        }
-    }
+        };
 
-    get options() {
-        return this._options;
-    };
-
-    set options(options) {
-        Object.keys(options).forEach((key) => {
-            if (this._options.hasOwnProperty(key)) {
-                this._options[key] = options[key];
-            }
-        });
+        this._comments = document.querySelectorAll('[data-jira-comment]');
     }
 
     init() {
@@ -41,10 +26,6 @@ export class Jira {
             if ('boards' === key) {
                 for (let board of this.options.boards) {
                     this.createBoard(board.id, board.key);
-                }
-            } else if ('comments' === key) {
-                for (let comment of this.options.comments) {
-                    this.initComment(comment.type, comment.message);
                 }
             } else {
                 let input = document.querySelector(`[data-option="${key}"]`);
@@ -55,21 +36,17 @@ export class Jira {
             }
         });
 
-        this._btn.addBoard.addEventListener('click', this.createBoard);
-    }
+        for (let comment of this._comments) {
+            if (this.options.comments.hasOwnProperty(comment.getAttribute('data-jira-comment'))) {
+                comment.value = this.options.comments[comment.getAttribute('data-jira-comment')];
 
-    initComment(type, key) {
-        switch (type) {
-            case 'tester':
-                document.querySelector('#jira-test-comment').value = key;
-                break;
-            case 'reviewer':
-                document.querySelector('#jira-review-comment').value = key;
-                break;
-            default:
-                document.querySelector('#jira-dev-comment').value = key;
-                break;
+                comment.addEventListener('change', () => {
+                    this.options.comments[comment.getAttribute('data-jira-comment')] = comment.value;
+                });
+            }
         }
+
+        this._btn.addBoard.addEventListener('click', this.createBoard);
     }
 
     createBoard(id = null, key = '') {
@@ -98,21 +75,6 @@ export class Jira {
                 this.options[option.getAttribute('data-option')] = option.value;
             }
         }
-
-        this.options.comments = [
-            {
-                type: "developer",
-                message: document.querySelector('#jira-dev-comment').value
-            },
-            {
-                type: "tester",
-                message: document.querySelector('#jira-test-comment').value
-            },
-            {
-                type: "reviewer",
-                message: document.querySelector('#jira-review-comment').value
-            }
-        ];
 
         this.options.boards = [];
 

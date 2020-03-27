@@ -88,9 +88,9 @@
                             <h5 class="col">Jira Comments</h5>
                         </div>
                         <div class="row">
-                            <label for="jira-dev-comment" class="col-form-label col-4">Developer</label>
+                            <label for="jira-dev-comment-success" class="col-form-label col-4">Developer</label>
                             <div class="col-6 input-group">
-                                <input class="form-control" id="jira-dev-comment" placeholder="h2. {color:#1e872b}Checklist{color}: All checked and done! (/)" />
+                                <input class="form-control" id="jira-dev-comment-success" placeholder="h4. {color:#1e872b}Checklist{color}: All checked and done! (/)" data-jira-comment="develop-success" />
                                 <div class="input-group-append" data-toggle="tooltip" title="You can use Jira syntax to create and style your message!">
                                     <span class="input-group-text">
                                         <i class="fas fa-lg fa-question"></i>
@@ -99,9 +99,9 @@
                             </div>
                         </div>
                         <div class="row mt-4">
-                            <label for="jira-test-comment" class="col-form-label col-4">Tester</label>
+                            <label for="jira-test-comment-success" class="col-form-label col-4">Test Success</label>
                             <div class="col-6 input-group">
-                                <input class="form-control" id="jira-test-comment" placeholder="h2. {color:#1e872b}Checklist{color}: Test OK! (y)" />
+                                <input class="form-control" id="jira-test-comment-success" placeholder="h4. Test {color:#1e872b}OK{color} (/)" data-jira-comment="test-success" />
                                 <div class="input-group-append" data-toggle="tooltip" title="You can use Jira syntax to create and style your message!">
                                     <span class="input-group-text">
                                         <i class="fas fa-lg fa-question"></i>
@@ -110,9 +110,31 @@
                             </div>
                         </div>
                         <div class="row mt-4">
-                            <label for="jira-review-comment" class="col-form-label col-4">Reviewer</label>
+                            <label for="jira-test-comment-failed" class="col-form-label col-4">Test Failed</label>
                             <div class="col-6 input-group">
-                                <input class="form-control" id="jira-review-comment" placeholder="h2. {color:#1e872b}Checklist{color}: Review OK! (y)" />
+                                <input class="form-control" id="jira-test-comment-failed" placeholder="h4. Test {color:#de350b}failed{color} (x)" data-jira-comment="test-failed" />
+                                <div class="input-group-append" data-toggle="tooltip" title="You can use Jira syntax to create and style your message!">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-lg fa-question"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <label for="jira-review-comment-success" class="col-form-label col-4">Review Success</label>
+                            <div class="col-6 input-group">
+                                <input class="form-control" id="jira-review-comment-success" placeholder="h4. Review {color:#1e872b}OK{color} (/)" data-jira-comment="review-success" />
+                                <div class="input-group-append" data-toggle="tooltip" title="You can use Jira syntax to create and style your message!">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-lg fa-question"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <label for="jira-review-comment-failed" class="col-form-label col-4">Review Failed</label>
+                            <div class="col-6 input-group">
+                                <input class="form-control" id="jira-review-comment-failed" placeholder="h4. Review {color:#de350b}failed{color} (x)" data-jira-comment="review-failed" />
                                 <div class="input-group-append" data-toggle="tooltip" title="You can use Jira syntax to create and style your message!">
                                     <span class="input-group-text">
                                         <i class="fas fa-lg fa-question"></i>
@@ -286,8 +308,9 @@
         <div class="col-8">
             <input type="text" name="item[%number%][]" class="form-control" data-item="%number%" />
         </div>
-        <div class="col-4">
-            <label><input type="checkbox" name="delete[%number%][]" value="%identifier%" data-delete="%number%"/> Delete</label>
+        <div class="col-4 custom-control custom-switch">
+            <input class="custom-control-input" type="checkbox" name="delete[%number%][]" id="delete%identifier%" value="%identifier%" data-delete="%number%" />
+            <label class="custom-control-label" for="delete%identifier%">Delete</label>
         </div>
         <input type="hidden" name="identifier[%number%]" value="%identifier%" data-identifier="%number%" />
     </div>
