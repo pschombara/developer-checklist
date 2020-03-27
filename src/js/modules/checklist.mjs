@@ -137,7 +137,10 @@ const initOverview = (cl) => {
 
         cl._issue.addEventListener('keyup', (e) => {
             e.preventDefault();
-            buttonIssue.click();
+
+            if ('Enter' === e.key) {
+                buttonIssue.click();
+            }
         });
 
         cl._storage.loadIdentifiers().then((identifiers) => {
