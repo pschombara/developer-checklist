@@ -157,7 +157,7 @@ const initOverview = (cl) => {
                 btn.setAttribute('title', identifier.title);
                 btn.setAttribute('data-toggle', 'tooltip');
                 btn.addEventListener('click', () => {
-                    browser.tabs.create({url: `${cl._options.jira.url}/browse/${identifier.key}`});
+                    cl._browser.tabs.create({url: `${cl._options.jira.url}/browse/${identifier.key}`});
                 });
 
                 div.appendChild(btn);
