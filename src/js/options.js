@@ -1,16 +1,18 @@
-import * as options from './modules/options.mjs';
+import './modules/jquery'
+import 'bootstrap';
 import {ErrorPrompt, Toast,} from "./modules/sweet";
-import {validator} from "./modules/options";
+import {Options} from "./modules/options";
 
 (() => {
     const saves = document.querySelectorAll('[data-save]');
+    const options = new Options();
 
     for (let save of saves) {
         save.addEventListener('click', () => {
             if (false === options.save(save.getAttribute('data-save'))) {
                 ErrorPrompt.fire({
                     title: 'One or more options are invalid!',
-                    html: validator.htmlErrors,
+                    html: options.validator.htmlErrors,
                 });
 
                 return
