@@ -103,7 +103,14 @@ const uploadFile = (file, storage, validator) =>  {
                 return;
             }
 
-            storage.write('options', data);
+            storage.loadOptions().then(stored => {
+                if (0 !== Object.keys(stored).length) {
+                    data.rocketChat.userId = stored.rocketChat.userId;
+                    data.rocketChat.authToken = stored.rocketChat.authToken;
+                }
+
+                storage.write('options', data);
+            });
 
             Toast.fire({
                 icon: 'success',
