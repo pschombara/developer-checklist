@@ -1,58 +1,95 @@
-import {Toast, ErrorPrompt} from "../sweet";
+import {ErrorPrompt, Toast} from "../sweet";
 import {Validator} from "./validator";
 import {Storage} from "../storage";
 
-const validator = new Validator();
-const storage = new Storage();
+export class Config {
+    constructor(storage, validator) {
+        this._storage = storage ? storage : new Storage();
+        this._validator = validator ? validator : new Validator();
+        this._buttonUpload = document.querySelector('[data-upload="btn"]');
+        this._fileUpload = document.querySelector('[data-upload="file"]');
+    }
 
-export function exportToJson(options) {
-    let elem = document.createElement('a');
+    init() {
+        this._buttonUpload.addEventListener('click', () => {
+            this._fileUpload.click();
+        });
 
-    // for security reasons reset user id and authToken
-    options.rocketChat.userId = '';
-    options.rocketChat.authToken = '';
+        this._fileUpload.addEventListener('change', (e) => {
+           this.importFromJson(e);
+        });
+    }
 
-    elem.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(options)));
-    elem.setAttribute('download', 'jira-dev-checklist-options');
-    elem.classList.add('d-none');
+    exportToJson(options) {
+        let elem = document.createElement('a');
 
-    document.body.appendChild(elem);
-    elem.click();
-    document.body.removeChild(elem);
+        // for security reasons reset user id and authToken
+        options.rocketChat.userId = '';
+        options.rocketChat.authToken = '';
+
+        elem.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(options)));
+        elem.setAttribute('download', 'jira-dev-checklist-options');
+        elem.classList.add('d-none');
+
+        document.body.appendChild(elem);
+        elem.click();
+        document.body.removeChild(elem);
+    }
+
+    importFromJson(e) {
+        if (0 === e.target.files.length) {
+            Toast.fire({
+                icon: "error",
+                title: "No file selected"
+            });
+
+            return;
+        }
+
+        let file = e.target.files[0];
+
+        if (file.size <= 0) {
+            Toast.fire({
+                icon: "error",
+                title: "File is empty"
+            });
+
+            return;
+        }
+
+        if ('application/json' !== file.type) {
+            Toast.fire({
+                icon: "error",
+                title: "Wrong file type"
+            });
+
+            return;
+        }
+
+        uploadFile(file, this._storage, this._validator);
+    }
+
+    restore() {
+        return new Promise(resolve => {
+            let xhttp = new XMLHttpRequest();
+
+            xhttp.open('GET', chrome.extension.getURL('/config.json'));
+
+            xhttp.onreadystatechange = () => {
+                if (XMLHttpRequest.DONE === xhttp.readyState) {
+                    resolve(JSON.parse(xhttp.response));
+                }
+            };
+
+            xhttp.send();
+        });
+    }
 }
 
-export function importFromJson(e) {
-    if (0 === e.target.files.length) {
-        Toast.fire({
-            icon: "error",
-            title: "No file selected"
-        });
-
-        return;
-    }
-
-    let file = e.target.files[0];
-
-    if (file.size <= 0) {
-        Toast.fire({
-            icon: "error",
-            title: "File is empty"
-        });
-
-        return;
-    }
-
-    if ('application/json' !== file.type) {
-        Toast.fire({
-            icon: "error",
-            title: "Wrong file type"
-        });
-
-        return;
-    }
-
+const uploadFile = (file, storage, validator) =>  {
     let fileReader = new FileReader();
-    fileReader.onload = (e) => {
+
+    fileReader.addEventListener('load', e => {
         if ('string' === typeof e.target.result) {
             let data = JSON.parse(e.target.result);
 
@@ -66,7 +103,14 @@ export function importFromJson(e) {
                 return;
             }
 
-            storage.write('options', data);
+            storage.loadOptions().then(stored => {
+                if (0 !== Object.keys(stored).length) {
+                    data.rocketChat.userId = stored.rocketChat.userId;
+                    data.rocketChat.authToken = stored.rocketChat.authToken;
+                }
+
+                storage.write('options', data);
+            });
 
             Toast.fire({
                 icon: 'success',
@@ -76,22 +120,7 @@ export function importFromJson(e) {
                 }
             });
         }
-    };
-    fileReader.readAsText(file, 'utf-8');
-}
-
-export function restore() {
-    return new Promise(resolve => {
-        let xhttp = new XMLHttpRequest();
-
-        xhttp.open('GET', chrome.extension.getURL('/config.json'));
-
-        xhttp.onreadystatechange = () => {
-            if (XMLHttpRequest.DONE === xhttp.readyState) {
-                resolve(JSON.parse(xhttp.response));
-            }
-        };
-
-        xhttp.send();
     });
-}
+
+    fileReader.readAsText(file, 'utf-8');
+};

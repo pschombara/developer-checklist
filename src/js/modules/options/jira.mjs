@@ -90,5 +90,7 @@ export class Jira extends SuperJira{
                 });
             }
         }
+
+        return this.options;
     }
 }
