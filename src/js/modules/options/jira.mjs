@@ -46,7 +46,7 @@ export class Jira extends SuperJira{
             }
         }
 
-        this._btn.addBoard.addEventListener('click', this.createBoard);
+        this._btn.addBoard.addEventListener('click', () => { this.createBoard() });
     }
 
     createBoard(id = null, key = '') {
