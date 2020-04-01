@@ -1,7 +1,4 @@
-import {SuperGit} from "./super/super.git";
-
-export class Git extends SuperGit {
+export class Git {
     constructor() {
-        super();
     }
 }

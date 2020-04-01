@@ -348,7 +348,21 @@
 </template>
 <template data-template="git">
     <div class="row mt-2" draggable="true">
-
+        <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
+        <div class="col-3">
+            <select name="gitDomain[]" class="form-control">
+                <option>alzura-rest-api-b2b</option>
+                <option>edvtp1_backend</option>
+                <option>edvtp1_b2c</option>
+            </select>
+        </div>
+        <div class="col-3">
+            <input type="text" name="gitProject[]" class="form-control" placeholder="project eg: alzura/local-bundle" />
+        </div>
+        <div class="col-2 custom-control custom-switch">
+            <input class="custom-control-input" type="checkbox" name="gitDelete[]" id="%gitUuid%" />
+            <label class="custom-control-label" for="%gitUuid%">Delete</label>
+        </div>
     </div>
 </template>
 <template data-template="cheatSheet">

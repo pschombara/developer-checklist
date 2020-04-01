@@ -406,7 +406,180 @@
     ],
     "git": [
         {
-
+            "domain": "alzura-rest-api-b2b",
+            "project": "api-alzura"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "api-local"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "cli-alzura"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "api-translation-interface"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "api-product-review"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "api-b2b"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "api-wearparts"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "alzura/fuel-price-bundle"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "alzura/ui-bundle"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "alzura/security-bundle"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "alzura/local-bundle"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "alzura/doctrine-bundle"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "alzura/behat-bundle"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "alzura/flex"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "alzura/security"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "alzura/media-management-bundle"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "alzura/geo-bundle"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "alzura/form-bundle"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "alzura/backoffice-billing-bundle"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "alzura/backoffice-commission-bundle"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "alzura/backoffice-account-bundle"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "saitowag/messenger-bundle"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "saitowag/phpunit"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "saitowag/token-generator-bundle"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "saitowag/swagger-bundle"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "saitowag/geo"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "saitowag/google-firestore-bundle"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "saitowag/form"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "saitowag/translation-bundle"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "saitowag/core-bundle"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "saitowag/rest-bundle"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "skeleton/package-skeleton"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "skeleton/bundle-skeleton"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "skeleton/api-skeleton"
+        },
+        {
+            "domain": "edvtp1_backend",
+            "project": "t24_framework"
+        },
+        {
+            "domain": "edvtp1_backend",
+            "project": "tyre24"
+        },
+        {
+            "domain": "edvtp1_backend",
+            "project": "backoffice"
+        },
+        {
+            "domain": "edvtp1_backend",
+            "project": "cron"
+        },
+        {
+            "domain": "edvtp1_backend",
+            "project": "database"
+        },
+        {
+            "domain": "edvtp1_backend",
+            "project": "media"
+        },
+        {
+            "domain": "edvtp1_backend",
+            "project": "mediaserver"
+        },
+        {
+            "domain": "edvtp1_b2c",
+            "project": "rvo"
+        },
+        {
+            "domain": "edvtp1_b2c",
+            "project": "tyre-shopping"
+        },
+        {
+            "domain": "edvtp1_b2c",
+            "project": "ris"
         }
     ],
     "rocketChat": {
