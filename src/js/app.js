@@ -5,5 +5,5 @@ chrome.tabs.query({active: true, currentWindow: true}, (tab) => {
         return;
     }
 
-    new Checklist().init(tab[0].url);
+    new Checklist(tab[0].url).init();
 });
