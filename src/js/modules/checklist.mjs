@@ -1,14 +1,14 @@
-import * as jenkins from './jenkins.mjs';
 import * as cheatSheet from './cheat-sheet.mjs';
 import {RocketChat} from "./rocket.chat";
 import {Storage} from "./storage";
 import {Jira} from "./jira";
+import {Jenkins} from "./jenkins";
 
 import './jquery.mjs';
 import 'bootstrap';
 
 export class Checklist {
-    constructor() {
+    constructor(url) {
         this._listTypes = ['developer', 'tester', 'reviewer', 'help']; // todo replace with options
         this._browser = window.browser ? window.browser : window.chrome;
         this._buttons = {
@@ -25,18 +25,20 @@ export class Checklist {
         this._rocketChat = new RocketChat();
         this._storage = new Storage();
         this._jira = new Jira();
+        this._jenkins = new Jenkins();
         this._issue = document.querySelector('#issue');
         this._checklistTabs = document.querySelectorAll('[data-tab-show="checklist"]');
+        this._url = url;
     }
 
-    init(url) {
+    init() {
         this._storage.loadOptions().then((result) => {
             this._options = result;
             checkOptions(this);
             this._storage.cleanUp();
 
-            if (url.includes(this._options.jira.url) && this._issuePattern.test(url)) {
-                let match = url.match(this._issuePattern)[0];
+            if (this._url.includes(this._options.jira.url) && this._issuePattern.test(this._url)) {
+                let match = this._url.match(this._issuePattern)[0];
                 this._identifier = match ? match : '';
             }
 
@@ -178,7 +180,7 @@ const initOverview = (cl) => {
         document.querySelector('.no-options').classList.remove('d-none');
     }
 
-    jenkins.init(cl._options.jenkins ? cl._options.jenkins : []);
+    cl._jenkins.init(cl._options.jenkins ? cl._options.jenkins : []);
     cheatSheet.init(cl._options.cheatSheet ? cl._options.cheatSheet : []);
 
     cl._rocketChat.board = cl._options.jira.url;
@@ -331,6 +333,8 @@ const showContent = (contentType, cl) => {
     if (cl._issue.closest('.tab-pane').classList.contains('show')) {
         cl._issue.focus();
     }
+
+    cl._jenkins.checkUrl(cl._url);
 };
 
 const save = (cl) => {
