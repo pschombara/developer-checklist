@@ -404,6 +404,11 @@
             "type": "PHP-CI"
         }
     ],
+    "git": [
+        {
+
+        }
+    ],
     "rocketChat": {
         "url": "https://rocketchat.saitow.ag",
         "authToken": "",
@@ -451,6 +456,10 @@
             {
                 "id": 115,
                 "key": "WASHB"
+            },
+            {
+                "id": 0,
+                "key": "ALZURA"
             },
             {
                 "id": 0,
