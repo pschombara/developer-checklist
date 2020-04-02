@@ -45,7 +45,7 @@ export class Git {
             this._mergeRequestUrl.value = '';
         } else {
             this._mergeRequestUrl.value = this._gitMergeUrl.replace(new RegExp('\{aliasUrl\}', 'g'), '' !== branch ? `${selected.value}:${branch}` : selected.value);
-            this._mergeRequestUrl.value = this._mergeRequestUrl.replace(new RegExp('\{project\}', 'g'), selected.value);
+            this._mergeRequestUrl.value = this._mergeRequestUrl.value.replace(new RegExp('\{project\}', 'g'), selected.value);
             this._mergeRequestUrl.value = this._mergeRequestUrl.value.replace(new RegExp('\{domain\}', 'g'), selected.getAttribute('data-domain'));
             this._mergeRequestUrl.value = this._mergeRequestUrl.value.replace(new RegExp('\{number\}', 'g'), this._input.mergeNumber.value);
         }
