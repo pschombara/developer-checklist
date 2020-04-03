@@ -29,6 +29,9 @@
                 <li class="nav-item" data-toggle="popover" data-content="Jenkins" data-placement="bottom">
                     <a class="nav-link" href="#jenkins" role="tab" id="jenkins-tab" data-toggle="tab"><i class="fab fa-jenkins"></i></a>
                 </li>
+                <li class="nav-item" data-toggle="popover" data-content="GitLab" data-placement="bottom">
+                    <a class="nav-link" href="#git" role="tab" id="git-tab" data-toggle="tab"><i class="fab fa-gitlab"></i></a>
+                </li>
                 <li class="nav-item" data-toggle="popover" data-content="Rocket.Chat" data-placement="bottom">
                     <a class="nav-link" href="#rocket-chat" role="tab" id="rocket-chat-tab" data-toggle="tab"><i class="fab fa-rocketchat"></i></a>
                 </li>
@@ -229,6 +232,12 @@
                         <button type="button" class="btn btn-success" data-add-jenkins>+ Add</button>
                     </div>
                 </div>
+                <div class="tab-pane" id="git" role="tabpanel">
+                    <div class="card-body" data-git data-draggable=""></div>
+                    <div class="mt-2">
+                        <button type="button" class="btn btn-success" data-add-git>+ Add</button>
+                    </div>
+                </div>
                 <div class="tab-pane" id="about" role="tabpanel">
                     <div class="card-body">
                         <div class="row mt-1">
@@ -334,6 +343,25 @@
         <div class="col-2 custom-control custom-switch">
             <input class="custom-control-input" type="checkbox" name="jenkinsDelete[]" id="%uuid%" />
             <label class="custom-control-label" for="%uuid%">Delete</label>
+        </div>
+    </div>
+</template>
+<template data-template="git">
+    <div class="row mt-2" draggable="true">
+        <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
+        <div class="col-3">
+            <select name="gitDomain[]" class="form-control">
+                <option>alzura-rest-api-b2b</option>
+                <option>edvtp1_backend</option>
+                <option>edvtp1_b2c</option>
+            </select>
+        </div>
+        <div class="col-3">
+            <input type="text" name="gitProject[]" class="form-control" placeholder="project eg: alzura/local-bundle" />
+        </div>
+        <div class="col-2 custom-control custom-switch">
+            <input class="custom-control-input" type="checkbox" name="gitDelete[]" id="%gitUuid%" />
+            <label class="custom-control-label" for="%gitUuid%">Delete</label>
         </div>
     </div>
 </template>

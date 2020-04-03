@@ -2,7 +2,7 @@ import {DragDrop} from "./drag-drop";
 import {Uuid} from "./uuid";
 import {SuperJira} from "../super/super.jira";
 
-export class Jira extends SuperJira{
+export class Jira extends SuperJira {
     constructor() {
         super();
 

@@ -3,6 +3,7 @@ import {RocketChat} from "./rocket.chat";
 import {Storage} from "./storage";
 import {Jira} from "./jira";
 import {Jenkins} from "./jenkins";
+import {Git} from "./git";
 
 import './jquery.mjs';
 import 'bootstrap';
@@ -26,6 +27,7 @@ export class Checklist {
         this._storage = new Storage();
         this._jira = new Jira();
         this._jenkins = new Jenkins();
+        this._git = new Git();
         this._issue = document.querySelector('#issue');
         this._checklistTabs = document.querySelectorAll('[data-tab-show="checklist"]');
         this._url = url;
@@ -181,6 +183,7 @@ const initOverview = (cl) => {
     }
 
     cl._jenkins.init(cl._options.jenkins ? cl._options.jenkins : []);
+    cl._git.init(cl._options.git ? cl._options.git : []);
     cheatSheet.init(cl._options.cheatSheet ? cl._options.cheatSheet : []);
 
     cl._rocketChat.board = cl._options.jira.url;
@@ -335,6 +338,7 @@ const showContent = (contentType, cl) => {
     }
 
     cl._jenkins.checkUrl(cl._url);
+    cl._git.checkUrl(cl._url);
 };
 
 const save = (cl) => {
