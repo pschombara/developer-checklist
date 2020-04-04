@@ -57,6 +57,7 @@ $input-border-color: $body-bg;
 
 $input-group-addon-color: $gray-500;
 $input-group-addon-bg: $gray-700;
+$input-group-addon-border-color: $input-border-color;
 
 $custom-file-color: $gray-500;
 $custom-file-border-color: $body-bg;
@@ -121,8 +122,9 @@ $card-bg: $gray-800;
 // Popovers
 
 $popover-bg: $gray-800;
-
+$popover-body-color: $body-color;
 $popover-header-bg: $gray-700;
+$popover-arrow-color: $popover-bg;
 
 // Toasts
 
