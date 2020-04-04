@@ -4,22 +4,6 @@
         margin: 8px;
     }
 
-    li {
-        list-style: disc;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-    }
-
-    .nav li {
-        list-style: none;
-    }
-
-    ul {
-        list-style: none;
-        padding-left: 20px;
-    }
-
     .checked {
         text-decoration: line-through;
         color: #b4b4b4;

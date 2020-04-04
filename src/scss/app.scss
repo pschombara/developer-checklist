@@ -4,4 +4,21 @@
 @import "./node_modules/@fortawesome/fontawesome-free/scss/solid";
 @import "./node_modules/@fortawesome/fontawesome-free/scss/brands";
 
+// dark mode on user preference
+@import "dark-variable";
+@import "dark-mode/reboot";
+@import "dark-mode/type";
+@import "dark-mode/code";
+@import "dark-mode/forms";
+@import "dark-mode/buttons";
+@import "dark-mode/dropdown";
+@import "dark-mode/input_group";
+@import "dark-mode/nav";
+@import "dark-mode/navbar";
+@import "dark-mode/card";
+@import "dark-mode/modal";
+@import "dark-mode/close";
+@import "dark-mode";
+
+// app
 @import 'popup';
