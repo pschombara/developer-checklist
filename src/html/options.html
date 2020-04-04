@@ -83,6 +83,11 @@
                             <h5 data-toggle="tooltip" data-placement="left" title="First column is your board number, second column is your board key.">Available Boards</h5>
                         </div>
 
+                        <div class="row mb-2">
+                            <div class="col-3 offset-1 text-center font-weight-bold">Board Number&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The numeric identifier of the board, keep it zero if the board has no identifier."></i></div>
+                            <div class="col-3 text-center font-weight-bold">Board Key&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The alpha identifier of the board. It is the prefix for your issues."></i></div>
+                        </div>
+
                         <div data-boards data-draggable></div>
 
                         <div class="mt-3">
@@ -122,6 +127,12 @@
                             <label for="jira-review-comment-failed" class="col-form-label col-4">Review Failed</label>
                             <div class="col-6 input-group">
                                 <input class="form-control" id="jira-review-comment-failed" placeholder="h4. Review {color:#de350b}failed{color} (x)" data-jira-comment="review-failed" />
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col-10 text-right btn-link">
+                                <small data-toggle="tooltip" title="Customize the comment that will be created when you hit the corresponding button in check list. You can use Jira syntax to create and style your messages.">help?</small>
                             </div>
                         </div>
 
