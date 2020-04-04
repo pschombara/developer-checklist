@@ -47,7 +47,10 @@
                 <div class="tab-pane fade show active" id="general" role="tabpanel">
                     <div class="card-body">
                         <div class="row">
-                            <label for="boardLink" class="col-form-label col-sm-4">Server URL</label>
+                            <h5  data-toggle="tooltip" data-placement="left" title="Adjust basic settings.">Jira</h5>
+                        </div>
+                        <div class="row">
+                            <label for="boardLink" class="col-form-label col-sm-4" data-toggle="tooltip" data-placement="left" title="The base URL of your company's Jira application.">Server URL</label>
                             <div class="col-sm-6 input-group">
                                 <input id="boardLink" name="option[]" type="url" class="form-control" placeholder="(ends with '.../browse/')" data-option="url" />
                                 <div class="input-group-append">
@@ -56,7 +59,7 @@
                             </div>
                         </div>
                         <div class="row mt-4">
-                            <label for="cleanup" class="col-form-label col-sm-4">Delete issues after</label>
+                            <label for="cleanup" class="col-form-label col-sm-4" data-toggle="tooltip" data-placement="left" title="Issues will be removed from storage after days given. This affects the issues in progress view.">Delete issues after</label>
                             <div class="col-sm-6 input-group">
                                 <input id="cleanup" min="1" max="30" type="number" class="form-control" name="option[]" data-option="cleanup" />
                                 <div class="input-group-append">
@@ -65,7 +68,7 @@
                             </div>
                         </div>
                         <div class="row mt-4">
-                            <label for="maximumIssues" class="col-form-label col-sm-4">Maximum Issues in progress</label>
+                            <label for="maximumIssues" class="col-form-label col-sm-4" data-toggle="tooltip" data-placement="left" title="Limit the issues to be remembered simultaneously. This affects the issues in progress view.">Maximum Issues in progress</label>
                             <div class="col-sm-6 input-group">
                                 <input id="maximumIssues" min="0" max="18" type="number" class="form-control" name="option[]" data-option="maximumIssues" />
                                 <div class="input-group-append">
@@ -77,8 +80,9 @@
                         <div class="my-5"><hr /></div>
 
                         <div class="row">
-                            <h5 class="col">Available Boards</h5>
+                            <h5 data-toggle="tooltip" data-placement="left" title="First column is your board number, second column is your board key.">Available Boards</h5>
                         </div>
+
                         <div data-boards data-draggable></div>
 
                         <div class="mt-3">
@@ -88,61 +92,36 @@
                         <div class="my-5"><hr /></div>
 
                         <div class="row">
-                            <h5 class="col">Jira Comments</h5>
+                                <h5 data-toggle="tooltip" data-placement="left" title="Customize the comment that will be created when you hit the corresponding button in check list. You can use Jira syntax to create and style your messages.">Jira Comments</h5>
                         </div>
                         <div class="row">
                             <label for="jira-dev-comment-success" class="col-form-label col-4">Developer</label>
                             <div class="col-6 input-group">
                                 <input class="form-control" id="jira-dev-comment-success" placeholder="h4. {color:#1e872b}Checklist{color}: All checked and done! (/)" data-jira-comment="develop-success" />
-                                <div class="input-group-append" data-toggle="tooltip" title="You can use Jira syntax to create and style your message!">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-lg fa-question"></i>
-                                    </span>
-                                </div>
                             </div>
                         </div>
                         <div class="row mt-4">
                             <label for="jira-test-comment-success" class="col-form-label col-4">Test Success</label>
                             <div class="col-6 input-group">
                                 <input class="form-control" id="jira-test-comment-success" placeholder="h4. Test {color:#1e872b}OK{color} (/)" data-jira-comment="test-success" />
-                                <div class="input-group-append" data-toggle="tooltip" title="You can use Jira syntax to create and style your message!">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-lg fa-question"></i>
-                                    </span>
-                                </div>
                             </div>
                         </div>
                         <div class="row mt-4">
                             <label for="jira-test-comment-failed" class="col-form-label col-4">Test Failed</label>
                             <div class="col-6 input-group">
                                 <input class="form-control" id="jira-test-comment-failed" placeholder="h4. Test {color:#de350b}failed{color} (x)" data-jira-comment="test-failed" />
-                                <div class="input-group-append" data-toggle="tooltip" title="You can use Jira syntax to create and style your message!">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-lg fa-question"></i>
-                                    </span>
-                                </div>
                             </div>
                         </div>
                         <div class="row mt-4">
                             <label for="jira-review-comment-success" class="col-form-label col-4">Review Success</label>
                             <div class="col-6 input-group">
                                 <input class="form-control" id="jira-review-comment-success" placeholder="h4. Review {color:#1e872b}OK{color} (/)" data-jira-comment="review-success" />
-                                <div class="input-group-append" data-toggle="tooltip" title="You can use Jira syntax to create and style your message!">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-lg fa-question"></i>
-                                    </span>
-                                </div>
                             </div>
                         </div>
                         <div class="row mt-4">
                             <label for="jira-review-comment-failed" class="col-form-label col-4">Review Failed</label>
                             <div class="col-6 input-group">
                                 <input class="form-control" id="jira-review-comment-failed" placeholder="h4. Review {color:#de350b}failed{color} (x)" data-jira-comment="review-failed" />
-                                <div class="input-group-append" data-toggle="tooltip" title="You can use Jira syntax to create and style your message!">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-lg fa-question"></i>
-                                    </span>
-                                </div>
                             </div>
                         </div>
 
@@ -163,7 +142,11 @@
                     <div class="accordion mt-2" data-accordion="help" id="helpAccordion"></div>
                 </div>
                 <div class="tab-pane" id="cheat-sheet" role="tabpanel">
-                    <div class="card-body" data-cheat-sheet data-draggable></div>
+                    <div class="card-body" data-cheat-sheet data-draggable>
+                        <div class="row">
+                            <h5 data-toggle="tooltip" data-placement="left" title="First column is a custom name, second column is the actual command/link etc.">Cheat Sheet</h5>
+                        </div>
+                    </div>
                     <div class="mt-2">
                         <button type="button" class="btn btn-success" data-add-cheat-sheet>+ Add</button>
                     </div>
@@ -171,7 +154,10 @@
                 <div class="tab-pane" id="rocket-chat" role="tabpanel">
                     <div class="card-body">
                         <div class="row">
-                            <label for="rc-url" class="col-form-label col-4">Rocket-Chat Url</label>
+                            <h5 data-toggle="tooltip" data-placement="left" title="Adjust Rocket.Chat settings. You have to login to use this feature.">Rocket.Chat</h5>
+                        </div>
+                        <div class="row">
+                            <label for="rc-url" class="col-form-label col-4" data-toggle="tooltip" data-placement="left" title="The base URL of your company's rocket chat application.">Rocket.Chat Url</label>
                             <div class="col-6 input-group">
                                 <input class="form-control" type="text" id="rc-url" />
                                 <div class="input-group-append">
@@ -179,67 +165,68 @@
                                 </div>
                                 <div class="input-group-append">
                                     <button type="button" class="btn btn-outline-danger" data-rc-user data-toggle="modal" data-target="#rc-modal-user">
-                                        <i class="fas fa-sign-in-alt"></i>
+                                        <i class="fas fa-sign-in-alt" data-toggle="tooltip" data-placement="top" title="Login with rocket chat credentials."></i>
                                     </button>
                                 </div>
                                 <div class="input-group-append">
                                     <button type="button" class="btn btn-outline-danger" data-rc-google data-toggle="modal" data-target="#rc-modal-google">
-                                        <i class="fab fa-google"></i>
+                                        <i class="fab fa-google" data-toggle="tooltip" data-placement="right" title="Login with Google."></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
                         <div class="row mt-4">
-                            <label for="rc-channel-internal" class="col-form-label col-4">Internal Channel</label>
+                            <label for="rc-channel-internal" class="col-form-label col-4" data-toggle="tooltip" data-placement="left" title="Select channel to be used for internal team planning messages.">Internal Channel</label>
                             <div class="col-6">
                                 <input class="form-control" list="rc-rooms" id="rc-channel-internal" placeholder="Internal Channel"/>
                             </div>
                         </div>
                         <div class="row mt-4">
-                            <label for="rc-channel-external" class="col-form-label col-4">External Channel</label>
+                            <label for="rc-channel-external" class="col-form-label col-4" data-toggle="tooltip" data-placement="left" title="Select channel to be used for external team planning messages.">External Channel</label>
                             <div class="col-6">
                                 <input class="form-control" list="rc-rooms" id="rc-channel-external" placeholder="External Channel"/>
                             </div>
                         </div>
                         <div class="row mt-4">
-                            <label for="rc-message-internal" class="col-form-label col-4">Message for Internal</label>
+                            <label for="rc-message-internal" class="col-form-label col-4" data-toggle="tooltip" data-placement="left" title="Customize your team planning message for internal channel. Add {issue} as a placeholder for an external link to the issue.">Message for Internal</label>
                             <div class="col-6 input-group">
                                 <input class="form-control" type="text" id="rc-message-internal" placeholder="@here team planning for {issue}" />
-                                <div class="input-group-append" data-toggle="tooltip" title="Add {issue} as a placeholder for an external link to the issue.">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-lg fa-question"></i>
-                                    </span>
-                                </div>
                             </div>
                         </div>
                         <div class="row mt-4">
-                            <label for="rc-message-external" class="col-form-label col-4">Message for External</label>
+                            <label for="rc-message-external" class="col-form-label col-4" data-toggle="tooltip" data-placement="left" title="Customize your team planning message for external channel. Add {issue} as a placeholder for an external link to the issue.">Message for External</label>
                             <div class="col-6 input-group">
                                 <input class="form-control" type="text" id="rc-message-external" placeholder="@here team planning for {issue}" />
-                                <div class="input-group-append" data-toggle="tooltip" title="Add {issue} as a placeholder for an external link to the issue.">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-lg fa-question"></i>
-                                    </span>
-                                </div>
                             </div>
                         </div>
                         <datalist id="rc-rooms"></datalist>
                     </div>
                 </div>
                 <div class="tab-pane" id="jenkins" role="tabpanel">
-                    <div class="card-body" data-jenkins data-draggable></div>
+                    <div class="card-body" data-jenkins data-draggable>
+                        <div class="row">
+                            <h5 data-toggle="tooltip" data-placement="left" title="First column is category, second column is type, third column is pipeline. It is used to generate embeddable build statuses.">Jenkins build pipelines</h5>
+                        </div>
+                    </div>
                     <div class="mt-2">
                         <button type="button" class="btn btn-success" data-add-jenkins>+ Add</button>
                     </div>
                 </div>
                 <div class="tab-pane" id="git" role="tabpanel">
-                    <div class="card-body" data-git data-draggable=""></div>
+                    <div class="card-body" data-git data-draggable>
+                        <div class="row">
+                            <h5 data-toggle="tooltip" data-placement="left" title="First column is category, second column is type. It is used to generate merge requests.">Git projects</h5>
+                        </div>
+                    </div>
                     <div class="mt-2">
                         <button type="button" class="btn btn-success" data-add-git>+ Add</button>
                     </div>
                 </div>
                 <div class="tab-pane" id="about" role="tabpanel">
                     <div class="card-body">
+                        <div class="row">
+                            <h5>Enjoy!</h5>
+                        </div>
                         <div class="row mt-1">
                             <div class="col">
                                 We hope your company, team or/and yourself benefit from our extension and are able to work
