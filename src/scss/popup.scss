@@ -9,6 +9,14 @@
         color: #b4b4b4;
     }
 
+    ul {
+        &[data-content] {
+            li {
+                cursor: pointer;
+            }
+        }
+    }
+
     label {
         cursor: pointer;
         position: relative;
