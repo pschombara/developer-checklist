@@ -1,3 +1,22 @@
 @media (prefers-color-scheme: dark) {
-  @import "./node_modules/bootstrap/scss/type";
+  //@import "./node_modules/bootstrap/scss/type";
+
+  h1, h2, h3, h4, h5, h6,
+  .h1, .h2, .h3, .h4, .h5, .h6 {
+    color: $headings-color;
+  }
+
+  hr {
+    border-top: $hr-border-width solid $hr-border-color;
+  }
+
+  mark,
+  .mark {
+    background-color: $mark-bg;
+  }
+
+
+  .blockquote-footer {
+    color: $blockquote-small-color;
+  }
 }

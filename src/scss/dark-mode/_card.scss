@@ -1,3 +1,23 @@
 @media (prefers-color-scheme: dark) {
-  @import "./node_modules/bootstrap/scss/card";
+  // @import "./node_modules/bootstrap/scss/card";
+
+  .card {
+    background-color: $card-bg;
+    border: $card-border-width solid $card-border-color;
+  }
+
+  .card-body {
+    color: $card-color;
+  }
+
+  .card-header {
+    color: $card-cap-color;
+    background-color: $card-cap-bg;
+    border-bottom: $card-border-width solid $card-border-color;
+  }
+
+  .card-footer {
+    background-color: $card-cap-bg;
+    border-top: $card-border-width solid $card-border-color;
+  }
 }

@@ -61,7 +61,6 @@
     }
 
     &-hover {
-
       .table-primary:hover {
         &, > th, > td {
           background-color: darken($primary, 5%);

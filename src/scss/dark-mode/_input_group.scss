@@ -1,3 +1,14 @@
 @media (prefers-color-scheme: dark) {
-  @import "./node_modules/bootstrap/scss/input-group";
+  // @import "./node_modules/bootstrap/scss/input-group";
+
+  // Textual addons
+  //
+  // Serves as a catch-all element for any text or radio/checkbox input you wish
+  // to prepend or append to an input.
+
+  .input-group-text {
+    color: $input-group-addon-color;
+    background-color: $input-group-addon-bg;
+    border: $input-border-width solid $input-group-addon-border-color;
+  }
 }
