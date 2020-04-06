@@ -5,7 +5,7 @@
 @import "./node_modules/@fortawesome/fontawesome-free/scss/brands";
 
 // dark mode on user preference
-@import "dark-variable";
+@import "dark-mode";
 @import "dark-mode/reboot";
 @import "dark-mode/type";
 @import "dark-mode/forms";
@@ -18,7 +18,7 @@
 @import "dark-mode/close";
 @import "dark-mode/popover";
 @import "dark-mode/alert";
-@import "dark-mode";
+@import "dark-mode/custom-forms";
 @import "dark-sweet";
 
 // app
