@@ -47,8 +47,11 @@
                 <div class="tab-pane fade show active" id="general" role="tabpanel">
                     <div class="card-body">
                         <div class="row">
+                            <h5>Jira</h5>
+                        </div>
+                        <div class="row">
                             <label for="boardLink" class="col-form-label col-sm-4">Server URL</label>
-                            <div class="col-sm-6 input-group">
+                            <div class="col-sm-6 input-group" data-toggle="tooltip" data-placement="right" title="The base URL of your company's Jira application.">
                                 <input id="boardLink" name="option[]" type="url" class="form-control" placeholder="(ends with '.../browse/')" data-option="url" />
                                 <div class="input-group-append">
                                     <span class="input-group-text">/browse/</span>
@@ -56,8 +59,8 @@
                             </div>
                         </div>
                         <div class="row mt-4">
-                            <label for="cleanup" class="col-form-label col-sm-4">Delete issues after</label>
-                            <div class="col-sm-6 input-group">
+                            <label for="cleanup" class="col-form-label col-sm-4" >Delete issues after</label>
+                            <div class="col-sm-6 input-group" data-toggle="tooltip" data-placement="right" title="Issues will be removed from storage after days given. This affects the issues in progress view.">
                                 <input id="cleanup" min="1" max="30" type="number" class="form-control" name="option[]" data-option="cleanup" />
                                 <div class="input-group-append">
                                     <span class="input-group-text">days</span>
@@ -66,7 +69,7 @@
                         </div>
                         <div class="row mt-4">
                             <label for="maximumIssues" class="col-form-label col-sm-4">Maximum Issues in progress</label>
-                            <div class="col-sm-6 input-group">
+                            <div class="col-sm-6 input-group" data-toggle="tooltip" data-placement="right" title="Limit the issues to be remembered simultaneously. This affects the issues in progress view.">
                                 <input id="maximumIssues" min="0" max="18" type="number" class="form-control" name="option[]" data-option="maximumIssues" />
                                 <div class="input-group-append">
                                     <span class="input-group-text">issues</span>
@@ -77,8 +80,14 @@
                         <div class="my-5"><hr /></div>
 
                         <div class="row">
-                            <h5 class="col">Available Boards</h5>
+                            <h5 data-toggle="tooltip">Available Boards</h5>
                         </div>
+
+                        <div class="row mb-2">
+                            <div class="col-3 offset-1 text-center font-weight-bold">Board Number&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The numeric identifier of the board, keep it zero if the board has no identifier."></i></div>
+                            <div class="col-3 text-center font-weight-bold">Board Key&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The alpha identifier of the board. It is the prefix for your issues."></i></div>
+                        </div>
+
                         <div data-boards data-draggable></div>
 
                         <div class="mt-3">
@@ -87,62 +96,41 @@
 
                         <div class="my-5"><hr /></div>
 
+
                         <div class="row">
-                            <h5 class="col">Jira Comments</h5>
+                            <h5>Jira Comments</h5>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-11 text-center font-weight-bold">Comment&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="Customize the comment that will be created when you hit the corresponding button in check list. You can use Jira syntax to create and style your messages."></i></div>
                         </div>
                         <div class="row">
                             <label for="jira-dev-comment-success" class="col-form-label col-4">Developer</label>
                             <div class="col-6 input-group">
                                 <input class="form-control" id="jira-dev-comment-success" placeholder="h4. {color:#1e872b}Checklist{color}: All checked and done! (/)" data-jira-comment="develop-success" />
-                                <div class="input-group-append" data-toggle="tooltip" title="You can use Jira syntax to create and style your message!">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-lg fa-question"></i>
-                                    </span>
-                                </div>
                             </div>
                         </div>
                         <div class="row mt-4">
                             <label for="jira-test-comment-success" class="col-form-label col-4">Test Success</label>
                             <div class="col-6 input-group">
                                 <input class="form-control" id="jira-test-comment-success" placeholder="h4. Test {color:#1e872b}OK{color} (/)" data-jira-comment="test-success" />
-                                <div class="input-group-append" data-toggle="tooltip" title="You can use Jira syntax to create and style your message!">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-lg fa-question"></i>
-                                    </span>
-                                </div>
                             </div>
                         </div>
                         <div class="row mt-4">
                             <label for="jira-test-comment-failed" class="col-form-label col-4">Test Failed</label>
                             <div class="col-6 input-group">
                                 <input class="form-control" id="jira-test-comment-failed" placeholder="h4. Test {color:#de350b}failed{color} (x)" data-jira-comment="test-failed" />
-                                <div class="input-group-append" data-toggle="tooltip" title="You can use Jira syntax to create and style your message!">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-lg fa-question"></i>
-                                    </span>
-                                </div>
                             </div>
                         </div>
                         <div class="row mt-4">
                             <label for="jira-review-comment-success" class="col-form-label col-4">Review Success</label>
                             <div class="col-6 input-group">
                                 <input class="form-control" id="jira-review-comment-success" placeholder="h4. Review {color:#1e872b}OK{color} (/)" data-jira-comment="review-success" />
-                                <div class="input-group-append" data-toggle="tooltip" title="You can use Jira syntax to create and style your message!">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-lg fa-question"></i>
-                                    </span>
-                                </div>
                             </div>
                         </div>
                         <div class="row mt-4">
                             <label for="jira-review-comment-failed" class="col-form-label col-4">Review Failed</label>
                             <div class="col-6 input-group">
                                 <input class="form-control" id="jira-review-comment-failed" placeholder="h4. Review {color:#de350b}failed{color} (x)" data-jira-comment="review-failed" />
-                                <div class="input-group-append" data-toggle="tooltip" title="You can use Jira syntax to create and style your message!">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-lg fa-question"></i>
-                                    </span>
-                                </div>
                             </div>
                         </div>
 
@@ -163,7 +151,15 @@
                     <div class="accordion mt-2" data-accordion="help" id="helpAccordion"></div>
                 </div>
                 <div class="tab-pane" id="cheat-sheet" role="tabpanel">
-                    <div class="card-body" data-cheat-sheet data-draggable></div>
+                    <div class="card-body" data-cheat-sheet data-draggable>
+                        <div class="row">
+                            <h5 data-toggle="tooltip" data-placement="left" title="First column is a custom name, second column is the actual command/link etc.">Cheat Sheet</h5>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-2 offset-1 text-center font-weight-bold">Name&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="A custom name for the command/link etc."></i></div>
+                            <div class="col-3 offset-2 text-center font-weight-bold">Command/link etc&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The actual command/link etc."></i></div>
+                        </div>
+                    </div>
                     <div class="mt-2">
                         <button type="button" class="btn btn-success" data-add-cheat-sheet>+ Add</button>
                     </div>
@@ -171,8 +167,11 @@
                 <div class="tab-pane" id="rocket-chat" role="tabpanel">
                     <div class="card-body">
                         <div class="row">
-                            <label for="rc-url" class="col-form-label col-4">Rocket-Chat Url</label>
-                            <div class="col-6 input-group">
+                            <h5>Rocket.Chat</h5>
+                        </div>
+                        <div class="row">
+                            <label for="rc-url" class="col-form-label col-4">Rocket.Chat Url</label>
+                            <div class="col-6 input-group"  data-toggle="tooltip" data-placement="right" title="The base URL of your company's rocket chat application. Login with Google or Rocket.Chat credentials.">
                                 <input class="form-control" type="text" id="rc-url" />
                                 <div class="input-group-append">
                                     <span class="input-group-text">/api</span>
@@ -192,54 +191,64 @@
                         <div class="row mt-4">
                             <label for="rc-channel-internal" class="col-form-label col-4">Internal Channel</label>
                             <div class="col-6">
-                                <input class="form-control" list="rc-rooms" id="rc-channel-internal" placeholder="Internal Channel"/>
+                                <input class="form-control" list="rc-rooms" id="rc-channel-internal" placeholder="Internal Channel" data-toggle="tooltip" data-placement="right" title="Select channel to be used for internal team planning messages."/>
                             </div>
                         </div>
                         <div class="row mt-4">
                             <label for="rc-channel-external" class="col-form-label col-4">External Channel</label>
                             <div class="col-6">
-                                <input class="form-control" list="rc-rooms" id="rc-channel-external" placeholder="External Channel"/>
+                                <input class="form-control" list="rc-rooms" id="rc-channel-external" placeholder="External Channel"  data-toggle="tooltip" data-placement="right" title="Select channel to be used for external team planning messages."/>
                             </div>
                         </div>
                         <div class="row mt-4">
                             <label for="rc-message-internal" class="col-form-label col-4">Message for Internal</label>
                             <div class="col-6 input-group">
-                                <input class="form-control" type="text" id="rc-message-internal" placeholder="@here team planning for {issue}" />
-                                <div class="input-group-append" data-toggle="tooltip" title="Add {issue} as a placeholder for an external link to the issue.">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-lg fa-question"></i>
-                                    </span>
-                                </div>
+                                <input class="form-control" type="text" id="rc-message-internal" placeholder="@here team planning for {issue}" data-toggle="tooltip" data-placement="right" title="Customize your team planning message for internal channel. Add {issue} as a placeholder for an external link to the issue."/>
                             </div>
                         </div>
                         <div class="row mt-4">
-                            <label for="rc-message-external" class="col-form-label col-4">Message for External</label>
+                            <label for="rc-message-external" class="col-form-label col-4" data-toggle="tooltip">Message for External</label>
                             <div class="col-6 input-group">
-                                <input class="form-control" type="text" id="rc-message-external" placeholder="@here team planning for {issue}" />
-                                <div class="input-group-append" data-toggle="tooltip" title="Add {issue} as a placeholder for an external link to the issue.">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-lg fa-question"></i>
-                                    </span>
-                                </div>
+                                <input class="form-control" type="text" id="rc-message-external" placeholder="@here team planning for {issue}" data-toggle="tooltip" data-placement="right" title="Customize your team planning message for external channel. Add {issue} as a placeholder for an external link to the issue."/>
                             </div>
                         </div>
                         <datalist id="rc-rooms"></datalist>
                     </div>
                 </div>
                 <div class="tab-pane" id="jenkins" role="tabpanel">
-                    <div class="card-body" data-jenkins data-draggable></div>
+                    <div class="card-body" data-jenkins data-draggable>
+                        <div class="row">
+                            <h5>Jenkins builds</h5>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-2 offset-1 text-center font-weight-bold">Category&nbsp;</div>
+                            <div class="col-3 text-center font-weight-bold">Name&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="A custom name of the pipeline. Will be used as url alias and can be used to search for the pipeline."></i></div>
+                            <div class="col-3 text-center font-weight-bold">Pipeline&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The project name of the pipeline in Jenkins."></i></div>
+                        </div>
+                    </div>
                     <div class="mt-2">
                         <button type="button" class="btn btn-success" data-add-jenkins>+ Add</button>
                     </div>
                 </div>
                 <div class="tab-pane" id="git" role="tabpanel">
-                    <div class="card-body" data-git data-draggable=""></div>
+                    <div class="card-body" data-git data-draggable>
+                        <div class="row">
+                            <h5>Git projects</h5>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-2 offset-1 text-center font-weight-bold">Category</div>
+                            <div class="col-3 offset-1 text-center font-weight-bold">Project</div>
+                        </div>
+                    </div>
                     <div class="mt-2">
                         <button type="button" class="btn btn-success" data-add-git>+ Add</button>
                     </div>
                 </div>
                 <div class="tab-pane" id="about" role="tabpanel">
                     <div class="card-body">
+                        <div class="row">
+                            <h5>Enjoy!</h5>
+                        </div>
                         <div class="row mt-1">
                             <div class="col">
                                 We hope your company, team or/and yourself benefit from our extension and are able to work
@@ -372,7 +381,7 @@
             <input type="text" name="cheatSheetLabel[]" class="form-control" placeholder="Label for the command/link etc." />
         </div>
         <div class="col-6">
-            <input type="text" name="cheatSheetCommand[]" class="form-control" placeholder="The actual command/link etc." />
+            <input type="text" name="cheatSheetCommand[]" class="form-control" placeholder="The actual command/link etc. It can be copied to clipboard." />
         </div>
         <div class="col-2 custom-control custom-switch">
             <input class="custom-control-input" type="checkbox" name="cheatSheetDelete[]" id="%uuidCheatSheet%" />
