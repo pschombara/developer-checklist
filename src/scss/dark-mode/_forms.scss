@@ -1,0 +1,84 @@
+@media (prefers-color-scheme: dark) {
+  // @import "./node_modules/bootstrap/scss/forms";
+
+  // stylelint-disable selector-no-qualifying-type
+
+  //
+  // Textual form controls
+  //
+
+  .form-control {
+    color: $input-color;
+    background-color: $input-bg;
+    border: $input-border-width solid $input-border-color;
+
+    // Unstyle the caret on `<select>`s in IE10+.
+    &::-ms-expand {
+      background-color: transparent;
+    }
+
+    // Remove select outline from select box in FF
+    &:-moz-focusring {
+      color: transparent;
+      text-shadow: 0 0 0 $input-color;
+    }
+
+    // Customize the `:focus` state to imitate native WebKit styles.
+    @include form-control-focus($ignore-warning: true);
+
+    // Placeholder
+    &::placeholder {
+      color: $input-placeholder-color;
+    }
+
+    // Disabled and read-only inputs
+    //
+    // HTML5 says that controls under a fieldset > legend:first-child won't be
+    // disabled if the fieldset is disabled. Due to implementation difficulty, we
+    // don't honor that edge case; we style them as disabled anyway.
+    &:disabled,
+    &[readonly] {
+      background-color: $input-disabled-bg;
+    }
+  }
+
+  select.form-control {
+    &:focus::-ms-value {
+      // Suppress the nested default white text on blue background highlight given to
+      // the selected option text when the (still closed) <select> receives focus
+      // in IE and (under certain conditions) Edge, as it looks bad and cannot be made to
+      // match the appearance of the native widget.
+      // See https://github.com/twbs/bootstrap/issues/19398.
+      color: $input-color;
+      background-color: $input-bg;
+    }
+  }
+
+  // Readonly controls as plain text
+  //
+  // Apply class to a readonly input to make it appear like regular plain
+  // text (without any border, background color, focus indicator)
+
+  .form-control-plaintext {
+    color: $input-plaintext-color;
+  }
+
+  .form-check-input {
+    // Use [disabled] and :disabled for workaround https://github.com/twbs/bootstrap/issues/28247
+    &[disabled] ~ .form-check-label,
+    &:disabled ~ .form-check-label {
+      color: $text-muted;
+    }
+  }
+
+  // Form validation
+  //
+  // Provide feedback to users when form field values are valid or invalid. Works
+  // primarily for client-side validation via scoped `:invalid` and `:valid`
+  // pseudo-classes but also includes `.is-invalid` and `.is-valid` classes for
+  // server side validation.
+
+  @each $state, $data in $form-validation-states {
+    @include form-validation-state($state, map-get($data, color), map-get($data, icon));
+  }
+}

@@ -1,0 +1,35 @@
+@media (prefers-color-scheme: dark) {
+ // @import "./node_modules/bootstrap/scss/buttons";
+  .btn {
+    color: $body-color;
+
+    @include hover() {
+      color: $body-color;
+    }
+  }
+
+  @each $color, $value in $theme-colors {
+    .btn-#{$color} {
+      @include button-variant($value, $value);
+    }
+  }
+
+  @each $color, $value in $theme-colors {
+    .btn-outline-#{$color} {
+      @include button-outline-variant($value);
+    }
+  }
+
+  .btn-link {
+    color: $link-color;
+
+    @include hover() {
+      color: $link-hover-color;
+    }
+
+    &:disabled,
+    &.disabled {
+      color: $btn-link-disabled-color;
+    }
+  }
+}

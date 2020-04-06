@@ -1,0 +1,12 @@
+@media (prefers-color-scheme: dark) {
+  // @import "./node_modules/bootstrap/scss/close";
+
+  .close {
+    color: $close-color;
+
+    // Override <a>'s hover style
+    @include hover() {
+      color: $close-color;
+    }
+  }
+}

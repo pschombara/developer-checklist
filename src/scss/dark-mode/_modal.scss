@@ -1,0 +1,26 @@
+@media (prefers-color-scheme: dark) {
+  // @import "./node_modules/bootstrap/scss/modal";
+
+  // Actual modal
+  .modal-content {
+    color: $modal-content-color;
+    background-color: $modal-content-bg;
+    border: $modal-content-border-width solid $modal-content-border-color;
+  }
+
+  // Modal background
+  .modal-backdrop {
+    background-color: $modal-backdrop-bg;
+  }
+
+  // Modal header
+  // Top section of the modal w/ title and dismiss
+  .modal-header {
+    border-bottom: $modal-header-border-width solid $modal-header-border-color;
+  }
+
+  // Footer (for actions)
+  .modal-footer {
+    border-top: $modal-footer-border-width solid $modal-footer-border-color;
+  }
+}
