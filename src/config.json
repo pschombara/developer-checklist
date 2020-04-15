@@ -384,6 +384,11 @@
             "type": "REST Bundles"
         },
         {
+            "name": "alzura/fuel-price-bundle",
+            "job": "pipeline-unit-fuel-price-bundle",
+            "type": "REST Bundles"
+        },
+        {
             "name": "saitowag/core-bundle",
             "job": "pipeline-unit-corebundle",
             "type": "REST Bundles"

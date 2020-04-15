@@ -88,7 +88,7 @@ export class Jenkins {
         this._tab.click();
 
         for (let item of this.pages) {
-            if (false === url.includes(item.job)) {
+            if (false === url.includes(`/job/${item.job}/`)) {
                 continue;
             }
 
