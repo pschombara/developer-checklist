@@ -222,8 +222,9 @@
                         </div>
                         <div class="row mb-2">
                             <div class="col-2 offset-1 text-center font-weight-bold">Category&nbsp;</div>
-                            <div class="col-3 text-center font-weight-bold">Name&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="A custom name of the pipeline. Will be used as url alias and can be used to search for the pipeline."></i></div>
+                            <div class="col-2 text-center font-weight-bold">Name&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="A custom name of the pipeline. Will be used as url alias and can be used to search for the pipeline."></i></div>
                             <div class="col-3 text-center font-weight-bold">Pipeline&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The project name of the pipeline in Jenkins."></i></div>
+                            <div class="col-2 text-center font-weight-bold">Label&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The label will be used for the badge. If it is empty the name will be used"></i></div>
                         </div>
                     </div>
                     <div class="mt-2">
@@ -346,11 +347,14 @@
                 <option>alzura.com</option>
             </select>
         </div>
-        <div class="col-3">
+        <div class="col-2">
             <input type="text" name="jenkinsName[]" class="form-control" placeholder="Name of the component (eg: api-alzura)" />
         </div>
-        <div class="col-4">
+        <div class="col-3">
             <input type="text" name="jenkinsJob[]" class="form-control" placeholder="Name of the job (eg: pipeline-unit-api-alzura)" />
+        </div>
+        <div class="col-2">
+            <input type="text" name="jenkinsLabel[]" class="form-control" placeholder="Label for badge" />
         </div>
         <div class="col-2 custom-control custom-switch">
             <input class="custom-control-input" type="checkbox" name="jenkinsDelete[]" id="%uuid%" />

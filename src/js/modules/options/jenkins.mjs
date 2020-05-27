@@ -14,7 +14,7 @@ export class Jenkins {
         });
     }
 
-    create(name = '', job = '', type = 'REST API') {
+    create(name = '', job = '', type = 'REST API', label = '')  {
         let elem = document.createElement('div');
         elem.innerHTML = this._template.innerHTML;
         elem.innerHTML = elem.innerHTML.replace(new RegExp('%uuid%', 'g'), Uuid.generate());
@@ -23,6 +23,7 @@ export class Jenkins {
         item.querySelector('[name="jenkinsName[]"]').value = 'string' === typeof name ? name : '';
         item.querySelector('[name="jenkinsJob[]"]').value = job;
         item.querySelector('[name="jenkinsType[]"]').value = type;
+        item.querySelector('[name="jenkinsLabel[]"]').value = label;
 
         this._target.appendChild(item);
 
@@ -35,6 +36,7 @@ export class Jenkins {
         let jenkinsName = document.querySelectorAll('[name="jenkinsName[]"]');
         let jenkinsJob = document.querySelectorAll('[name="jenkinsJob[]"]');
         let jenkinsType = document.querySelectorAll('[name="jenkinsType[]"]');
+        let jenkinsLabel = document.querySelectorAll('[name="jenkinsLabel[]"]');
         let jenkinsDelete = document.querySelectorAll('[name="jenkinsDelete[]"]');
 
         for (let key in jenkinsName) {
@@ -43,6 +45,7 @@ export class Jenkins {
                     name: jenkinsName[key].value,
                     job: jenkinsJob[key].value,
                     type: jenkinsType[key].value,
+                    label: jenkinsLabel[key].value,
                 });
             }
         }
