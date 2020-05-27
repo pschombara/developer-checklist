@@ -1,467 +1,32 @@
 {
-    "lists": {
-        "developer": [
-            {
-                "id": 1,
-                "items": [
-                    {
-                        "text": "read the issue description carefully",
-                        "checked": false,
-                        "id": "48ab541e-6251-4d56-aa04-1688a814bbb9"
-                    },
-                    {
-                        "text": "the issue is not blocked by any other issue",
-                        "checked": false,
-                        "id": "bc62629b-e2c2-4ad9-8310-a70108f3fedb"
-                    },
-                    {
-                        "text": "inspect issues linked to your issue",
-                        "checked": false,
-                        "id": "6e51f277-9149-4e32-bbe9-f8723a25277e"
-                    },
-                    {
-                        "text": "read comments already made",
-                        "checked": false,
-                        "id": "1a8bb7e6-e7b9-4a63-a3dc-f28146ef2afc"
-                    }
-                ],
-                "title": "General"
-            },
-            {
-                "id": 2,
-                "items": [
-                    {
-                        "text": "write down your ideas in a JIRA comment",
-                        "checked": false,
-                        "id": "09a229ab-6a62-4487-a85d-ced379eb2510"
-                    },
-                    {
-                        "text": "add request/response models",
-                        "checked": false,
-                        "id": "526d3c44-e2fd-4254-a120-2931b45962d6"
-                    },
-                    {
-                        "text": "add Behat features/scenarios",
-                        "checked": false,
-                        "id": "275322f6-a85d-483f-a725-d05686511e1f"
-                    },
-                    {
-                        "text": "add questions that came up",
-                        "checked": false,
-                        "id": "c1f1807f-e449-46dc-a3cb-711b3ae2dd25"
-                    },
-                    {
-                        "text": "add code/SQL if needed",
-                        "checked": false,
-                        "id": "48f13194-7ca3-4c5a-bf5b-c7c8c633168d"
-                    }
-                ],
-                "title": "Planning"
-            },
-            {
-                "id": 3,
-                "items": [
-                    {
-                        "text": "remember KISS, do what HAS to be done",
-                        "checked": false,
-                        "id": "ea61e775-f79c-4837-b0db-e2b5e90c1a89"
-                    },
-                    {
-                        "text": "keep controller small, use services",
-                        "checked": false,
-                        "id": "d00a3597-2e2a-4919-ba68-627650b36f4f"
-                    },
-                    {
-                        "text": "add documentation",
-                        "checked": false,
-                        "id": "d0ec8051-ebfb-4c09-ac99-f26b1b0d7c1b"
-                    },
-                    {
-                        "text": "add changelog",
-                        "checked": false,
-                        "id": "54da84f0-d674-4202-ac19-390f410cf686"
-                    }
-                ],
-                "title": "Coding"
-            },
-            {
-                "id": 4,
-                "items": [
-                    {
-                        "text": "write unit tests (use identicalTo). Mock as little as possible.",
-                        "checked": false,
-                        "id": "0f890946-095c-4a21-9b01-4f5c0ff796ca"
-                    },
-                    {
-                        "text": "add Allure statements",
-                        "checked": false,
-                        "id": "f93ffa2f-272c-4cdf-9250-79ac00ed9338"
-                    },
-                    {
-                        "text": "write Behat tests (including edge cases)",
-                        "checked": false,
-                        "id": "5e8621d1-002a-43c3-9a67-a8fb07b036c2"
-                    },
-                    {
-                        "text": "Behat schemas should have a 'minimum' value and enums of possible values",
-                        "checked": false,
-                        "id": "d4e332c5-5fa4-41ae-a35e-86439d190c74"
-                    },
-                    {
-                        "text": "run PHPStan and CS-Fixer",
-                        "checked": false,
-                        "id": "6feff05b-0181-4132-86af-d316bd59d2f9"
-                    },
-                    {
-                        "text": "run Jenkins (both API's)",
-                        "checked": false,
-                        "id": "3bf3087b-971f-4607-a8fc-b4a519c42242"
-                    }
-                ],
-                "title": "Testing"
-            },
-            {
-                "id": 5,
-                "items": [
-                    {
-                        "text": "write test instructions in JIRA comment with linked merge requests",
-                        "checked": false,
-                        "id": "ac875c72-6f0b-41e4-876d-c72cbf8081ae"
-                    },
-                    {
-                        "text": "link also embeddable build status (Jens) in JIRA comment",
-                        "checked": false,
-                        "id": "fc8daf63-3964-4818-81bc-04844ea54c49"
-                    },
-                    {
-                        "text": "add fixed versions",
-                        "checked": false,
-                        "id": "60107e8c-0f72-496f-b850-2e6182b560b0"
-                    },
-                    {
-                        "text": "add news intern (eng) and extern (ger)",
-                        "checked": false,
-                        "id": "3488b74b-83b5-4abb-878c-6d2eaa372d6a"
-                    },
-                    {
-                        "text": "log time and inform scrum master if time was increased",
-                        "checked": false,
-                        "id": "94c0d4ff-3ee6-4867-9507-4a00aa06ae17"
-                    },
-                    {
-                        "text": "inform other teams about changes if needed",
-                        "checked": false,
-                        "id": "d10a9e81-d1e0-4096-8e8a-7e016f45da90"
-                    },
-                    {
-                        "text": "merge develop/master into your branches if needed and re-run Jenkins",
-                        "checked": false,
-                        "id": "8675f7f0-75ce-4ba7-b100-794a72016b29"
-                    },
-                    {
-                        "text": "merge all merge requests as fast as possible once the review is done",
-                        "checked": false,
-                        "id": "a00c1113-b603-4567-86b3-6e7646acbc26"
-                    }
-                ],
-                "title": "Finishing"
-            }
-        ],
-        "reviewer": [
-            {
-                "id": 1,
-                "items": [
-                    {
-                        "text": "check out all related branches (coa)",
-                        "checked": false,
-                        "id": "7cc99962-b5d5-4f29-9977-d5439e372216"
-                    },
-                    {
-                        "text": "check if changelog was added and if it is detailed enough",
-                        "checked": false,
-                        "id": "d0143282-39f3-4907-9187-7ce33e551ace"
-                    },
-                    {
-                        "text": "check if composer files were updated properly and make suggestions to change dev-feature branch to dev-master",
-                        "checked": false,
-                        "id": "d469ebde-2898-4efe-831d-15a88b69dcba"
-                    },
-                    {
-                        "text": "check if code is simple / not to complex for the given case",
-                        "checked": false,
-                        "id": "6ddf9693-d524-43e9-8fe2-3dabac7de0b4"
-                    },
-                    {
-                        "text": "check if all our coding standards are met",
-                        "checked": false,
-                        "id": "7dbf211e-11d9-4a41-b19a-67441146e3bb"
-                    },
-                    {
-                        "text": "check if code follows SOLID principles",
-                        "checked": false,
-                        "id": "0f2ef824-21d8-4062-a5b0-40fc2b2f007c"
-                    },
-                    {
-                        "text": "check if code is readable and maintainable",
-                        "checked": false,
-                        "id": "7605a06d-b260-425d-b289-ff1f28f4856b"
-                    }
-                ],
-                "title": "Reviewer"
-            }
-        ],
-        "tester": [
-            {
-                "id": 1,
-                "items": [
-                    {
-                        "text": "check out all related branches (coa)",
-                        "checked": false,
-                        "id": "1f8dc0c3-506e-417c-aa3c-47ef0da5eabe"
-                    },
-                    {
-                        "text": "check status codes in endpoints.",
-                        "checked": false,
-                        "id": "1b365fa8-11f8-43a2-843a-2ea111248a0d"
-                    },
-                    {
-                        "text": "run open-api command and check results (including errors).",
-                        "checked": false,
-                        "id": "25b3f9c4-8977-4f9b-9956-e03f271b25aa"
-                    },
-                    {
-                        "text": "check if edge cases were also covered with Behat.",
-                        "checked": false,
-                        "id": "01e69355-3f71-4271-ac0b-75c4d6a2bd71"
-                    },
-                    {
-                        "text": "check json schemas used for Behat tests.",
-                        "checked": false,
-                        "id": "02b01d34-e6c1-4c66-90cd-54c00fbddb75"
-                    },
-                    {
-                        "text": "check code in merge request and make suggestions if needed.",
-                        "checked": false,
-                        "id": "f83169cc-3b5e-43d8-9ede-680c06dc8f47"
-                    },
-                    {
-                        "text": "check if changelog was added and if it is detailed enough.",
-                        "checked": false,
-                        "id": "0948d4db-6759-40b1-9c9c-3493999bc3c8"
-                    },
-                    {
-                        "text": "check if composer files were updated properly.",
-                        "checked": false,
-                        "id": "b6b06b9a-edbc-4b3e-bbc8-dd13d4b69064"
-                    }
-                ],
-                "title": "Tester"
-            }
-        ],
-        "help": [
-            {
-                "id": 1,
-                "title": "General",
-                "items": [
-                    {
-                        "text": "clear cache",
-                        "checked": false,
-                        "id": "107401b2-0240-41da-ae9a-7c2bdbfbaadc"
-                    },
-                    {
-                        "text": "check fixtures",
-                        "checked": false,
-                        "id": "b7754d04-a9dd-4e73-b796-52a425ad0c8d"
-                    },
-                    {
-                        "text": "run composer update (cup)",
-                        "checked": false,
-                        "id": "2260840f-66ab-4ce6-84ed-6b3f07d29d46"
-                    },
-                    {
-                        "text": "check dependencies in composer files",
-                        "checked": false,
-                        "id": "d95c52bc-3b77-4f75-a33a-6a9e0050dc7a"
-                    }
-                ]
-            }
-        ]
-    },
-    "jenkins": [
+    "cheatSheet": [
         {
-            "name": "api-alzura",
-            "job": "pipeline-unit-api-alzura",
-            "type": "REST API"
+            "label": "Behat",
+            "command": "php -d memory_limit=512M vendor/bin/behat"
         },
         {
-            "name": "cli-alzura",
-            "job": "pipeline-unit-cli-alzura",
-            "type": "REST API"
+            "label": "Behat progress",
+            "command": "php -d memory_limit=512M vendor/bin/behat -f progress"
         },
         {
-            "name": "api-local",
-            "job": "pipeline-unit-api-local",
-            "type": "REST API"
+            "label": "PHP Stan",
+            "command": "vendor/bin/phpstan analyse -c build/conf.d/phpstan.neon src --memory-limit 2G"
         },
         {
-            "name": "api-backoffice",
-            "job": "pipeline-unit-api-backoffice",
-            "type": "REST API"
+            "label": "PHP Fixer dry run",
+            "command": "vendor/bin/php-cs-fixer fix --config=./.php_cs.dist --dry-run --diff"
         },
         {
-            "name": "api-product-review",
-            "job": "pipeline-unit-api-product-review",
-            "type": "REST API"
+            "label": "PHP Fixer",
+            "command": "vendor/bin/php-cs-fixer fix --config=./.php_cs.dist"
         },
         {
-            "name": "api-translation-interface",
-            "job": "pipeline-unit-api-translation-interface",
-            "type": "REST API"
+            "label": "PMD",
+            "command": "vendor/bin/phpmd src ansi build/conf.d/phpmd.xml"
         },
         {
-            "name": "api-b2b",
-            "job": "pipeline-unit-api-b2b",
-            "type": "REST API"
-        },
-        {
-            "name": "alzura/backoffice-account-bundle",
-            "job": "pipeline-unit-boaccountbundle",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "alzura/backoffice-billing-bundle",
-            "job": "pipeline-unit-bobillingbundle",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "alzura/backoffice-commission-bundle",
-            "job": "pipeline-unit-bocomissionbundle",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "alzura/doctrine-bundle",
-            "job": "pipeline-unit-doctrine-bundle",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "alzura/form-bundle",
-            "job": "pipeline-unit-formbundle",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "alzura/geo-bundle",
-            "job": "pipeline-unit-geobundle",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "alzura/local-bundle",
-            "job": "pipeline-unit-local-bundle",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "alzura/media-management-bundle",
-            "job": "pipeline-unit-mediamanagementbundle",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "alzura/mtsk-bundle",
-            "job": "pipeline-unit-mtsk-bundle",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "alzura/security",
-            "job": "pipeline-unit-security-m",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "alzura/security-bundle",
-            "job": "pipeline-unit-security-bundle",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "alzura/ui-bundle",
-            "job": "pipeline-unit-ui-bundle",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "alzura/fuel-price-bundle",
-            "job": "pipeline-unit-fuel-price-bundle",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "saitowag/core-bundle",
-            "job": "pipeline-unit-corebundle",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "saitowag/form",
-            "job": "pipeline-unit-form",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "saitowag/geo",
-            "job": "pipeline-unit-geo",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "saitowag/google-firestore-bundle",
-            "job": "pipeline-unit-googlefirestorebundle",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "saitowag/messenger-bundle",
-            "job": "pipeline-unit-messengerbundle",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "saitowag/rest-bundle",
-            "job": "pipeline-unit-restbundle",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "saitowag/swagger-bundle",
-            "job": "pipeline-unit-swaggerbundle",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "saitowag/token-generator-bundle",
-            "job": "pipeline-unit-tokengeneratorbundle",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "saitowag/translation-bundle",
-            "job": "pipeline-unit-translationbundle",
-            "type": "REST Bundles"
-        },
-        {
-            "name": "backoffice",
-            "job": "pipeline-unit-backoffice",
-            "type": "PHP-CI"
-        },
-        {
-            "name": "cron",
-            "job": "pipeline-unit-cron",
-            "type": "PHP-CI"
-        },
-        {
-            "name": "framework",
-            "job": "pipeline-unit-core",
-            "type": "PHP-CI"
-        },
-        {
-            "name": "rvo",
-            "job": "pipeline-unit-rvo",
-            "type": "PHP-CI"
-        },
-        {
-            "name": "tyre-shopping",
-            "job": "pipeline-unit-ts",
-            "type": "PHP-CI"
-        },
-        {
-            "name": "tyre24",
-            "job": "pipeline-unit-tyre24",
-            "type": "PHP-CI"
+            "label": "Open Api",
+            "command": "bin/console alzura:open-api:create"
         }
     ],
     "git": [
@@ -642,43 +207,271 @@
             "project": "ris"
         }
     ],
-    "rocketChat": {
-        "url": "https://rocketchat.saitow.ag",
-        "authToken": "",
-        "userId": "",
-        "internalRoom": "",
-        "externalRoom": "",
-        "internalMessage": "@here team planning for {issue}",
-        "externalMessage": "@here team planning for {issue}"
-    },
-    "cheatSheet": [
+    "jenkins": [
         {
-            "label": "Behat",
-            "command": "php -d memory_limit=512M vendor/bin/behat"
+            "name": "api-alzura",
+            "job": "pipeline-unit-api-alzura",
+            "type": "REST API"
         },
         {
-            "label": "Behat progress",
-            "command": "php -d memory_limit=512M vendor/bin/behat -f progress"
+            "name": "cli-alzura",
+            "job": "pipeline-unit-cli-alzura",
+            "type": "REST API"
         },
         {
-            "label": "PHP Stan",
-            "command": "vendor/bin/phpstan analyse -c build/conf.d/phpstan.neon src --memory-limit 2G"
+            "name": "api-local",
+            "job": "pipeline-unit-api-local",
+            "type": "REST API"
         },
         {
-            "label": "PHP Fixer dry run",
-            "command": "vendor/bin/php-cs-fixer fix --config=./.php_cs.dist --dry-run --diff"
+            "name": "api-backoffice",
+            "job": "pipeline-unit-api-backoffice",
+            "type": "REST API"
         },
         {
-            "label": "PHP Fixer",
-            "command": "vendor/bin/php-cs-fixer fix --config=./.php_cs.dist"
+            "name": "api-product-review",
+            "job": "pipeline-unit-api-product-review",
+            "type": "REST API"
         },
         {
-            "label": "PMD",
-            "command": "vendor/bin/phpmd src ansi build/conf.d/phpmd.xml"
+            "name": "api-translation-interface",
+            "job": "pipeline-unit-api-translation-interface",
+            "type": "REST API"
         },
         {
-            "label": "Open Api",
-            "command": "bin/console alzura:open-api:create"
+            "name": "api-b2b",
+            "job": "pipeline-unit-api-b2b",
+            "type": "REST API"
+        },
+        {
+            "name": "alzura/backoffice-account-bundle",
+            "job": "pipeline-unit-boaccountbundle",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "alzura/backoffice-billing-bundle",
+            "job": "pipeline-unit-bobillingbundle",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "alzura/backoffice-commission-bundle",
+            "job": "pipeline-unit-bocomissionbundle",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "alzura/doctrine-bundle",
+            "job": "pipeline-unit-doctrine-bundle",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "alzura/form-bundle",
+            "job": "pipeline-unit-formbundle",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "alzura/geo-bundle",
+            "job": "pipeline-unit-geobundle",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "alzura/local-bundle",
+            "job": "pipeline-unit-local-bundle",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "alzura/media-management-bundle",
+            "job": "pipeline-unit-mediamanagementbundle",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "alzura/mtsk-bundle",
+            "job": "pipeline-unit-mtsk-bundle",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "alzura/security",
+            "job": "pipeline-unit-security-m",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "alzura/security-bundle",
+            "job": "pipeline-unit-security-bundle",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "alzura/ui-bundle",
+            "job": "pipeline-unit-ui-bundle",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "alzura/fuel-price-bundle",
+            "job": "pipeline-unit-fuel-price-bundle",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "saitowag/core-bundle",
+            "job": "pipeline-unit-corebundle",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "saitowag/form",
+            "job": "pipeline-unit-form",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "saitowag/geo",
+            "job": "pipeline-unit-geo",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "saitowag/google-firestore-bundle",
+            "job": "pipeline-unit-googlefirestorebundle",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "saitowag/messenger-bundle",
+            "job": "pipeline-unit-messengerbundle",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "saitowag/rest-bundle",
+            "job": "pipeline-unit-restbundle",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "saitowag/swagger-bundle",
+            "job": "pipeline-unit-swaggerbundle",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "saitowag/token-generator-bundle",
+            "job": "pipeline-unit-tokengeneratorbundle",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "saitowag/translation-bundle",
+            "job": "pipeline-unit-translationbundle",
+            "type": "REST Bundles"
+        },
+        {
+            "name": "backoffice",
+            "job": "pipeline-unit-backoffice",
+            "type": "PHP-CI"
+        },
+        {
+            "name": "cron",
+            "job": "pipeline-unit-cron",
+            "type": "PHP-CI"
+        },
+        {
+            "name": "framework",
+            "job": "pipeline-unit-core",
+            "type": "PHP-CI"
+        },
+        {
+            "name": "rvo",
+            "job": "pipeline-unit-rvo",
+            "type": "PHP-CI"
+        },
+        {
+            "name": "tyre-shopping",
+            "job": "pipeline-unit-ts",
+            "type": "PHP-CI"
+        },
+        {
+            "name": "tyre24",
+            "job": "pipeline-unit-tyre24",
+            "type": "PHP-CI"
+        },
+        {
+            "name": "api-local (mobile)",
+            "job": "deploy-mobile-api-local",
+            "type": "alzura.mobile"
+        },
+        {
+            "name": "api-local (test)",
+            "job": "deploy-test-api-local",
+            "type": "alzura.test"
+        },
+        {
+            "name": "api-local (production)",
+            "job": "deploy-production-api-local",
+            "type": "alzura.com"
+        },
+        {
+            "name": "api-alzura (mobile)",
+            "job": "deploy-mobile-api-alzura",
+            "type": "alzura.mobile"
+        },
+        {
+            "name": "api-alzura (test)",
+            "job": "deploy-test-api-alzura",
+            "type": "alzura.test"
+        },
+        {
+            "name": "api-alzura (production)",
+            "job": "deploy-production-api-alzura",
+            "type": "alzura.com"
+        },
+        {
+            "name": "abi-backoffice (mobile)",
+            "job": "deploy-mobile-api-backoffice",
+            "type": "alzura.mobile"
+        },
+        {
+            "name": "abi-backoffice (test)",
+            "job": "deploy-test-api-backoffice",
+            "type": "alzura.test"
+        },
+        {
+            "name": "abi-backoffice (production)",
+            "job": "deploy-production-api-backoffice",
+            "type": "alzura.com"
+        },
+        {
+            "name": "cli-alzura (mobile)",
+            "job": "deploy-mobile-cli-alzura",
+            "type": "alzura.mobile"
+        },
+        {
+            "name": "cli-alzura (test)",
+            "job": "deploy-test-cli-alzura",
+            "type": "alzura.test"
+        },
+        {
+            "name": "cli-alzura (production)",
+            "job": "deploy-production-cli-alzura",
+            "type": "alzura.com"
+        },
+        {
+            "name": "api-product-review (mobile)",
+            "job": "deploy-mobile-api-product-review",
+            "type": "alzura.mobile"
+        },
+        {
+            "name": "api-product-review (test)",
+            "job": "deploy-test-api-product-review",
+            "type": "alzura.test"
+        },
+        {
+            "name": "api-product-review (production)",
+            "job": "deploy-production-api-product-review",
+            "type": "alzura.com"
+        },
+        {
+            "name": "api-translation-interface (mobile)",
+            "job": "deploy-mobile-api-translation-interface",
+            "type": "alzura.mobile"
+        },
+        {
+            "name": "api-translation-interface (test)",
+            "job": "deploy-test-api-translation-interface",
+            "type": "alzura.test"
+        },
+        {
+            "name": "api-translation-interface (production)",
+            "job": "deploy-production-api-translation-interface",
+            "type": "alzura.com"
         }
     ],
     "jira": {
@@ -709,10 +502,307 @@
         ],
         "comments": {
             "develop-success": "h4. {color:#1e872b}Checklist{color}: All checked and done! (/)",
-            "test-success": "h4. Test {color:#1e872b}OK{color} (/)",
-            "test-failed": "h4. Test {color:#de350b}failed{color} (x)",
+            "review-failed": "h4. Review {color:#de350b}failed{color} (x)",
             "review-success": "h4. Review {color:#1e872b}OK{color} (/)",
-            "review-failed": "h4. Review {color:#de350b}failed{color} (x)"
+            "test-failed": "h4. Test {color:#de350b}failed{color} (x)",
+            "test-success": "h4. Test {color:#1e872b}OK{color} (/)"
         }
+    },
+    "lists": {
+        "developer": [
+            {
+                "id": 1,
+                "items": [
+                    {
+                        "text": "read the issue description carefully",
+                        "checked": false,
+                        "id": "48ab541e-6251-4d56-aa04-1688a814bbb9"
+                    },
+                    {
+                        "text": "the issue is not blocked by any other issue",
+                        "checked": false,
+                        "id": "bc62629b-e2c2-4ad9-8310-a70108f3fedb"
+                    },
+                    {
+                        "text": "inspect issues linked to your issue",
+                        "checked": false,
+                        "id": "6e51f277-9149-4e32-bbe9-f8723a25277e"
+                    },
+                    {
+                        "text": "read comments already made",
+                        "checked": false,
+                        "id": "1a8bb7e6-e7b9-4a63-a3dc-f28146ef2afc"
+                    }
+                ],
+                "title": "General"
+            },
+            {
+                "id": 2,
+                "items": [
+                    {
+                        "text": "write down your ideas in a JIRA comment",
+                        "checked": false,
+                        "id": "09a229ab-6a62-4487-a85d-ced379eb2510"
+                    },
+                    {
+                        "text": "add request/response models",
+                        "checked": false,
+                        "id": "526d3c44-e2fd-4254-a120-2931b45962d6"
+                    },
+                    {
+                        "text": "add Behat features/scenarios",
+                        "checked": false,
+                        "id": "275322f6-a85d-483f-a725-d05686511e1f"
+                    },
+                    {
+                        "text": "add questions that came up",
+                        "checked": false,
+                        "id": "c1f1807f-e449-46dc-a3cb-711b3ae2dd25"
+                    },
+                    {
+                        "text": "add code/SQL if needed",
+                        "checked": false,
+                        "id": "48f13194-7ca3-4c5a-bf5b-c7c8c633168d"
+                    }
+                ],
+                "title": "Planning"
+            },
+            {
+                "id": 3,
+                "items": [
+                    {
+                        "text": "remember KISS, do what HAS to be done",
+                        "checked": false,
+                        "id": "ea61e775-f79c-4837-b0db-e2b5e90c1a89"
+                    },
+                    {
+                        "text": "keep controller small, use services",
+                        "checked": false,
+                        "id": "d00a3597-2e2a-4919-ba68-627650b36f4f"
+                    },
+                    {
+                        "text": "add documentation",
+                        "checked": false,
+                        "id": "d0ec8051-ebfb-4c09-ac99-f26b1b0d7c1b"
+                    },
+                    {
+                        "text": "add changelog",
+                        "checked": false,
+                        "id": "54da84f0-d674-4202-ac19-390f410cf686"
+                    }
+                ],
+                "title": "Coding"
+            },
+            {
+                "id": 4,
+                "items": [
+                    {
+                        "text": "write unit tests (use identicalTo). Mock as little as possible.",
+                        "checked": false,
+                        "id": "0f890946-095c-4a21-9b01-4f5c0ff796ca"
+                    },
+                    {
+                        "text": "add Allure statements",
+                        "checked": false,
+                        "id": "f93ffa2f-272c-4cdf-9250-79ac00ed9338"
+                    },
+                    {
+                        "text": "write Behat tests (including edge cases)",
+                        "checked": false,
+                        "id": "5e8621d1-002a-43c3-9a67-a8fb07b036c2"
+                    },
+                    {
+                        "text": "Behat schemas should have a 'minimum' value and enums of possible values",
+                        "checked": false,
+                        "id": "d4e332c5-5fa4-41ae-a35e-86439d190c74"
+                    },
+                    {
+                        "text": "run PHPStan and CS-Fixer",
+                        "checked": false,
+                        "id": "6feff05b-0181-4132-86af-d316bd59d2f9"
+                    },
+                    {
+                        "text": "run Jenkins (both API's)",
+                        "checked": false,
+                        "id": "3bf3087b-971f-4607-a8fc-b4a519c42242"
+                    }
+                ],
+                "title": "Testing"
+            },
+            {
+                "id": 5,
+                "items": [
+                    {
+                        "text": "write test instructions in JIRA comment with linked merge requests",
+                        "checked": false,
+                        "id": "ac875c72-6f0b-41e4-876d-c72cbf8081ae"
+                    },
+                    {
+                        "text": "link also embeddable build status (Jens) in JIRA comment",
+                        "checked": false,
+                        "id": "fc8daf63-3964-4818-81bc-04844ea54c49"
+                    },
+                    {
+                        "text": "add fixed versions",
+                        "checked": false,
+                        "id": "60107e8c-0f72-496f-b850-2e6182b560b0"
+                    },
+                    {
+                        "text": "add news intern (eng) and extern (ger)",
+                        "checked": false,
+                        "id": "3488b74b-83b5-4abb-878c-6d2eaa372d6a"
+                    },
+                    {
+                        "text": "log time and inform scrum master if time was increased",
+                        "checked": false,
+                        "id": "94c0d4ff-3ee6-4867-9507-4a00aa06ae17"
+                    },
+                    {
+                        "text": "inform other teams about changes if needed",
+                        "checked": false,
+                        "id": "d10a9e81-d1e0-4096-8e8a-7e016f45da90"
+                    },
+                    {
+                        "text": "merge develop/master into your branches if needed and re-run Jenkins",
+                        "checked": false,
+                        "id": "8675f7f0-75ce-4ba7-b100-794a72016b29"
+                    },
+                    {
+                        "text": "merge all merge requests as fast as possible once the review is done",
+                        "checked": false,
+                        "id": "a00c1113-b603-4567-86b3-6e7646acbc26"
+                    }
+                ],
+                "title": "Finishing"
+            }
+        ],
+        "help": [
+            {
+                "id": 1,
+                "items": [
+                    {
+                        "text": "clear cache",
+                        "checked": false,
+                        "id": "107401b2-0240-41da-ae9a-7c2bdbfbaadc"
+                    },
+                    {
+                        "text": "check fixtures",
+                        "checked": false,
+                        "id": "b7754d04-a9dd-4e73-b796-52a425ad0c8d"
+                    },
+                    {
+                        "text": "run composer update (cup)",
+                        "checked": false,
+                        "id": "2260840f-66ab-4ce6-84ed-6b3f07d29d46"
+                    },
+                    {
+                        "text": "check dependencies in composer files",
+                        "checked": false,
+                        "id": "d95c52bc-3b77-4f75-a33a-6a9e0050dc7a"
+                    }
+                ],
+                "title": "General"
+            }
+        ],
+        "reviewer": [
+            {
+                "id": 1,
+                "items": [
+                    {
+                        "text": "check out all related branches (coa)",
+                        "checked": false,
+                        "id": "7cc99962-b5d5-4f29-9977-d5439e372216"
+                    },
+                    {
+                        "text": "check if changelog was added and if it is detailed enough",
+                        "checked": false,
+                        "id": "d0143282-39f3-4907-9187-7ce33e551ace"
+                    },
+                    {
+                        "text": "check if composer files were updated properly and make suggestions to change dev-feature branch to dev-master",
+                        "checked": false,
+                        "id": "d469ebde-2898-4efe-831d-15a88b69dcba"
+                    },
+                    {
+                        "text": "check if code is simple / not to complex for the given case",
+                        "checked": false,
+                        "id": "6ddf9693-d524-43e9-8fe2-3dabac7de0b4"
+                    },
+                    {
+                        "text": "check if all our coding standards are met",
+                        "checked": false,
+                        "id": "7dbf211e-11d9-4a41-b19a-67441146e3bb"
+                    },
+                    {
+                        "text": "check if code follows SOLID principles",
+                        "checked": false,
+                        "id": "0f2ef824-21d8-4062-a5b0-40fc2b2f007c"
+                    },
+                    {
+                        "text": "check if code is readable and maintainable",
+                        "checked": false,
+                        "id": "7605a06d-b260-425d-b289-ff1f28f4856b"
+                    }
+                ],
+                "title": "Reviewer"
+            }
+        ],
+        "tester": [
+            {
+                "id": 1,
+                "items": [
+                    {
+                        "text": "check out all related branches (coa)",
+                        "checked": false,
+                        "id": "1f8dc0c3-506e-417c-aa3c-47ef0da5eabe"
+                    },
+                    {
+                        "text": "check status codes in endpoints.",
+                        "checked": false,
+                        "id": "1b365fa8-11f8-43a2-843a-2ea111248a0d"
+                    },
+                    {
+                        "text": "run open-api command and check results (including errors).",
+                        "checked": false,
+                        "id": "25b3f9c4-8977-4f9b-9956-e03f271b25aa"
+                    },
+                    {
+                        "text": "check if edge cases were also covered with Behat.",
+                        "checked": false,
+                        "id": "01e69355-3f71-4271-ac0b-75c4d6a2bd71"
+                    },
+                    {
+                        "text": "check json schemas used for Behat tests.",
+                        "checked": false,
+                        "id": "02b01d34-e6c1-4c66-90cd-54c00fbddb75"
+                    },
+                    {
+                        "text": "check code in merge request and make suggestions if needed.",
+                        "checked": false,
+                        "id": "f83169cc-3b5e-43d8-9ede-680c06dc8f47"
+                    },
+                    {
+                        "text": "check if changelog was added and if it is detailed enough.",
+                        "checked": false,
+                        "id": "0948d4db-6759-40b1-9c9c-3493999bc3c8"
+                    },
+                    {
+                        "text": "check if composer files were updated properly.",
+                        "checked": false,
+                        "id": "b6b06b9a-edbc-4b3e-bbc8-dd13d4b69064"
+                    }
+                ],
+                "title": "Tester"
+            }
+        ]
+    },
+    "rocketChat": {
+        "url": "https://rocketchat.saitow.ag",
+        "authToken": "",
+        "userId": "",
+        "internalRoom": "",
+        "externalRoom": "",
+        "internalMessage": "@here team planning for {issue}",
+        "externalMessage": "@here team planning for {issue}"
     }
 }
