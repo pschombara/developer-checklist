@@ -171,7 +171,7 @@
             "project": "t24_framework"
         },
         {
-            "domain": "edvtp1_backend",
+            "domain": "edvtp1_b2b",
             "project": "tyre24"
         },
         {
@@ -205,6 +205,14 @@
         {
             "domain": "edvtp1_b2c",
             "project": "ris"
+        },
+        {
+            "domain": "alzura-rest-api-b2b",
+            "project": "alzura/distribution"
+        },
+        {
+            "domain": "edv_tp1_tools",
+            "project": "automaticdeployment"
         }
     ],
     "jenkins": [
