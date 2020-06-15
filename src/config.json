@@ -213,6 +213,10 @@
         {
             "domain": "edv_tp1_tools",
             "project": "automaticdeployment"
+        },
+        {
+            "domain": "edvtp1_vm",
+            "project": "centos"
         }
     ],
     "jenkins": [
