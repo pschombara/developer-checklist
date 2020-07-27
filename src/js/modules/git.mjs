@@ -81,7 +81,7 @@ export class Git {
         this._tab.click();
 
         for (let item of this._projects) {
-            if (false === url.includes(`${item.domain}/${item.project}`)) {
+            if (false === url.includes(`${item.domain}/${item.project}/`)) {
                 continue;
             }
 

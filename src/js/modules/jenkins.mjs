@@ -30,6 +30,7 @@ export class Jenkins {
             option.value = item.name;
             option.setAttribute('data-type', item.type);
             option.setAttribute('data-job', item.job);
+            option.setAttribute('data-label', item.label);
             this._job.appendChild(option);
         }
 
@@ -53,7 +54,7 @@ export class Jenkins {
         } else {
             this._embeddableUrl.value = this._jenkinsBuildUrl.replace(new RegExp('\{type\}', 'g'), selected.getAttribute('data-type'));
             this._embeddableUrl.value = this._embeddableUrl.value.replace(new RegExp('\{job\}', 'g'), selected.getAttribute('data-job'));
-            this._embeddableUrl.value = this._embeddableUrl.value.replace(new RegExp('\{name\}', 'g'), selected.value);
+            this._embeddableUrl.value = this._embeddableUrl.value.replace(new RegExp('\{name\}', 'g'), '' !== selected.getAttribute('data-label') ? selected.getAttribute('data-label') : selected.value);
             this._embeddableUrl.value = this._embeddableUrl.value.replace(new RegExp('\{build\}', 'g'), this._build.value);
         }
     };

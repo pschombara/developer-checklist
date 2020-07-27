@@ -221,7 +221,7 @@ const createListEntry = (op, target, item, id) => {
 const create = (op) => {
     if (op.options.hasOwnProperty('jenkins')) {
         for (let item of op.options.jenkins) {
-            op.jenkins.create(item.name, item.job, item.type);
+            op.jenkins.create(item.name, item.job, item.type, item.label);
         }
     }
 
