@@ -4,11 +4,11 @@
     "description": "",
     "scripts": {},
     "devDependencies": {
-        "bootstrap": "^4.4.1",
-        "browserify": "^16.5.0",
+        "@fortawesome/fontawesome-free": "^5.14.0",
+        "bootstrap": "^4.5.1",
+        "browserify": "^16.5.2",
         "cssnano": "^4.1.10",
         "del": "^5.1.0",
-        "@fortawesome/fontawesome-free": "^5.13.0",
         "gulp": "^4.0.2",
         "gulp-better-rollup": "^4.0.1",
         "gulp-clean-css": "^4.2.0",
@@ -19,15 +19,15 @@
         "gulp-postcss": "^8.0.0",
         "gulp-rollup": "^2.17.0",
         "gulp-sass": "^4.0.2",
-        "gulp-terser": "^1.2.0",
-        "gulp-zip": "^5.0.1",
+        "gulp-terser": "^1.3.2",
+        "gulp-zip": "^5.0.2",
         "jquery": "^3.4.1",
         "popper.js": "^1.16",
         "rollup": "^1.32",
         "rollup-plugin-commonjs": "^10.1.0",
         "rollup-plugin-node-resolve": "^5.2.0",
         "rollup-stream": "^1.24.1",
-        "sweetalert2": "^9.8.2"
+        "sweetalert2": "^9.17.1"
     },
     "contributors": [
         "Christian Buchholz",
