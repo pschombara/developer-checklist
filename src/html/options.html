@@ -232,17 +232,46 @@
                     </div>
                 </div>
                 <div class="tab-pane" id="git" role="tabpanel">
-                    <div class="card-body" data-git data-draggable>
-                        <div class="row">
-                            <h5>Git projects</h5>
+                    <div class="accordion mt-2" data-accordion="git" id="gitAccordion">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='git-projects']">Projects</button>
+                                </h2>
+                            </div>
+                            <div class="collapse" data-collapse="git-projects" data-parent="#gitAccordion">
+                                <div class="card-body">
+                                    <div class="row mb-2">
+                                        <div class="col-2 offset-1 text-center font-weight-bold">Category</div>
+                                        <div class="col-3 offset-1 text-center font-weight-bold">Project</div>
+                                    </div>
+                                    <div data-git data-draggable>
+                                    </div>
+                                    <div class="mt-2">
+                                        <button type="button" class="btn btn-success" data-add-git>+ Add</button>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
-                        <div class="row mb-2">
-                            <div class="col-2 offset-1 text-center font-weight-bold">Category</div>
-                            <div class="col-3 offset-1 text-center font-weight-bold">Project</div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='git-categories']">Categories</button>
+                                </h2>
+                            </div>
+                            <div class="collapse" data-collapse="git-categories" data-parent="#gitAccordion">
+                                <div class="card-body" >
+                                    <div class="row mb-2">
+                                        <div class="col-2 offset-1 text-center">Category</div>
+                                    </div>
+                                    <div data-git-categories data-draggable=""></div>
+                                    <div class="mt-2">
+                                        <button type="button" class="btn btn-success" data-add-git-category>+ Add</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="mt-2">
-                        <button type="button" class="btn btn-success" data-add-git>+ Add</button>
                     </div>
                 </div>
                 <div class="tab-pane" id="about" role="tabpanel">
@@ -366,14 +395,7 @@
     <div class="row mt-2" draggable="true">
         <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
         <div class="col-3">
-            <select name="gitDomain[]" class="form-control">
-                <option>alzura-rest-api-b2b</option>
-                <option>edvtp1_backend</option>
-                <option>edvtp1_b2c</option>
-                <option>edvtp1_b2b</option>
-                <option>edv_tp1_tools</option>
-                <option>edvtp1_vm</option>
-            </select>
+            <select name="gitDomain[]" class="form-control"></select>
         </div>
         <div class="col-3">
             <input type="text" name="gitProject[]" class="form-control" placeholder="project eg: alzura/local-bundle" />
@@ -381,6 +403,18 @@
         <div class="col-2 custom-control custom-switch">
             <input class="custom-control-input" type="checkbox" name="gitDelete[]" id="%gitUuid%" />
             <label class="custom-control-label" for="%gitUuid%">Delete</label>
+        </div>
+    </div>
+</template>
+<template data-template="git-category">
+    <div class="row mt-2" draggable="true">
+        <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
+        <div class="col-3">
+            <input type="text" name="gitCategoryName[]" class="form-control" placeholder="name of the category" />
+        </div>
+        <div class="col-2 custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" name="gitCategoryDelete[]" id="%gitCategoryUuid%" />
+            <label class="custom-control-label" for="%gitCategoryUuid%">Delete</label>
         </div>
     </div>
 </template>

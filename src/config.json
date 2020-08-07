@@ -219,6 +219,14 @@
             "project": "centos"
         }
     ],
+    "gitCategories": [
+        "alzura-rest-api-b2b",
+        "edvtp1_backend",
+        "edvtp1_b2c",
+        "edvtp1_b2b",
+        "edv_tp1_tools",
+        "edvtp1_vm"
+    ],
     "jenkins": [
         {
             "name": "api-alzura",

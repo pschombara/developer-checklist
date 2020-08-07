@@ -8,6 +8,7 @@ import {Config} from "./options/config";
 import {CheatSheet} from "./options/cheat-sheet";
 import {Jenkins} from "./options/jenkins";
 import {Git} from "./options/git";
+import {GitCategories} from "./options/gitCategories";
 
 export class Options {
     constructor() {
@@ -19,6 +20,7 @@ export class Options {
         this._cheatSheet = new CheatSheet();
         this._jenkins = new Jenkins();
         this._git = new Git();
+        this._gitCategories = new GitCategories();
 
         this._templates = {
             cardList: document.querySelector('[data-template="cardList"]'),
@@ -71,6 +73,10 @@ export class Options {
         return this._git;
     }
 
+    get gitCategories() {
+        return this._gitCategories;
+    }
+
     init() {
         this.storage.loadOptions().then(stored => {
             if (0 === Object.keys(stored).length) {
@@ -94,6 +100,7 @@ export class Options {
         this.cheatSheet.init();
         this.config.init();
         this.git.init();
+        this.gitCategories.init();
 
         this._buttonRestoreOptions.addEventListener('click', () => {
             ConfirmationPrompt.fire({
@@ -134,6 +141,7 @@ export class Options {
         this.options.rocketChat = this.rocketChat.options;
         this.options.cheatSheet = this.cheatSheet.save();
         this.options.git = this.git.save();
+        this.options.gitCategories = this.gitCategories.save();
 
         for (let type of this._listTypes) {
             let items = document.querySelectorAll(`[data-type=${type}][data-items]`);
@@ -222,6 +230,14 @@ const create = (op) => {
     if (op.options.hasOwnProperty('jenkins')) {
         for (let item of op.options.jenkins) {
             op.jenkins.create(item.name, item.job, item.type, item.label);
+        }
+    }
+
+    if (op.options.hasOwnProperty('gitCategories')) {
+        op.git.categories = op.options.gitCategories;
+
+        for (let category of op.options.gitCategories) {
+            op.gitCategories.create(category);
         }
     }
 
