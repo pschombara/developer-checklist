@@ -6,6 +6,11 @@ export class Jenkins {
         this._template = document.querySelector('[data-template="jenkins"]');
         this._target = document.querySelector('[data-jenkins]');
         this._add =  document.querySelector('[data-add-jenkins]');
+        this._categories = [];
+    }
+
+    set categories(categories) {
+        this._categories = categories;
     }
 
     init() {
@@ -14,15 +19,26 @@ export class Jenkins {
         });
     }
 
-    create(name = '', job = '', type = 'REST API', label = '')  {
+    create(name = '', job = '', type = '', label = '')  {
         let elem = document.createElement('div');
         elem.innerHTML = this._template.innerHTML;
         elem.innerHTML = elem.innerHTML.replace(new RegExp('%uuid%', 'g'), Uuid.generate());
         let item = elem.children[0];
 
+        let typeSelect = item.querySelector('[name="jenkinsType[]"]');
+
+        for (let category of this._categories) {
+            const option = document.createElement('option');
+            option.innerHTML = category;
+            typeSelect.appendChild(option);
+        }
+
+        if ('string' === typeof type && '' !== type) {
+            typeSelect.value = type;
+        }
+
         item.querySelector('[name="jenkinsName[]"]').value = 'string' === typeof name ? name : '';
         item.querySelector('[name="jenkinsJob[]"]').value = job;
-        item.querySelector('[name="jenkinsType[]"]').value = type;
         item.querySelector('[name="jenkinsLabel[]"]').value = label;
 
         this._target.appendChild(item);

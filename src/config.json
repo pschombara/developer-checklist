@@ -547,6 +547,14 @@
             "label": "api-translation-interface"
         }
     ],
+    "jenkinsCategories": [
+        "REST API",
+        "REST Bundles",
+        "PHP-CI",
+        "alzura.mobile",
+        "alzura.test",
+        "alzura.com"
+    ],
     "jira": {
         "url": "https://jira.saitow.ag",
         "cleanup": 2,

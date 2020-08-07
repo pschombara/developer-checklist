@@ -46,7 +46,7 @@ const checkIsObject = (data) => {
 
 const checkRootSchema = (data) => {
     let errors = [];
-    let requiredOptions = ['lists', 'jenkins', 'git', 'gitCategories', 'jira', 'rocketChat', 'cheatSheet'];
+    let requiredOptions = ['lists', 'jenkins', 'jenkinsCategories', 'git', 'gitCategories', 'jira', 'rocketChat', 'cheatSheet'];
 
     for (let option of requiredOptions) {
         if (false === data.hasOwnProperty(option)) {

@@ -26,7 +26,7 @@ export class Git {
         let selectDomain = item.querySelector('[name="gitDomain[]"]');
 
         for (let category of this._categories) {
-            let option = document.createElement('option');
+            const option = document.createElement('option');
             option.innerHTML = category;
             selectDomain.appendChild(option);
         }

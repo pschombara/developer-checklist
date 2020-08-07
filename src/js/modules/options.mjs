@@ -9,6 +9,7 @@ import {CheatSheet} from "./options/cheat-sheet";
 import {Jenkins} from "./options/jenkins";
 import {Git} from "./options/git";
 import {GitCategories} from "./options/gitCategories";
+import {JenkinsCategories} from "./options/jenkinsCategories";
 
 export class Options {
     constructor() {
@@ -19,6 +20,7 @@ export class Options {
         this._rocketChat = new OptionsRocketChat();
         this._cheatSheet = new CheatSheet();
         this._jenkins = new Jenkins();
+        this._jenkinsCategories = new JenkinsCategories();
         this._git = new Git();
         this._gitCategories = new GitCategories();
 
@@ -55,6 +57,10 @@ export class Options {
 
     get jenkins() {
         return this._jenkins;
+    }
+
+    get jenkinsCategories() {
+        return this._jenkinsCategories;
     }
 
     get cheatSheet() {
@@ -97,6 +103,7 @@ export class Options {
         });
 
         this.jenkins.init();
+        this.jenkinsCategories.init();
         this.cheatSheet.init();
         this.config.init();
         this.git.init();
@@ -138,6 +145,7 @@ export class Options {
     save(type) {
         this.options.jira = this.jira.save();
         this.options.jenkins = this.jenkins.save();
+        this.options.jenkinsCategories = this.jenkinsCategories.save();
         this.options.rocketChat = this.rocketChat.options;
         this.options.cheatSheet = this.cheatSheet.save();
         this.options.git = this.git.save();
@@ -227,6 +235,14 @@ const createListEntry = (op, target, item, id) => {
 };
 
 const create = (op) => {
+    if (op.options.hasOwnProperty('jenkinsCategories')) {
+        op.jenkins.categories = op.options.jenkinsCategories;
+
+        for (let category of op.options.jenkinsCategories) {
+            op.jenkinsCategories.create(category);
+        }
+    }
+
     if (op.options.hasOwnProperty('jenkins')) {
         for (let item of op.options.jenkins) {
             op.jenkins.create(item.name, item.job, item.type, item.label);

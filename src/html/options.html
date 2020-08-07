@@ -216,20 +216,48 @@
                     </div>
                 </div>
                 <div class="tab-pane" id="jenkins" role="tabpanel">
-                    <div class="card-body" data-jenkins data-draggable>
-                        <div class="row">
-                            <h5>Jenkins builds</h5>
+                    <div class="accordion mt-2" data-accordion="jenkins" id="jenkinsAccordion">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='jenkins-builds']">Builds</button>
+                                </h2>
+                            </div>
+                            <div class="collapse" data-collapse="jenkins-builds" data-parent="#jenkinsAccordion">
+                                <div class="card-body">
+                                    <div class="row mb-2">
+                                        <div class="col-2 offset-1 text-center font-weight-bold">Category&nbsp;</div>
+                                        <div class="col-2 text-center font-weight-bold">Name&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="A custom name of the pipeline. Will be used as url alias and can be used to search for the pipeline."></i></div>
+                                        <div class="col-3 text-center font-weight-bold">Pipeline&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The project name of the pipeline in Jenkins."></i></div>
+                                        <div class="col-2 text-center font-weight-bold">Label&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The label will be used for the badge. If it is empty the name will be used"></i></div>
+                                    </div>
+                                    <div data-jenkins data-draggable></div>
+                                    <div class="mt-2">
+                                        <button type="button" class="btn btn-success" data-add-jenkins>+ Add</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="row mb-2">
-                            <div class="col-2 offset-1 text-center font-weight-bold">Category&nbsp;</div>
-                            <div class="col-2 text-center font-weight-bold">Name&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="A custom name of the pipeline. Will be used as url alias and can be used to search for the pipeline."></i></div>
-                            <div class="col-3 text-center font-weight-bold">Pipeline&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The project name of the pipeline in Jenkins."></i></div>
-                            <div class="col-2 text-center font-weight-bold">Label&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The label will be used for the badge. If it is empty the name will be used"></i></div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='jenkins-categories']">Categories</button>
+                                </h2>
+                            </div>
+                            <div class="collapse" data-collapse="jenkins-categories" data-parent="#jenkinsAccordion">
+                                <div class="card-body">
+                                    <div class="row mb-2">
+                                        <div class="offset-1 text-center">Category</div>
+                                    </div>
+                                    <div data-jenkins-categories data-draggable></div>
+                                    <div class="mt-2">
+                                        <button type="button" class="btn btn-success" data-add-jenkins-category>+ Add</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="mt-2">
-                        <button type="button" class="btn btn-success" data-add-jenkins>+ Add</button>
-                    </div>
+
                 </div>
                 <div class="tab-pane" id="git" role="tabpanel">
                     <div class="accordion mt-2" data-accordion="git" id="gitAccordion">
@@ -265,7 +293,7 @@
                                     <div class="row mb-2">
                                         <div class="col-2 offset-1 text-center">Category</div>
                                     </div>
-                                    <div data-git-categories data-draggable=""></div>
+                                    <div data-git-categories data-draggable></div>
                                     <div class="mt-2">
                                         <button type="button" class="btn btn-success" data-add-git-category>+ Add</button>
                                     </div>
@@ -367,14 +395,7 @@
     <div class="row mt-2" draggable="true">
         <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
         <div class="col-2">
-            <select name="jenkinsType[]" class="form-control">
-                <option>REST Bundles</option>
-                <option>REST API</option>
-                <option>PHP-CI</option>
-                <option>alzura.mobile</option>
-                <option>alzura.test</option>
-                <option>alzura.com</option>
-            </select>
+            <select name="jenkinsType[]" class="form-control"></select>
         </div>
         <div class="col-2">
             <input type="text" name="jenkinsName[]" class="form-control" placeholder="Name of the component (eg: api-alzura)" />
@@ -388,6 +409,18 @@
         <div class="col-2 custom-control custom-switch">
             <input class="custom-control-input" type="checkbox" name="jenkinsDelete[]" id="%uuid%" />
             <label class="custom-control-label" for="%uuid%">Delete</label>
+        </div>
+    </div>
+</template>
+<template data-template="jenkins-category">
+    <div class="row mt-2" draggable="true">
+        <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
+        <div class="col-3">
+            <input type="text" name="jenkinsCategoryName[]" class="form-control" placeholder="name of the category" />
+        </div>
+        <div class="col-2 custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" name="jenkinsCategoryDelete[]" id="%jenkinsCategoryUuid%" />
+            <label class="custom-control-label" for="%jenkinsCategoryUuid%">Delete</label>
         </div>
     </div>
 </template>
