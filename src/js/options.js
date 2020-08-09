@@ -1,7 +1,7 @@
-import './modules/jquery'
+import './modules/jquery';
 import 'bootstrap';
-import {ErrorPrompt, Toast,} from "./modules/sweet";
-import {Options} from "./modules/options";
+import {ErrorPrompt, Toast,} from './modules/sweet';
+import {Options} from './modules/options';
 
 (() => {
     const saves = document.querySelectorAll('[data-save]');
@@ -15,7 +15,7 @@ import {Options} from "./modules/options";
                     html: options.validator.htmlErrors,
                 });
 
-                return
+                return;
             }
 
             let title = 'Saved';

@@ -1,4 +1,4 @@
-import {Checklist} from "./modules/checklist";
+import {Checklist} from './modules/checklist';
 
 chrome.tabs.query({active: true, currentWindow: true}, (tab) => {
     if (tab.length <= 0) {
