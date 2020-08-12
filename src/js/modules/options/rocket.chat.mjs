@@ -27,9 +27,15 @@ export class OptionsRocketChat extends SuperRocketChat{
         };
 
         this._datalist = document.querySelector('#rc-rooms');
+
+        this._initiliazed = false;
     }
 
     init() {
+        if (this._initiliazed) {
+            return;
+        }
+
         this._inputs.internalMessage.value = this.options.internalMessage;
         this._inputs.externalMessage.value = this.options.externalMessage;
 
@@ -217,6 +223,7 @@ export class OptionsRocketChat extends SuperRocketChat{
         }).then(result => {
             if ('object' === typeof result && result.success) {
                 this.createRooms(result.update);
+                this._initiliazed = true;
             }
         });
     }

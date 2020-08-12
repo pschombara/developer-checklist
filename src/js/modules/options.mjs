@@ -8,6 +8,8 @@ import {Config} from "./options/config";
 import {CheatSheet} from "./options/cheat-sheet";
 import {Jenkins} from "./options/jenkins";
 import {Git} from "./options/git";
+import {GitCategories} from "./options/gitCategories";
+import {JenkinsCategories} from "./options/jenkinsCategories";
 
 export class Options {
     constructor() {
@@ -18,7 +20,9 @@ export class Options {
         this._rocketChat = new OptionsRocketChat();
         this._cheatSheet = new CheatSheet();
         this._jenkins = new Jenkins();
+        this._jenkinsCategories = new JenkinsCategories();
         this._git = new Git();
+        this._gitCategories = new GitCategories();
 
         this._templates = {
             cardList: document.querySelector('[data-template="cardList"]'),
@@ -55,6 +59,10 @@ export class Options {
         return this._jenkins;
     }
 
+    get jenkinsCategories() {
+        return this._jenkinsCategories;
+    }
+
     get cheatSheet() {
         return this._cheatSheet;
     }
@@ -69,6 +77,10 @@ export class Options {
 
     get git() {
         return this._git;
+    }
+
+    get gitCategories() {
+        return this._gitCategories;
     }
 
     init() {
@@ -91,9 +103,11 @@ export class Options {
         });
 
         this.jenkins.init();
+        this.jenkinsCategories.init();
         this.cheatSheet.init();
         this.config.init();
         this.git.init();
+        this.gitCategories.init();
 
         this._buttonRestoreOptions.addEventListener('click', () => {
             ConfirmationPrompt.fire({
@@ -131,9 +145,11 @@ export class Options {
     save(type) {
         this.options.jira = this.jira.save();
         this.options.jenkins = this.jenkins.save();
+        this.options.jenkinsCategories = this.jenkinsCategories.save();
         this.options.rocketChat = this.rocketChat.options;
         this.options.cheatSheet = this.cheatSheet.save();
         this.options.git = this.git.save();
+        this.options.gitCategories = this.gitCategories.save();
 
         for (let type of this._listTypes) {
             let items = document.querySelectorAll(`[data-type=${type}][data-items]`);
@@ -219,9 +235,25 @@ const createListEntry = (op, target, item, id) => {
 };
 
 const create = (op) => {
+    if (op.options.hasOwnProperty('jenkinsCategories')) {
+        op.jenkins.categories = op.options.jenkinsCategories;
+
+        for (let category of op.options.jenkinsCategories) {
+            op.jenkinsCategories.create(category);
+        }
+    }
+
     if (op.options.hasOwnProperty('jenkins')) {
         for (let item of op.options.jenkins) {
             op.jenkins.create(item.name, item.job, item.type, item.label);
+        }
+    }
+
+    if (op.options.hasOwnProperty('gitCategories')) {
+        op.git.categories = op.options.gitCategories;
+
+        for (let category of op.options.gitCategories) {
+            op.gitCategories.create(category);
         }
     }
 

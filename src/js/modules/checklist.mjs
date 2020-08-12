@@ -18,7 +18,7 @@ export class Checklist {
         };
         this._header = document.querySelector('[data-header]');
         this._missingOptions = true;
-        this._jiraUrl = document.querySelectorAll('.jira_url');
+        this._jiraUrl = document.querySelector('.jira_url');
         this._issuePattern = new RegExp('[a-zA-Z]+-\\d+');
         this._identifier = '';
         this._options = {};
@@ -394,7 +394,7 @@ const clear = (cl) => {
         element.classList.remove('checked');
     });
 
-    document.querySelectorAll('[data-btn][data-type]').forEach((element) => {
+    document.querySelectorAll('[data-btn][data-type].btn-outline-success').forEach((element) => {
         element.setAttribute('disabled', 'disabled');
     });
 };
