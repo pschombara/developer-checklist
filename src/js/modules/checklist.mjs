@@ -44,7 +44,15 @@ export class Checklist {
                 this._identifier = match ? match : '';
             }
 
-            initView(this);
+            if (this._missingOptions) {
+                showContent('missingOptions', this);
+
+                document.querySelector('[data-open="options"]').addEventListener('click', () => {
+                    chrome.tabs.create({url: '/html/options.html'});
+                });
+            } else {
+                initView(this);
+            }
 
             $('[data-toggle="tooltip"]').tooltip();
             $('[data-toggle="popover"]').popover({
@@ -97,10 +105,20 @@ const checkOptions = (cl) => {
         cl._jira.options = cl._options.jira;
         cl._jira.createBoards();
 
-        if (0 !== (cl._options.jira.boards[0].id ? cl._options.jira.boards[0].id : 0)) {
+        if ('' === cl._options.jira.url) {
+            return;
+        }
+
+        if (0 !== cl._options.jira.boards.length && 0 !== (cl._options.jira.boards[0].id ? cl._options.jira.boards[0].id : 0)) {
             cl._jiraUrl.href = cl._options.jira.url + `/secure/RapidBoard.jspa?rapidView=${cl._options.jira.boards[0].id}`;
         } else {
             cl._jiraUrl.href = cl._options.jira.url + '/secure/ManageRapidViews.jspa';
+        }
+
+        if (0 === cl._options.jira.boards.length) {
+            let buttonIssue = document.querySelector('#buttonIssue');
+            buttonIssue.disabled = true;
+            buttonIssue.setAttribute('title', 'At least one board needs to be configured in the options!');
         }
     }
 
