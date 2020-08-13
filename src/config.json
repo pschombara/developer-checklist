@@ -333,7 +333,7 @@
         ]
     },
     "rocketChat": {
-        "url": "https://rocketchat.saitow.ag",
+        "url": "",
         "authToken": "",
         "userId": "",
         "internalRoom": "",

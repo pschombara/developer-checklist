@@ -95,23 +95,3 @@ const getClient = (method, url, options) => {
 
     return xHttp;
 };
-
-
-// xhttp.open("GET", "https://rocketchat.saitow.ag/api/v1/rooms.get", true);
-// xhttp.setRequestHeader("X-Auth-Token", "OgX7FXyYVhTEA4yzLIt89ya_aI8avrp2LDO_O0aIFua");
-// xhttp.setRequestHeader("X-User-Id", "nqjxnBxLfP6vrvAqe");
-// xhttp.setRequestHeader("Content-Type", "application/json");
-// xhttp.onreadystatechange = function () {
-// if (xhttp.readyState === 4 && xhttp.status === 200) {
-//       // var json = JSON.parse(xhttp.responseText);
-//       // console.log(json.email + ", " + json.password);
-//       console.log(xhttp.responseText);
-//     }
-// };
-// //var data = JSON.stringify({"user": "checklist", "password": "letMeInRoger"});
-// xhttp.send();
-// "OgX7FXyYVhTEA4yzLIt89ya_aI8avrp2LDO_O0aIFua" = X AUTH personal
-// user_id = nqjxnBxLfP6vrvAqe
-// room id internal = CkJdMjtN4ycaJ4J3K
-// room_id bdev 3 = iM3fvccnvWR8QLuPo
-// var xhttp = new XMLHttpRequest();
