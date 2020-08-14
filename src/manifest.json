@@ -18,9 +18,7 @@
     "permissions": [
         "tabs",
         "storage",
-        "activeTab",
-        "https://www.paypal.com/*",
-        "https://www.paypalobjects.com/*"
+        "activeTab"
     ],
     "optional_permissions": [
         "*://*/*"
