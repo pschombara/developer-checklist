@@ -24,7 +24,7 @@ export class RocketChat extends SuperRocketChat
 
     init() {
         const attachEventListener = (btn, room, message) => {
-            if ('' !== room && '' !== this.options.userId && '' !== this.options.authToken) {
+            if ('' !== this._identifier && '' !== room && '' !== this.options.userId && '' !== this.options.authToken) {
                 btn.addEventListener('click', () => {
                    sendMessage(getMessage(room, message, this._identifier, this._board), this._options);
                 });
