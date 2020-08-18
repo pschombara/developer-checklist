@@ -11,8 +11,11 @@
         <div class="col">
             <h1>Options</h1>
             <ul class="nav nav-tabs" id="optionsTab" role="tablist">
+                <li class="nav-item" data-toggle="popover" data-content="Modules" data-placement="bottom">
+                    <a class="nav-link active" href="#modules" role="tab" id="modules-tab" data-toggle="tab"><i class="fas fa-cogs"></i></a>
+                </li>
                 <li class="nav-item" data-toggle="popover" data-content="Jira" data-placement="bottom">
-                    <a class="nav-link active" href="#general" role="tab" id="general-tab" data-toggle="tab"><i class="fab fa-jira"></i></a>
+                    <a class="nav-link" href="#general" role="tab" id="general-tab" data-toggle="tab"><i class="fab fa-jira"></i></a>
                 </li>
                 <li class="nav-item" data-toggle="popover" data-content="Developer items" data-placement="bottom">
                     <a class="nav-link" href="#developer-items" role="tab" id="list-items-tab" data-toggle="tab"><i class="fas fa-keyboard"></i></a>
@@ -44,10 +47,49 @@
             </ul>
 
             <div class="tab-content" id="optionsTabContent">
-                <div class="tab-pane fade show active" id="general" role="tabpanel">
+                <div class="tab-pane fade show active" id="modules" role="tabpanel">
                     <div class="card-body">
                         <div class="row">
-                            <h5>Jira</h5>
+                            <h5 class="col">Modules</h5>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" name="module[jenkins]" id="moduleJenkins" />
+                                    <label class="custom-control-label" for="moduleJenkins"><i class="fab fa-jenkins"></i> Jenkins</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" name="module[gitLab]" id="moduleGitLab" />
+                                    <label class="custom-control-label" for="moduleGitLab"><i class="fab fa-gitlab"></i> GitLab</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" name="module[rocketChat]" id="moduleRocketChat" />
+                                    <label class="custom-control-label" for="moduleRocketChat"><i class="fab fa-rocketchat"></i> RocketChat</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" name="module[cheatSheet]" id="moduleCheatSheet" />
+                                    <label class="custom-control-label" for="moduleCheatSheet"><i class="fas fa-terminal"></i> CheatSheet</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="general" role="tabpanel">
+                    <div class="card-body">
+                        <div class="row">
+                            <h5 class="col">Jira</h5>
                         </div>
                         <div class="row">
                             <label for="boardLink" class="col-form-label col-sm-4">Server URL</label>
@@ -153,7 +195,7 @@
                 <div class="tab-pane" id="cheat-sheet" role="tabpanel">
                     <div class="card-body" data-cheat-sheet data-draggable>
                         <div class="row">
-                            <h5 data-toggle="tooltip" data-placement="left" title="First column is a custom name, second column is the actual command/link etc.">Cheat Sheet</h5>
+                            <h5 class="col" data-toggle="tooltip" data-placement="left" title="First column is a custom name, second column is the actual command/link etc.">Cheat Sheet</h5>
                         </div>
                         <div class="row mb-2">
                             <div class="col-2 offset-1 text-center font-weight-bold">Name&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="A custom name for the command/link etc."></i></div>
@@ -167,7 +209,7 @@
                 <div class="tab-pane" id="rocket-chat" role="tabpanel">
                     <div class="card-body">
                         <div class="row">
-                            <h5>Rocket.Chat</h5>
+                            <h5 class="col">Rocket.Chat</h5>
                         </div>
                         <div class="row">
                             <label for="rc-url" class="col-form-label col-4">Rocket.Chat Url</label>
@@ -305,7 +347,7 @@
                 <div class="tab-pane" id="about" role="tabpanel">
                     <div class="card-body">
                         <div class="row">
-                            <h5>Enjoy!</h5>
+                            <h5 class="col">Enjoy!</h5>
                         </div>
                         <div class="row mt-1">
                             <div class="col">
