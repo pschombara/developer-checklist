@@ -1,4 +1,10 @@
 {
+    "modules": {
+        "jenkins":  false,
+        "cheatSheet": false,
+        "rocketChat":  false,
+        "gitLab": false
+    },
     "cheatSheet": [
         {
             "label": "Behat",

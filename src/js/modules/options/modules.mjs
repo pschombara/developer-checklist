@@ -42,4 +42,8 @@ export class Modules {
             this._tabs[module].classList.remove('d-none');
         }
     }
+
+    save() {
+        return this._modules;
+    }
 }

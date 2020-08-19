@@ -269,6 +269,24 @@ const checkCheatSheet = (data) => {
     return errors;
 }
 
+const checkModules = (data) => {
+    const requiredKeys = [
+        'jenkins',
+        'cheatSheet',
+        'rocketChat',
+        'gitLab',
+    ];
+
+    const types = {
+        jenkins: 'boolean',
+        cheatSheet: 'boolean',
+        rocketChat: 'boolean',
+        gitLab: 'boolean',
+    };
+
+    return checkObjectContainsKeys(data, requiredKeys, types, 'modules');
+};
+
 const check = {
     lists: checkLists,
     jenkins: checkJenkins,
@@ -277,7 +295,8 @@ const check = {
     gitCategories: checkGitCategories,
     jira: checkJira,
     rocketChat: checkRocketChat,
-    cheatSheet: checkCheatSheet
+    cheatSheet: checkCheatSheet,
+    modules: checkModules,
 }
 
 const checkIsObject = (data) => {
@@ -298,7 +317,7 @@ const checkIsObject = (data) => {
 
 const checkRootSchema = (data) => {
     let errors = [];
-    let requiredOptions = ['lists', 'jenkins', 'jenkinsCategories', 'git', 'gitCategories', 'jira', 'rocketChat', 'cheatSheet'];
+    let requiredOptions = ['lists', 'jenkins', 'jenkinsCategories', 'git', 'gitCategories', 'jira', 'rocketChat', 'cheatSheet', 'modules'];
 
     for (let option of requiredOptions) {
         if (false === data.hasOwnProperty(option)) {
