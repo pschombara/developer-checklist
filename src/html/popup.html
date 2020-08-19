@@ -38,10 +38,10 @@
             <li class="nav-item d-none" data-tab-show="checklist" data-toggle="popover" data-content="Help" data-placement="bottom">
                 <a class="nav-link" href="#help" role="tab" id="help-tab" data-toggle="tab"><i class="fas fa-question-circle"></i></a>
             </li>
-            <li class="nav-item" data-tab-show="all" data-toggle="popover" data-content="Special" data-placement="bottom">
+            <li class="nav-item" data-tab-show="all" data-module="special" data-toggle="popover" data-content="Special" data-placement="bottom">
                 <a class="nav-link" href="#special" role="tab" id="special-tab" data-toggle="tab"><i class="fas fa-toilet-paper"></i></a>
             </li>
-            <li class="nav-item" data-tab-show="all" data-toggle="popover" data-content="Cheat Sheet" data-placement="bottom">
+            <li class="nav-item" data-tab-show="all" data-module="cheatSheet" data-toggle="popover" data-content="Cheat Sheet" data-placement="bottom">
                 <a class="nav-link" href="#cheat-sheet" role="tab" id="cheat-sheet-tab" data-toggle="tab"><i class="fas fa-terminal"></i></a>
             </li>
         </ul>
@@ -144,65 +144,71 @@
             <div class="tab-pane fade" id="special" role="tabpanel">
                 <div class="card-body">
                     <div class="container-fluid">
-                        <div class="row">
-                            <div class="col">
-                                <h4><i class="fab fa-rocketchat"></i> Team planing</h4>
+                        <div data-module="rocketChat">
+                            <div class="row">
+                                <div class="col">
+                                    <h4><i class="fab fa-rocketchat"></i> Team planing</h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <button type="button" class="btn btn-primary btn-sm btn-block" data-chat="internal">Internal</button>
+                                </div>
+                                <div class="col-3">
+                                    <button type="button" class="btn btn-primary btn-sm btn-block" data-chat="external">External</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <button type="button" class="btn btn-primary btn-sm btn-block" data-chat="internal">Internal</button>
+                        <div data-module="jenkins">
+                            <div class="row mt-3">
+                                <div class="col">
+                                    <h4><i class="fab fa-jenkins"></i> Embeddable Build Status</h4>
+                                </div>
                             </div>
-                            <div class="col-3">
-                                <button type="button" class="btn btn-primary btn-sm btn-block" data-chat="external">External</button>
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col">
-                                <h4><i class="fab fa-jenkins"></i> Embeddable Build Status</h4>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <input class="form-control" list="jenkinsJobs" placeholder="Jenkins job"/>
-                                <datalist id="jenkinsJobs" data-jenkins-jobs>
+                            <div class="row">
+                                <div class="col-6">
+                                    <input class="form-control" list="jenkinsJobs" placeholder="Jenkins job"/>
+                                    <datalist id="jenkinsJobs" data-jenkins-jobs>
 
-                                </datalist>
+                                    </datalist>
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" class="form-control" min="1" data-jenkins-build placeholder="Build number" />
+                                </div>
                             </div>
-                            <div class="col-6">
-                                <input type="number" class="form-control" min="1" data-jenkins-build placeholder="Build number" />
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col">
-                                <div class="input-group">
-                                    <input type="url" class="form-control" data-jenkins-url readonly />
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button" data-copy="jenkins-url"><i class="fas fa-copy"></i></button>
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <div class="input-group">
+                                        <input type="url" class="form-control" data-jenkins-url readonly />
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button" data-copy="jenkins-url"><i class="fas fa-copy"></i></button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-3">
-                            <div class="col">
-                                <h4><i class="fab fa-gitlab"></i> Merge Requests</h4>
+                        <div data-module="gitLab">
+                            <div class="row mt-3">
+                                <div class="col">
+                                    <h4><i class="fab fa-gitlab"></i> Merge Requests</h4>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <input class="form-control" list="gitProjects" placeholder="Project" />
-                                <datalist id="gitProjects" data-git-projects></datalist>
+                            <div class="row">
+                                <div class="col-6">
+                                    <input class="form-control" list="gitProjects" placeholder="Project" />
+                                    <datalist id="gitProjects" data-git-projects></datalist>
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" class="form-control" min="1" data-git-merge-request placeholder="Merge Request Number" />
+                                </div>
                             </div>
-                            <div class="col-6">
-                                <input type="number" class="form-control" min="1" data-git-merge-request placeholder="Merge Request Number" />
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col">
-                                <div class="input-group">
-                                    <input type="url" class="form-control" data-git-url readonly />
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button" data-copy="git-url"><i class="fas fa-copy"></i></button>
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <div class="input-group">
+                                        <input type="url" class="form-control" data-git-url readonly />
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button" data-copy="git-url"><i class="fas fa-copy"></i></button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

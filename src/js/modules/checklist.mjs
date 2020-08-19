@@ -4,6 +4,7 @@ import {Storage} from "./storage";
 import {Jira} from "./jira";
 import {Jenkins} from "./jenkins";
 import {Git} from "./git";
+import {Modules} from './modules';
 
 import './jquery.mjs';
 import 'bootstrap';
@@ -28,6 +29,7 @@ export class Checklist {
         this._jira = new Jira();
         this._jenkins = new Jenkins();
         this._git = new Git();
+        this._modules = new Modules();
         this._issue = document.querySelector('#issue');
         this._checklistTabs = document.querySelectorAll('[data-tab-show="checklist"]');
         this._url = url;
@@ -129,6 +131,10 @@ const checkOptions = (cl) => {
     if (cl._options.hasOwnProperty('rocketChat')) {
         cl._rocketChat.options = cl._options.rocketChat;
     }
+
+    if (cl._options.hasOwnProperty('modules')) {
+        cl._modules.options = cl._options.modules;
+    }
 };
 
 const initView = (cl) => {
@@ -142,6 +148,7 @@ const initView = (cl) => {
         initIssue(cl);
     }
 
+    cl._modules.hideModules();
     showContent('checklist', cl);
 };
 

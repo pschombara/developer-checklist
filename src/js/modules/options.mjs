@@ -114,7 +114,6 @@ export class Options {
         this.config.init();
         this.git.init();
         this.gitCategories.init();
-        this.modules.init();
 
         this._buttonRestoreOptions.addEventListener('click', () => {
             ConfirmationPrompt.fire({
@@ -157,6 +156,7 @@ export class Options {
         this.options.cheatSheet = this.cheatSheet.save();
         this.options.git = this.git.save();
         this.options.gitCategories = this.gitCategories.save();
+        this.options.modules = this.modules.save();
 
         for (let type of this._listTypes) {
             let items = document.querySelectorAll(`[data-type=${type}][data-items]`);
@@ -242,6 +242,12 @@ const createListEntry = (op, target, item, id) => {
 };
 
 const create = (op) => {
+    if (op.options.hasOwnProperty('modules')) {
+        op.modules.options = op.options.modules;
+    }
+
+    op.modules.init();
+
     if (op.options.hasOwnProperty('jenkinsCategories')) {
         op.jenkins.categories = op.options.jenkinsCategories;
 
