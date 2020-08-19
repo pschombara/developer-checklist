@@ -1,4 +1,5 @@
 {
+    "version": "0.4.0",
     "modules": {
         "jenkins":  false,
         "cheatSheet": false,
@@ -35,10 +36,11 @@
             "command": "bin/console alzura:open-api:create"
         }
     ],
-    "git": [
-    ],
-    "gitCategories": [
-    ],
+    "gitLab": {
+        "host": "",
+        "projects": [],
+        "categories": []
+    },
     "jenkins": [],
     "jenkinsCategories": [],
     "jira": {

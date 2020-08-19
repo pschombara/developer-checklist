@@ -1,10 +1,9 @@
-export class SuperModules {
+export class SuperGitLab {
     constructor() {
         this._options = {
-            jenkins: false,
-            cheatSheet: false,
-            rocketChat: false,
-            gitLab: false
+            host: '',
+            projects: [],
+            categories: []
         }
     }
 

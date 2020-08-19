@@ -7,10 +7,10 @@ import {Storage} from "./storage";
 import {Config} from "./options/config";
 import {CheatSheet} from "./options/cheat-sheet";
 import {Jenkins} from "./options/jenkins";
-import {Git} from "./options/git";
-import {GitCategories} from "./options/gitCategories";
 import {JenkinsCategories} from "./options/jenkinsCategories";
 import {Modules} from './options/modules';
+import {GitLab} from './options/gitLab';
+import {Migration} from './migration/migration';
 
 export class Options {
     constructor() {
@@ -22,9 +22,9 @@ export class Options {
         this._cheatSheet = new CheatSheet();
         this._jenkins = new Jenkins();
         this._jenkinsCategories = new JenkinsCategories();
-        this._git = new Git();
-        this._gitCategories = new GitCategories();
+        this._gitLab = new GitLab();
         this._modules = new Modules();
+        this._migration = new Migration();
 
         this._templates = {
             cardList: document.querySelector('[data-template="cardList"]'),
@@ -77,12 +77,8 @@ export class Options {
         return this._rocketChat;
     }
 
-    get git() {
-        return this._git;
-    }
-
-    get gitCategories() {
-        return this._gitCategories;
+    get gitLab() {
+        return this._gitLab;
     }
 
     get modules() {
@@ -100,51 +96,57 @@ export class Options {
 
                     this.options = stored;
                     this.storage.write('options', stored);
-                    create(this);
                 });
             } else {
-                this.options = stored;
-                create(this);
-            }
-        });
+                this.options = this._migration.migrate(stored);
 
-        this.jenkins.init();
-        this.jenkinsCategories.init();
-        this.cheatSheet.init();
-        this.config.init();
-        this.git.init();
-        this.gitCategories.init();
-
-        this._buttonRestoreOptions.addEventListener('click', () => {
-            ConfirmationPrompt.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                confirmButtonText: 'Yes, restore it!',
-            }).then((result) => {
-                if (result.value) {
-                    this.config.restore().then(options => {
-                        if (this.options.hasOwnProperty('rocketChat')) {
-                            options.rocketChat.userId = this.options.rocketChat.userId;
-                            options.rocketChat.authToken = this.options.rocketChat.authToken;
-                        }
-
-                        this.storage.write('options', options);
-
-                        SuccessPrompt.fire({
-                            title: 'Restored!',
-                            text: 'Your options have been restored.',
-                            onClose: () => {
-                                location.reload();
-                            },
-                        })
-                    });
+                if (this._migration.migrated) {
+                    this.storage.write('options', stored);
                 }
-            });
-        });
+            }
 
-        $('[data-toggle="tooltip"]').tooltip();
-        $('[data-toggle="popover"]').popover({
-            trigger: 'hover',
+            create(this).then(() => {
+                this.modules.init();
+                this.jenkins.init();
+                this.jenkinsCategories.init();
+                this.cheatSheet.init();
+                this.config.init();
+                this.gitLab.init();
+                this.jira.init();
+
+                this._buttonRestoreOptions.addEventListener('click', () => {
+                    ConfirmationPrompt.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        confirmButtonText: 'Yes, restore it!',
+                    }).then((result) => {
+                        if (result.value) {
+                            this.config.restore().then(options => {
+                                if (this.options.hasOwnProperty('rocketChat')) {
+                                    options.rocketChat.userId = this.options.rocketChat.userId;
+                                    options.rocketChat.authToken = this.options.rocketChat.authToken;
+                                }
+
+                                this.storage.write('options', options);
+
+                                SuccessPrompt.fire({
+                                    title: 'Restored!',
+                                    text: 'Your options have been restored.',
+                                    onClose: () => {
+                                        location.reload();
+                                    },
+                                })
+                            });
+                        }
+                    });
+                });
+
+                $('[data-toggle="tooltip"]').tooltip();
+                $('[data-toggle="popover"]').popover({
+                    trigger: 'hover',
+                });
+                $('[data-toggle="collapse"]').collapse();
+            });
         });
     }
 
@@ -154,9 +156,9 @@ export class Options {
         this.options.jenkinsCategories = this.jenkinsCategories.save();
         this.options.rocketChat = this.rocketChat.options;
         this.options.cheatSheet = this.cheatSheet.save();
-        this.options.git = this.git.save();
-        this.options.gitCategories = this.gitCategories.save();
+        this.options.gitLab = this.gitLab.save();
         this.options.modules = this.modules.save();
+        this.options.version = this._migration.currentVersion;
 
         for (let type of this._listTypes) {
             let items = document.querySelectorAll(`[data-type=${type}][data-items]`);
@@ -242,66 +244,54 @@ const createListEntry = (op, target, item, id) => {
 };
 
 const create = (op) => {
-    if (op.options.hasOwnProperty('modules')) {
-        op.modules.options = op.options.modules;
-    }
-
-    op.modules.init();
-
-    if (op.options.hasOwnProperty('jenkinsCategories')) {
-        op.jenkins.categories = op.options.jenkinsCategories;
-
-        for (let category of op.options.jenkinsCategories) {
-            op.jenkinsCategories.create(category);
+    return new Promise(resolve => {
+        if (op.options.hasOwnProperty('modules')) {
+            op.modules.options = op.options.modules;
         }
-    }
 
-    if (op.options.hasOwnProperty('jenkins')) {
-        for (let item of op.options.jenkins) {
-            op.jenkins.create(item.name, item.job, item.type, item.label);
+        if (op.options.hasOwnProperty('jenkinsCategories')) {
+            op.jenkins.categories = op.options.jenkinsCategories;
+
+            for (let category of op.options.jenkinsCategories) {
+                op.jenkinsCategories.create(category);
+            }
         }
-    }
 
-    if (op.options.hasOwnProperty('gitCategories')) {
-        op.git.categories = op.options.gitCategories;
-
-        for (let category of op.options.gitCategories) {
-            op.gitCategories.create(category);
+        if (op.options.hasOwnProperty('jenkins')) {
+            for (let item of op.options.jenkins) {
+                op.jenkins.create(item.name, item.job, item.type, item.label);
+            }
         }
-    }
 
-    if (op.options.hasOwnProperty('git')) {
-        for (let item of op.options.git) {
-            op.git.create(item.project, item.domain);
+        if (op.options.hasOwnProperty('gitLab')) {
+            op.gitLab.options = op.options.gitLab;
         }
-    }
 
-    if (op.options.hasOwnProperty('cheatSheet')) {
-        for (let item of op.options.cheatSheet) {
-            op.cheatSheet.create(item.label, item.command);
+        if (op.options.hasOwnProperty('cheatSheet')) {
+            for (let item of op.options.cheatSheet) {
+                op.cheatSheet.create(item.label, item.command);
+            }
         }
-    }
 
-    if (op.options.hasOwnProperty('jira')) {
-        op.jira.options = op.options.jira;
-    }
+        if (op.options.hasOwnProperty('jira')) {
+            op.jira.options = op.options.jira;
+        }
 
-    op.jira.init();
+        if (op.options.hasOwnProperty('rocketChat')) {
+            op.rocketChat.options = op.options.rocketChat;
+        }
 
-    if (op.options.hasOwnProperty('rocketChat')) {
-        op.rocketChat.options = op.options.rocketChat;
-    }
+        // need user action to request permission
+        document.querySelector('#rocket-chat-tab').addEventListener('click', () => {
+            op.rocketChat.init();
+        });
 
-    // need user action to request permission
-    document.querySelector('#rocket-chat-tab').addEventListener('click', () => {
-        op.rocketChat.init();
+        for (let type of op._listTypes) {
+            for (let entry of op.options.lists[type]) {
+                createCardList(op, entry.id, entry.title, entry.items, type);
+            }
+        }
+
+        resolve();
     });
-
-    for (let type of op._listTypes) {
-        for (let entry of op.options.lists[type]) {
-            createCardList(op, entry.id, entry.title, entry.items, type);
-        }
-    }
-
-    $('[data-toggle="collapse"]').collapse();
 };

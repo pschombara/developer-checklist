@@ -18,7 +18,6 @@ export class Modules extends SuperModules
         });
 
         for (let module of this._modules) {
-            console.log(module, this._decideModuleEnabled);
             if (false === this._decideModuleEnabled[module.getAttribute('data-module')]) {
                 module.classList.add('d-none');
             }

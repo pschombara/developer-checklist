@@ -3,11 +3,12 @@ import {RocketChat} from "./rocket.chat";
 import {Storage} from "./storage";
 import {Jira} from "./jira";
 import {Jenkins} from "./jenkins";
-import {Git} from "./git";
 import {Modules} from './modules';
+import {GitLab} from './gitLab';
 
 import './jquery.mjs';
 import 'bootstrap';
+import {Migration} from './migration/migration';
 
 export class Checklist {
     constructor(url) {
@@ -28,8 +29,9 @@ export class Checklist {
         this._storage = new Storage();
         this._jira = new Jira();
         this._jenkins = new Jenkins();
-        this._git = new Git();
+        this._gitLab = new GitLab();
         this._modules = new Modules();
+        this._migration = new Migration();
         this._issue = document.querySelector('#issue');
         this._checklistTabs = document.querySelectorAll('[data-tab-show="checklist"]');
         this._url = url;
@@ -37,7 +39,12 @@ export class Checklist {
 
     init() {
         this._storage.loadOptions().then((result) => {
-            this._options = result;
+            this._options = this._migration.migrate(result);
+
+            if (this._migration.migrated) {
+                this._storage.write('options', result);
+            }
+
             checkOptions(this);
             this._storage.cleanUp();
 
@@ -135,6 +142,10 @@ const checkOptions = (cl) => {
     if (cl._options.hasOwnProperty('modules')) {
         cl._modules.options = cl._options.modules;
     }
+
+    if (cl._options.hasOwnProperty('gitLab')) {
+        cl._gitLab.options = cl._options.gitLab;
+    }
 };
 
 const initView = (cl) => {
@@ -208,7 +219,7 @@ const initOverview = (cl) => {
     }
 
     cl._jenkins.init(cl._options.jenkins ? cl._options.jenkins : []);
-    cl._git.init(cl._options.git ? cl._options.git : []);
+    cl._gitLab.init();
     cheatSheet.init(cl._options.cheatSheet ? cl._options.cheatSheet : []);
 
     cl._rocketChat.board = cl._options.jira.url;
@@ -363,7 +374,7 @@ const showContent = (contentType, cl) => {
     }
 
     cl._jenkins.checkUrl(cl._url);
-    cl._git.checkUrl(cl._url);
+    cl._gitLab.checkUrl(cl._url);
 };
 
 const save = (cl) => {

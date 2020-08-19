@@ -120,10 +120,6 @@ const checkJenkinsCategories = (data) => {
     return checkCategories(data, 'jenkinsCategories');
 }
 
-const checkGitCategories = (data) => {
-    return checkCategories(data, 'gitCategories');
-}
-
 const checkObjectContainsKeys = (entry, requiredKeys, types, optionKey) => {
     let errors = [];
 
@@ -158,27 +154,6 @@ const checkObjectContainsKeys = (entry, requiredKeys, types, optionKey) => {
             }
         });
     }
-
-    return errors;
-}
-
-const checkGit = (data) => {
-    if (false === Array.isArray(data)) {
-        return [{
-            err: 'Unsupported type for option git! Expected value is from type array.'
-        }];
-    }
-
-    let errors = [];
-    const requiredKeys = ['domain', 'project'];
-    const types = {
-        domain: 'string',
-        project: 'string',
-    }
-
-    data.forEach((entry, key) => {
-        errors.push(...checkObjectContainsKeys(entry, requiredKeys, types, `git[${key}]`));
-    });
 
     return errors;
 }
@@ -287,16 +262,89 @@ const checkModules = (data) => {
     return checkObjectContainsKeys(data, requiredKeys, types, 'modules');
 };
 
+const checkGit = (data) => {
+    if (false === Array.isArray(data)) {
+        return [{
+            err: 'Unsupported type for option git! Expected value is from type array.'
+        }];
+    }
+
+    let errors = [];
+    const requiredKeys = ['domain', 'project'];
+    const types = {
+        domain: 'string',
+        project: 'string',
+    }
+
+    data.forEach((entry, key) => {
+        errors.push(...checkObjectContainsKeys(entry, requiredKeys, types, `git[${key}]`));
+    });
+
+    return errors;
+}
+
+const checkGitLab = (data) => {
+    let errors = [];
+
+    const requiredKeys = [
+        'host',
+        'projects',
+        'categories',
+    ];
+
+    const types = {
+        host: 'string',
+        projects: 'object',
+        categories: 'object',
+    };
+
+    errors.push(...checkObjectContainsKeys(data, requiredKeys, types, 'modules'));
+
+    if (0 !== errors.length) {
+        return errors;
+    }
+
+    errors.push(...checkCategories(data.categories, 'gitLab[categories]'));
+
+    if (false === Array.isArray(data.projects)) {
+        errors.push({
+            err: 'Unsupported type for option git! Expected value is from type array.'
+        })
+    } else {
+        const projectRequiredKeys = ['domain', 'project'];
+        const projectTypes = {
+            domain: 'string',
+            project: 'string',
+        }
+
+        data.projects.forEach((entry, key) => {
+            errors.push(...checkObjectContainsKeys(entry, projectRequiredKeys, projectTypes, `gitLab[projects][${key}]`));
+        });
+    }
+
+    return errors;
+};
+
+const checkVersion = (data) => {
+    if ('string' !== typeof data) {
+        return [{
+            err: 'Unsupported type for option version! Expected value is from type string.'
+        }];
+    }
+
+    return [];
+}
+
 const check = {
     lists: checkLists,
     jenkins: checkJenkins,
     jenkinsCategories: checkJenkinsCategories,
-    git: checkGit,
-    gitCategories: checkGitCategories,
     jira: checkJira,
     rocketChat: checkRocketChat,
     cheatSheet: checkCheatSheet,
     modules: checkModules,
+    gitLab: checkGitLab,
+    version: checkVersion,
 }
 
 const checkIsObject = (data) => {
@@ -317,7 +365,7 @@ const checkIsObject = (data) => {
 
 const checkRootSchema = (data) => {
     let errors = [];
-    let requiredOptions = ['lists', 'jenkins', 'jenkinsCategories', 'git', 'gitCategories', 'jira', 'rocketChat', 'cheatSheet', 'modules'];
+    let requiredOptions = ['lists', 'jenkins', 'jenkinsCategories', 'jira', 'rocketChat', 'cheatSheet', 'modules', 'gitLab', 'version'];
 
     for (let option of requiredOptions) {
         if (false === data.hasOwnProperty(option)) {

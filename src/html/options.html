@@ -33,7 +33,7 @@
                     <a class="nav-link" href="#jenkins" role="tab" id="jenkins-tab" data-toggle="tab"><i class="fab fa-jenkins"></i></a>
                 </li>
                 <li class="nav-item" data-toggle="popover" data-content="GitLab" data-placement="bottom">
-                    <a class="nav-link" href="#git" role="tab" id="git-tab" data-toggle="tab"><i class="fab fa-gitlab"></i></a>
+                    <a class="nav-link" href="#gitLab" role="tab" id="gitLab-tab" data-toggle="tab"><i class="fab fa-gitlab"></i></a>
                 </li>
                 <li class="nav-item" data-toggle="popover" data-content="Rocket.Chat" data-placement="bottom">
                     <a class="nav-link" href="#rocket-chat" role="tab" id="rocket-chat-tab" data-toggle="tab"><i class="fab fa-rocketchat"></i></a>
@@ -301,45 +301,57 @@
                     </div>
 
                 </div>
-                <div class="tab-pane" id="git" role="tabpanel">
-                    <div class="accordion mt-2" data-accordion="git" id="gitAccordion">
-                        <div class="card">
-                            <div class="card-header">
-                                <h2 class="mb-0">
-                                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='git-projects']">Projects</button>
-                                </h2>
-                            </div>
-                            <div class="collapse" data-collapse="git-projects" data-parent="#gitAccordion">
-                                <div class="card-body">
-                                    <div class="row mb-2">
-                                        <div class="col-2 offset-1 text-center font-weight-bold">Category</div>
-                                        <div class="col-3 offset-1 text-center font-weight-bold">Project</div>
-                                    </div>
-                                    <div data-git data-draggable>
-                                    </div>
-                                    <div class="mt-2">
-                                        <button type="button" class="btn btn-success" data-add-git>+ Add</button>
-                                    </div>
+                <div class="tab-pane" id="gitLab" role="tabpanel">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5><i class="fab fa-gitlab"></i> GitLab</h5>
+
+                            <div class="row mb-3">
+                                <label for="gitLabHost" class="col-form-label col-sm-4">Host</label>
+                                <div class="col-sm-6">
+                                    <input type="url" id="gitLabHost" name="gitLabHost" value="" placeholder="https://gitlab.com/" clitass="form-control" />
                                 </div>
                             </div>
 
-                        </div>
-                        <div class="card">
-                            <div class="card-header">
-                                <h2 class="mb-0">
-                                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='git-categories']">Categories</button>
-                                </h2>
-                            </div>
-                            <div class="collapse" data-collapse="git-categories" data-parent="#gitAccordion">
-                                <div class="card-body" >
-                                    <div class="row mb-2">
-                                        <div class="col-2 offset-1 text-center">Category</div>
+                            <div class="accordion mt-2" data-accordion="gitLab" id="gitLabAccordion">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='gitLab-projects']">Projects</button>
+                                        </h2>
                                     </div>
-                                    <div data-git-categories data-draggable></div>
-                                    <div class="mt-2">
-                                        <button type="button" class="btn btn-success" data-add-git-category>+ Add</button>
+                                    <div class="collapse" data-collapse="gitLab-projects" data-parent="#gitLabAccordion">
+                                        <div class="card-body">
+                                            <div class="row mb-2">
+                                                <div class="col-2 offset-1 text-center font-weight-bold">Category</div>
+                                                <div class="col-3 offset-1 text-center font-weight-bold">Project</div>
+                                            </div>
+                                            <div data-gitLab-projects data-draggable>
+                                            </div>
+                                            <div class="mt-2">
+                                                <button type="button" class="btn btn-success" data-add-gitLab-project>+ Add</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="card">
+                                <div class="card-header">
+                                    <h2 class="mb-0">
+                                        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='gitLab-categories']">Categories</button>
+                                    </h2>
+                                </div>
+                                <div class="collapse" data-collapse="gitLab-categories" data-parent="#gitLabAccordion">
+                                    <div class="card-body" >
+                                        <div class="row mb-2">
+                                            <div class="col-2 offset-1 text-center">Category</div>
+                                        </div>
+                                        <div data-gitLab-categories data-draggable></div>
+                                        <div class="mt-2">
+                                            <button type="button" class="btn btn-success" data-add-gitLab-category>+ Add</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             </div>
                         </div>
                     </div>
@@ -465,30 +477,30 @@
         </div>
     </div>
 </template>
-<template data-template="git">
+<template data-template="gitLabProject">
     <div class="row mt-2" draggable="true">
         <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
         <div class="col-3">
-            <select name="gitDomain[]" class="form-control"></select>
+            <select name="gitLabDomain[]" class="form-control"></select>
         </div>
         <div class="col-3">
-            <input type="text" name="gitProject[]" class="form-control" placeholder="project eg: alzura/local-bundle" />
+            <input type="text" name="gitLabProject[]" class="form-control" placeholder="project eg: alzura/local-bundle" />
         </div>
         <div class="col-2 custom-control custom-switch">
-            <input class="custom-control-input" type="checkbox" name="gitDelete[]" id="%gitUuid%" />
-            <label class="custom-control-label" for="%gitUuid%">Delete</label>
+            <input class="custom-control-input" type="checkbox" name="gitLabProjectDelete[]" id="%gitLabUuid%" />
+            <label class="custom-control-label" for="%gitLabUuid%">Delete</label>
         </div>
     </div>
 </template>
-<template data-template="git-category">
+<template data-template="gitLabCategory">
     <div class="row mt-2" draggable="true">
         <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
         <div class="col-3">
-            <input type="text" name="gitCategoryName[]" class="form-control" placeholder="name of the category" />
+            <input type="text" name="gitLabCategoryName[]" class="form-control" placeholder="name of the category" />
         </div>
         <div class="col-2 custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" name="gitCategoryDelete[]" id="%gitCategoryUuid%" />
-            <label class="custom-control-label" for="%gitCategoryUuid%">Delete</label>
+            <input type="checkbox" class="custom-control-input" name="gitLabCategoryDelete[]" id="%gitLabCategoryUuid%" />
+            <label class="custom-control-label" for="%gitLabCategoryUuid%">Delete</label>
         </div>
     </div>
 </template>

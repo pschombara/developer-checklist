@@ -15,7 +15,7 @@ export class Modules extends SuperModules{
             jenkins: document.querySelector('#jenkins-tab'),
             cheatSheet: document.querySelector('#cheat-sheet-tab'),
             rocketChat: document.querySelector('#rocket-chat-tab'),
-            gitLab: document.querySelector('#git-tab'),
+            gitLab: document.querySelector('#gitLab-tab'),
         }
     }
 
