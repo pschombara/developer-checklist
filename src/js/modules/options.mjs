@@ -10,6 +10,7 @@ import {Jenkins} from "./options/jenkins";
 import {Git} from "./options/git";
 import {GitCategories} from "./options/gitCategories";
 import {JenkinsCategories} from "./options/jenkinsCategories";
+import {Modules} from './options/modules';
 
 export class Options {
     constructor() {
@@ -23,6 +24,7 @@ export class Options {
         this._jenkinsCategories = new JenkinsCategories();
         this._git = new Git();
         this._gitCategories = new GitCategories();
+        this._modules = new Modules();
 
         this._templates = {
             cardList: document.querySelector('[data-template="cardList"]'),
@@ -83,6 +85,10 @@ export class Options {
         return this._gitCategories;
     }
 
+    get modules() {
+        return this._modules;
+    }
+
     init() {
         this.storage.loadOptions().then(stored => {
             if (0 === Object.keys(stored).length) {
@@ -108,6 +114,7 @@ export class Options {
         this.config.init();
         this.git.init();
         this.gitCategories.init();
+        this.modules.init();
 
         this._buttonRestoreOptions.addEventListener('click', () => {
             ConfirmationPrompt.fire({
