@@ -7,7 +7,6 @@ import {Storage} from "./storage";
 import {Config} from "./options/config";
 import {CheatSheet} from "./options/cheat-sheet";
 import {Jenkins} from "./options/jenkins";
-import {JenkinsCategories} from "./options/jenkinsCategories";
 import {Modules} from './options/modules';
 import {GitLab} from './options/gitLab';
 import {Migration} from './migration/migration';
@@ -21,7 +20,6 @@ export class Options {
         this._rocketChat = new OptionsRocketChat();
         this._cheatSheet = new CheatSheet();
         this._jenkins = new Jenkins();
-        this._jenkinsCategories = new JenkinsCategories();
         this._gitLab = new GitLab();
         this._modules = new Modules();
         this._migration = new Migration();
@@ -59,10 +57,6 @@ export class Options {
 
     get jenkins() {
         return this._jenkins;
-    }
-
-    get jenkinsCategories() {
-        return this._jenkinsCategories;
     }
 
     get cheatSheet() {
@@ -108,7 +102,6 @@ export class Options {
             create(this).then(() => {
                 this.modules.init();
                 this.jenkins.init();
-                this.jenkinsCategories.init();
                 this.cheatSheet.init();
                 this.config.init();
                 this.gitLab.init();
@@ -249,18 +242,8 @@ const create = (op) => {
             op.modules.options = op.options.modules;
         }
 
-        if (op.options.hasOwnProperty('jenkinsCategories')) {
-            op.jenkins.categories = op.options.jenkinsCategories;
-
-            for (let category of op.options.jenkinsCategories) {
-                op.jenkinsCategories.create(category);
-            }
-        }
-
         if (op.options.hasOwnProperty('jenkins')) {
-            for (let item of op.options.jenkins) {
-                op.jenkins.create(item.name, item.job, item.type, item.label);
-            }
+            op.jenkins.options = op.options.jenkins;
         }
 
         if (op.options.hasOwnProperty('gitLab')) {

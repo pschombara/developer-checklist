@@ -73,7 +73,7 @@ export class GitLab extends SuperGitLab {
     }
 
     checkUrl(url) {
-        if (false === url.startsWith(this.options.host)) {
+        if ('' === this.options.host || false === url.startsWith(this.options.host)) {
             return;
         }
 

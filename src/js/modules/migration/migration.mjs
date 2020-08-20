@@ -44,10 +44,12 @@ const migrateTo0_0_4 = (options) => {
 
     if (options.hasOwnProperty('git')) {
         options.gitLab.projects = options.git;
+        delete options.git;
     }
 
     if (options.hasOwnProperty('gitCategories')) {
         options.gitLab.categories = options.gitCategories;
+        delete options.gitCategories;
     }
 
     options.modules = {
@@ -57,6 +59,19 @@ const migrateTo0_0_4 = (options) => {
         gitLab: true
     };
 
-    delete options.git;
-    delete options.gitCategories;
+    const jenkins = {
+        host: '',
+        builds: [],
+        categories: [],
+    };
+
+    if (options.hasOwnProperty('jenkins') && Array.isArray(options.jenkins)) {
+        jenkins.builds = options.jenkins;
+    }
+
+    if (options.hasOwnProperty('jenkinsCategories')) {
+        jenkins.categories = options.jenkinsCategories;
+
+        delete options.jenkinsCategories;
+    }
 }

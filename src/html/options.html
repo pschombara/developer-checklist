@@ -258,48 +258,60 @@
                     </div>
                 </div>
                 <div class="tab-pane" id="jenkins" role="tabpanel">
-                    <div class="accordion mt-2" data-accordion="jenkins" id="jenkinsAccordion">
-                        <div class="card">
-                            <div class="card-header">
-                                <h2 class="mb-0">
-                                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='jenkins-builds']">Builds</button>
-                                </h2>
-                            </div>
-                            <div class="collapse" data-collapse="jenkins-builds" data-parent="#jenkinsAccordion">
-                                <div class="card-body">
-                                    <div class="row mb-2">
-                                        <div class="col-2 offset-1 text-center font-weight-bold">Category&nbsp;</div>
-                                        <div class="col-2 text-center font-weight-bold">Name&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="A custom name of the pipeline. Will be used as url alias and can be used to search for the pipeline."></i></div>
-                                        <div class="col-3 text-center font-weight-bold">Pipeline&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The project name of the pipeline in Jenkins."></i></div>
-                                        <div class="col-2 text-center font-weight-bold">Label&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The label will be used for the badge. If it is empty the name will be used"></i></div>
-                                    </div>
-                                    <div data-jenkins data-draggable></div>
-                                    <div class="mt-2">
-                                        <button type="button" class="btn btn-success" data-add-jenkins>+ Add</button>
-                                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5><i class="fab fa-jenkins"></i> Jenkins</h5>
+
+                            <div class="row mb-3">
+                                <label for="jenkinsHost" class="col-form-label col-sm-4">Host</label>
+                                <div class="col-sm-6">
+                                    <input type="url" id="jenkinsHost" name="jenkinsHost" value="" placeholder="https://jenkins.local:8080/" class="form-control" />
                                 </div>
                             </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-header">
-                                <h2 class="mb-0">
-                                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='jenkins-categories']">Categories</button>
-                                </h2>
-                            </div>
-                            <div class="collapse" data-collapse="jenkins-categories" data-parent="#jenkinsAccordion">
-                                <div class="card-body">
-                                    <div class="row mb-2">
-                                        <div class="offset-1 text-center">Category</div>
+
+                            <div class="accordion mt-2" data-accordion="jenkins" id="jenkinsAccordion">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='jenkins-builds']">Builds</button>
+                                        </h2>
                                     </div>
-                                    <div data-jenkins-categories data-draggable></div>
-                                    <div class="mt-2">
-                                        <button type="button" class="btn btn-success" data-add-jenkins-category>+ Add</button>
+                                    <div class="collapse" data-collapse="jenkins-builds" data-parent="#jenkinsAccordion">
+                                        <div class="card-body">
+                                            <div class="row mb-2">
+                                                <div class="col-2 offset-1 text-center font-weight-bold">Category&nbsp;</div>
+                                                <div class="col-2 text-center font-weight-bold">Name&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="A custom name of the pipeline. Will be used as url alias and can be used to search for the pipeline."></i></div>
+                                                <div class="col-3 text-center font-weight-bold">Pipeline&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The project name of the pipeline in Jenkins."></i></div>
+                                                <div class="col-2 text-center font-weight-bold">Label&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The label will be used for the badge. If it is empty the name will be used"></i></div>
+                                            </div>
+                                            <div data-jenkins data-draggable></div>
+                                            <div class="mt-2">
+                                                <button type="button" class="btn btn-success" data-add-jenkins>+ Add</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='jenkins-categories']">Categories</button>
+                                        </h2>
+                                    </div>
+                                    <div class="collapse" data-collapse="jenkins-categories" data-parent="#jenkinsAccordion">
+                                        <div class="card-body">
+                                            <div class="row mb-2">
+                                                <div class="offset-1 text-center">Category</div>
+                                            </div>
+                                            <div data-jenkins-categories data-draggable></div>
+                                            <div class="mt-2">
+                                                <button type="button" class="btn btn-success" data-add-jenkins-category>+ Add</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="tab-pane" id="gitLab" role="tabpanel">
                     <div class="card">
@@ -309,7 +321,7 @@
                             <div class="row mb-3">
                                 <label for="gitLabHost" class="col-form-label col-sm-4">Host</label>
                                 <div class="col-sm-6">
-                                    <input type="url" id="gitLabHost" name="gitLabHost" value="" placeholder="https://gitlab.com/" clitass="form-control" />
+                                    <input type="url" id="gitLabHost" name="gitLabHost" value="" placeholder="https://gitlab.com/" class="form-control" />
                                 </div>
                             </div>
 
