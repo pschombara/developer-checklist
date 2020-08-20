@@ -74,4 +74,6 @@ const migrateTo0_0_4 = (options) => {
 
         delete options.jenkinsCategories;
     }
+
+    options.jenkins = jenkins;
 }

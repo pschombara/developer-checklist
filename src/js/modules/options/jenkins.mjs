@@ -17,11 +17,23 @@ export class Jenkins extends SuperJenkins{
             target: document.querySelector('[data-jenkins-categories]'),
             add: document.querySelector('[data-add-jenkins-category]'),
         }
+
+        this._jenkinsHost = document.querySelector('#jenkinsHost');
     }
 
     init() {
         this.builds.add.addEventListener('click', () => { this.createBuild(); });
         this.categories.add.addEventListener('click', () => { this.createCategory(); });
+
+        for (let build of this.options.builds) {
+            this.createBuild(build.name, build.job, build.type, build.label);
+        }
+
+        for (let category of this.options.categories) {
+            this.createCategory(category);
+        }
+
+        this._jenkinsHost.value = this.options.host;
     }
 
     createBuild(name = '', job = '', type = '', label = '')  {
@@ -67,7 +79,7 @@ export class Jenkins extends SuperJenkins{
 
     save() {
         const jenkins = {
-            host: '',
+            host: this._jenkinsHost.value,
             builds: [],
             categories: []
         };

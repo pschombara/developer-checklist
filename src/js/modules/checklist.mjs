@@ -55,6 +55,19 @@ export class Checklist {
 
             if (this._missingOptions) {
                 showContent('missingOptions', this);
+                const openOptionLinks = document.querySelectorAll('[data-open="options"]');
+
+                for (let link of openOptionLinks) {
+                    link.addEventListener('click', () => {
+                        let tab = '';
+
+                        if (link.hasAttribute('data-open-extra')) {
+                            tab = '/#' + link.getAttribute('data-open-extra');
+                        }
+
+                        chrome.tabs.create({url: '/html/options.html' + `${tab}` });
+                    });
+                }
 
                 document.querySelector('[data-open="options"]').addEventListener('click', () => {
                     chrome.tabs.create({url: '/html/options.html'});
@@ -218,7 +231,7 @@ const initOverview = (cl) => {
         document.querySelector('.no-options').classList.remove('d-none');
     }
 
-    cl._jenkins.init(cl._options.jenkins ? cl._options.jenkins : []);
+    cl._jenkins.init();
     cl._gitLab.init();
     cheatSheet.init(cl._options.cheatSheet ? cl._options.cheatSheet : []);
 

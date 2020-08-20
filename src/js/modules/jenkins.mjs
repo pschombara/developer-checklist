@@ -13,10 +13,20 @@ export class Jenkins extends SuperJenkins {
         this._build = document.querySelector('[data-jenkins-build]');
         this._jobInput = document.querySelector('[list="jenkinsJobs"]');
         this._tab = document.querySelector('#special-tab');
-        this._pages = [];
+        this._area = {
+            enabled: document.querySelector('[data-gitLab="enabled"]'),
+            disabled: document.querySelector('[data-gitLab="disabled"]'),
+        };
     }
 
     init() {
+        if ('' === this.options.host) {
+            this._area.enabled.classList.add('d-none');
+            this._area.disabled.classList.remove('d-none');
+
+            return;
+        }
+
         for (let item of this.options.builds) {
             const option = document.createElement('option');
             option.value = item.name;
@@ -75,7 +85,7 @@ export class Jenkins extends SuperJenkins {
     };
 
     checkUrl(url) {
-        if ('' === this.options.url || false === url.startsWith(this.options.host)) {
+        if (false === this._enabled || '' === this.options.host || false === url.startsWith(this.options.host)) {
             return;
         }
 

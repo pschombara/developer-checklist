@@ -14,9 +14,20 @@ export class GitLab extends SuperGitLab {
             project: document.querySelector('[list="gitLabProjects"]'),
             mergeNumber: document.querySelector('[data-gitLab-merge-request]'),
         };
+        this._area = {
+            enabled: document.querySelector('[data-jenkins="enabled"]'),
+            disabled: document.querySelector('[data-jenkins="disabled"]'),
+        };
     }
 
     init() {
+        if ('' === this.options.host) {
+            this._area.enabled.classList.add('d-none');
+            this._area.disabled.classList.remove('d-none');
+
+            return;
+        }
+
         for (let item of this.options.projects) {
             const option = document.createElement('option');
             option.value = item.project;
@@ -73,7 +84,7 @@ export class GitLab extends SuperGitLab {
     }
 
     checkUrl(url) {
-        if ('' === this.options.host || false === url.startsWith(this.options.host)) {
+        if (false === this._enabled || '' === this.options.host || false === url.startsWith(this.options.host)) {
             return;
         }
 
