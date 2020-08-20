@@ -5,7 +5,7 @@ export class Jenkins extends SuperJenkins {
     constructor() {
         super();
 
-        this._jenkinsBuildUrl = '[!{host}/buildStatus/icon?job={job}&build={build}&style=flat-square&subject={name}!|{host}/view/{type}/job/{job}/{build}/]';
+        this._jenkinsBuildUrl = '[!{host}buildStatus/icon?job={job}&build={build}&style=flat-square&subject={name}!|{host}view/{type}/job/{job}/{build}/]';
 
         this._embeddableUrl = document.querySelector('[data-jenkins-url]');
         this._copyBtn = document.querySelector('[data-copy="jenkins-url"]');
@@ -14,8 +14,8 @@ export class Jenkins extends SuperJenkins {
         this._jobInput = document.querySelector('[list="jenkinsJobs"]');
         this._tab = document.querySelector('#special-tab');
         this._area = {
-            enabled: document.querySelector('[data-gitLab="enabled"]'),
-            disabled: document.querySelector('[data-gitLab="disabled"]'),
+            enabled: document.querySelector('[data-jenkins="enabled"]'),
+            disabled: document.querySelector('[data-jenkins="disabled"]'),
         };
     }
 

@@ -78,8 +78,14 @@ export class Jenkins extends SuperJenkins{
     }
 
     save() {
+        let host = this._jenkinsHost.value.trim();
+
+        if ('' !== host && false === host.endsWith('/')) {
+            host += '/';
+        }
+
         const jenkins = {
-            host: this._jenkinsHost.value,
+            host: host,
             builds: [],
             categories: []
         };

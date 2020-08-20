@@ -77,8 +77,14 @@ export class GitLab extends SuperGitLab {
     }
 
     save() {
+        let host = this._gitLabHost.value.trim();
+
+        if ('' !== host && false === host.endsWith('/')) {
+            host += '/';
+        }
+
         const gitLab = {
-            host: this._gitLabHost.value,
+            host: host,
             projects: [],
             categories: []
         }

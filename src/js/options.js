@@ -49,6 +49,7 @@ import {Options} from './modules/options';
 
         if (null !== targetTab) {
             targetTab.click();
+            window.location.hash = '';
         }
     });
 })();

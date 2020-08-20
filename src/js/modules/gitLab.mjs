@@ -15,8 +15,8 @@ export class GitLab extends SuperGitLab {
             mergeNumber: document.querySelector('[data-gitLab-merge-request]'),
         };
         this._area = {
-            enabled: document.querySelector('[data-jenkins="enabled"]'),
-            disabled: document.querySelector('[data-jenkins="disabled"]'),
+            enabled: document.querySelector('[data-gitLab="enabled"]'),
+            disabled: document.querySelector('[data-gitLab="disabled"]'),
         };
     }
 

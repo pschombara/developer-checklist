@@ -53,25 +53,23 @@ export class Checklist {
                 this._identifier = match ? match : '';
             }
 
+            const openOptionLinks = document.querySelectorAll('[data-open="options"]');
+
+            for (let link of openOptionLinks) {
+                link.addEventListener('click', () => {
+                    console.log('here?');
+                    let tab = '';
+
+                    if (link.hasAttribute('data-open-extra')) {
+                        tab = '#' + link.getAttribute('data-open-extra');
+                    }
+
+                    chrome.tabs.create({url: '/html/options.html' + `${tab}` });
+                });
+            }
+
             if (this._missingOptions) {
                 showContent('missingOptions', this);
-                const openOptionLinks = document.querySelectorAll('[data-open="options"]');
-
-                for (let link of openOptionLinks) {
-                    link.addEventListener('click', () => {
-                        let tab = '';
-
-                        if (link.hasAttribute('data-open-extra')) {
-                            tab = '/#' + link.getAttribute('data-open-extra');
-                        }
-
-                        chrome.tabs.create({url: '/html/options.html' + `${tab}` });
-                    });
-                }
-
-                document.querySelector('[data-open="options"]').addEventListener('click', () => {
-                    chrome.tabs.create({url: '/html/options.html'});
-                });
             } else {
                 initView(this);
             }
@@ -158,6 +156,10 @@ const checkOptions = (cl) => {
 
     if (cl._options.hasOwnProperty('gitLab')) {
         cl._gitLab.options = cl._options.gitLab;
+    }
+
+    if (cl._options.hasOwnProperty('jenkins')) {
+        cl._jenkins.options = cl._options.jenkins;
     }
 };
 
