@@ -1,33 +1,50 @@
 import {DragDrop} from "./drag-drop";
 import {Uuid} from "./uuid";
+import {SuperJenkins} from '../super/super.jenkins';
 
-export class Jenkins {
+export class Jenkins extends SuperJenkins{
     constructor() {
-        this._template = document.querySelector('[data-template="jenkins"]');
-        this._target = document.querySelector('[data-jenkins]');
-        this._add =  document.querySelector('[data-add-jenkins]');
-        this._categories = [];
-    }
+        super();
 
-    set categories(categories) {
-        this._categories = categories;
+        this.builds = {
+            template: document.querySelector('[data-template="jenkins"]'),
+            target: document.querySelector('[data-jenkins]'),
+            add: document.querySelector('[data-add-jenkins]'),
+        }
+
+        this.categories = {
+            template: document.querySelector('[data-template="jenkins-category"]'),
+            target: document.querySelector('[data-jenkins-categories]'),
+            add: document.querySelector('[data-add-jenkins-category]'),
+        }
+
+        this._jenkinsHost = document.querySelector('#jenkinsHost');
     }
 
     init() {
-        this._add.addEventListener('click', () => {
-            this.create();
-        });
+        this.builds.add.addEventListener('click', () => { this.createBuild(); });
+        this.categories.add.addEventListener('click', () => { this.createCategory(); });
+
+        for (let build of this.options.builds) {
+            this.createBuild(build.name, build.job, build.type, build.label);
+        }
+
+        for (let category of this.options.categories) {
+            this.createCategory(category);
+        }
+
+        this._jenkinsHost.value = this.options.host;
     }
 
-    create(name = '', job = '', type = '', label = '')  {
-        let elem = document.createElement('div');
-        elem.innerHTML = this._template.innerHTML;
+    createBuild(name = '', job = '', type = '', label = '')  {
+        const elem = document.createElement('div');
+        elem.innerHTML = this.builds.template.innerHTML;
         elem.innerHTML = elem.innerHTML.replace(new RegExp('%uuid%', 'g'), Uuid.generate());
-        let item = elem.children[0];
+        const item = elem.children[0];
 
-        let typeSelect = item.querySelector('[name="jenkinsType[]"]');
+        const typeSelect = item.querySelector('[name="jenkinsType[]"]');
 
-        for (let category of this._categories) {
+        for (let category of this.options.categories) {
             const option = document.createElement('option');
             option.innerHTML = category;
             typeSelect.appendChild(option);
@@ -41,28 +58,63 @@ export class Jenkins {
         item.querySelector('[name="jenkinsJob[]"]').value = job;
         item.querySelector('[name="jenkinsLabel[]"]').value = label;
 
-        this._target.appendChild(item);
+        this.builds.target.appendChild(item);
+
+        new DragDrop(item).init();
+    }
+
+    createCategory(category = '') {
+        const elem = document.createElement('div');
+        elem.innerHTML = this.categories.template.innerHTML;
+        elem.innerHTML = elem.innerHTML.replace(new RegExp('%jenkinsCategoryUuid%', 'g'), Uuid.generate());
+
+        const item = elem.children[0];
+
+        item.querySelector('[name="jenkinsCategoryName[]"]').value = 'string' === typeof category ? category : '';
+
+        this.categories.target.appendChild(item);
 
         new DragDrop(item).init();
     }
 
     save() {
-        let jenkins = [];
+        let host = this._jenkinsHost.value.trim();
 
-        let jenkinsName = document.querySelectorAll('[name="jenkinsName[]"]');
-        let jenkinsJob = document.querySelectorAll('[name="jenkinsJob[]"]');
-        let jenkinsType = document.querySelectorAll('[name="jenkinsType[]"]');
-        let jenkinsLabel = document.querySelectorAll('[name="jenkinsLabel[]"]');
-        let jenkinsDelete = document.querySelectorAll('[name="jenkinsDelete[]"]');
+        if ('' !== host && false === host.endsWith('/')) {
+            host += '/';
+        }
+
+        const jenkins = {
+            host: host,
+            builds: [],
+            categories: []
+        };
+
+        // save jenkins builds
+        const jenkinsName = document.querySelectorAll('[name="jenkinsName[]"]');
+        const jenkinsJob = document.querySelectorAll('[name="jenkinsJob[]"]');
+        const jenkinsType = document.querySelectorAll('[name="jenkinsType[]"]');
+        const jenkinsLabel = document.querySelectorAll('[name="jenkinsLabel[]"]');
+        const jenkinsDelete = document.querySelectorAll('[name="jenkinsDelete[]"]');
 
         for (let key in jenkinsName) {
             if (jenkinsName.hasOwnProperty(key) && false === jenkinsDelete[key].checked) {
-                jenkins.push({
+                jenkins.builds.push({
                     name: jenkinsName[key].value,
                     job: jenkinsJob[key].value,
                     type: jenkinsType[key].value,
                     label: jenkinsLabel[key].value,
                 });
+            }
+        }
+
+        // save jenkins categories
+        const categoryName = document.querySelectorAll('[name="jenkinsCategoryName[]"]');
+        const categoryDelete = document.querySelectorAll('[name="jenkinsCategoryDelete[]"]');
+
+        for (let key in categoryName) {
+            if (categoryName.hasOwnProperty(key) && false === categoryDelete[key].checked) {
+                jenkins.categories.push(categoryName[key].value);
             }
         }
 

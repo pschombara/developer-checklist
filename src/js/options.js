@@ -34,4 +34,22 @@ import {Options} from './modules/options';
     }
 
     options.init();
+
+    chrome.tabs.query({active: true, currentWindow: true}, (tab) => {
+        if (0 === tab.length) {
+            return;
+        }
+
+        if (false === tab[0].url.includes('#')) {
+            return;
+        }
+
+        const tabIdentifier = tab[0].url.split('#')[1];
+        const targetTab = document.querySelector(`#${tabIdentifier}-tab`);
+
+        if (null !== targetTab) {
+            targetTab.click();
+            window.location.hash = '';
+        }
+    });
 })();

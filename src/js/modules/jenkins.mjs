@@ -1,32 +1,34 @@
 import {Toast} from "./sweet.mjs";
+import {SuperJenkins} from './super/super.jenkins';
 
-export class Jenkins {
+export class Jenkins extends SuperJenkins {
     constructor() {
-        this._jenkinsBuildUrl = '[!http://jenkins.tyre24.local:8080/buildStatus/icon?job={job}&build={build}&style=flat-square&subject={name}!|http://jenkins.tyre24.local:8080/view/{type}/job/{job}/{build}/]';
+        super();
+
+        this._jenkinsBuildUrl = '[!{host}buildStatus/icon?job={job}&build={build}&style=flat-square&subject={name}!|{host}view/{type}/job/{job}/{build}/]';
 
         this._embeddableUrl = document.querySelector('[data-jenkins-url]');
         this._copyBtn = document.querySelector('[data-copy="jenkins-url"]');
         this._job = document.querySelector('[data-jenkins-jobs]');
         this._build = document.querySelector('[data-jenkins-build]');
         this._jobInput = document.querySelector('[list="jenkinsJobs"]');
-        this._host = 'http://jenkins.tyre24.local:8080';
         this._tab = document.querySelector('#special-tab');
-        this._pages = [];
+        this._area = {
+            enabled: document.querySelector('[data-jenkins="enabled"]'),
+            disabled: document.querySelector('[data-jenkins="disabled"]'),
+        };
     }
 
-    get pages() {
-        return this._pages;
-    }
+    init() {
+        if ('' === this.options.host) {
+            this._area.enabled.classList.add('d-none');
+            this._area.disabled.classList.remove('d-none');
 
-    set pages(pages) {
-        this._pages = pages;
-    }
+            return;
+        }
 
-    init(pages) {
-        this.pages = pages;
-
-        for (let item of this.pages) {
-            let option = document.createElement('option');
+        for (let item of this.options.builds) {
+            const option = document.createElement('option');
             option.value = item.name;
             option.setAttribute('data-type', item.type);
             option.setAttribute('data-job', item.job);
@@ -47,12 +49,13 @@ export class Jenkins {
     }
 
     buildUrl() {
-        let selected = document.querySelector(`#jenkinsJobs option[value="${this._jobInput.value}"]`);
+        const selected = document.querySelector(`#jenkinsJobs option[value="${this._jobInput.value}"]`);
 
-        if ('' === this._build.value || null === selected) {
+        if ('' === this._build.value || null === selected || '' === this.options.host) {
             this._embeddableUrl.value = '';
         } else {
-            this._embeddableUrl.value = this._jenkinsBuildUrl.replace(new RegExp('\{type\}', 'g'), selected.getAttribute('data-type'));
+            this._embeddableUrl.value = this._jenkinsBuildUrl.replace(new RegExp('\{host\}', 'g'), this.options.host);
+            this._embeddableUrl.value = this._embeddableUrl.replace(new RegExp('\{type\}', 'g'), selected.getAttribute('data-type'));
             this._embeddableUrl.value = this._embeddableUrl.value.replace(new RegExp('\{job\}', 'g'), selected.getAttribute('data-job'));
             this._embeddableUrl.value = this._embeddableUrl.value.replace(new RegExp('\{name\}', 'g'), '' !== selected.getAttribute('data-label') ? selected.getAttribute('data-label') : selected.value);
             this._embeddableUrl.value = this._embeddableUrl.value.replace(new RegExp('\{build\}', 'g'), this._build.value);
@@ -82,13 +85,13 @@ export class Jenkins {
     };
 
     checkUrl(url) {
-        if (false === url.startsWith(this._host)) {
+        if (false === this._enabled || '' === this.options.host || false === url.startsWith(this.options.host)) {
             return;
         }
 
         this._tab.click();
 
-        for (let item of this.pages) {
+        for (let item of this.options.builds) {
             if (false === url.includes(`/job/${item.job}/`)) {
                 continue;
             }

@@ -1,29 +1,39 @@
-import {Toast} from "./sweet";
+import {SuperGitLab} from './super/super.gitLab';
+import {Toast} from './sweet';
 
-export class Git {
+export class GitLab extends SuperGitLab {
     constructor() {
-        this._host = 'http://tg-git.tyre24.local/';
-        this._gitMergeUrl = `[{aliasUrl}|${this._host}{domain}/{project}/merge_requests/{number}]`;
-        this._mergeRequestUrl = document.querySelector('[data-git-url]');
-        this._copyBtn = document.querySelector('[data-copy="git-url"]');
+        super();
+
+        this._gitMergeUrl = `[{aliasUrl}|${this.options.host}{domain}/{project}/merge_requests/{number}]`;
+        this._mergeRequestUrl = document.querySelector('[data-gitLab-url]');
+        this._copyBtn = document.querySelector('[data-copy="gitLab-url"]');
         this._tab = document.querySelector('#special-tab');
-        this._gitProjects = document.querySelector('#gitProjects');
+        this._gitLabProjects = document.querySelector('#gitLabProjects');
         this._input = {
-            project: document.querySelector('[list="gitProjects"]'),
-            mergeNumber: document.querySelector('[data-git-merge-request]'),
+            project: document.querySelector('[list="gitLabProjects"]'),
+            mergeNumber: document.querySelector('[data-gitLab-merge-request]'),
         };
-        this._projects = [];
+        this._area = {
+            enabled: document.querySelector('[data-gitLab="enabled"]'),
+            disabled: document.querySelector('[data-gitLab="disabled"]'),
+        };
     }
 
-    init(projects) {
-        this._projects = projects;
+    init() {
+        if ('' === this.options.host) {
+            this._area.enabled.classList.add('d-none');
+            this._area.disabled.classList.remove('d-none');
 
-        for (let item of this._projects) {
-            let option = document.createElement('option');
+            return;
+        }
+
+        for (let item of this.options.projects) {
+            const option = document.createElement('option');
             option.value = item.project;
             option.setAttribute('data-domain', item.domain);
 
-            this._gitProjects.appendChild(option);
+            this._gitLabProjects.appendChild(option);
         }
 
         this._input.project.addEventListener('click', () => {
@@ -39,7 +49,7 @@ export class Git {
     }
 
     buildUrl(branch = '') {
-        let selected = this._gitProjects.querySelector(`option[value="${this._input.project.value}"]`);
+        let selected = this._gitLabProjects.querySelector(`option[value="${this._input.project.value}"]`);
 
         if ('' === this._input.mergeNumber.value || null === selected) {
             this._mergeRequestUrl.value = '';
@@ -74,13 +84,13 @@ export class Git {
     }
 
     checkUrl(url) {
-        if (false === url.startsWith(this._host)) {
+        if (false === this._enabled || '' === this.options.host || false === url.startsWith(this.options.host)) {
             return;
         }
 
         this._tab.click();
 
-        for (let item of this._projects) {
+        for (let item of this.options.projects) {
             if (false === url.includes(`${item.domain}/${item.project}/`)) {
                 continue;
             }

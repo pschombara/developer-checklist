@@ -11,8 +11,11 @@
         <div class="col">
             <h1>Options</h1>
             <ul class="nav nav-tabs" id="optionsTab" role="tablist">
+                <li class="nav-item" data-toggle="popover" data-content="Modules" data-placement="bottom">
+                    <a class="nav-link active" href="#modules" role="tab" id="modules-tab" data-toggle="tab"><i class="fas fa-cogs"></i></a>
+                </li>
                 <li class="nav-item" data-toggle="popover" data-content="Jira" data-placement="bottom">
-                    <a class="nav-link active" href="#general" role="tab" id="general-tab" data-toggle="tab"><i class="fab fa-jira"></i></a>
+                    <a class="nav-link" href="#general" role="tab" id="general-tab" data-toggle="tab"><i class="fab fa-jira"></i></a>
                 </li>
                 <li class="nav-item" data-toggle="popover" data-content="Developer items" data-placement="bottom">
                     <a class="nav-link" href="#developer-items" role="tab" id="list-items-tab" data-toggle="tab"><i class="fas fa-keyboard"></i></a>
@@ -30,7 +33,7 @@
                     <a class="nav-link" href="#jenkins" role="tab" id="jenkins-tab" data-toggle="tab"><i class="fab fa-jenkins"></i></a>
                 </li>
                 <li class="nav-item" data-toggle="popover" data-content="GitLab" data-placement="bottom">
-                    <a class="nav-link" href="#git" role="tab" id="git-tab" data-toggle="tab"><i class="fab fa-gitlab"></i></a>
+                    <a class="nav-link" href="#gitLab" role="tab" id="gitLab-tab" data-toggle="tab"><i class="fab fa-gitlab"></i></a>
                 </li>
                 <li class="nav-item" data-toggle="popover" data-content="Rocket.Chat" data-placement="bottom">
                     <a class="nav-link" href="#rocket-chat" role="tab" id="rocket-chat-tab" data-toggle="tab"><i class="fab fa-rocketchat"></i></a>
@@ -44,10 +47,49 @@
             </ul>
 
             <div class="tab-content" id="optionsTabContent">
-                <div class="tab-pane fade show active" id="general" role="tabpanel">
+                <div class="tab-pane fade show active" id="modules" role="tabpanel">
                     <div class="card-body">
                         <div class="row">
-                            <h5>Jira</h5>
+                            <h5 class="col"><i class="fas fa-cogs"></i> Modules</h5>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" name="module[jenkins]" id="moduleJenkins" />
+                                    <label class="custom-control-label" for="moduleJenkins"><i class="fab fa-jenkins"></i> Jenkins</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" name="module[gitLab]" id="moduleGitLab" />
+                                    <label class="custom-control-label" for="moduleGitLab"><i class="fab fa-gitlab"></i> GitLab</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" name="module[rocketChat]" id="moduleRocketChat" />
+                                    <label class="custom-control-label" for="moduleRocketChat"><i class="fab fa-rocketchat"></i> RocketChat</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" name="module[cheatSheet]" id="moduleCheatSheet" />
+                                    <label class="custom-control-label" for="moduleCheatSheet"><i class="fas fa-terminal"></i> CheatSheet</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="general" role="tabpanel">
+                    <div class="card-body">
+                        <div class="row">
+                            <h5 class="col"><i class="fab fa-jira"></i> Jira</h5>
                         </div>
                         <div class="row">
                             <label for="boardLink" class="col-form-label col-sm-4">Server URL</label>
@@ -138,22 +180,22 @@
 
                     </div>
                 </div>
-                <div class="tab-pane" id="developer-items" role="tabpanel">
+                <div class="tab-pane fade" id="developer-items" role="tabpanel">
                     <div class="accordion mt-2" data-accordion="developer" id="developerAccordion"></div>
                 </div>
-                <div class="tab-pane" id="tester-items" role="tabpanel">
+                <div class="tab-pane fade" id="tester-items" role="tabpanel">
                     <div class="accordion mt-2" data-accordion="tester" id="testerAccordion"></div>
                 </div>
-                <div class="tab-pane" id="reviewer-items" role="tabpanel">
+                <div class="tab-pane fade" id="reviewer-items" role="tabpanel">
                     <div class="accordion mt-2" data-accordion="reviewer" id="reviewerAccordion"></div>
                 </div>
-                <div class="tab-pane" id="help-items" role="tabpanel">
+                <div class="tab-pane fade" id="help-items" role="tabpanel">
                     <div class="accordion mt-2" data-accordion="help" id="helpAccordion"></div>
                 </div>
-                <div class="tab-pane" id="cheat-sheet" role="tabpanel">
+                <div class="tab-pane fade" id="cheat-sheet" role="tabpanel">
                     <div class="card-body" data-cheat-sheet data-draggable>
                         <div class="row">
-                            <h5 data-toggle="tooltip" data-placement="left" title="First column is a custom name, second column is the actual command/link etc.">Cheat Sheet</h5>
+                            <h5 class="col" data-toggle="tooltip" data-placement="left" title="First column is a custom name, second column is the actual command/link etc."><i class="fas fa-terminal"></i> Cheat Sheet</h5>
                         </div>
                         <div class="row mb-2">
                             <div class="col-2 offset-1 text-center font-weight-bold">Name&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="A custom name for the command/link etc."></i></div>
@@ -167,7 +209,7 @@
                 <div class="tab-pane" id="rocket-chat" role="tabpanel">
                     <div class="card-body">
                         <div class="row">
-                            <h5>Rocket.Chat</h5>
+                            <h5 class="col"><i class="fab fa-rocketchat"></i> Rocket.Chat</h5>
                         </div>
                         <div class="row">
                             <label for="rc-url" class="col-form-label col-4">Rocket.Chat Url</label>
@@ -216,88 +258,112 @@
                     </div>
                 </div>
                 <div class="tab-pane" id="jenkins" role="tabpanel">
-                    <div class="accordion mt-2" data-accordion="jenkins" id="jenkinsAccordion">
-                        <div class="card">
-                            <div class="card-header">
-                                <h2 class="mb-0">
-                                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='jenkins-builds']">Builds</button>
-                                </h2>
-                            </div>
-                            <div class="collapse" data-collapse="jenkins-builds" data-parent="#jenkinsAccordion">
-                                <div class="card-body">
-                                    <div class="row mb-2">
-                                        <div class="col-2 offset-1 text-center font-weight-bold">Category&nbsp;</div>
-                                        <div class="col-2 text-center font-weight-bold">Name&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="A custom name of the pipeline. Will be used as url alias and can be used to search for the pipeline."></i></div>
-                                        <div class="col-3 text-center font-weight-bold">Pipeline&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The project name of the pipeline in Jenkins."></i></div>
-                                        <div class="col-2 text-center font-weight-bold">Label&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The label will be used for the badge. If it is empty the name will be used"></i></div>
-                                    </div>
-                                    <div data-jenkins data-draggable></div>
-                                    <div class="mt-2">
-                                        <button type="button" class="btn btn-success" data-add-jenkins>+ Add</button>
-                                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5><i class="fab fa-jenkins"></i> Jenkins</h5>
+
+                            <div class="row mb-3">
+                                <label for="jenkinsHost" class="col-form-label col-sm-4">Host</label>
+                                <div class="col-sm-6">
+                                    <input type="url" id="jenkinsHost" name="jenkinsHost" value="" placeholder="https://jenkins.local:8080/" class="form-control" />
                                 </div>
                             </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-header">
-                                <h2 class="mb-0">
-                                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='jenkins-categories']">Categories</button>
-                                </h2>
-                            </div>
-                            <div class="collapse" data-collapse="jenkins-categories" data-parent="#jenkinsAccordion">
-                                <div class="card-body">
-                                    <div class="row mb-2">
-                                        <div class="offset-1 text-center">Category</div>
+
+                            <div class="accordion mt-2" data-accordion="jenkins" id="jenkinsAccordion">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='jenkins-builds']">Builds</button>
+                                        </h2>
                                     </div>
-                                    <div data-jenkins-categories data-draggable></div>
-                                    <div class="mt-2">
-                                        <button type="button" class="btn btn-success" data-add-jenkins-category>+ Add</button>
+                                    <div class="collapse" data-collapse="jenkins-builds" data-parent="#jenkinsAccordion">
+                                        <div class="card-body">
+                                            <div class="row mb-2">
+                                                <div class="col-2 offset-1 text-center font-weight-bold">Category&nbsp;</div>
+                                                <div class="col-2 text-center font-weight-bold">Name&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="A custom name of the pipeline. Will be used as url alias and can be used to search for the pipeline."></i></div>
+                                                <div class="col-3 text-center font-weight-bold">Pipeline&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The project name of the pipeline in Jenkins."></i></div>
+                                                <div class="col-2 text-center font-weight-bold">Label&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The label will be used for the badge. If it is empty the name will be used"></i></div>
+                                            </div>
+                                            <div data-jenkins data-draggable></div>
+                                            <div class="mt-2">
+                                                <button type="button" class="btn btn-success" data-add-jenkins>+ Add</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='jenkins-categories']">Categories</button>
+                                        </h2>
+                                    </div>
+                                    <div class="collapse" data-collapse="jenkins-categories" data-parent="#jenkinsAccordion">
+                                        <div class="card-body">
+                                            <div class="row mb-2">
+                                                <div class="offset-1 text-center">Category</div>
+                                            </div>
+                                            <div data-jenkins-categories data-draggable></div>
+                                            <div class="mt-2">
+                                                <button type="button" class="btn btn-success" data-add-jenkins-category>+ Add</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
-                <div class="tab-pane" id="git" role="tabpanel">
-                    <div class="accordion mt-2" data-accordion="git" id="gitAccordion">
-                        <div class="card">
-                            <div class="card-header">
-                                <h2 class="mb-0">
-                                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='git-projects']">Projects</button>
-                                </h2>
-                            </div>
-                            <div class="collapse" data-collapse="git-projects" data-parent="#gitAccordion">
-                                <div class="card-body">
-                                    <div class="row mb-2">
-                                        <div class="col-2 offset-1 text-center font-weight-bold">Category</div>
-                                        <div class="col-3 offset-1 text-center font-weight-bold">Project</div>
-                                    </div>
-                                    <div data-git data-draggable>
-                                    </div>
-                                    <div class="mt-2">
-                                        <button type="button" class="btn btn-success" data-add-git>+ Add</button>
-                                    </div>
+                <div class="tab-pane" id="gitLab" role="tabpanel">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5><i class="fab fa-gitlab"></i> GitLab</h5>
+
+                            <div class="row mb-3">
+                                <label for="gitLabHost" class="col-form-label col-sm-4">Host</label>
+                                <div class="col-sm-6">
+                                    <input type="url" id="gitLabHost" name="gitLabHost" value="" placeholder="https://gitlab.com/" class="form-control" />
                                 </div>
                             </div>
 
-                        </div>
-                        <div class="card">
-                            <div class="card-header">
-                                <h2 class="mb-0">
-                                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='git-categories']">Categories</button>
-                                </h2>
-                            </div>
-                            <div class="collapse" data-collapse="git-categories" data-parent="#gitAccordion">
-                                <div class="card-body" >
-                                    <div class="row mb-2">
-                                        <div class="col-2 offset-1 text-center">Category</div>
+                            <div class="accordion mt-2" data-accordion="gitLab" id="gitLabAccordion">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='gitLab-projects']">Projects</button>
+                                        </h2>
                                     </div>
-                                    <div data-git-categories data-draggable></div>
-                                    <div class="mt-2">
-                                        <button type="button" class="btn btn-success" data-add-git-category>+ Add</button>
+                                    <div class="collapse" data-collapse="gitLab-projects" data-parent="#gitLabAccordion">
+                                        <div class="card-body">
+                                            <div class="row mb-2">
+                                                <div class="col-2 offset-1 text-center font-weight-bold">Category</div>
+                                                <div class="col-3 offset-1 text-center font-weight-bold">Project</div>
+                                            </div>
+                                            <div data-gitLab-projects data-draggable>
+                                            </div>
+                                            <div class="mt-2">
+                                                <button type="button" class="btn btn-success" data-add-gitLab-project>+ Add</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="card">
+                                <div class="card-header">
+                                    <h2 class="mb-0">
+                                        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='gitLab-categories']">Categories</button>
+                                    </h2>
+                                </div>
+                                <div class="collapse" data-collapse="gitLab-categories" data-parent="#gitLabAccordion">
+                                    <div class="card-body" >
+                                        <div class="row mb-2">
+                                            <div class="col-2 offset-1 text-center">Category</div>
+                                        </div>
+                                        <div data-gitLab-categories data-draggable></div>
+                                        <div class="mt-2">
+                                            <button type="button" class="btn btn-success" data-add-gitLab-category>+ Add</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             </div>
                         </div>
                     </div>
@@ -305,7 +371,7 @@
                 <div class="tab-pane" id="about" role="tabpanel">
                     <div class="card-body">
                         <div class="row">
-                            <h5>Enjoy!</h5>
+                            <h5 class="col">Enjoy!</h5>
                         </div>
                         <div class="row mt-1">
                             <div class="col">
@@ -423,30 +489,30 @@
         </div>
     </div>
 </template>
-<template data-template="git">
+<template data-template="gitLabProject">
     <div class="row mt-2" draggable="true">
         <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
         <div class="col-3">
-            <select name="gitDomain[]" class="form-control"></select>
+            <select name="gitLabDomain[]" class="form-control"></select>
         </div>
         <div class="col-3">
-            <input type="text" name="gitProject[]" class="form-control" placeholder="project eg: alzura/local-bundle" />
+            <input type="text" name="gitLabProject[]" class="form-control" placeholder="project eg: alzura/local-bundle" />
         </div>
         <div class="col-2 custom-control custom-switch">
-            <input class="custom-control-input" type="checkbox" name="gitDelete[]" id="%gitUuid%" />
-            <label class="custom-control-label" for="%gitUuid%">Delete</label>
+            <input class="custom-control-input" type="checkbox" name="gitLabProjectDelete[]" id="%gitLabUuid%" />
+            <label class="custom-control-label" for="%gitLabUuid%">Delete</label>
         </div>
     </div>
 </template>
-<template data-template="git-category">
+<template data-template="gitLabCategory">
     <div class="row mt-2" draggable="true">
         <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
         <div class="col-3">
-            <input type="text" name="gitCategoryName[]" class="form-control" placeholder="name of the category" />
+            <input type="text" name="gitLabCategoryName[]" class="form-control" placeholder="name of the category" />
         </div>
         <div class="col-2 custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" name="gitCategoryDelete[]" id="%gitCategoryUuid%" />
-            <label class="custom-control-label" for="%gitCategoryUuid%">Delete</label>
+            <input type="checkbox" class="custom-control-input" name="gitLabCategoryDelete[]" id="%gitLabCategoryUuid%" />
+            <label class="custom-control-label" for="%gitLabCategoryUuid%">Delete</label>
         </div>
     </div>
 </template>
