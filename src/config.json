@@ -42,7 +42,6 @@
         "categories": []
     },
     "jenkins": [],
-    "jenkinsCategories": [],
     "jira": {
         "url": "",
         "cleanup": 2,
