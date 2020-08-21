@@ -57,7 +57,6 @@ export class Checklist {
 
             for (let link of openOptionLinks) {
                 link.addEventListener('click', () => {
-                    console.log('here?');
                     let tab = '';
 
                     if (link.hasAttribute('data-open-extra')) {
