@@ -86,6 +86,52 @@ const checkObjectContainsKeys = (entry, requiredKeys, types, optionKey) => {
     return errors;
 }
 
+const checkChecklistsBtn = (data, key) => {
+    const requiredKeys = ['success', 'failed'];
+    const types = {
+        success: 'object',
+        failed: 'object',
+    };
+
+    let errors = checkObjectContainsKeys(data, requiredKeys, types, key);
+
+    if (0 !== errors.length) {
+        return errors;
+    }
+
+    return errors;
+}
+
+const checkChecklists = (data, key) => {
+    let errors = [];
+
+    const listKeys = ['id', 'items', 'title'];
+    const listTypes = {
+        id: 'number',
+        items: 'array',
+        title: 'string',
+    }
+
+    const itemKeys = ['text', 'checked', 'id'];
+    const itemTypes = {
+        text: 'string',
+        checked: 'boolean',
+        id: 'string',
+    };
+
+    data.forEach((obj, entryKey) => {
+        errors.push(...checkObjectContainsKeys(obj, listKeys, listTypes, `${key}[${entryKey}]`));
+
+        if (obj.hasOwnProperty('items')) {
+            obj.items.forEach((item, itemKey) => {
+                errors.push(...checkObjectContainsKeys(item, itemKeys, itemTypes, `${key}[${entryKey}][items][${itemKey}]`));
+            });
+        }
+    })
+
+    return errors;
+}
+
 const checkJira = (data) => {
     const requiredKeys = ['url', 'cleanup', 'maximumIssues', 'boards', 'comments'];
     const types = {
@@ -125,7 +171,13 @@ const checkJira = (data) => {
     jira.checklists.forEach((entry, key) => {
         errors.push(...checkObjectContainsKeys(entry, checklistsKeys, checklistsTypes, `jira[checklists][${key}]`));
 
-        // todo check checklist, buttons
+        if (0 === errors.length) {
+            errors.push(...checkChecklistsBtn(entry.buttons, `jira[checklists][${key}][buttons]`));
+
+            entry.checklist.forEach((category, entryKey) => {
+                errors.push(...checkChecklists(category, `jira[checklists][${key}][checklist][${entryKey}]`));
+            });
+        }
     });
 
     return errors;
