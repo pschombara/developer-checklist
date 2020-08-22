@@ -12,7 +12,7 @@ import {Migration} from './migration/migration';
 
 export class Checklist {
     constructor(url) {
-        this._listTypes = ['developer', 'tester', 'reviewer', 'help']; // todo replace with options
+        //this._listTypes = ['developer', 'tester', 'reviewer', 'help']; // todo replace with options
         this._browser = window.browser ? window.browser : window.chrome;
         this._buttons = {
             clear: document.querySelectorAll('[data-btn="clear"]'),
@@ -81,43 +81,43 @@ export class Checklist {
     }
 }
 
-const checkIsChecked = (items, id) => {
-    for (let item of items) {
-        if (item.id === id) {
-            return item.checked;
-        }
-    }
+// const checkIsChecked = (items, id) => {
+//     for (let item of items) {
+//         if (item.id === id) {
+//             return item.checked;
+//         }
+//     }
+//
+//     return false;
+// };
 
-    return false;
-};
-
-const sync = (optionsList, issueLists) => {
-    if (0 === issueLists.length) {
-        return optionsList;
-    }
-
-    let lists = [];
-
-    optionsList.forEach((content, key) => {
-        let items = [];
-
-        content.items.forEach((item, innerKey) => {
-            items.push({
-                text: item.text,
-                checked: checkIsChecked(undefined !== issueLists[key] ? issueLists[key].items : [], item.id),
-                id: item.id
-            });
-        });
-
-        lists[key] = {
-            id: content.id,
-            title: content.title,
-            items: items
-        };
-    });
-
-    return lists;
-};
+// const sync = (optionsList, issueLists) => {
+//     if (0 === issueLists.length) {
+//         return optionsList;
+//     }
+//
+//     let lists = [];
+//
+//     optionsList.forEach((content, key) => {
+//         let items = [];
+//
+//         content.items.forEach((item, innerKey) => {
+//             items.push({
+//                 text: item.text,
+//                 checked: checkIsChecked(undefined !== issueLists[key] ? issueLists[key].items : [], item.id),
+//                 id: item.id
+//             });
+//         });
+//
+//         lists[key] = {
+//             id: content.id,
+//             title: content.title,
+//             items: items
+//         };
+//     });
+//
+//     return lists;
+// };
 
 const checkOptions = (cl) => {
     if (cl._options.hasOwnProperty('jira')) {
@@ -139,10 +139,6 @@ const checkOptions = (cl) => {
             buttonIssue.disabled = true;
             buttonIssue.setAttribute('title', 'At least one board needs to be configured in the options!');
         }
-    }
-
-    if (cl._options.hasOwnProperty('lists')) {
-        cl._missingOptions = false;
     }
 
     if (cl._options.hasOwnProperty('rocketChat')) {
@@ -226,10 +222,6 @@ const initOverview = (cl) => {
                 document.querySelector('[data-issues]').classList.add('d-none');
             }
         });
-    }
-
-    if (cl._missingOptions) {
-        document.querySelector('.no-options').classList.remove('d-none');
     }
 
     cl._jenkins.init();

@@ -10,24 +10,12 @@
     <div class="row">
         <div class="col">
             <h1>Options</h1>
-            <ul class="nav nav-tabs" id="optionsTab" role="tablist">
+            <ul class="nav nav-tabs mb-3" id="optionsTab" role="tablist">
                 <li class="nav-item" data-toggle="popover" data-content="Modules" data-placement="bottom">
                     <a class="nav-link active" href="#modules" role="tab" id="modules-tab" data-toggle="tab"><i class="fas fa-cogs"></i></a>
                 </li>
                 <li class="nav-item" data-toggle="popover" data-content="Jira" data-placement="bottom">
-                    <a class="nav-link" href="#general" role="tab" id="general-tab" data-toggle="tab"><i class="fab fa-jira"></i></a>
-                </li>
-                <li class="nav-item" data-toggle="popover" data-content="Developer items" data-placement="bottom">
-                    <a class="nav-link" href="#developer-items" role="tab" id="list-items-tab" data-toggle="tab"><i class="fas fa-keyboard"></i></a>
-                </li>
-                <li class="nav-item" data-toggle="popover" data-content="Tester items" data-placement="bottom">
-                    <a class="nav-link" href="#tester-items" role="tab" id="tester-items-tab" data-toggle="tab"><i class="fas fa-gamepad"></i></a>
-                </li>
-                <li class="nav-item" data-toggle="popover" data-content="Reviewer items" data-placement="bottom">
-                    <a class="nav-link" href="#reviewer-items" role="tab" id="reviewer-items-tab" data-toggle="tab"><i class="fas fa-bug"></i></a>
-                </li>
-                <li class="nav-item" data-toggle="popover" data-content="Help items" data-placement="bottom">
-                    <a class="nav-link" href="#help-items" role="tab" id="help-items-tab" data-toggle="tab"><i class="fas fa-question-circle"></i></a>
+                    <a class="nav-link" href="#jira" role="tab" id="jira-tab" data-toggle="tab"><i class="fab fa-jira"></i></a>
                 </li>
                 <li class="nav-item" data-toggle="popover" data-content="Jenkins" data-placement="bottom">
                     <a class="nav-link" href="#jenkins" role="tab" id="jenkins-tab" data-toggle="tab"><i class="fab fa-jenkins"></i></a>
@@ -48,149 +36,115 @@
 
             <div class="tab-content" id="optionsTabContent">
                 <div class="tab-pane fade show active" id="modules" role="tabpanel">
-                    <div class="card-body">
-                        <div class="row">
-                            <h5 class="col"><i class="fas fa-cogs"></i> Modules</h5>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" name="module[jenkins]" id="moduleJenkins" />
-                                    <label class="custom-control-label" for="moduleJenkins"><i class="fab fa-jenkins"></i> Jenkins</label>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row mb-2">
+                                <h5 class="col"><i class="fas fa-cogs"></i> Modules</h5>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" name="module[jenkins]" id="moduleJenkins" />
+                                        <label class="custom-control-label" for="moduleJenkins"><i class="fab fa-jenkins"></i> Jenkins</label>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" name="module[gitLab]" id="moduleGitLab" />
-                                    <label class="custom-control-label" for="moduleGitLab"><i class="fab fa-gitlab"></i> GitLab</label>
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" name="module[gitLab]" id="moduleGitLab" />
+                                        <label class="custom-control-label" for="moduleGitLab"><i class="fab fa-gitlab"></i> GitLab</label>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" name="module[rocketChat]" id="moduleRocketChat" />
-                                    <label class="custom-control-label" for="moduleRocketChat"><i class="fab fa-rocketchat"></i> RocketChat</label>
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" name="module[rocketChat]" id="moduleRocketChat" />
+                                        <label class="custom-control-label" for="moduleRocketChat"><i class="fab fa-rocketchat"></i> RocketChat</label>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" name="module[cheatSheet]" id="moduleCheatSheet" />
-                                    <label class="custom-control-label" for="moduleCheatSheet"><i class="fas fa-terminal"></i> CheatSheet</label>
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" name="module[cheatSheet]" id="moduleCheatSheet" />
+                                        <label class="custom-control-label" for="moduleCheatSheet"><i class="fas fa-terminal"></i> CheatSheet</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="general" role="tabpanel">
-                    <div class="card-body">
-                        <div class="row">
-                            <h5 class="col"><i class="fab fa-jira"></i> Jira</h5>
-                        </div>
-                        <div class="row">
-                            <label for="boardLink" class="col-form-label col-sm-4">Server URL</label>
-                            <div class="col-sm-6 input-group" data-toggle="tooltip" data-placement="right" title="The base URL of your company's Jira application.">
-                                <input id="boardLink" name="option[]" type="url" class="form-control" placeholder="(ends with '.../browse/')" data-option="url" />
-                                <div class="input-group-append">
-                                    <span class="input-group-text">/browse/</span>
+                <div class="tab-pane fade" id="jira" role="tabpanel">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <h5 class="col"><i class="fab fa-jira"></i> Jira</h5>
+                            </div>
+
+                            <ul class="nav nav-pills nav-justified mb-3" id="jira-tab-settings" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" role="tab" data-toggle="pill" href="#jira-general">General</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" role="tab" data-toggle="pill" href="#jira-boards">Boards</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" role="tab" data-toggle="pill" href="#jira-checklists">Checklists</a>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content" id="jira-settings">
+                                <div class="tab-pane fade show active" id="jira-general">
+                                    <div class="row">
+                                        <label for="boardLink" class="col-form-label col-sm-4">Server URL</label>
+                                        <div class="col-sm-6 input-group" data-toggle="tooltip" data-placement="right" title="The base URL of your company's Jira application.">
+                                            <input id="boardLink" name="option[]" type="url" class="form-control" placeholder="(ends with '.../browse/')" data-option="url" />
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">/browse/</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4">
+                                        <label for="cleanup" class="col-form-label col-sm-4" >Delete issues after</label>
+                                        <div class="col-sm-6 input-group" data-toggle="tooltip" data-placement="right" title="Issues will be removed from storage after days given. This affects the issues in progress view.">
+                                            <input id="cleanup" min="1" max="30" type="number" class="form-control" name="option[]" data-option="cleanup" />
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">days</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4">
+                                        <label for="maximumIssues" class="col-form-label col-sm-4">Maximum Issues in progress</label>
+                                        <div class="col-sm-6 input-group" data-toggle="tooltip" data-placement="right" title="Limit the issues to be remembered simultaneously. This affects the issues in progress view.">
+                                            <input id="maximumIssues" min="0" max="18" type="number" class="form-control" name="option[]" data-option="maximumIssues" />
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">issues</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row mt-4">
-                            <label for="cleanup" class="col-form-label col-sm-4" >Delete issues after</label>
-                            <div class="col-sm-6 input-group" data-toggle="tooltip" data-placement="right" title="Issues will be removed from storage after days given. This affects the issues in progress view.">
-                                <input id="cleanup" min="1" max="30" type="number" class="form-control" name="option[]" data-option="cleanup" />
-                                <div class="input-group-append">
-                                    <span class="input-group-text">days</span>
+                                <div class="tab-pane fade" id="jira-boards">
+                                    <div class="row">
+                                        <h5 data-toggle="tooltip">Available Boards&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="Used to quick jump to issues."></i></h5>
+                                    </div>
+
+                                    <div class="row mb-2">
+                                        <div class="col-3 offset-1 text-center font-weight-bold">Board Number&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The numeric identifier of the board, keep it zero if the board has no identifier."></i></div>
+                                        <div class="col-3 text-center font-weight-bold">Board Key&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The alpha identifier of the board. It is the prefix for your issues."></i></div>
+                                    </div>
+
+                                    <div data-boards data-draggable></div>
+
+                                    <div class="mt-3">
+                                        <button type="button" class="btn btn-success" data-add-board>+ Add</button>
+                                    </div>
                                 </div>
+                                <div class="tab-pane fade" id="jira-checklists"></div>
                             </div>
                         </div>
-                        <div class="row mt-4">
-                            <label for="maximumIssues" class="col-form-label col-sm-4">Maximum Issues in progress</label>
-                            <div class="col-sm-6 input-group" data-toggle="tooltip" data-placement="right" title="Limit the issues to be remembered simultaneously. This affects the issues in progress view.">
-                                <input id="maximumIssues" min="0" max="18" type="number" class="form-control" name="option[]" data-option="maximumIssues" />
-                                <div class="input-group-append">
-                                    <span class="input-group-text">issues</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="my-5"><hr /></div>
-
-                        <div class="row">
-                            <h5 data-toggle="tooltip">Available Boards&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="Used to quick jump to issues."></i></h5>
-                        </div>
-
-                        <div class="row mb-2">
-                            <div class="col-3 offset-1 text-center font-weight-bold">Board Number&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The numeric identifier of the board, keep it zero if the board has no identifier."></i></div>
-                            <div class="col-3 text-center font-weight-bold">Board Key&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The alpha identifier of the board. It is the prefix for your issues."></i></div>
-                        </div>
-
-                        <div data-boards data-draggable></div>
-
-                        <div class="mt-3">
-                            <button type="button" class="btn btn-success" data-add-board>+ Add</button>
-                        </div>
-
-                        <div class="my-5"><hr /></div>
-
-
-                        <div class="row">
-                            <h5>Jira Comments</h5>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-11 text-center font-weight-bold">Comment&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="Customize the comment that will be created when you hit the corresponding button in check list. You can use Jira syntax to create and style your messages."></i></div>
-                        </div>
-                        <div class="row">
-                            <label for="jira-dev-comment-success" class="col-form-label col-4">Developer</label>
-                            <div class="col-6 input-group">
-                                <input class="form-control" id="jira-dev-comment-success" placeholder="h4. {color:#1e872b}Checklist{color}: All checked and done! (/)" data-jira-comment="develop-success" />
-                            </div>
-                        </div>
-                        <div class="row mt-4">
-                            <label for="jira-test-comment-success" class="col-form-label col-4">Test Success</label>
-                            <div class="col-6 input-group">
-                                <input class="form-control" id="jira-test-comment-success" placeholder="h4. Test {color:#1e872b}OK{color} (/)" data-jira-comment="test-success" />
-                            </div>
-                        </div>
-                        <div class="row mt-4">
-                            <label for="jira-test-comment-failed" class="col-form-label col-4">Test Failed</label>
-                            <div class="col-6 input-group">
-                                <input class="form-control" id="jira-test-comment-failed" placeholder="h4. Test {color:#de350b}failed{color} (x)" data-jira-comment="test-failed" />
-                            </div>
-                        </div>
-                        <div class="row mt-4">
-                            <label for="jira-review-comment-success" class="col-form-label col-4">Review Success</label>
-                            <div class="col-6 input-group">
-                                <input class="form-control" id="jira-review-comment-success" placeholder="h4. Review {color:#1e872b}OK{color} (/)" data-jira-comment="review-success" />
-                            </div>
-                        </div>
-                        <div class="row mt-4">
-                            <label for="jira-review-comment-failed" class="col-form-label col-4">Review Failed</label>
-                            <div class="col-6 input-group">
-                                <input class="form-control" id="jira-review-comment-failed" placeholder="h4. Review {color:#de350b}failed{color} (x)" data-jira-comment="review-failed" />
-                            </div>
-                        </div>
-
-                        <div class="my-5"><hr /></div>
-
                     </div>
-                </div>
-                <div class="tab-pane fade" id="developer-items" role="tabpanel">
-                    <div class="accordion mt-2" data-accordion="developer" id="developerAccordion"></div>
-                </div>
-                <div class="tab-pane fade" id="tester-items" role="tabpanel">
-                    <div class="accordion mt-2" data-accordion="tester" id="testerAccordion"></div>
-                </div>
-                <div class="tab-pane fade" id="reviewer-items" role="tabpanel">
-                    <div class="accordion mt-2" data-accordion="reviewer" id="reviewerAccordion"></div>
-                </div>
-                <div class="tab-pane fade" id="help-items" role="tabpanel">
-                    <div class="accordion mt-2" data-accordion="help" id="helpAccordion"></div>
                 </div>
                 <div class="tab-pane fade" id="cheat-sheet" role="tabpanel">
                     <div class="card-body" data-cheat-sheet data-draggable>
@@ -206,7 +160,7 @@
                         <button type="button" class="btn btn-success" data-add-cheat-sheet>+ Add</button>
                     </div>
                 </div>
-                <div class="tab-pane" id="rocket-chat" role="tabpanel">
+                <div class="tab-pane fade" id="rocket-chat" role="tabpanel">
                     <div class="card-body">
                         <div class="row">
                             <h5 class="col"><i class="fab fa-rocketchat"></i> Rocket.Chat</h5>
@@ -257,7 +211,7 @@
                         <datalist id="rc-rooms"></datalist>
                     </div>
                 </div>
-                <div class="tab-pane" id="jenkins" role="tabpanel">
+                <div class="tab-pane fade" id="jenkins" role="tabpanel">
                     <div class="card">
                         <div class="card-body">
                             <h5><i class="fab fa-jenkins"></i> Jenkins</h5>
@@ -313,7 +267,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane" id="gitLab" role="tabpanel">
+                <div class="tab-pane fade" id="gitLab" role="tabpanel">
                     <div class="card">
                         <div class="card-body">
                             <h5><i class="fab fa-gitlab"></i> GitLab</h5>
@@ -368,34 +322,37 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane" id="about" role="tabpanel">
-                    <div class="card-body">
-                        <div class="row">
-                            <h5 class="col">Enjoy!</h5>
-                        </div>
-                        <div class="row mt-1">
-                            <div class="col">
-                                We hope your company, team or/and yourself benefit from our extension and are able to work
-                                with Jira more efficient.
+                <div class="tab-pane fade" id="about" role="tabpanel">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <h5 class="col">Enjoy!</h5>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                If you want to send some 'bugs' to support the extension, it would be highly appreciated.
+                            <div class="row mt-1">
+                                <div class="col">
+                                    We hope your company, team or/and yourself benefit from our extension and are able to work
+                                    with Jira more efficient.
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-4">
-                            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" class="col">
-                                <input type="hidden" name="cmd" value="_s-xclick"/>
-                                <input type="hidden" name="hosted_button_id" value="X5XGC2J7M2RZ6"/>
-                                <input type="image" src="/images/btn_donateCC_LG.webP"
-                                       name="submit" title="PayPal - The safer, easier way to pay online!"
-                                       alt="Donate with PayPal button"/>
-                            </form>
+                            <div class="row">
+                                <div class="col">
+                                    If you want to send some 'bugs' to support the extension, it would be highly appreciated.
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" class="col">
+                                    <input type="hidden" name="cmd" value="_s-xclick"/>
+                                    <input type="hidden" name="hosted_button_id" value="X5XGC2J7M2RZ6"/>
+                                    <input type="image" src="/images/btn_donateCC_LG.webP"
+                                           name="submit" title="PayPal - The safer, easier way to pay online!"
+                                           alt="Donate with PayPal button"/>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div class="row my-5">
                 <div class="col">
                     <button type="button" class="btn btn-primary" data-save="save">Save</button>

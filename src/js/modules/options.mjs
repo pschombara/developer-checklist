@@ -1,7 +1,6 @@
 import {Validator} from "./options/validator";
 import {ConfirmationPrompt, SuccessPrompt} from "./sweet";
 import {OptionsRocketChat} from "./options/rocket.chat";
-import {Uuid} from "./options/uuid";
 import {Jira} from "./options/jira";
 import {Storage} from "./storage";
 import {Config} from "./options/config";
@@ -24,14 +23,8 @@ export class Options {
         this._modules = new Modules();
         this._migration = new Migration();
 
-        this._templates = {
-            cardList: document.querySelector('[data-template="cardList"]'),
-            listEntry: document.querySelector('[data-template="listEntry"]'),
-        };
-
         this._buttonRestoreOptions = document.querySelector('[data-default="btn"]');
 
-        this._listTypes = ['developer', 'tester', 'reviewer', 'help']; // todo replace with options
         this._options = {};
     }
 
@@ -144,6 +137,8 @@ export class Options {
     }
 
     save(type) {
+        // start with clean state
+        this.options = {};
         this.options.jira = this.jira.save();
         this.options.jenkins = this.jenkins.save();
         this.options.rocketChat = this.rocketChat.options;
@@ -152,32 +147,32 @@ export class Options {
         this.options.modules = this.modules.save();
         this.options.version = this._migration.currentVersion;
 
-        for (let type of this._listTypes) {
-            let items = document.querySelectorAll(`[data-type=${type}][data-items]`);
-            let saveLists = {};
-            saveLists = this.options.lists[type];
-
-            for (let item of items) {
-                let id = item.getAttribute('data-items');
-                let inputs = item.querySelectorAll(`[data-item="${id}"]`);
-                let deletes = item.querySelectorAll(`[data-delete="${id}"]`);
-                let identifiers = item.querySelectorAll(`[data-identifier="${id}"]`);
-
-                saveLists[id - 1].items = [];
-
-                for (let key in inputs) {
-                    if (false === deletes[key].checked) {
-                        saveLists[id - 1].items.push({
-                            text: inputs[key].value,
-                            checked: false,
-                            id: identifiers[key].value
-                        });
-                    }
-                }
-
-                this.options.lists[type] = saveLists;
-            }
-        }
+        // for (let type of this._listTypes) {
+        //     let items = document.querySelectorAll(`[data-type=${type}][data-items]`);
+        //     let saveLists = {};
+        //     saveLists = this.options.lists[type];
+        //
+        //     for (let item of items) {
+        //         let id = item.getAttribute('data-items');
+        //         let inputs = item.querySelectorAll(`[data-item="${id}"]`);
+        //         let deletes = item.querySelectorAll(`[data-delete="${id}"]`);
+        //         let identifiers = item.querySelectorAll(`[data-identifier="${id}"]`);
+        //
+        //         saveLists[id - 1].items = [];
+        //
+        //         for (let key in inputs) {
+        //             if (false === deletes[key].checked) {
+        //                 saveLists[id - 1].items.push({
+        //                     text: inputs[key].value,
+        //                     checked: false,
+        //                     id: identifiers[key].value
+        //                 });
+        //             }
+        //         }
+        //
+        //         this.options.lists[type] = saveLists;
+        //     }
+        // }
 
         if (false === this.validator.validate(this.options)) {
             return false;
@@ -192,48 +187,48 @@ export class Options {
         return true;
     }
 }
-
-const createCardList = (op, id, title, items, type) => {
-    let temp = op._templates.cardList.innerHTML;
-    let cardList = document.querySelector(`[data-accordion="${type}"]`);
-
-    temp = temp.replace(new RegExp('%number%', 'g'), id);
-    temp = temp.replace('%name%', title);
-    temp = temp.replace(new RegExp('%type%', 'g'), type);
-
-    let elem = document.createElement('div');
-    elem.innerHTML = temp;
-
-    cardList.appendChild(elem.children[0]);
-
-    createListEntries(op, id, items, type);
-
-    let addBtn = document.querySelector(`[data-type="${type}"][data-add="${id}"]`);
-    addBtn.addEventListener('click', () => {
-        createListEntry(op, document.querySelector(`[data-type="${addBtn.getAttribute('data-type')}"][data-items="${id}"]`), {text: '', id: Uuid.generate()}, id);
-    });
-};
-
-const createListEntries = (op, id, items, type) => {
-    let target = document.querySelector(`[data-type="${type}"][data-items="${id}"]`);
-
-    for (let item of items) {
-        createListEntry(op, target, item, id);
-    }
-};
-
-const createListEntry = (op, target, item, id) => {
-    let temp = op._templates.listEntry.innerHTML;
-
-    temp = temp.replace(new RegExp('%number%', 'g'), id);
-    temp = temp.replace(new RegExp('%identifier%', 'g'), item.id);
-
-    let elem = document.createElement('div');
-    elem.innerHTML = temp;
-    elem.children[0].querySelector('input').value = item.text;
-
-    target.appendChild(elem.children[0]);
-};
+//
+// const createCardList = (op, id, title, items, type) => {
+//     let temp = op._templates.cardList.innerHTML;
+//     let cardList = document.querySelector(`[data-accordion="${type}"]`);
+//
+//     temp = temp.replace(new RegExp('%number%', 'g'), id);
+//     temp = temp.replace('%name%', title);
+//     temp = temp.replace(new RegExp('%type%', 'g'), type);
+//
+//     let elem = document.createElement('div');
+//     elem.innerHTML = temp;
+//
+//     cardList.appendChild(elem.children[0]);
+//
+//     createListEntries(op, id, items, type);
+//
+//     let addBtn = document.querySelector(`[data-type="${type}"][data-add="${id}"]`);
+//     addBtn.addEventListener('click', () => {
+//         createListEntry(op, document.querySelector(`[data-type="${addBtn.getAttribute('data-type')}"][data-items="${id}"]`), {text: '', id: Uuid.generate()}, id);
+//     });
+// };
+//
+// const createListEntries = (op, id, items, type) => {
+//     let target = document.querySelector(`[data-type="${type}"][data-items="${id}"]`);
+//
+//     for (let item of items) {
+//         createListEntry(op, target, item, id);
+//     }
+// };
+//
+// const createListEntry = (op, target, item, id) => {
+//     let temp = op._templates.listEntry.innerHTML;
+//
+//     temp = temp.replace(new RegExp('%number%', 'g'), id);
+//     temp = temp.replace(new RegExp('%identifier%', 'g'), item.id);
+//
+//     let elem = document.createElement('div');
+//     elem.innerHTML = temp;
+//     elem.children[0].querySelector('input').value = item.text;
+//
+//     target.appendChild(elem.children[0]);
+// };
 
 const create = (op) => {
     return new Promise(resolve => {
@@ -268,11 +263,11 @@ const create = (op) => {
             op.rocketChat.init();
         });
 
-        for (let type of op._listTypes) {
-            for (let entry of op.options.lists[type]) {
-                createCardList(op, entry.id, entry.title, entry.items, type);
-            }
-        }
+        // for (let type of op._listTypes) {
+        //     for (let entry of op.options.lists[type]) {
+        //         createCardList(op, entry.id, entry.title, entry.items, type);
+        //     }
+        // }
 
         resolve();
     });
