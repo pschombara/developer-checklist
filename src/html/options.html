@@ -38,7 +38,7 @@
                 <div class="tab-pane fade show active" id="modules" role="tabpanel">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row mb-2">
+                            <div class="row mb-3">
                                 <h5 class="col"><i class="fas fa-cogs"></i> Modules</h5>
                             </div>
                             <div class="row mb-2">
@@ -141,7 +141,41 @@
                                         <button type="button" class="btn btn-success" data-add-board>+ Add</button>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="jira-checklists"></div>
+                                <div class="tab-pane fade" id="jira-checklists">
+                                    <div class="row mb-5">
+                                        <div class="col">TODO Choose checklist pill/tabs?</div>
+                                    </div>
+<!--                                    <template data-template="jira-checklist">-->
+                                        <div data-checklist="">
+                                            <div class="row mb-2">
+                                                <label for="" class="col-form-label col-sm-2">Name</label>
+                                                <div class="col-sm-6">
+                                                    <input type="text" class="form-control" placeholder="checklist name eg: developer" />
+                                                </div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <label for="" class="col-form-label col-sm-2">Icon</label>
+                                                <div class="col-sm-6">TODO</div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-sm-6 offset-sm-2">
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" id="checklist0Enabled" name="checklistEnabled[0]" class="custom-control-input"/>
+                                                        <label for="checklist0Enabled" class="custom-control-label">Enabled</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-sm-6 offset-sm-2">
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" id="checklist0SuccessRequiredAll" name="checklistSuccessRequiredAll[0]" class="custom-control-input" />
+                                                        <label for="checklist0SuccessRequiredAll" class="custom-control-label">All entries needs to be checked</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+<!--                                    </template>-->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -325,10 +359,10 @@
                 <div class="tab-pane fade" id="about" role="tabpanel">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row">
-                                <h5 class="col">Enjoy!</h5>
+                            <div class="row mb-3">
+                                <h5 class="col"><i class="fas fa-info-circle"></i> Enjoy!</h5>
                             </div>
-                            <div class="row mt-1">
+                            <div class="row">
                                 <div class="col">
                                     We hope your company, team or/and yourself benefit from our extension and are able to work
                                     with Jira more efficient.
@@ -379,38 +413,6 @@
             <input class="custom-control-input" type="checkbox" name="boardDelete[]" id="%boardUuid%" />
             <label class="custom-control-label" for="%boardUuid%">Delete</label>
         </div>
-    </div>
-</template>
-<template data-template="cardList">
-    <div class="card">
-        <div class="card-header" data-header="%type%%number%" data-toggle="collapse" data-target='[data-collapse="%type%%number%"]'>
-            <h2 class="mb-0">
-                <button class="btn btn-link" type="button" >%name%</button>
-            </h2>
-        </div>
-
-        <div data-collapse="%type%%number%" class="collapse" data-parent='#%type%Accordion'>
-            <div class="card-body">
-                <div data-type="%type%" data-items="%number%"></div>
-                <div class="row mt-2">
-                    <div class="col">
-                        <button type="button" class="btn btn-success" data-type="%type%" data-add="%number%">+ Add</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
-<template data-template="listEntry">
-    <div class="row mt-2">
-        <div class="col-8">
-            <input type="text" name="item[%number%][]" class="form-control" data-item="%number%" />
-        </div>
-        <div class="col-4 custom-control custom-switch">
-            <input class="custom-control-input" type="checkbox" name="delete[%number%][]" id="delete%identifier%" value="%identifier%" data-delete="%number%" />
-            <label class="custom-control-label" for="delete%identifier%">Delete</label>
-        </div>
-        <input type="hidden" name="identifier[%number%]" value="%identifier%" data-identifier="%number%" />
     </div>
 </template>
 <template data-template="jenkins">

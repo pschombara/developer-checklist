@@ -15,12 +15,13 @@ export class Jira extends SuperJira {
     init() {
         this._boards.init(this.options.boards);
         this._general.init(this.options);
+        this._checklists.init(this.options.checklists);
     }
 
     save() {
         let jira = {
             boards: this._boards.save(),
-            checklists: [ ], // todo
+            checklists: this._checklists.save(),
         };
 
         return Object.assign(jira, this._general.save());

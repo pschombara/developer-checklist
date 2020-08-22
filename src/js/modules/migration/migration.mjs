@@ -73,6 +73,8 @@ const migrateTo0_4_0 = (options) => {
 };
 
 const migrateTo0_5_0 = (options) => {
+    options.version = '0.5.0';
+
     const checklists = [
         {
             name: 'developer',
