@@ -142,107 +142,176 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="jira-checklists">
-                                    <div class="row mb-5">
-                                        <div class="col">TODO Choose checklist pill/tabs?</div>
+                                    <div class="row mb-2">
+                                        <div class="col">
+                                            <ul class="nav nav-tabs" id="checklistsTab" role="tablist">
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link active" id="checklist-0-tab" data-toggle="tab" href="#checklist-0" role="tab">Checklist 0</a>
+
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link" id="checklist-1-tab" data-toggle="tab" href="#checklist-1" role="tab">Checklist 1</a>
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link" id="checklist-2-tab" data-toggle="tab" href="#checklist-2" role="tab">Checklist 2</a>
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link" id="checklist-3-tab" data-toggle="tab" href="#checklist-3" role="tab">Checklist 3</a>
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link" id="checklist-4-tab" data-toggle="tab" href="#checklist-4" role="tab">Checklist 4</a>
+                                                </li>
+
+                                            </ul>
+                                        </div>
                                     </div>
-<!--                                    <template data-template="jira-checklist">-->
-                                        <div data-checklist="">
-                                            <div class="row mb-2">
-                                                <label for="" class="col-form-label col-sm-2">Name</label>
-                                                <div class="col-sm-6">
-                                                    <input type="text" class="form-control" placeholder="checklist name eg: developer" />
-                                                </div>
-                                            </div>
-                                            <div class="row mb-2">
-                                                <label for="" class="col-form-label col-sm-2">Icon</label>
-                                                <div class="col-sm-6">TODO</div>
-                                            </div>
-                                            <div class="row mb-2">
-                                                <div class="col-sm-6 offset-sm-2">
-                                                    <div class="custom-control custom-switch">
-                                                        <input type="checkbox" id="checklist0Enabled" name="checklistEnabled[0]" class="custom-control-input"/>
-                                                        <label for="checklist0Enabled" class="custom-control-label">Enabled</label>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <!--                                    <template data-template="jira-checklist">-->
+                                                    <div data-checklist="">
+                                                        <div class="row mb-2">
+                                                            <label for="" class="col-form-label col-sm-2">Name</label>
+                                                            <div class="col-sm-6">
+                                                                <input type="text" class="form-control" placeholder="checklist name eg: developer" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <label for="" class="col-form-label col-sm-2">Icon</label>
+                                                            <div class="col-sm-6">TODO</div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-6 offset-sm-2">
+                                                                <div class="custom-control custom-switch">
+                                                                    <input type="checkbox" id="checklist0Enabled" name="checklistEnabled[0]" class="custom-control-input"/>
+                                                                    <label for="checklist0Enabled" class="custom-control-label">Enabled</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-6 offset-sm-2">
+                                                                <div class="custom-control custom-switch">
+                                                                    <input type="checkbox" id="checklist0SuccessRequiredAll" name="checklistSuccessRequiredAll[0]" class="custom-control-input" />
+                                                                    <label for="checklist0SuccessRequiredAll" class="custom-control-label">All entries needs to be checked</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-2">
+                                                            <h6 class="col">Buttons</h6>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <div class="row mb-2">
+                                                                    <div class="col-sm-2">Success</div>
+                                                                    <div class="col-sm-10 mb-3">
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="custom-control custom-switch">
+                                                                                    <input type="checkbox" id="checklist0ButtonSuccessEnabled" name="checklistButtonSuccessEnabled[0]" class="custom-control-input">
+                                                                                    <label for="checklist0ButtonSuccessEnabled" class="custom-control-label">Button Enabled</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row mb-2">
+                                                                            <div class="col-sm-6">
+                                                                                <label for="checklist0ButtonSuccessText"></label>
+                                                                                <input id="checklist0ButtonSuccessText" type="text" class="form-control" placeholder="Success" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-sm-2">
+                                                                        Failed
+                                                                    </div>
+                                                                    <div class="col-sm-10">
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div class="row mb-2">
-                                                <div class="col-sm-6 offset-sm-2">
-                                                    <div class="custom-control custom-switch">
-                                                        <input type="checkbox" id="checklist0SuccessRequiredAll" name="checklistSuccessRequiredAll[0]" class="custom-control-input" />
-                                                        <label for="checklist0SuccessRequiredAll" class="custom-control-label">All entries needs to be checked</label>
-                                                    </div>
+                                                    <!--                                    </template>-->
                                                 </div>
                                             </div>
                                         </div>
-<!--                                    </template>-->
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="cheat-sheet" role="tabpanel">
-                    <div class="card-body" data-cheat-sheet data-draggable>
-                        <div class="row">
-                            <h5 class="col" data-toggle="tooltip" data-placement="left" title="First column is a custom name, second column is the actual command/link etc."><i class="fas fa-terminal"></i> Cheat Sheet</h5>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <h5 class="col" data-toggle="tooltip" data-placement="left" title="First column is a custom name, second column is the actual command/link etc."><i class="fas fa-terminal"></i> Cheat Sheet</h5>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-2 offset-1 text-center font-weight-bold">Name&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="A custom name for the command/link etc."></i></div>
+                                <div class="col-3 offset-2 text-center font-weight-bold">Command/link etc&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The actual command/link etc."></i></div>
+                            </div>
+
+                            <div data-cheat-sheet data-draggable></div>
+
+                            <div class="mt-2">
+                                <button type="button" class="btn btn-success" data-add-cheat-sheet>+ Add</button>
+                            </div>
                         </div>
-                        <div class="row mb-2">
-                            <div class="col-2 offset-1 text-center font-weight-bold">Name&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="A custom name for the command/link etc."></i></div>
-                            <div class="col-3 offset-2 text-center font-weight-bold">Command/link etc&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The actual command/link etc."></i></div>
-                        </div>
-                    </div>
-                    <div class="mt-2">
-                        <button type="button" class="btn btn-success" data-add-cheat-sheet>+ Add</button>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="rocket-chat" role="tabpanel">
-                    <div class="card-body">
-                        <div class="row">
-                            <h5 class="col"><i class="fab fa-rocketchat"></i> Rocket.Chat</h5>
-                        </div>
-                        <div class="row">
-                            <label for="rc-url" class="col-form-label col-4">Rocket.Chat Url</label>
-                            <div class="col-6 input-group"  data-toggle="tooltip" data-placement="right" title="The base URL of your company's rocket chat application. Login with Google or Rocket.Chat credentials.">
-                                <input class="form-control" type="text" id="rc-url" placeholder="https://www.rocket.chat" />
-                                <div class="input-group-append">
-                                    <span class="input-group-text">/api</span>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <h5 class="col"><i class="fab fa-rocketchat"></i> Rocket.Chat</h5>
+                            </div>
+                            <div class="row">
+                                <label for="rc-url" class="col-form-label col-4">Rocket.Chat Url</label>
+                                <div class="col-6 input-group"  data-toggle="tooltip" data-placement="right" title="The base URL of your company's rocket chat application. Login with Google or Rocket.Chat credentials.">
+                                    <input class="form-control" type="text" id="rc-url" placeholder="https://www.rocket.chat" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">/api</span>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-outline-danger" data-rc-user data-toggle="modal" data-target="#rc-modal-user">
+                                            <i class="fas fa-sign-in-alt"></i>
+                                        </button>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-outline-danger" data-rc-google data-toggle="modal" data-target="#rc-modal-google">
+                                            <i class="fab fa-google"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-outline-danger" data-rc-user data-toggle="modal" data-target="#rc-modal-user">
-                                        <i class="fas fa-sign-in-alt"></i>
-                                    </button>
-                                </div>
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-outline-danger" data-rc-google data-toggle="modal" data-target="#rc-modal-google">
-                                        <i class="fab fa-google"></i>
-                                    </button>
+                            </div>
+                            <div class="row mt-4">
+                                <label for="rc-channel-internal" class="col-form-label col-4">Internal Channel</label>
+                                <div class="col-6">
+                                    <input class="form-control" list="rc-rooms" id="rc-channel-internal" placeholder="Internal Channel" data-toggle="tooltip" data-placement="right" title="Select channel to be used for internal team planning messages."/>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row mt-4">
-                            <label for="rc-channel-internal" class="col-form-label col-4">Internal Channel</label>
-                            <div class="col-6">
-                                <input class="form-control" list="rc-rooms" id="rc-channel-internal" placeholder="Internal Channel" data-toggle="tooltip" data-placement="right" title="Select channel to be used for internal team planning messages."/>
+                            <div class="row mt-4">
+                                <label for="rc-channel-external" class="col-form-label col-4">External Channel</label>
+                                <div class="col-6">
+                                    <input class="form-control" list="rc-rooms" id="rc-channel-external" placeholder="External Channel"  data-toggle="tooltip" data-placement="right" title="Select channel to be used for external team planning messages."/>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-4">
-                            <label for="rc-channel-external" class="col-form-label col-4">External Channel</label>
-                            <div class="col-6">
-                                <input class="form-control" list="rc-rooms" id="rc-channel-external" placeholder="External Channel"  data-toggle="tooltip" data-placement="right" title="Select channel to be used for external team planning messages."/>
+                            <div class="row mt-4">
+                                <label for="rc-message-internal" class="col-form-label col-4">Message for Internal</label>
+                                <div class="col-6 input-group">
+                                    <input class="form-control" type="text" id="rc-message-internal" placeholder="@here team planning for {issue}" data-toggle="tooltip" data-placement="right" title="Customize your team planning message for internal channel. Add {issue} as a placeholder for an external link to the issue."/>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-4">
-                            <label for="rc-message-internal" class="col-form-label col-4">Message for Internal</label>
-                            <div class="col-6 input-group">
-                                <input class="form-control" type="text" id="rc-message-internal" placeholder="@here team planning for {issue}" data-toggle="tooltip" data-placement="right" title="Customize your team planning message for internal channel. Add {issue} as a placeholder for an external link to the issue."/>
+                            <div class="row mt-4">
+                                <label for="rc-message-external" class="col-form-label col-4" data-toggle="tooltip">Message for External</label>
+                                <div class="col-6 input-group">
+                                    <input class="form-control" type="text" id="rc-message-external" placeholder="@here team planning for {issue}" data-toggle="tooltip" data-placement="right" title="Customize your team planning message for external channel. Add {issue} as a placeholder for an external link to the issue."/>
+                                </div>
                             </div>
+                            <datalist id="rc-rooms"></datalist>
                         </div>
-                        <div class="row mt-4">
-                            <label for="rc-message-external" class="col-form-label col-4" data-toggle="tooltip">Message for External</label>
-                            <div class="col-6 input-group">
-                                <input class="form-control" type="text" id="rc-message-external" placeholder="@here team planning for {issue}" data-toggle="tooltip" data-placement="right" title="Customize your team planning message for external channel. Add {issue} as a placeholder for an external link to the issue."/>
-                            </div>
-                        </div>
-                        <datalist id="rc-rooms"></datalist>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="jenkins" role="tabpanel">
@@ -386,7 +455,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="row my-5">
                 <div class="col">
                     <button type="button" class="btn btn-primary" data-save="save">Save</button>
