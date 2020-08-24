@@ -1,6 +1,6 @@
 export class Migration {
     constructor() {
-        this._currentVersion = '0.4.0';
+        this._currentVersion = '0.4.1';
         this._migrations = {
             '0.3.1': migrateTo0_0_4,
         };
