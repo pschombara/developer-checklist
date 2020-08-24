@@ -104,8 +104,8 @@ export class GitLab extends SuperGitLab {
         }
 
         // save gitLab categories
-        const categoryName = document.querySelectorAll('[name="gitCategoryName[]"]');
-        const categoryDelete = document.querySelectorAll('[name="gitCategoryDelete[]"]');
+        const categoryName = document.querySelectorAll('[name="gitLabCategoryName[]"]');
+        const categoryDelete = document.querySelectorAll('[name="gitLabCategoryDelete[]"]');
 
         for (let key in categoryName) {
             if (categoryName.hasOwnProperty(key) && false === categoryDelete[key].checked) {

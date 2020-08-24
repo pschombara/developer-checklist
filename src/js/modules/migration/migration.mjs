@@ -1,8 +1,8 @@
 export class Migration {
     constructor() {
-        this._currentVersion = '0.4.1';
+        this._currentVersion = '0.4.2';
         this._migrations = {
-            '0.3.1': migrateTo0_0_4,
+            '0.3.1': migrateTo0_4_0,
         };
         this._migrated = false;
     }
@@ -24,16 +24,19 @@ export class Migration {
             Object.keys(this._migrations).forEach((version) => {
                 if (options.version === version) {
                     this._migrations[version](options);
-                    this._migrated = true;
                 }
             });
+
+            // Finally set to new version
+            options.version = this.currentVersion;
+            this._migrated = true;
         }
 
         return options;
     }
 }
 
-const migrateTo0_0_4 = (options) => {
+const migrateTo0_4_0 = (options) => {
     options.version = '0.4.0';
 
     options.gitLab = {
