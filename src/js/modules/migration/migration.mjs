@@ -18,9 +18,12 @@ export class Migration extends SuperMigration {
             Object.keys(this._migrations).forEach((version) => {
                 if (options.version === version) {
                     this._migrations[version](options);
-                    this.migrated = true;
                 }
             });
+
+            // Finally set to new version
+            options.version = this.currentVersion;
+            this.migrated = true;
         }
 
         return options;

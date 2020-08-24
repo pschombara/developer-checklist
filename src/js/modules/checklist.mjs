@@ -156,6 +156,9 @@ const checkOptions = (cl) => {
     if (cl._options.hasOwnProperty('jenkins')) {
         cl._jenkins.options = cl._options.jenkins;
     }
+
+    cl._gitLab.enabled = cl._modules.options.gitLab;
+    cl._jenkins.enabled = cl._modules.options.jenkins;
 };
 
 const initView = (cl) => {

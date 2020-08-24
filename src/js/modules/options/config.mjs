@@ -1,11 +1,13 @@
 import {ErrorPrompt, Toast} from "../sweet";
 import {Validator} from "./validator";
 import {Storage} from "../storage";
+import {Migration} from '../migration/migration';
 
 export class Config {
     constructor(storage, validator) {
         this._storage = storage ? storage : new Storage();
         this._validator = validator ? validator : new Validator();
+        this._migration = new Migration();
         this._buttonUpload = document.querySelector('[data-upload="btn"]');
         this._fileUpload = document.querySelector('[data-upload="file"]');
     }
@@ -66,7 +68,7 @@ export class Config {
             return;
         }
 
-        uploadFile(file, this._storage, this._validator);
+        uploadFile(file, this._storage, this._validator, this._migration);
     }
 
     restore() {
@@ -86,12 +88,15 @@ export class Config {
     }
 }
 
-const uploadFile = (file, storage, validator) =>  {
+const uploadFile = (file, storage, validator, migration) =>  {
     let fileReader = new FileReader();
 
     fileReader.addEventListener('load', e => {
         if ('string' === typeof e.target.result) {
             let data = JSON.parse(e.target.result);
+
+            // try to migrate data
+            data = migration.migrate(data);
 
             if (false === validator.validate(data)) {
                 ErrorPrompt.fire({
