@@ -5,7 +5,7 @@ export class GitLab extends SuperGitLab {
     constructor() {
         super();
 
-        this._gitMergeUrl = `[{aliasUrl}|${this.options.host}{domain}/{project}/merge_requests/{number}]`;
+        this._gitMergeUrl = `[{aliasUrl}|{host}{domain}/{project}/merge_requests/{number}]`;
         this._mergeRequestUrl = document.querySelector('[data-gitLab-url]');
         this._copyBtn = document.querySelector('[data-copy="gitLab-url"]');
         this._tab = document.querySelector('#special-tab');
@@ -18,6 +18,11 @@ export class GitLab extends SuperGitLab {
             enabled: document.querySelector('[data-gitLab="enabled"]'),
             disabled: document.querySelector('[data-gitLab="disabled"]'),
         };
+        this._enabled = false;
+    }
+
+    set enabled(enabled) {
+        this._enabled = enabled;
     }
 
     init() {
@@ -54,7 +59,8 @@ export class GitLab extends SuperGitLab {
         if ('' === this._input.mergeNumber.value || null === selected) {
             this._mergeRequestUrl.value = '';
         } else {
-            this._mergeRequestUrl.value = this._gitMergeUrl.replace(new RegExp('\{aliasUrl\}', 'g'), '' !== branch ? `${selected.value}:${branch}` : selected.value);
+            this._mergeRequestUrl.value = this._gitMergeUrl.replace(new RegExp('\{host\}', 'g'), this.options.host)
+            this._mergeRequestUrl.value = this._mergeRequestUrl.value.replace(new RegExp('\{aliasUrl\}', 'g'), '' !== branch ? `${selected.value}:${branch}` : selected.value);
             this._mergeRequestUrl.value = this._mergeRequestUrl.value.replace(new RegExp('\{project\}', 'g'), selected.value);
             this._mergeRequestUrl.value = this._mergeRequestUrl.value.replace(new RegExp('\{domain\}', 'g'), selected.getAttribute('data-domain'));
             this._mergeRequestUrl.value = this._mergeRequestUrl.value.replace(new RegExp('\{number\}', 'g'), this._input.mergeNumber.value);

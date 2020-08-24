@@ -17,6 +17,12 @@ export class Jenkins extends SuperJenkins {
             enabled: document.querySelector('[data-jenkins="enabled"]'),
             disabled: document.querySelector('[data-jenkins="disabled"]'),
         };
+
+        this._enabled = false;
+    }
+
+    set enabled(enabled) {
+        this._enabled = enabled;
     }
 
     init() {
