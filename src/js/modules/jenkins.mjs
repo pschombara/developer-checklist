@@ -55,7 +55,7 @@ export class Jenkins extends SuperJenkins {
             this._embeddableUrl.value = '';
         } else {
             this._embeddableUrl.value = this._jenkinsBuildUrl.replace(new RegExp('\{host\}', 'g'), this.options.host);
-            this._embeddableUrl.value = this._embeddableUrl.replace(new RegExp('\{type\}', 'g'), selected.getAttribute('data-type'));
+            this._embeddableUrl.value = this._embeddableUrl.value.replace(new RegExp('\{type\}', 'g'), selected.getAttribute('data-type'));
             this._embeddableUrl.value = this._embeddableUrl.value.replace(new RegExp('\{job\}', 'g'), selected.getAttribute('data-job'));
             this._embeddableUrl.value = this._embeddableUrl.value.replace(new RegExp('\{name\}', 'g'), '' !== selected.getAttribute('data-label') ? selected.getAttribute('data-label') : selected.value);
             this._embeddableUrl.value = this._embeddableUrl.value.replace(new RegExp('\{build\}', 'g'), this._build.value);
