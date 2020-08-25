@@ -98,36 +98,43 @@
                             <div class="tab-content" id="jira-settings">
                                 <div class="tab-pane fade show active" id="jira-general">
                                     <div class="row">
-                                        <label for="jiraUrl" class="col-form-label col-sm-4">Server URL</label>
-                                        <div class="col-sm-6 input-group" data-toggle="tooltip" data-placement="right" title="The base URL of your Jira application.">
-                                            <input id="jiraUrl" name="jiraUrl" type="url" class="form-control" placeholder="(ends with '.../browse/')" data-option="url" />
-                                            <div class="input-group-append">
-                                                <span class="input-group-text">/browse/</span>
+                                        <div class="col-sm-6">
+                                            <label for="jiraUrl" class="col-form-label">Server URL</label>
+                                            <div class="input-group" data-toggle="tooltip" data-placement="right" title="The base URL of your Jira application.">
+
+                                                <input id="jiraUrl" name="jiraUrl" type="url" class="form-control" placeholder="(ends with '.../browse/')" data-option="url" />
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">/browse/</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row mt-4">
-                                        <label for="jiraCleanup" class="col-form-label col-sm-4" >Delete issues after</label>
-                                        <div class="col-sm-6 input-group" data-toggle="tooltip" data-placement="right" title="Issues will be removed from storage after days given. This affects the issues in progress view.">
-                                            <input id="jiraCleanup" min="1" max="30" type="number" class="form-control" name="jiraCleanup" data-option="cleanup" />
-                                            <div class="input-group-append">
-                                                <span class="input-group-text">days</span>
+                                        <div class="col-sm-6">
+                                            <label for="jiraCleanup" class="col-form-label " >Delete issues after</label>
+                                            <div class="input-group" data-toggle="tooltip" data-placement="right" title="Issues will be removed from storage after days given. This affects the issues in progress view.">
+                                                <input id="jiraCleanup" min="1" max="30" type="number" class="form-control" name="jiraCleanup" data-option="cleanup" />
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">days</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row mt-4">
-                                        <label for="jiraMaximumIssues" class="col-form-label col-sm-4">Maximum Issues in progress</label>
-                                        <div class="col-sm-6 input-group" data-toggle="tooltip" data-placement="right" title="Limit the issues to be remembered simultaneously. This affects the issues in progress view.">
-                                            <input id="jiraMaximumIssues" min="0" max="18" type="number" class="form-control" name="jiraMaximumIssues" data-option="maximumIssues" />
-                                            <div class="input-group-append">
-                                                <span class="input-group-text">issues</span>
+                                        <div class="col-sm-6">
+                                            <label for="jiraMaximumIssues" class="col-form-label">Maximum Issues in progress</label>
+                                            <div class="input-group" data-toggle="tooltip" data-placement="right" title="Limit the issues to be remembered simultaneously. This affects the issues in progress view.">
+                                                <input id="jiraMaximumIssues" min="0" max="18" type="number" class="form-control" name="jiraMaximumIssues" data-option="maximumIssues" />
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">issues</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="jira-boards">
                                     <div class="row">
-                                        <h5 data-toggle="tooltip">Available Boards&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="Used to quick jump to issues."></i></h5>
+                                        <h5 class="col" data-toggle="tooltip">Available Boards&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="Used to quick jump to issues."></i></h5>
                                     </div>
 
                                     <div class="row mb-2">
@@ -146,20 +153,20 @@
                                         <div class="col">
                                             <ul class="nav nav-tabs" id="checklistsTab" role="tablist">
                                                 <li class="nav-item" role="presentation">
-                                                    <a class="nav-link active" id="checklist-0-tab" data-toggle="tab" href="#checklist-0" role="tab">Checklist 0</a>
+                                                    <a class="nav-link active" id="checklist-0-tab" data-toggle="tab" href="#jira-checklist-0" role="tab">Checklist 0</a>
 
                                                 </li>
                                                 <li class="nav-item" role="presentation">
-                                                    <a class="nav-link" id="checklist-1-tab" data-toggle="tab" href="#checklist-1" role="tab">Checklist 1</a>
+                                                    <a class="nav-link" id="checklist-1-tab" data-toggle="tab" href="#jira-checklist-1" role="tab">Checklist 1</a>
                                                 </li>
                                                 <li class="nav-item" role="presentation">
-                                                    <a class="nav-link" id="checklist-2-tab" data-toggle="tab" href="#checklist-2" role="tab">Checklist 2</a>
+                                                    <a class="nav-link" id="checklist-2-tab" data-toggle="tab" href="#jira-checklist-2" role="tab">Checklist 2</a>
                                                 </li>
                                                 <li class="nav-item" role="presentation">
-                                                    <a class="nav-link" id="checklist-3-tab" data-toggle="tab" href="#checklist-3" role="tab">Checklist 3</a>
+                                                    <a class="nav-link" id="checklist-3-tab" data-toggle="tab" href="#jira-checklist-3" role="tab">Checklist 3</a>
                                                 </li>
                                                 <li class="nav-item" role="presentation">
-                                                    <a class="nav-link" id="checklist-4-tab" data-toggle="tab" href="#checklist-4" role="tab">Checklist 4</a>
+                                                    <a class="nav-link" id="checklist-4-tab" data-toggle="tab" href="#jira-checklist-4" role="tab">Checklist 4</a>
                                                 </li>
 
                                             </ul>
@@ -169,20 +176,27 @@
                                         <div class="col">
                                             <div class="card">
                                                 <div class="card-body">
+                                                    <div class="tab-pane fade active show" id="jira-checklist-0"></div>
+                                                    <div class="tab-pane fade" id="jira-checklist-1"></div>
+                                                    <div class="tab-pane fade" id="jira-checklist-2"></div>
+                                                    <div class="tab-pane fade" id="jira-checklist-3"></div>
+                                                    <div class="tab-pane fade" id="jira-checklist-4"></div>
                                                     <!--                                    <template data-template="jira-checklist">-->
-                                                    <div data-checklist="">
+                                                    <div data-checklist>
                                                         <div class="row mb-2">
-                                                            <label for="" class="col-form-label col-sm-2">Name</label>
                                                             <div class="col-sm-6">
+                                                                <label for="" class="col-form-label">Name</label>
                                                                 <input type="text" class="form-control" placeholder="checklist name eg: developer" />
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
-                                                            <label for="" class="col-form-label col-sm-2">Icon</label>
-                                                            <div class="col-sm-6">TODO</div>
+                                                            <div class="col-sm-6">
+                                                                <label for="" class="col-form-label">Icon</label>
+                                                                <input type="text" class="form-control" placeholder="icon class todo" />
+                                                            </div>
                                                         </div>
                                                         <div class="row mb-2">
-                                                            <div class="col-sm-6 offset-sm-2">
+                                                            <div class="col-sm-6">
                                                                 <div class="custom-control custom-switch">
                                                                     <input type="checkbox" id="checklist0Enabled" name="checklistEnabled[0]" class="custom-control-input"/>
                                                                     <label for="checklist0Enabled" class="custom-control-label">Enabled</label>
@@ -190,14 +204,14 @@
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
-                                                            <div class="col-sm-6 offset-sm-2">
+                                                            <div class="col-sm-6">
                                                                 <div class="custom-control custom-switch">
                                                                     <input type="checkbox" id="checklist0SuccessRequiredAll" name="checklistSuccessRequiredAll[0]" class="custom-control-input" />
                                                                     <label for="checklist0SuccessRequiredAll" class="custom-control-label">All entries needs to be checked</label>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="row mb-2">
+                                                        <div class="row my-3">
                                                             <h6 class="col">Buttons</h6>
                                                         </div>
                                                         <div class="row">
@@ -215,8 +229,14 @@
                                                                         </div>
                                                                         <div class="row mb-2">
                                                                             <div class="col-sm-6">
-                                                                                <label for="checklist0ButtonSuccessText"></label>
+                                                                                <label for="checklist0ButtonSuccessText">Text</label>
                                                                                 <input id="checklist0ButtonSuccessText" type="text" class="form-control" placeholder="Success" />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row mb-2">
+                                                                            <div class="col-sm-6">
+                                                                                <label for="checklist0Comment">Comment</label>
+                                                                                <input id="checklist0Comment" type="text" class="form-control" placeholder="Success comment in jira" />
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -268,46 +288,53 @@
                                 <h5 class="col"><i class="fab fa-rocketchat"></i> Rocket.Chat</h5>
                             </div>
                             <div class="row">
-                                <label for="rc-url" class="col-form-label col-4">Rocket.Chat Url</label>
-                                <div class="col-6 input-group"  data-toggle="tooltip" data-placement="right" title="The base URL of your company's rocket chat application. Login with Google or Rocket.Chat credentials.">
-                                    <input class="form-control" type="text" id="rc-url" placeholder="https://www.rocket.chat" />
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">/api</span>
-                                    </div>
-                                    <div class="input-group-append">
-                                        <button type="button" class="btn btn-outline-danger" data-rc-user data-toggle="modal" data-target="#rc-modal-user">
-                                            <i class="fas fa-sign-in-alt"></i>
-                                        </button>
-                                    </div>
-                                    <div class="input-group-append">
-                                        <button type="button" class="btn btn-outline-danger" data-rc-google data-toggle="modal" data-target="#rc-modal-google">
-                                            <i class="fab fa-google"></i>
-                                        </button>
+                                <div class="col-sm-6">
+                                    <label for="rc-url" class="col-form-label">Rocket.Chat Url</label>
+                                    <div class="input-group"  data-toggle="tooltip" data-placement="right" title="The base URL of your company's rocket chat application. Login with Google or Rocket.Chat credentials.">
+                                        <input class="form-control" type="text" id="rc-url" placeholder="https://www.rocket.chat" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">/api</span>
+                                        </div>
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-outline-danger" data-rc-user data-toggle="modal" data-target="#rc-modal-user">
+                                                <i class="fas fa-sign-in-alt"></i>
+                                            </button>
+                                        </div>
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-outline-danger" data-rc-google data-toggle="modal" data-target="#rc-modal-google">
+                                                <i class="fab fa-google"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mt-4">
-                                <label for="rc-channel-internal" class="col-form-label col-4">Internal Channel</label>
-                                <div class="col-6">
+                                <div class="col-sm-6">
+                                    <label for="rc-channel-internal" class="col-form-label">Internal Channel</label>
                                     <input class="form-control" list="rc-rooms" id="rc-channel-internal" placeholder="Internal Channel" data-toggle="tooltip" data-placement="right" title="Select channel to be used for internal team planning messages."/>
                                 </div>
                             </div>
                             <div class="row mt-4">
-                                <label for="rc-channel-external" class="col-form-label col-4">External Channel</label>
-                                <div class="col-6">
+                                <div class="col-sm-6">
+                                    <label for="rc-channel-external" class="col-form-label">External Channel</label>
                                     <input class="form-control" list="rc-rooms" id="rc-channel-external" placeholder="External Channel"  data-toggle="tooltip" data-placement="right" title="Select channel to be used for external team planning messages."/>
                                 </div>
                             </div>
                             <div class="row mt-4">
-                                <label for="rc-message-internal" class="col-form-label col-4">Message for Internal</label>
-                                <div class="col-6 input-group">
-                                    <input class="form-control" type="text" id="rc-message-internal" placeholder="@here team planning for {issue}" data-toggle="tooltip" data-placement="right" title="Customize your team planning message for internal channel. Add {issue} as a placeholder for an external link to the issue."/>
+                                <div class="col-sm-6">
+                                    <label for="rc-message-internal" class="col-form-label">Message for Internal</label>
+                                    <div class="input-group">
+
+                                        <input class="form-control" type="text" id="rc-message-internal" placeholder="@here team planning for {issue}" data-toggle="tooltip" data-placement="right" title="Customize your team planning message for internal channel. Add {issue} as a placeholder for an external link to the issue."/>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row mt-4">
-                                <label for="rc-message-external" class="col-form-label col-4" data-toggle="tooltip">Message for External</label>
-                                <div class="col-6 input-group">
-                                    <input class="form-control" type="text" id="rc-message-external" placeholder="@here team planning for {issue}" data-toggle="tooltip" data-placement="right" title="Customize your team planning message for external channel. Add {issue} as a placeholder for an external link to the issue."/>
+                                <div class="col-sm-6">
+                                    <label for="rc-message-external" class="col-form-label" data-toggle="tooltip">Message for External</label>
+                                    <div class="input-group">
+                                        <input class="form-control" type="text" id="rc-message-external" placeholder="@here team planning for {issue}" data-toggle="tooltip" data-placement="right" title="Customize your team planning message for external channel. Add {issue} as a placeholder for an external link to the issue."/>
+                                    </div>
                                 </div>
                             </div>
                             <datalist id="rc-rooms"></datalist>
@@ -320,8 +347,8 @@
                             <h5><i class="fab fa-jenkins"></i> Jenkins</h5>
 
                             <div class="row mb-3">
-                                <label for="jenkinsHost" class="col-form-label col-sm-4">Host</label>
                                 <div class="col-sm-6">
+                                    <label for="jenkinsHost" class="col-form-label">Host</label>
                                     <input type="url" id="jenkinsHost" name="jenkinsHost" value="" placeholder="https://jenkins.local:8080/" class="form-control" />
                                 </div>
                             </div>
@@ -376,8 +403,8 @@
                             <h5><i class="fab fa-gitlab"></i> GitLab</h5>
 
                             <div class="row mb-3">
-                                <label for="gitLabHost" class="col-form-label col-sm-4">Host</label>
                                 <div class="col-sm-6">
+                                    <label for="gitLabHost" class="col-form-label">Host</label>
                                     <input type="url" id="gitLabHost" name="gitLabHost" value="" placeholder="https://gitlab.com/" class="form-control" />
                                 </div>
                             </div>
