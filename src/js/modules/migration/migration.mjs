@@ -78,8 +78,8 @@ const migrateTo0_4_0 = (options) => {
 const migrateTo0_5_0 = (options) => {
     options.version = '0.5.0';
 
-    const checklists = [
-        {
+    const checklists = {
+        0: {
             name: 'developer',
             enabled: true,
             icon: 'fas fa-keyboard',
@@ -100,7 +100,7 @@ const migrateTo0_5_0 = (options) => {
             },
             checklist: []
         },
-        {
+        1: {
             name: 'tester',
             enabled: true,
             icon: 'fas fa-gamepad',
@@ -121,7 +121,7 @@ const migrateTo0_5_0 = (options) => {
             },
             checklist: []
         },
-        {
+        2: {
             name: 'reviewer',
             enabled: true,
             icon: 'fas fa-bug',
@@ -142,7 +142,7 @@ const migrateTo0_5_0 = (options) => {
             },
             checklist: []
         },
-        {
+        3: {
             name: 'help',
             enabled: true,
             icon: 'fas fa-question-circle',
@@ -163,7 +163,7 @@ const migrateTo0_5_0 = (options) => {
             },
             checklist: []
         },
-        {
+        4: {
             name: '',
             enabled: false,
             icon: '',
@@ -184,7 +184,7 @@ const migrateTo0_5_0 = (options) => {
             },
             checklist: []
         }
-    ];
+    };
 
     if (options.hasOwnProperty('lists')) {
         if (options.lists.hasOwnProperty('developer')) {

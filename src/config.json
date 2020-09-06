@@ -19,8 +19,8 @@
         "maximumIssues": 6,
         "boards": [
         ],
-        "checklists": [
-            {
+        "checklists": {
+            "0": {
                 "name": "developer",
                 "enabled": true,
                 "icon": "fas fa-keyboard",
@@ -207,7 +207,7 @@
                     }
                 ]
             },
-            {
+            "1": {
                 "name": "tester",
                 "enabled": true,
                 "icon": "fas fa-gamepad",
@@ -275,7 +275,7 @@
                     }
                 ]
             },
-            {
+            "2": {
                 "name": "reviewer",
                 "enabled": true,
                 "icon": "fas fa-bug",
@@ -333,7 +333,7 @@
                     }
                 ]
             },
-            {
+            "3": {
                 "name": "help",
                 "enabled": true,
                 "icon": "fas fa-question-circle",
@@ -359,8 +359,35 @@
                         "title": "General"
                     }
                 ]
+            },
+            "4": {
+                "name": "",
+                "enabled": false,
+                "icon": "",
+                "successRequiredAll": false,
+                "buttons": {
+                    "success": {
+                        "text": "",
+                        "enabled": false,
+                        "comment": "",
+                        "autoComment": false
+                    },
+                    "failed": {
+                        "text": "",
+                        "enabled": true,
+                        "comment": "",
+                        "autoComment": false
+                    }
+                },
+                "checklist": [
+                    {
+                        "id": 1,
+                        "items": [],
+                        "title": "General"
+                    }
+                ]
             }
-        ]
+        }
     },
     "rocketChat": {
         "url": "",

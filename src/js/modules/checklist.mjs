@@ -159,6 +159,8 @@ const checkOptions = (cl) => {
 
     cl._gitLab.enabled = cl._modules.options.gitLab;
     cl._jenkins.enabled = cl._modules.options.jenkins;
+
+    cl._missingOptions = false;
 };
 
 const initView = (cl) => {
