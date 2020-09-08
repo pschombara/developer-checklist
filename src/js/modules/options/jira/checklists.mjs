@@ -18,24 +18,28 @@ export class Checklists {
             4: document.querySelector('#checklist-4-tab'),
         }
 
-        this.values = {
-            name: {
-                type: 'text',
-                selectorSuffix: 'Name',
+        this.structure= {
+            enabled: 'checkbox',
+            name: 'text',
+            icon: 'select',
+            successRequiredAll: 'checkbox',
+            buttons: {
+                success: {
+                    text: 'text',
+                    enabled: 'checkbox',
+                    comment: 'text',
+                    autoComment: 'checkbox',
+                },
+                failed: {
+                    text: 'text',
+                    enabled: 'checkbox',
+                    comment: 'text',
+                    autoComment: 'checkbox',
+                }
             },
-            enabled: {
-                type: 'checkbox',
-                selectorSuffix: 'Enabled',
-            },
-            icon: {
-                type: 'select',
-                selectorSuffix: 'Icon',
-            },
-            successRequiredAll: {
-                type: 'checkbox',
-                selectorSuffix: 'SuccessRequiredAll'
-            }
-        };
+        }
+
+        this.
     }
 
     init(checklists) {
@@ -58,21 +62,53 @@ export class Checklists {
 
         const item = element.children[0];
 
-        Object.keys(this.values).forEach((name) => {
-            let valueItem = item.querySelector(`#checklist${number}${this.values[name].selectorSuffix}`);
 
-            if ('text' === this.values[name].type) {
-                valueItem.value = checklist[name];
+        const elements = this.buildValues(checklist, `checklist[${number}]`, this.structure);
 
-                if ('name' === name && '' !== checklist[name]) {
-                    this.tabs[number].innerHTML = checklist[name];
+        Object.keys(elements).forEach((key) => {
+            let input = item.querySelector(`[name="${elements[key].path}"]`);
+
+            if ('checkbox' === elements[key].type) {
+                input.checked = elements[key].value;
+            } else {
+                input.value = elements[key].value;
+
+                if (input.hasAttribute('data-checklist-name') && '' !== input.value) {
+                    this.tabs[number].innerHTML = input.value;
                 }
-            } else if ('checkbox' === this.values[name].type && true === checklist[name]) {
-                valueItem.checked = true;
             }
         });
 
         this.container[number].appendChild(item);
+    }
+
+    buildValues(checklist, path, structure) {
+        let result = [];
+
+        if ('object' !== typeof checklist) {
+            return {
+                type: structure,
+                value: checklist,
+                path: path,
+            }
+        }
+
+        Object.keys(checklist).forEach((key) => {
+            if (false === structure.hasOwnProperty(key)) {
+                return;
+                //throw new Error('Unknown structure!');
+            }
+
+            let temp = this.buildValues(checklist[key], path + `[${key}]`, structure[key]);
+
+            if (Array.isArray(temp)) {
+                result.push(...temp);
+            } else {
+                result.push(temp);
+            }
+        });
+
+        return result;
     }
 
     save() {

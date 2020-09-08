@@ -154,7 +154,6 @@
                                             <ul class="nav nav-tabs" id="checklistsTab" role="tablist">
                                                 <li class="nav-item" role="presentation">
                                                     <a class="nav-link active" id="checklist-0-tab" data-toggle="tab" href="#jira-checklist-0" role="tab">Checklist 0</a>
-
                                                 </li>
                                                 <li class="nav-item" role="presentation">
                                                     <a class="nav-link" id="checklist-1-tab" data-toggle="tab" href="#jira-checklist-1" role="tab">Checklist 1</a>
@@ -176,13 +175,15 @@
                                         <div class="col">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <div class="tab-content">
-                                                        <div class="tab-pane fade active show" id="jira-checklist-0"></div>
-                                                        <div class="tab-pane fade" id="jira-checklist-1"></div>
-                                                        <div class="tab-pane fade" id="jira-checklist-2"></div>
-                                                        <div class="tab-pane fade" id="jira-checklist-3"></div>
-                                                        <div class="tab-pane fade" id="jira-checklist-4"></div>
-                                                    </div>
+                                                    <form id="jiraChecklist">
+                                                        <div class="tab-content">
+                                                            <div class="tab-pane fade active show" id="jira-checklist-0"></div>
+                                                            <div class="tab-pane fade" id="jira-checklist-1"></div>
+                                                            <div class="tab-pane fade" id="jira-checklist-2"></div>
+                                                            <div class="tab-pane fade" id="jira-checklist-3"></div>
+                                                            <div class="tab-pane fade" id="jira-checklist-4"></div>
+                                                        </div>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
@@ -520,7 +521,7 @@
         <div class="row mb-2">
             <div class="col-sm-6">
                 <div class="custom-control custom-switch">
-                    <input type="checkbox" id="checklist%clNumber%Enabled" name="checklistEnabled[%clNumber%]" class="custom-control-input"/>
+                    <input type="checkbox" id="checklist%clNumber%Enabled" name="checklist[%clNumber%][enabled]" class="custom-control-input"/>
                     <label for="checklist%clNumber%Enabled" class="custom-control-label">Checklist Enabled</label>
                 </div>
             </div>
@@ -528,13 +529,13 @@
         <div class="row mb-2">
             <div class="col-sm-6">
                 <label for="checklist%clNumber%Name" class="col-form-label">Name</label>
-                <input id="checklist%clNumber%Name" type="text" class="form-control" placeholder="checklist name eg: developer" />
+                <input id="checklist%clNumber%Name" name="checklist[%clNumber%][name]" type="text" class="form-control" data-checklist-name placeholder="checklist name eg: developer" />
             </div>
         </div>
         <div class="row">
             <div class="col-sm-6">
                 <label for="checklist%clNumber%Icon" class="col-form-label">Icon</label>
-                <select class="form-control fas-select" id="checklist%clNumber%Icon">
+                <select class="form-control fas-select" id="checklist%clNumber%Icon" name="checklist[%clNumber%][icon]">
                     <option value="fas fa-keyboard">&#xf11c; keyboard</option>
                 </select>
             </div>
@@ -550,7 +551,7 @@
                         <div class="row mb-2">
                             <div class="col">
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" id="checklist%clNumber%ButtonSuccessEnabled" name="checklistButtonSuccessEnabled[%clNumber%]" class="custom-control-input">
+                                    <input type="checkbox" id="checklist%clNumber%ButtonSuccessEnabled" name="checklist[%clNumber%][buttons][success][enabled]" class="custom-control-input">
                                     <label for="checklist%clNumber%ButtonSuccessEnabled" class="custom-control-label">Button Enabled</label>
                                 </div>
                             </div>
@@ -558,19 +559,19 @@
                         <div class="row mb-2">
                             <div class="col">
                                 <label for="checklist%clNumber%ButtonSuccessText">Text</label>
-                                <input id="checklist%clNumber%ButtonSuccessText" type="text" class="form-control" placeholder="Success" />
+                                <input id="checklist%clNumber%ButtonSuccessText" name="checklist[%clNumber%][buttons][success][text]" type="text" class="form-control" placeholder="Success" />
                             </div>
                         </div>
                         <div class="row mb-2">
                             <div class="col">
                                 <label for="checklist%clNumber%SuccessComment">Comment</label>
-                                <input id="checklist%clNumber%SuccessComment" type="text" class="form-control" placeholder="Success comment in jira" />
+                                <input id="checklist%clNumber%SuccessComment" name="checklist[%clNumber%][buttons][success][comment]" type="text" class="form-control" placeholder="Success comment in jira" />
                             </div>
                         </div>
                         <div class="row mb-2">
                             <div class="col">
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" id="checklist%clNumber%CommentSuccessAutocommit" name="checklistCommentSuccessAutocommit[%clNumber%]" class="custom-control-input" />
+                                    <input type="checkbox" id="checklist%clNumber%CommentSuccessAutocommit" name="checklist[%clNumber%][buttons][success][autoComment]" class="custom-control-input" />
                                     <label for="checklist%clNumber%CommentSuccessAutocommit" class="custom-control-label">Send comment immediately</label>
                                 </div>
                             </div>
@@ -578,7 +579,7 @@
                         <div class="row mb-2">
                             <div class="col">
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" id="checklist%clNumber%SuccessRequiredAll" name="checklistSuccessRequiredAll[%clNumber%]" class="custom-control-input" />
+                                    <input type="checkbox" id="checklist%clNumber%SuccessRequiredAll" name="checklist[%clNumber%][successRequiredAll]" class="custom-control-input" />
                                     <label for="checklist%clNumber%SuccessRequiredAll" class="custom-control-label">All entries needs to be checked</label>
                                 </div>
                             </div>
@@ -595,7 +596,7 @@
                         <div class="row mb-2">
                             <div class="col">
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" id="checklist%clNumber%ButtonFailedEnabled" name="checklistButtonFailedEnabled[%clNumber%]" class="custom-control-input">
+                                    <input type="checkbox" id="checklist%clNumber%ButtonFailedEnabled" name="checklist[%clNumber%][buttons][failed][enabled]" class="custom-control-input">
                                     <label for="checklist%clNumber%ButtonFailedEnabled" class="custom-control-label">Button Enabled</label>
                                 </div>
                             </div>
@@ -603,19 +604,19 @@
                         <div class="row mb-2">
                             <div class="col">
                                 <label for="checklist%clNumber%ButtonFailedText">Text</label>
-                                <input id="checklist%clNumber%ButtonFailedText" type="text" class="form-control" placeholder="Failed" />
+                                <input id="checklist%clNumber%ButtonFailedText" name="checklist[%clNumber%][buttons][failed][text]" type="text" class="form-control" placeholder="Failed" />
                             </div>
                         </div>
                         <div class="row mb-2">
                             <div class="col">
                                 <label for="checklist%clNumber%FailedComment">Comment</label>
-                                <input id="checklist%clNumber%FailedComment" type="text" class="form-control" placeholder="Failed comment in jira" />
+                                <input id="checklist%clNumber%FailedComment" name="checklist[%clNumber%][buttons][failed][comment]" type="text" class="form-control" placeholder="Failed comment in jira" />
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" id="checklist%clNumber%CommentFailedAutocommit" name="checklistCommentFailedAutocommit[%clNumber%]" class="custom-control-input" />
+                                    <input type="checkbox" id="checklist%clNumber%CommentFailedAutocommit" name="checklist[%clNumber%][buttons][failed][autoComment]" class="custom-control-input" />
                                     <label for="checklist%clNumber%CommentFailedAutocommit" class="custom-control-label">Send comment immediately</label>
                                 </div>
                             </div>
