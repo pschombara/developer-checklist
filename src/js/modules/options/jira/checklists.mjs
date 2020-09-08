@@ -39,7 +39,6 @@ export class Checklists {
             },
         }
 
-        this.
     }
 
     init(checklists) {
