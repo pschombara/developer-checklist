@@ -1,3 +1,5 @@
+import _ from 'lodash-es';
+
 export class Checklists {
     constructor() {
         this.template = document.querySelector('[data-template="jira-checklist"]');
@@ -39,9 +41,37 @@ export class Checklists {
             },
         }
 
+        this.elements = [];
+
+        this.form = document.querySelector('#formJiraChecklist');
+
+        this.defaultChecklist = {
+            enabled: false,
+            name: '',
+            icon: '',
+            successRequiredAll: false,
+            buttons: {
+                success: {
+                    text: '',
+                    enabled: false,
+                    comment: '',
+                    autoComment: false
+                },
+                failed: {
+                    text: '',
+                    enabled: false,
+                    comment: '',
+                    autoComment: false
+                },
+            }
+        };
+
+        // todo remove
+        this.checklists = {};
     }
 
     init(checklists) {
+        this.checklists = checklists; // todo remove
         let count = 0;
 
         for (let checklist of checklists) {
@@ -62,15 +92,17 @@ export class Checklists {
         const item = element.children[0];
 
 
-        const elements = this.buildValues(checklist, `checklist[${number}]`, this.structure);
+        this.elements[number] = this.buildValues(checklist, `checklist[${number}]`, this.structure);
 
-        Object.keys(elements).forEach((key) => {
-            let input = item.querySelector(`[name="${elements[key].path}"]`);
+        console.log(this.elements);
 
-            if ('checkbox' === elements[key].type) {
-                input.checked = elements[key].value;
+        Object.keys(this.elements[number]).forEach((key) => {
+            let input = item.querySelector(`[name="${this.elements[number][key].path}"]`);
+
+            if ('checkbox' === this.elements[number][key].type) {
+                input.checked = this.elements[number][key].value;
             } else {
-                input.value = elements[key].value;
+                input.value = this.elements[number][key].value;
 
                 if (input.hasAttribute('data-checklist-name') && '' !== input.value) {
                     this.tabs[number].innerHTML = input.value;
@@ -81,7 +113,7 @@ export class Checklists {
         this.container[number].appendChild(item);
     }
 
-    buildValues(checklist, path, structure) {
+    buildValues(checklist, path, structure, keys = []) {
         let result = [];
 
         if ('object' !== typeof checklist) {
@@ -89,6 +121,7 @@ export class Checklists {
                 type: structure,
                 value: checklist,
                 path: path,
+                key: keys.join('.'),
             }
         }
 
@@ -98,7 +131,7 @@ export class Checklists {
                 //throw new Error('Unknown structure!');
             }
 
-            let temp = this.buildValues(checklist[key], path + `[${key}]`, structure[key]);
+            let temp = this.buildValues(checklist[key], path + `[${key}]`, structure[key], [...keys, key]);
 
             if (Array.isArray(temp)) {
                 result.push(...temp);
@@ -110,7 +143,36 @@ export class Checklists {
         return result;
     }
 
+    fillValues(checklist, formData, number) {
+        Object.keys(this.elements[number]).forEach(key => {
+            if (formData.has(this.elements[number][key].path)) {
+                if ('checkbox' === this.elements[number][key].type) {
+                    _.set(checklist, this.elements[number][key].key, true)
+                } else {
+                    _.set(checklist, this.elements[number][key].key, formData.get(this.elements[number][key].path))
+                }
+            }
+        });
+    }
+
     save() {
-        return [];
+        const formData = new FormData(this.form);
+        let checklists = {};
+
+        for (let i = 0; i < 5; ++i) {
+            let checklist = Object.assign({}, this.defaultChecklist);
+
+            this.fillValues(checklist, formData, i);
+
+            // todo update lists, remove next line
+            checklist.checklist = this.checklists[i].checklists;
+
+            checklists[i] = checklist;
+        }
+
+        console.log(checklists);
+        return this.checklists;
+
+        return checklists;
     }
 }

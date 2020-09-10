@@ -133,7 +133,7 @@ const checkChecklists = (data, key) => {
 }
 
 const checkJira = (data) => {
-    const requiredKeys = ['url', 'cleanup', 'maximumIssues', 'boards', 'comments'];
+    const requiredKeys = ['url', 'cleanup', 'maximumIssues', 'boards', 'checklists'];
     const types = {
         url: 'string',
         cleanup: 'number',
