@@ -6,8 +6,13 @@ export class General {
             cleanup: document.querySelector('#jiraCleanup'),
         };
 
-        this.optionKeys = ['url', 'cleanup', 'maximumIssues'];
+        this.types = {
+            url: 'string',
+            maximumIssues: 'number',
+            cleanup: 'number',
+        }
 
+        this.optionKeys = ['url', 'cleanup', 'maximumIssues'];
     }
 
     init(options) {
@@ -22,7 +27,11 @@ export class General {
         let general = {};
 
         for (let key of this.optionKeys) {
-             general[key] = this._inputs[key].value;
+            if ('number' === this.types[key]) {
+                general[key] = parseInt(this._inputs[key].value);
+            } else {
+                general[key] = this._inputs[key].value;
+            }
         }
 
         return general;

@@ -119,15 +119,13 @@ const checkChecklists = (data, key) => {
         id: 'string',
     };
 
-    data.forEach((obj, entryKey) => {
-        errors.push(...checkObjectContainsKeys(obj, listKeys, listTypes, `${key}[${entryKey}]`));
+    errors.push(...checkObjectContainsKeys(data, listKeys, listTypes, `${key}`));
 
-        if (obj.hasOwnProperty('items')) {
-            obj.items.forEach((item, itemKey) => {
-                errors.push(...checkObjectContainsKeys(item, itemKeys, itemTypes, `${key}[${entryKey}][items][${itemKey}]`));
-            });
-        }
-    })
+    if (data.hasOwnProperty('items')) {
+        data.items.forEach((item, itemKey) => {
+            errors.push(...checkObjectContainsKeys(item, itemKeys, itemTypes, `${key}[items][${itemKey}]`));
+        });
+    }
 
     return errors;
 }
@@ -139,7 +137,7 @@ const checkJira = (data) => {
         cleanup: 'number',
         maximumIssues: 'number',
         boards: 'array',
-        checklists: 'array',
+        checklists: 'object',
     };
 
     let errors = checkObjectContainsKeys(data, requiredKeys, types, 'jira');
@@ -168,13 +166,13 @@ const checkJira = (data) => {
         checklist: 'array',
     };
 
-    jira.checklists.forEach((entry, key) => {
-        errors.push(...checkObjectContainsKeys(entry, checklistsKeys, checklistsTypes, `jira[checklists][${key}]`));
+    Object.keys(data.checklists).forEach(key => {
+        errors.push(...checkObjectContainsKeys(data.checklists[key], checklistsKeys, checklistsTypes, `jira[checklists][${key}]`));
 
         if (0 === errors.length) {
-            errors.push(...checkChecklistsBtn(entry.buttons, `jira[checklists][${key}][buttons]`));
+            errors.push(...checkChecklistsBtn(data.checklists[key].buttons, `jira[checklists][${key}][buttons]`));
 
-            entry.checklist.forEach((category, entryKey) => {
+            data.checklists[key].checklist.forEach((category, entryKey) => {
                 errors.push(...checkChecklists(category, `jira[checklists][${key}][checklist][${entryKey}]`));
             });
         }
