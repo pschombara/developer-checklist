@@ -5,7 +5,7 @@ export class Migration extends SuperMigration {
         super();
         this._migrations = {
             '0.3.1': migrateTo0_4_0,
-            '0.4.0': migrateTo0_5_0,
+            '0.4.2': migrateTo0_5_0,
         };
     }
 
@@ -229,6 +229,14 @@ const migrateTo0_5_0 = (options) => {
 
         delete options.jira.comments;
     }
+
+    Object.keys(checklists).forEach(key => {
+       for (let category of checklists[key].checklist) {
+           for (let item of category.items) {
+               delete item.checked;
+           }
+       }
+    });
 
     options.jira.checklists = checklists;
 };

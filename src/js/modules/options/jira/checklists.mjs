@@ -74,13 +74,9 @@ export class Checklists {
         this.checklists = checklists; // todo remove
         let count = 0;
 
-        for (let checklist of checklists) {
-            this.fillChecklist(checklist, count);
-
-            if (++count >= 5) {
-                return;
-            }
-        }
+        Object.values(checklists).forEach(checklist => {
+            this.fillChecklist(checklist, count++);
+        });
     }
 
     fillChecklist(checklist, number) {
@@ -91,10 +87,7 @@ export class Checklists {
 
         const item = element.children[0];
 
-
         this.elements[number] = this.buildValues(checklist, `checklist[${number}]`, this.structure);
-
-        console.log(this.elements);
 
         Object.keys(this.elements[number]).forEach((key) => {
             let input = item.querySelector(`[name="${this.elements[number][key].path}"]`);

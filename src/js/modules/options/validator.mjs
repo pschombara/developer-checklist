@@ -112,10 +112,9 @@ const checkChecklists = (data, key) => {
         title: 'string',
     }
 
-    const itemKeys = ['text', 'checked', 'id'];
+    const itemKeys = ['text', 'id'];
     const itemTypes = {
         text: 'string',
-        checked: 'boolean',
         id: 'string',
     };
 
