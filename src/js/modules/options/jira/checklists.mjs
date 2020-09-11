@@ -1,4 +1,5 @@
 import _ from 'lodash-es';
+import Select from '../../extension/select';
 
 export class Checklists {
     constructor() {
@@ -101,6 +102,10 @@ export class Checklists {
                     this.tabs[number].innerHTML = input.value;
                 }
             }
+
+            if (input.hasAttribute('data-select')) {
+                new Select(input);
+            }
         });
 
         this.container[number].appendChild(item);
@@ -163,8 +168,7 @@ export class Checklists {
             checklists[i] = checklist;
         }
 
-        console.log(checklists);
-        return this.checklists;
+        return this.checklists; // todo remove
 
         return checklists;
     }
