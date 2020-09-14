@@ -4,6 +4,8 @@ import Select from '../../extension/select';
 export class Checklists {
     constructor() {
         this.template = document.querySelector('[data-template="jira-checklist"]');
+        this.templateCategory = document.querySelector('[data-template="jira-checklist-category"]');
+        this.templateItem = document.querySelector('[data-template="jira-checklist-item"]');
 
         this.container = {
             0: document.querySelector('#jira-checklist-0'),
@@ -64,6 +66,13 @@ export class Checklists {
                     comment: '',
                     autoComment: false
                 },
+            },
+            checklist: {
+                0: [],
+                1: [],
+                2: [],
+                3: [],
+                4: [],
             }
         };
 
@@ -87,6 +96,35 @@ export class Checklists {
         element.innerHTML = element.innerHTML.replace(new RegExp('%clNumber%', 'g'), number.toString())
 
         const item = element.children[0];
+
+        const itemChecklist = item.querySelector('[data-checklist-accordion]');
+
+        for (let category of checklist.checklist) {
+            const categoryElement = document.createElement('div');
+            categoryElement.innerHTML = this.templateCategory.innerHTML;
+            categoryElement.innerHTML = categoryElement.innerHTML.replace(new RegExp('%clNumber%', 'g'), number);
+            categoryElement.innerHTML = categoryElement.innerHTML.replace(new RegExp('%clcUuid%', 'g'), category.uid);
+
+            const categoryItem = categoryElement.children[0];
+            categoryItem.querySelector('input').value = category.title;
+
+            const containerItems = categoryItem.querySelector('[data-checklist-items]');
+
+            for (let cItem of category.items) {
+                const itemElement = document.createElement('div');
+                itemElement.innerHTML = this.templateItem.innerHTML;
+                itemElement.innerHTML = itemElement.innerHTML.replace(new RegExp('%clNumber%', 'g'), number);
+                itemElement.innerHTML = itemElement.innerHTML.replace(new RegExp('%clcUuid%', 'g'), category.uid);
+                itemElement.innerHTML = itemElement.innerHTML.replace(new RegExp('%cliUuid%', 'g'), cItem.id);
+
+                const itemItem = itemElement.children[0];
+                itemItem.querySelector('input').value = cItem.text;
+
+                containerItems.append(itemItem);
+            }
+
+            itemChecklist.appendChild(categoryItem);
+        }
 
         this.elements[number] = this.buildValues(checklist, `checklist[${number}]`, this.structure);
 
@@ -126,7 +164,6 @@ export class Checklists {
         Object.keys(checklist).forEach((key) => {
             if (false === structure.hasOwnProperty(key)) {
                 return;
-                //throw new Error('Unknown structure!');
             }
 
             let temp = this.buildValues(checklist[key], path + `[${key}]`, structure[key], [...keys, key]);

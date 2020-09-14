@@ -1,10 +1,13 @@
 import {SuperMigration} from './super-migration';
+import {Uuid} from '../options/uuid';
 
 export class Migration extends SuperMigration {
     constructor() {
         super();
         this._migrations = {
             '0.3.1': migrateTo0_4_0,
+            '0.4.0': '0.4.1',
+            '0.4.1': '0.4.2',
             '0.4.2': migrateTo0_5_0,
         };
     }
@@ -17,7 +20,11 @@ export class Migration extends SuperMigration {
         if (options.version !== this.currentVersion) {
             Object.keys(this._migrations).forEach((version) => {
                 if (options.version === version) {
-                    this._migrations[version](options);
+                    if ('function' === typeof this._migrations[version]) {
+                        this._migrations[version](options);
+                    } else if ('string' === typeof this._migrations['version']) {
+                        options.version = this._migrations[version];
+                    }
                 }
             });
 
@@ -232,6 +239,11 @@ const migrateTo0_5_0 = (options) => {
 
     Object.keys(checklists).forEach(key => {
        for (let category of checklists[key].checklist) {
+           category.uid = Uuid.generate();
+
+           // todo remove id
+           // todo migrate issue lists
+
            for (let item of category.items) {
                delete item.checked;
            }

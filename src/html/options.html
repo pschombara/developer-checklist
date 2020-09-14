@@ -1525,7 +1525,6 @@
                     <option value="fas fa-weight">&#xf496; weight</option>
                     <option value="fas fa-weight-hanging">&#xf5cd; weight-hanging</option>
                     <option value="fas fa-wheelchair">&#xf193; wheelchair</option>
-                    <option value="fas fa-whmcs">&#xf40d; whmcs</option>
                     <option value="fas fa-wifi">&#xf1eb; wifi</option>
                     <option value="fas fa-wind">&#xf72e; wind</option>
                     <option value="fas fa-window-close">&#xf410; window-close</option>
@@ -1543,7 +1542,7 @@
                 </select>
             </div>
         </div>
-        <div class="row mt-5 mb-3">
+        <div class="row mt-4 mb-3">
             <h6 class="col">Buttons</h6>
         </div>
         <div class="row">
@@ -1628,7 +1627,56 @@
                 </div>
             </div>
         </div>
+        <div class="row mt-4">
+            <h6 class="col">Checklists</h6>
+        </div>
+        <div class="row">
+            <div class="col" data-container="checklist">
+                <div class="accordion" id="checklist%clNumber%Accordion" data-checklist-accordion>
+
+                </div>
+            </div>
+        </div>
     </div>
+</template>
+<template data-template="jira-checklist-category">
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-1">
+                    <button class="btn btn-link btn-block" type="button" data-toggle="collapse" data-target="[data-checklist-category='%clcUuid%']"><i class="fas fa-chevron-down"></i></button>
+                </div>
+                <div class="col-10">
+                    <input type="text" value="" placeholder="Category Name" class="form-control" />
+                </div>
+                <div class="col-1">
+                    <button class="btn btn-link" type="button"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="collapse" data-parent="#checklist%clNumber%Accordion" data-checklist-category="%clcUuid%">
+            <div class="card-body">
+                <div data-checklist-items></div>
+                <div class="row mt-2">
+                    <div class="col">
+                        <button type="button" class="btn btn-success" data-add="%clcUuid%"><i class="fas fa-plus"></i> Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<template data-template="jira-checklist-item">
+<div class="row mb-2">
+    <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
+    <div class="col-5">
+        <input type="text" name="checklist[%clNumber%][checklist][%clcUuid%][%cliUuid%]" data-uuid="%cliUuid%" class="form-control" />
+    </div>
+    <div class="col-2 custom-control custom-switch">
+        <input class="custom-control-input" type="checkbox" name="jenkins-item-delete[]" id="jenkins-item-delete-%cliUuid%" />
+        <label class="custom-control-label" for="jenkins-item-delete-%cliUuid%">Delete</label>
+    </div>
+</div>
 </template>
 <div class="modal" tabindex="-1" role="dialog" id="rc-modal-user">
     <div class="modal-dialog" role="document">
