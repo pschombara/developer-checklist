@@ -1,5 +1,7 @@
 import _ from 'lodash-es';
 import Select from '../../extension/select';
+import {DragDrop} from '../drag-drop';
+import {Uuid} from '../uuid';
 
 export class Checklists {
     constructor() {
@@ -100,27 +102,15 @@ export class Checklists {
         const itemChecklist = item.querySelector('[data-checklist-accordion]');
 
         for (let category of checklist.checklist) {
-            const categoryElement = document.createElement('div');
-            categoryElement.innerHTML = this.templateCategory.innerHTML;
-            categoryElement.innerHTML = categoryElement.innerHTML.replace(new RegExp('%clNumber%', 'g'), number);
-            categoryElement.innerHTML = categoryElement.innerHTML.replace(new RegExp('%clcUuid%', 'g'), category.uid);
-
-            const categoryItem = categoryElement.children[0];
-            categoryItem.querySelector('input').value = category.title;
+            const categoryItem = this.createCategory(number, category.title, category.uid);
 
             const containerItems = categoryItem.querySelector('[data-checklist-items]');
 
             for (let cItem of category.items) {
-                const itemElement = document.createElement('div');
-                itemElement.innerHTML = this.templateItem.innerHTML;
-                itemElement.innerHTML = itemElement.innerHTML.replace(new RegExp('%clNumber%', 'g'), number);
-                itemElement.innerHTML = itemElement.innerHTML.replace(new RegExp('%clcUuid%', 'g'), category.uid);
-                itemElement.innerHTML = itemElement.innerHTML.replace(new RegExp('%cliUuid%', 'g'), cItem.id);
-
-                const itemItem = itemElement.children[0];
-                itemItem.querySelector('input').value = cItem.text;
+                const itemItem = this.createItem(number, category.uid, cItem.id, cItem.text);
 
                 containerItems.append(itemItem);
+                new DragDrop(itemItem).init();
             }
 
             itemChecklist.appendChild(categoryItem);
@@ -147,6 +137,31 @@ export class Checklists {
         });
 
         this.container[number].appendChild(item);
+    }
+
+    createCategory(number, title = '', uid = '') {
+        const categoryElement = document.createElement('div');
+        categoryElement.innerHTML = this.templateCategory.innerHTML;
+        categoryElement.innerHTML = categoryElement.innerHTML.replace(new RegExp('%clNumber%', 'g'), number);
+        categoryElement.innerHTML = categoryElement.innerHTML.replace(new RegExp('%clcUuid%', 'g'), '' !== uid ? uid : Uuid.generate());
+
+        const categoryItem = categoryElement.children[0];
+        categoryItem.querySelector('input').value = title;
+
+        return categoryItem;
+    }
+
+    createItem(number, categoryUid, uid = '', text = '') {
+        const element = document.createElement('div');
+        element.innerHTML = this.templateItem.innerHTML;
+        element.innerHTML = element.innerHTML.replace(new RegExp('%clNumber%', 'g'), number);
+        element.innerHTML = element.innerHTML.replace(new RegExp('%clcUuid%', 'g'), categoryUid);
+        element.innerHTML = element.innerHTML.replace(new RegExp('%cliUuid%', 'g'), '' !== uid ? uid : Uuid.generate());
+
+        const item = element.children[0];
+        item.querySelector('input').value = text;
+
+        return item;
     }
 
     buildValues(checklist, path, structure, keys = []) {

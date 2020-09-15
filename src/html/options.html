@@ -1656,7 +1656,7 @@
         </div>
         <div class="collapse" data-parent="#checklist%clNumber%Accordion" data-checklist-category="%clcUuid%">
             <div class="card-body">
-                <div data-checklist-items></div>
+                <div data-checklist-items data-draggable></div>
                 <div class="row mt-2">
                     <div class="col">
                         <button type="button" class="btn btn-success" data-add="%clcUuid%"><i class="fas fa-plus"></i> Add</button>
@@ -1667,7 +1667,7 @@
     </div>
 </template>
 <template data-template="jira-checklist-item">
-<div class="row mb-2">
+<div class="row mb-2" draggable="true">
     <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
     <div class="col-5">
         <input type="text" name="checklist[%clNumber%][checklist][%clcUuid%][%cliUuid%]" data-uuid="%cliUuid%" class="form-control" />
