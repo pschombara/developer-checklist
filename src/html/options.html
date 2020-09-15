@@ -1637,6 +1637,11 @@
                 </div>
             </div>
         </div>
+        <div class="row mt-2">
+            <div class="col">
+                <button class="btn btn-success" type="button" data-add="%clNumber%"><i class="fas fa-plus"></i> Add Category</button>
+            </div>
+        </div>
     </div>
 </template>
 <template data-template="jira-checklist-category">
@@ -1649,8 +1654,9 @@
                 <div class="col-10">
                     <input type="text" value="" placeholder="Category Name" class="form-control" />
                 </div>
-                <div class="col-1">
-                    <button class="btn btn-link" type="button"><i class="fas fa-trash"></i></button>
+                <div class="col-1 custom-control custom-switch">
+                    <input class="custom-control-input" type="checkbox" name="jenkins-category-delete[]" id="jenkins-category-delete-%clcUuid%" value="%clcUuid%" />
+                    <label class="custom-control-label" for="jenkins-category-delete-%clcUuid%"><i class="fas fa-trash"></i></label>
                 </div>
             </div>
         </div>
@@ -1673,7 +1679,7 @@
         <input type="text" name="checklist[%clNumber%][checklist][%clcUuid%][%cliUuid%]" data-uuid="%cliUuid%" class="form-control" />
     </div>
     <div class="col-2 custom-control custom-switch">
-        <input class="custom-control-input" type="checkbox" name="jenkins-item-delete[]" id="jenkins-item-delete-%cliUuid%" />
+        <input class="custom-control-input" type="checkbox" name="jenkins-item-delete[]" id="jenkins-item-delete-%cliUuid%" value="%cliUuid%" />
         <label class="custom-control-label" for="jenkins-item-delete-%cliUuid%">Delete</label>
     </div>
 </div>

@@ -100,11 +100,23 @@ export class Checklists {
         const item = element.children[0];
 
         const itemChecklist = item.querySelector('[data-checklist-accordion]');
+        const categoryAdd = item.querySelector('[data-add]');
+
+        categoryAdd.addEventListener('click', () => {
+            itemChecklist.append(this.createCategory(number));
+        });
 
         for (let category of checklist.checklist) {
             const categoryItem = this.createCategory(number, category.title, category.uid);
-
             const containerItems = categoryItem.querySelector('[data-checklist-items]');
+
+            const itemAdd = categoryItem.querySelector('[data-add]');
+
+            itemAdd.addEventListener('click', () => {
+                const newItem = this.createItem(number, category.uid);
+                containerItems.append(newItem);
+                new DragDrop(newItem).init();
+            });
 
             for (let cItem of category.items) {
                 const itemItem = this.createItem(number, category.uid, cItem.id, cItem.text);
@@ -208,6 +220,9 @@ export class Checklists {
     save() {
         const formData = new FormData(this.form);
         let checklists = {};
+
+        const deleteItems = formData.getAll('jenkins-item-delete[]');
+        const deleteCategories = formData.getAll('jenkins-category-delete[]');
 
         for (let i = 0; i < 5; ++i) {
             let checklist = Object.assign({}, this.defaultChecklist);
