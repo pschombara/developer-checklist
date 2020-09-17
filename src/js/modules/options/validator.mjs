@@ -105,9 +105,8 @@ const checkChecklistsBtn = (data, key) => {
 const checkChecklists = (data, key) => {
     let errors = [];
 
-    const listKeys = ['id', 'items', 'title', 'uid'];
+    const listKeys = ['items', 'title', 'uid'];
     const listTypes = {
-        id: 'number',
         items: 'array',
         title: 'string',
         uid: 'string',

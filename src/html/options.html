@@ -1652,7 +1652,8 @@
                     <button class="btn btn-link btn-block" type="button" data-toggle="collapse" data-target="[data-checklist-category='%clcUuid%']"><i class="fas fa-chevron-down"></i></button>
                 </div>
                 <div class="col-10">
-                    <input type="text" value="" placeholder="Category Name" class="form-control" />
+                    <input type="text" name="checklist[%clNumber%][checklist][title][]" placeholder="Category Name" class="form-control" />
+                    <input type="hidden" name="checklist[%clNumber%][checklist][uid][]" value="%clcUuid%" />
                 </div>
                 <div class="col-1 custom-control custom-switch">
                     <input class="custom-control-input" type="checkbox" name="jenkins-category-delete[]" id="jenkins-category-delete-%clcUuid%" value="%clcUuid%" />
@@ -1676,7 +1677,8 @@
 <div class="row mb-2" draggable="true">
     <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
     <div class="col-5">
-        <input type="text" name="checklist[%clNumber%][checklist][%clcUuid%][%cliUuid%]" data-uuid="%cliUuid%" class="form-control" />
+        <input type="text" name="checklist[%clNumber%][checklist][%clcUuid%][text][]" class="form-control" />
+        <input type="hidden" name="checklist[%clNumber%][checklist][%clcUuid%][id][]" value="%cliUuid%" />
     </div>
     <div class="col-2 custom-control custom-switch">
         <input class="custom-control-input" type="checkbox" name="jenkins-item-delete[]" id="jenkins-item-delete-%cliUuid%" value="%cliUuid%" />

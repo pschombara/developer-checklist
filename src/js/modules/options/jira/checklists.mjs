@@ -110,14 +110,6 @@ export class Checklists {
             const categoryItem = this.createCategory(number, category.title, category.uid);
             const containerItems = categoryItem.querySelector('[data-checklist-items]');
 
-            const itemAdd = categoryItem.querySelector('[data-add]');
-
-            itemAdd.addEventListener('click', () => {
-                const newItem = this.createItem(number, category.uid);
-                containerItems.append(newItem);
-                new DragDrop(newItem).init();
-            });
-
             for (let cItem of category.items) {
                 const itemItem = this.createItem(number, category.uid, cItem.id, cItem.text);
 
@@ -153,12 +145,24 @@ export class Checklists {
 
     createCategory(number, title = '', uid = '') {
         const categoryElement = document.createElement('div');
+
+        uid = '' !== uid ? uid : Uuid.generate();
+
         categoryElement.innerHTML = this.templateCategory.innerHTML;
         categoryElement.innerHTML = categoryElement.innerHTML.replace(new RegExp('%clNumber%', 'g'), number);
-        categoryElement.innerHTML = categoryElement.innerHTML.replace(new RegExp('%clcUuid%', 'g'), '' !== uid ? uid : Uuid.generate());
+        categoryElement.innerHTML = categoryElement.innerHTML.replace(new RegExp('%clcUuid%', 'g'), uid);
 
         const categoryItem = categoryElement.children[0];
+        const itemAdd = categoryItem.querySelector('[data-add]');
+        const containerItems = categoryItem.querySelector('[data-checklist-items]');
+
         categoryItem.querySelector('input').value = title;
+
+        itemAdd.addEventListener('click', () => {
+            const newItem = this.createItem(number, uid);
+            containerItems.append(newItem);
+            new DragDrop(newItem).init();
+        });
 
         return categoryItem;
     }
@@ -215,27 +219,57 @@ export class Checklists {
                 }
             }
         });
+
+        const deleteItems = formData.getAll('jenkins-item-delete[]');
+        const deleteCategories = formData.getAll('jenkins-category-delete[]');
+
+        const categories = formData.getAll(`checklist[${number}][checklist][title][]`);
+        const categoryUuids = formData.getAll(`checklist[${number}][checklist][uid][]`);
+
+        let cl = [];
+
+        for (let key in categories) {
+            if (undefined === categoryUuids[key] || deleteCategories.includes(categoryUuids[key])) {
+                continue;
+            }
+
+            let items = [];
+
+            const itemText = formData.getAll(`checklist[${number}][checklist][${categoryUuids[key]}][text][]`);
+            const itemIds = formData.getAll(`checklist[${number}][checklist][${categoryUuids[key]}][id][]`);
+
+            for (let innerKey in itemText) {
+                if (undefined === itemIds[innerKey] || deleteItems.includes(itemIds[innerKey])) {
+                    continue;
+                }
+
+                items.push({
+                    text: itemText[innerKey],
+                    id: itemIds[innerKey],
+                });
+            }
+
+            cl.push({
+                title: categories[key],
+                uid: categoryUuids[key],
+                items: items,
+            });
+        }
+
+        checklist.checklist = cl;
     }
 
     save() {
         const formData = new FormData(this.form);
         let checklists = {};
 
-        const deleteItems = formData.getAll('jenkins-item-delete[]');
-        const deleteCategories = formData.getAll('jenkins-category-delete[]');
-
         for (let i = 0; i < 5; ++i) {
             let checklist = Object.assign({}, this.defaultChecklist);
 
             this.fillValues(checklist, formData, i);
 
-            // todo update lists, remove next line
-            checklist.checklist = this.checklists[i].checklists;
-
             checklists[i] = checklist;
         }
-
-        return this.checklists; // todo remove
 
         return checklists;
     }

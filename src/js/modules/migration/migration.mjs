@@ -1,5 +1,6 @@
 import {SuperMigration} from './super-migration';
 import {Uuid} from '../options/uuid';
+import {StorageChecklist} from './storage-checklist';
 
 export class Migration extends SuperMigration {
     constructor() {
@@ -10,6 +11,8 @@ export class Migration extends SuperMigration {
             '0.4.1': '0.4.2',
             '0.4.2': migrateTo0_5_0,
         };
+
+        this._storageMigration = new StorageChecklist();
     }
 
     migrate(options) {
@@ -32,6 +35,8 @@ export class Migration extends SuperMigration {
             options.version = this.currentVersion;
             this.migrated = true;
         }
+
+        this._storageMigration.migrate();
 
         return options;
     }
@@ -240,9 +245,7 @@ const migrateTo0_5_0 = (options) => {
     Object.keys(checklists).forEach(key => {
        for (let category of checklists[key].checklist) {
            category.uid = Uuid.generate();
-
-           // todo remove id
-           // todo migrate issue lists
+           delete category.id;
 
            for (let item of category.items) {
                delete item.checked;
