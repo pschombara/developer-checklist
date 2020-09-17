@@ -3,9 +3,10 @@ import {DragDrop} from '../drag-drop';
 
 export class Boards {
     constructor() {
-        this._template = document.querySelector('[data-template="board"]');
+        this._template = document.querySelector('[data-template="jira-board"]');
         this._container = document.querySelector('[data-boards]');
         this._add = document.querySelector('[data-add-board]');
+        this._form = document.querySelector('#formJiraBoards');
     }
 
     init(boards) {
@@ -26,8 +27,8 @@ export class Boards {
 
         const item = elem.children[0];
 
-        item.querySelector('[name="boardId[]"]').value = 'number' === typeof id ? id : null;
-        item.querySelector('[name="boardKey[]"]').value = key;
+        item.querySelector('[name="board[id][]"]').value = 'number' === typeof id ? id : null;
+        item.querySelector('[name="board[key][]"]').value = key;
 
         this._container.appendChild(item);
 
@@ -36,8 +37,24 @@ export class Boards {
 
     save() {
         let boards = [];
+        const form = new FormData(this._form);
 
-        // todo
+        const ids = form.getAll('board[id][]');
+        const keys = form.getAll('board[key][]');
+        const uuids = form.getAll('board[uuid][]');
+        const deleteBoards = form.getAll('boardDelete[]');
+
+        for (let i in ids) {
+            if (deleteBoards.includes(uuids[i])) {
+                continue;
+            }
+
+            boards.push({
+                id: parseInt(ids[i]),
+                key: keys[i],
+            });
+        }
+
         return boards;
     }
 }

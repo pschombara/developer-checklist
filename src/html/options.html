@@ -145,7 +145,7 @@
                                         <div class="col-3 text-center font-weight-bold">Board Key&nbsp;<i class="fas fa-xs fa-question-circle" data-toggle="tooltip" title="The alpha identifier of the board. It is the prefix for your issues."></i></div>
                                     </div>
 
-                                    <div data-boards data-draggable></div>
+                                    <form id="formJiraBoards" data-boards data-draggable></form>
 
                                     <div class="mt-3">
                                         <button type="button" class="btn btn-success" data-add-board>+ Add</button>
@@ -429,21 +429,6 @@
     </div>
 </div>
 
-<template data-template="board">
-    <div class="row mb-2" draggable="true">
-        <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
-        <div class="col-3">
-            <input type="number" name="boardId[]" min="0" placeholder="The id of the board" class="form-control"/>
-        </div>
-        <div class="col-3">
-            <input type="text" name="boardKey[]" placeholder="The key of the board." class="form-control" />
-        </div>
-        <div class="col-2 custom-control custom-switch">
-            <input class="custom-control-input" type="checkbox" name="boardDelete[]" id="%boardUuid%" />
-            <label class="custom-control-label" for="%boardUuid%">Delete</label>
-        </div>
-    </div>
-</template>
 <template data-template="jenkins">
     <div class="row mt-2" draggable="true">
         <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
@@ -516,6 +501,22 @@
         <div class="col-2 custom-control custom-switch">
             <input class="custom-control-input" type="checkbox" name="cheatSheetDelete[]" id="%uuidCheatSheet%" />
             <label class="custom-control-label" for="%uuidCheatSheet%">Delete</label>
+        </div>
+    </div>
+</template>
+<template data-template="jira-board">
+    <div class="row mb-2" draggable="true">
+        <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
+        <div class="col-3">
+            <input type="number" name="board[id][]" min="0" placeholder="The id of the board" class="form-control"/>
+            <input type="hidden" name="board[uuid][]" value="%boardUuid%">
+        </div>
+        <div class="col-3">
+            <input type="text" name="board[key][]" placeholder="The key of the board." class="form-control" />
+        </div>
+        <div class="col-2 custom-control custom-switch">
+            <input class="custom-control-input" type="checkbox" name="boardDelete[]" value="%boardUuid%" id="%boardUuid%" />
+            <label class="custom-control-label" for="%boardUuid%">Delete</label>
         </div>
     </div>
 </template>

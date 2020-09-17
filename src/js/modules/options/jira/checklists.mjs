@@ -77,13 +77,9 @@ export class Checklists {
                 4: [],
             }
         };
-
-        // todo remove
-        this.checklists = {};
     }
 
     init(checklists) {
-        this.checklists = checklists; // todo remove
         let count = 0;
 
         Object.values(checklists).forEach(checklist => {
