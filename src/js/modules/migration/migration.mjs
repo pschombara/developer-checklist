@@ -189,7 +189,7 @@ const migrateTo0_5_0 = (options) => {
                 },
                 failed: {
                     text: '',
-                    enabled: true,
+                    enabled: false,
                     comment: '',
                     autoComment: false
                 }
@@ -219,24 +219,24 @@ const migrateTo0_5_0 = (options) => {
     }
 
     if (options.hasOwnProperty('jira') && options.jira.hasOwnProperty('comments')) {
-        if (options.jira.comments.hasOwnProperty('developer-success')) {
-            checklists[0].buttons.success.comment = jira.comments['developer-success'];
+        if (options.jira.comments.hasOwnProperty('develop-success')) {
+            checklists[0].buttons.success.comment = options.jira.comments['develop-success'];
         }
 
-        if (options.jira.comments.hasOwnProperty('tester-success')) {
-            checklists[1].buttons.success.comment = jira.comments['tester-success'];
+        if (options.jira.comments.hasOwnProperty('test-success')) {
+            checklists[1].buttons.success.comment = options.jira.comments['test-success'];
         }
 
-        if (options.jira.comments.hasOwnProperty('tester-failed')) {
-            checklists[1].buttons.failed.comment = jira.comments['tester-failed'];
+        if (options.jira.comments.hasOwnProperty('test-failed')) {
+            checklists[1].buttons.failed.comment = options.jira.comments['test-failed'];
         }
 
-        if (options.jira.comments.hasOwnProperty('reviewer-success')) {
-            checklists[2].buttons.success.comment = jira.comments['reviewer-success'];
+        if (options.jira.comments.hasOwnProperty('review-success')) {
+            checklists[2].buttons.success.comment = options.jira.comments['review-success'];
         }
 
-        if (options.jira.comments.hasOwnProperty('reviewer-failed')) {
-            checklists[2].buttons.failed.comment = jira.comments['reviewer-failed'];
+        if (options.jira.comments.hasOwnProperty('review-failed')) {
+            checklists[2].buttons.failed.comment = options.jira.comments['review-failed'];
         }
 
         delete options.jira.comments;

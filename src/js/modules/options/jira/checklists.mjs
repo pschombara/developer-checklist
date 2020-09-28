@@ -49,34 +49,6 @@ export class Checklists {
         this.elements = [];
 
         this.form = document.querySelector('#formJiraChecklist');
-
-        this.defaultChecklist = {
-            enabled: false,
-            name: '',
-            icon: '',
-            successRequiredAll: false,
-            buttons: {
-                success: {
-                    text: '',
-                    enabled: false,
-                    comment: '',
-                    autoComment: false
-                },
-                failed: {
-                    text: '',
-                    enabled: false,
-                    comment: '',
-                    autoComment: false
-                },
-            },
-            checklist: {
-                0: [],
-                1: [],
-                2: [],
-                3: [],
-                4: [],
-            }
-        };
     }
 
     init(checklists) {
@@ -205,14 +177,14 @@ export class Checklists {
         return result;
     }
 
-    fillValues(checklist, formData, number) {
+    fillValues(formData, number) {
+        let checklist = {};
+
         Object.keys(this.elements[number]).forEach(key => {
-            if (formData.has(this.elements[number][key].path)) {
-                if ('checkbox' === this.elements[number][key].type) {
-                    _.set(checklist, this.elements[number][key].key, true)
-                } else {
-                    _.set(checklist, this.elements[number][key].key, formData.get(this.elements[number][key].path))
-                }
+            if ('checkbox' === this.elements[number][key].type) {
+                _.set(checklist, this.elements[number][key].key, formData.has(this.elements[number][key].path));
+            } else {
+                _.set(checklist, this.elements[number][key].key, formData.get(this.elements[number][key].path))
             }
         });
 
@@ -253,6 +225,8 @@ export class Checklists {
         }
 
         checklist.checklist = cl;
+
+        return checklist;
     }
 
     save() {
@@ -260,11 +234,7 @@ export class Checklists {
         let checklists = {};
 
         for (let i = 0; i < 5; ++i) {
-            let checklist = Object.assign({}, this.defaultChecklist);
-
-            this.fillValues(checklist, formData, i);
-
-            checklists[i] = checklist;
+            checklists[i] = this.fillValues(formData, i);
         }
 
         return checklists;
