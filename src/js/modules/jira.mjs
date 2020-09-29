@@ -21,6 +21,7 @@ export class Jira extends SuperJira{
         }
 
         this._templateContent = document.querySelector('[data-template="jira-checklist-content"]');
+        this._templateCategory = document.querySelector('[data-template="jira-checklist-category"]');
     }
 
     createBoards() {
@@ -124,19 +125,44 @@ const fillContent = (checklist, issue, number, instance) => {
     const buttonSuccess = content.querySelector('button[data-btn="success"]');
     const buttonFailed = content.querySelector('button[data-btn="failed"]');
     const buttonClear = content.querySelector('button[data-btn="clear"]');
+    const categoryTarget = content.querySelector('[data-list]');
 
     if (false === checklist.buttons.success.enabled) {
         buttonSuccess.classList.add('d-none');
     } else {
-        buttonSuccess.append(checklist.buttons.success.text);
+        buttonSuccess.append(` ${checklist.buttons.success.text}`);
     }
 
     if (false === checklist.buttons.failed.enabled) {
         buttonFailed.classList.add('d-none');
-        buttonFailed.append(checklist.buttons.failed.text);
+    } else {
+        buttonFailed.append(` ${checklist.buttons.failed.text}`);
     }
 
-    console.log(checklist.buttons);
+    for (let category of checklist.checklist) {
+        let newCategory = document.createElement('div');
+        newCategory.innerHTML = instance._templateCategory.innerHTML;
+        newCategory.innerHTML = newCategory.innerHTML.replace(new RegExp('%number%', 'g'), number);
+        newCategory.innerHTML = newCategory.innerHTML.replace(new RegExp('%title%', 'g'), category.title);
+
+        const categoryContent = newCategory.children[0];
+        const itemTarget = categoryContent.querySelector('[data-content]');
+
+        for (let item of category.items) {
+            let newItem = document.createElement('li');
+
+            newItem.setAttribute('data-checked', '0');
+            newItem.innerHTML = item.text;
+
+            newItem.addEventListener('click', () => {
+                newItem.setAttribute('data-checked', '0' === newItem.getAttribute('data-checked') ? '1' : '0');
+            });
+
+            itemTarget.append(newItem);
+        }
+
+        categoryTarget.append(categoryContent);
+    }
 
     instance._checklistContent[number].appendChild(content);
 }

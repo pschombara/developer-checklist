@@ -168,7 +168,7 @@ const migrateTo0_5_0 = (options) => {
                 },
                 failed: {
                     text: '',
-                    enabled: true,
+                    enabled: false,
                     comment: '',
                     autoComment: false
                 }

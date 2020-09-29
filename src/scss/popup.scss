@@ -4,15 +4,15 @@
         margin: 8px;
     }
 
-    .checked {
-        text-decoration: line-through;
-        color: #b4b4b4;
-    }
-
     ul {
         &[data-content] {
             li {
                 cursor: pointer;
+
+                &[data-checked="1"] {
+                    text-decoration: line-through;
+                    color: #b4b4b4;
+                }
             }
         }
     }
