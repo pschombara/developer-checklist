@@ -121,16 +121,22 @@ const checkOptions = (cl) => {
 const initView = (cl) => {
     initOverview(cl);
 
-    if ('' === cl._identifier) {
-        cl._header.innerHTML = 'Checklist';
-    } else {
-        cl._header.innerHTML = cl._identifier;
+    new Promise(resolve => {
+        if ('' === cl._identifier) {
+            cl._header.innerHTML = 'Checklist';
+            resolve();
+        } else {
+            cl._header.innerHTML = cl._identifier;
 
-        initIssue(cl);
-    }
+            initIssue(cl).then(() => {
+                resolve();
+            });
+        }
+    }).then(() => {
+        cl._modules.hideModules();
 
-    cl._modules.hideModules();
-    showContent('checklist', cl);
+        showContent('checklist', cl);
+    })
 };
 
 const initOverview = (cl) => {
@@ -194,25 +200,40 @@ const initOverview = (cl) => {
 };
 
 const initIssue = (cl) => {
-    cl._storage.loadIssue(cl._identifier).then((stored) => {
-        if (stored.hasOwnProperty('openTab')) {
-            const tab = document.querySelector(`#${stored.openTab}`);
+    return new Promise(resolve => {
+        document.addEventListener('saveChecklist', () => {
+            save(cl).then(data => {
+                cl._storage.write(cl._identifier, data);
+            });
+        })
 
-            if (null !== tab) {
-                tab.click();
+        cl._storage.loadIssue(cl._identifier).then((stored) => {
+            if (stored.hasOwnProperty('openTab')) {
+                const tab = document.querySelector(`#${stored.openTab}`);
+
+                if (null !== tab) {
+                    tab.click();
+                }
             }
-        }
 
-        cl._jira.createChecklists(stored);
-    });
-
-    Array.prototype.map.call(document.querySelectorAll('#listTab .nav-item'), (nav) => {
-        $(nav).on('shown.bs.tab', () => {
-            //save(cl);
-
-            if ('Quick Select' === nav.getAttribute('data-content')) {
-                cl._issue.focus();
+            if (Array.isArray(stored)) {
+                document.dispatchEvent(new CustomEvent('saveChecklist'));
+                stored = {};
             }
+
+            cl._jira.createChecklists(stored);
+
+            Array.prototype.map.call(document.querySelectorAll('#listTab .nav-item'), (nav) => {
+                $(nav).on('shown.bs.tab', () => {
+                    document.dispatchEvent(new CustomEvent('saveChecklist'));
+
+                    if ('Quick Select' === nav.getAttribute('data-content')) {
+                        cl._issue.focus();
+                    }
+                });
+            });
+
+            resolve();
         });
     });
 };
@@ -236,3 +257,20 @@ const showContent = (contentType, cl) => {
     cl._gitLab.checkUrl(cl._url);
 };
 
+const save = (cl) => {
+    return new Promise(resolve => {
+        const data = {
+            updateDate: Math.floor(Date.now() / 1000),
+            openTab: document.querySelector('#listTab .nav-link.active').getAttribute('id'),
+            title: '',
+            checklist: cl._jira.checkedEntries(),
+            version: cl._migration.currentVersion,
+        }
+
+        cl._jira.getIssueTitle().then(result => {
+            data.title = result;
+
+            resolve(data);
+        })
+    });
+}

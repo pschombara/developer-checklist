@@ -1,3 +1,8 @@
+@mixin checked {
+    text-decoration: line-through;
+    color: #b4b4b4;
+}
+
 .app--popup {
     .app--content {
         min-width: 540px;
@@ -10,10 +15,13 @@
                 cursor: pointer;
 
                 &[data-checked="1"] {
-                    text-decoration: line-through;
-                    color: #b4b4b4;
+                    @include checked;
                 }
             }
+        }
+
+        &[data-checked="1"] {
+            @include checked;
         }
     }
 

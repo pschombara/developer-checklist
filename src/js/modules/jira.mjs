@@ -77,6 +77,30 @@ export class Jira extends SuperJira{
             code: '(' + sendComment + ')(' + `"${this.options.comments[type]}", ${submit}` + ')',
         });
     }
+
+    checkedEntries() {
+        const checked = {
+            0: [],
+            1: [],
+            2: [],
+            3: [],
+            4: [],
+        };
+
+        for (let number = 0; number < 5; ++number) {
+            if (false === this.options.checklists[number].enabled) {
+                continue;
+            }
+
+            const checkedEntries = this._checklistContent[number].querySelectorAll('li[data-checked="1"]');
+
+            for (let checkedEntry of checkedEntries) {
+                checked[number].push(checkedEntry.getAttribute('data-uuid'));
+            }
+        }
+
+        return checked;
+    }
 }
 
 const receiveTitle = () => {
@@ -150,12 +174,16 @@ const fillContent = (checklist, issue, number, instance) => {
 
         for (let item of category.items) {
             let newItem = document.createElement('li');
+            const isChecked = issue.hasOwnProperty('checklist') && -1 !== issue.checklist[number].indexOf(item.id);
 
-            newItem.setAttribute('data-checked', '0');
+            newItem.setAttribute('data-checked', isChecked ? '1' : '0');
+            newItem.setAttribute('data-uuid', item.id);
             newItem.innerHTML = item.text;
 
             newItem.addEventListener('click', () => {
                 newItem.setAttribute('data-checked', '0' === newItem.getAttribute('data-checked') ? '1' : '0');
+
+                document.dispatchEvent(new CustomEvent('saveChecklist'));
             });
 
             itemTarget.append(newItem);
