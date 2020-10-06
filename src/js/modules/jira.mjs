@@ -78,24 +78,6 @@ export class Jira extends SuperJira{
         });
     }
 
-    createComment(type) {
-        let submit = true;
-        let testFailed = new RegExp('^\\w+-failed$');
-
-        if (false === this.options.comments.hasOwnProperty(type)) {
-            return;
-        }
-
-        if (testFailed.test(type)) {
-            submit = false;
-        }
-
-        //We have permission to access the activeTab, so we can call chrome.tabs.executeScript:
-        chrome.tabs.executeScript({
-            code: '(' + sendComment + ')(' + `"${this.options.comments[type]}", ${submit}` + ')',
-        });
-    }
-
     checkedEntries() {
         const checked = {
             0: [],
@@ -125,7 +107,7 @@ const receiveTitle = () => {
     return document.querySelector('#summary-val').innerText;
 };
 
-const sendComment = (comment, submit) => {
+const jiraApplyComment = (comment, submit) => {
     let commentBtn = document.querySelector('#footer-comment-button');
 
     commentBtn.click();
@@ -140,6 +122,13 @@ const sendComment = (comment, submit) => {
 
     return true;
 };
+
+const sendComment = (comment, submit) => {
+    //We have permission to access the activeTab, so we can call chrome.tabs.executeScript:
+    chrome.tabs.executeScript({
+        code: '(' + jiraApplyComment + ')(' + `"${comment}", ${submit}` + ')',
+    });
+}
 
 const fillTab = (checklist, tab, number) => {
     const name = '' !== checklist.name ? checklist.name : `Checklist ${number}`
@@ -173,6 +162,10 @@ const fillContent = (checklist, issue, number, instance) => {
         buttonSuccess.classList.add('d-none');
     } else {
         buttonSuccess.append(` ${checklist.buttons.success.text}`);
+
+        buttonSuccess.addEventListener('click', () => {
+            sendComment(checklist.buttons.success.comment, checklist.buttons.success.autoComment);
+        });
     }
 
     if (checklist.successRequiredAll) {
@@ -195,6 +188,10 @@ const fillContent = (checklist, issue, number, instance) => {
         buttonFailed.classList.add('d-none');
     } else {
         buttonFailed.append(` ${checklist.buttons.failed.text}`);
+
+        buttonFailed.addEventListener('click', () => {
+            sendComment(checklist.buttons.failed.comment, checklist.buttons.failed.autoComment);
+        });
     }
 
     createCategories(checklist.checklist, categoryTarget, issue, number, instance);
@@ -255,6 +252,7 @@ const createCategories = (categories, categoryTarget, issue, number, instance) =
 
         if (allChecked) {
             categoryTitle.setAttribute('data-checked', '1');
+            itemTarget.classList.add('d-none');
         }
 
         categoryTarget.append(categoryContent);
@@ -272,3 +270,4 @@ const registerButtonClear = (buttonClear, content) => {
         document.dispatchEvent(new CustomEvent('saveChecklist'));
     });
 }
+
