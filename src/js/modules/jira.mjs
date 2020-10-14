@@ -114,9 +114,10 @@ const jiraApplyComment = (comment, submit) => {
     let text = document.querySelector('#comment');
     text.value = comment;
 
+    let send = document.querySelector('#issue-comment-add-submit');
+    send.removeAttribute("disabled");
+
     if (submit) {
-        let send = document.querySelector('#issue-comment-add-submit');
-        send.removeAttribute("disabled");
         send.click();
     }
 
