@@ -98,8 +98,34 @@ export class Checklists {
             } else {
                 input.value = this.elements[number][key].value;
 
-                if (input.hasAttribute('data-checklist-name') && '' !== input.value) {
-                    this.tabs[number].innerHTML = input.value;
+                if (input.hasAttribute('data-checklist-name')) {
+                    let name = this.tabs[number].querySelector('[data-name]');
+
+                    if ('' !== input.value) {
+                        name.innerHTML = input.value;
+                    }
+
+                    input.addEventListener('blur', () => {
+                        name.innerHTML = '' !== input.value ? input.value : `Checklist ${number}`
+                    })
+                }
+
+                if (input.hasAttribute('data-checklist-icon')) {
+                    let icon = this.tabs[number].querySelector('[data-icon]');
+                    if ('' !== input.value) {
+                        icon.classList.remove(...icon.classList);
+                        icon.classList.add(...(input.value.split(' ')));
+                    }
+
+                    input.addEventListener('change', () => {
+                        if ('' !== input.value) {
+                            icon.classList.remove(...icon.classList);
+                            icon.classList.add(...(input.value.split(' ')));
+                        } else {
+                            icon.classList.remove(...icon.classList);
+                            icon.classList.add('d-none');
+                        }
+                    });
                 }
             }
 

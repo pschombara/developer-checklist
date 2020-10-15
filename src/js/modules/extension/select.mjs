@@ -45,12 +45,13 @@ export default class Select {
             this.chooser.classList.add('select--chooser-container');
 
             this.chooser.innerHTML =
-                '<h5>Choose a option</h5>' +
+                '<h5>Choose an option</h5>' +
                 '<div class="input-group">' +
                 '<div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-search"></i></span></div><input type="search" class="form-control" data-search />' +
                 '</div>' +
                 '<div class="select--chooser-options" data-options></div>' +
-                '<button type="button" class="btn btn-primary btn-block mt-3">OK</button>'
+                '<div class="btn--box"><button type="button" class="btn btn-secondary mt-3" data-cancel>Cancel</button>' +
+                '<button type="button" class="btn btn-primary mt-3" data-success>OK</button></div>'
             ;
 
             this.buildOptions();
@@ -60,13 +61,9 @@ export default class Select {
 
             const search = this.chooser.querySelector('[data-search]');
 
-            this.chooser.querySelector('button').addEventListener('click', () => {
+            const closeChooser = () => {
                 this.body.classList.remove('no--scroll');
                 this.html.classList.remove('no--scroll');
-
-                const checked = this.chooser.querySelector('input[type="radio"]:checked');
-                this.select.value = checked.value;
-                this.element.value = checked.parentNode.innerText;
 
                 this.chooser.querySelectorAll('label.d-none').forEach(label => {
                     label.classList.remove('d-none');
@@ -76,7 +73,23 @@ export default class Select {
 
                 this.body.removeChild(this.chooser);
                 this.body.removeChild(this.backdrop);
+            };
+
+            this.chooser.querySelector('button[data-success]').addEventListener('click', () => {
+                const checked = this.chooser.querySelector('input[type="radio"]:checked');
+
+                if (this.select.value !== checked.value) {
+                    this.select.value = checked.value;
+                    this.element.value = checked.parentNode.innerText;
+
+                    this.select.dispatchEvent(new Event('change'));
+                }
+
+                closeChooser();
             });
+
+            this.chooser.querySelector('button[data-cancel]').addEventListener('click', closeChooser);
+            this.backdrop.addEventListener('click', closeChooser);
 
             search.addEventListener('keyup', (e) => {
                 this.searchOption(e.target.value);
