@@ -18,11 +18,11 @@ export class Checklists {
         };
 
         this.tabs = {
-            0: document.querySelector('#checklist-0-tab'),
-            1: document.querySelector('#checklist-1-tab'),
-            2: document.querySelector('#checklist-2-tab'),
-            3: document.querySelector('#checklist-3-tab'),
-            4: document.querySelector('#checklist-4-tab'),
+            0: document.querySelector('#jira-checklist-0-tab'),
+            1: document.querySelector('#jira-checklist-1-tab'),
+            2: document.querySelector('#jira-checklist-2-tab'),
+            3: document.querySelector('#jira-checklist-3-tab'),
+            4: document.querySelector('#jira-checklist-4-tab'),
         }
 
         this.structure= {

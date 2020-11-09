@@ -73,7 +73,7 @@ export class Options {
     }
 
     init() {
-        this.storage.loadOptions().then(stored => {
+        return this.storage.loadOptions().then(stored => {
             if (0 === Object.keys(stored).length) {
                 this.config.restore().then(stored => {
                     if (this.options.hasOwnProperty('rocketChat')) {

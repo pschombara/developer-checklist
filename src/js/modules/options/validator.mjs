@@ -174,6 +174,10 @@ const checkJira = (data) => {
             data.checklists[key].checklist.forEach((category, entryKey) => {
                 errors.push(...checkChecklists(category, `jira[checklists][${key}][checklist][${entryKey}]`));
             });
+
+            if (data.checklists[key].enabled && 0 === data.checklists[key].checklist.length) {
+                errors.push({err: `jira[checklists][${key}] is enabled but has no checklist entry!`});
+            }
         }
     });
 
