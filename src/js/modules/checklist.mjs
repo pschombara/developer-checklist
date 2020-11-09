@@ -211,7 +211,7 @@ const initIssue = (cl) => {
             if (stored.hasOwnProperty('openTab')) {
                 const tab = document.querySelector(`#${stored.openTab}`);
 
-                if (null !== tab) {
+                if (null !== tab && false === tab.parentNode.classList.contains('d-none')) {
                     tab.click();
                 }
             }
