@@ -102,7 +102,7 @@ const checkChecklistsBtn = (data, key) => {
     return errors;
 }
 
-const checkChecklists = (data, key) => {
+const checkChecklists = (data, key, enabled, parentKey) => {
     let errors = [];
 
     const listKeys = ['items', 'title', 'uid'];
@@ -124,6 +124,12 @@ const checkChecklists = (data, key) => {
         data.items.forEach((item, itemKey) => {
             errors.push(...checkObjectContainsKeys(item, itemKeys, itemTypes, `${key}[items][${itemKey}]`));
         });
+
+        if (false === enabled && 0 === data.items.length) {
+            errors.push({
+                err: `jira[checklists][${parentKey}] is enabled but ${key}[items] has no entries!`
+            })
+        }
     }
 
     return errors;
@@ -172,7 +178,7 @@ const checkJira = (data) => {
             errors.push(...checkChecklistsBtn(data.checklists[key].buttons, `jira[checklists][${key}][buttons]`));
 
             data.checklists[key].checklist.forEach((category, entryKey) => {
-                errors.push(...checkChecklists(category, `jira[checklists][${key}][checklist][${entryKey}]`));
+                errors.push(...checkChecklists(category, `jira[checklists][${key}][checklist][${entryKey}]`, data.checklists[key].enabled, key));
             });
 
             if (data.checklists[key].enabled && 0 === data.checklists[key].checklist.length) {
