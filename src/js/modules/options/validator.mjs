@@ -125,7 +125,7 @@ const checkChecklists = (data, key, enabled, parentKey) => {
             errors.push(...checkObjectContainsKeys(item, itemKeys, itemTypes, `${key}[items][${itemKey}]`));
         });
 
-        if (false === enabled && 0 === data.items.length) {
+        if (enabled && 0 === data.items.length) {
             errors.push({
                 err: `jira[checklists][${parentKey}] is enabled but ${key}[items] has no entries!`
             })
