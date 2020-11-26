@@ -28,50 +28,6 @@ export class Validator {
     }
 }
 
-const checkLists = (data) => {
-    const requiredKeys = ['developer', 'help', 'reviewer', 'tester'];
-    const types = {
-        developer: 'array',
-        help: 'array',
-        reviewer: 'array',
-        tester: 'array',
-    };
-
-    let errors = checkObjectContainsKeys(data, requiredKeys, types, 'lists');
-
-    if (0 !== errors.length) {
-        return errors;
-    }
-
-    const listKeys = ['id', 'items', 'title'];
-    const listTypes = {
-        id: 'number',
-        items: 'array',
-        title: 'string',
-    }
-
-    const itemKeys = ['text', 'checked', 'id'];
-    const itemTypes = {
-        text: 'string',
-        checked: 'boolean',
-        id: 'string',
-    };
-
-    for (let key of requiredKeys) {
-        data[key].forEach((obj, entryKey) => {
-            errors.push(...checkObjectContainsKeys(obj, listKeys, listTypes, `lists[${key}][${entryKey}]`));
-
-            if (obj.hasOwnProperty('items')) {
-                obj.items.forEach((item, itemKey) => {
-                    errors.push(...checkObjectContainsKeys(item, itemKeys, itemTypes, `lists[${key}][${entryKey}][items][${itemKey}]`));
-                });
-            }
-        })
-    }
-
-    return errors;
-}
-
 const checkCategories = (data, optionKey) => {
     if (false === Array.isArray(data)) {
         return [{
@@ -130,14 +86,63 @@ const checkObjectContainsKeys = (entry, requiredKeys, types, optionKey) => {
     return errors;
 }
 
+const checkChecklistsBtn = (data, key) => {
+    const requiredKeys = ['success', 'failed'];
+    const types = {
+        success: 'object',
+        failed: 'object',
+    };
+
+    let errors = checkObjectContainsKeys(data, requiredKeys, types, key);
+
+    if (0 !== errors.length) {
+        return errors;
+    }
+
+    return errors;
+}
+
+const checkChecklists = (data, key, enabled, parentKey) => {
+    let errors = [];
+
+    const listKeys = ['items', 'title', 'uid'];
+    const listTypes = {
+        items: 'array',
+        title: 'string',
+        uid: 'string',
+    }
+
+    const itemKeys = ['text', 'id'];
+    const itemTypes = {
+        text: 'string',
+        id: 'string',
+    };
+
+    errors.push(...checkObjectContainsKeys(data, listKeys, listTypes, `${key}`));
+
+    if (data.hasOwnProperty('items')) {
+        data.items.forEach((item, itemKey) => {
+            errors.push(...checkObjectContainsKeys(item, itemKeys, itemTypes, `${key}[items][${itemKey}]`));
+        });
+
+        if (enabled && 0 === data.items.length) {
+            errors.push({
+                err: `jira[checklists][${parentKey}] is enabled but ${key}[items] has no entries!`
+            })
+        }
+    }
+
+    return errors;
+}
+
 const checkJira = (data) => {
-    const requiredKeys = ['url', 'cleanup', 'maximumIssues', 'boards', 'comments'];
+    const requiredKeys = ['url', 'cleanup', 'maximumIssues', 'boards', 'checklists'];
     const types = {
         url: 'string',
         cleanup: 'number',
         maximumIssues: 'number',
         boards: 'array',
-        comments: 'object',
+        checklists: 'object',
     };
 
     let errors = checkObjectContainsKeys(data, requiredKeys, types, 'jira');
@@ -156,17 +161,31 @@ const checkJira = (data) => {
         errors.push(...checkObjectContainsKeys(entry, boardKeys, boardTypes, `jira[boards][${key}]`))
     });
 
-    const commentKeys = ['develop-success', 'review-failed', 'review-success', 'test-failed', 'test-success',
-    ];
-    const commentTypes = {
-        'develop-success': 'string',
-        'review-failed': 'string',
-        'review-success': 'string',
-        'test-failed': 'string',
-        'test-success': 'string',
-    }
+    const checklistsKeys = ['name', 'enabled', 'icon', 'successRequiredAll', 'buttons', 'checklist'];
+    const checklistsTypes = {
+        name: 'string',
+        enabled: 'boolean',
+        icon: 'string',
+        successRequiredAll: 'boolean',
+        buttons: 'object',
+        checklist: 'array',
+    };
 
-    errors.push(...checkObjectContainsKeys(data.comments, commentKeys, commentTypes, 'jira[comments]'));
+    Object.keys(data.checklists).forEach(key => {
+        errors.push(...checkObjectContainsKeys(data.checklists[key], checklistsKeys, checklistsTypes, `jira[checklists][${key}]`));
+
+        if (0 === errors.length) {
+            errors.push(...checkChecklistsBtn(data.checklists[key].buttons, `jira[checklists][${key}][buttons]`));
+
+            data.checklists[key].checklist.forEach((category, entryKey) => {
+                errors.push(...checkChecklists(category, `jira[checklists][${key}][checklist][${entryKey}]`, data.checklists[key].enabled, key));
+            });
+
+            if (data.checklists[key].enabled && 0 === data.checklists[key].checklist.length) {
+                errors.push({err: `jira[checklists][${key}] is enabled but has no checklist entry!`});
+            }
+        }
+    });
 
     return errors;
 }
@@ -319,7 +338,6 @@ const checkVersion = (data) => {
 }
 
 const check = {
-    lists: checkLists,
     jenkins: checkJenkins,
     jira: checkJira,
     rocketChat: checkRocketChat,
@@ -347,7 +365,7 @@ const checkIsObject = (data) => {
 
 const checkRootSchema = (data) => {
     let errors = [];
-    let requiredOptions = ['lists', 'jenkins', 'jira', 'rocketChat', 'cheatSheet', 'modules', 'gitLab', 'version'];
+    let requiredOptions = ['jenkins', 'jira', 'rocketChat', 'cheatSheet', 'modules', 'gitLab', 'version'];
 
     for (let option of requiredOptions) {
         if (false === data.hasOwnProperty(option)) {

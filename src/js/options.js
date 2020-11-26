@@ -27,29 +27,42 @@ import {Options} from './modules/options';
                 icon: 'success',
                 title: title,
                 onClose: () => {
+                    const activeTabs = document.querySelectorAll('.tab-pane.active');
+                    let hash = '';
+
+                    for (let tab of activeTabs) {
+                        hash += '#' + tab.getAttribute('id');
+                    }
+
+                    window.location.hash = hash;
                     location.reload();
                 }
             });
         });
     }
 
-    options.init();
+    options.init().then(() => {
+        chrome.tabs.query({active: true, currentWindow: true}, (tab) => {
+            if (0 === tab.length) {
+                return;
+            }
 
-    chrome.tabs.query({active: true, currentWindow: true}, (tab) => {
-        if (0 === tab.length) {
-            return;
-        }
+            if (false === tab[0].url.includes('#')) {
+                return;
+            }
 
-        if (false === tab[0].url.includes('#')) {
-            return;
-        }
+            const tabIdentifiers = tab[0].url.split('#');
+            tabIdentifiers.shift();
 
-        const tabIdentifier = tab[0].url.split('#')[1];
-        const targetTab = document.querySelector(`#${tabIdentifier}-tab`);
+            for (let tabIdentifier of tabIdentifiers) {
+                const targetTab = document.querySelector(`#${tabIdentifier}-tab`);
 
-        if (null !== targetTab) {
-            targetTab.click();
+                if (null !== targetTab) {
+                    targetTab.click();
+                }
+            }
+
             window.location.hash = '';
-        }
+        });
     });
 })();

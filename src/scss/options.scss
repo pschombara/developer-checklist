@@ -1,0 +1,75 @@
+.select--chooser {
+  font-family: "Font Awesome 5 Free", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  cursor: pointer;
+
+  &[readonly] {
+    background-color: #fff;
+  }
+
+  &-container {
+    background-color: $body-bg;
+    color: $body-color;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    padding: 1.5rem;
+    margin: auto;
+    height: 30rem;
+    max-height: 80%;
+    width: 28rem;
+    max-width: 100%;
+    z-index: 9000;
+    box-shadow: $modal-content-box-shadow-sm-up;
+
+    & > * {
+      margin: .25rem 0;
+    }
+
+    .btn--box {
+      display: flex;
+
+      button {
+        flex: 1;
+        margin: 0 .25rem;
+      }
+    }
+  }
+
+  &-backdrop {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 8000;
+    backdrop-filter: blur(2px);
+  }
+
+  &-options {
+    overflow-y: scroll;
+    font-family: "Font Awesome 5 Free", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    cursor: pointer;
+    border: $card-border-width solid $card-border-color;
+    padding: 1rem;
+    flex-grow: 2;
+
+    label {
+      display: block;
+
+      input {
+        margin-right: 1rem;
+      }
+    }
+  }
+}
+
+.no--scroll {
+  overflow: hidden;
+}
