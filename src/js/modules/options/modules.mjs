@@ -8,6 +8,7 @@ export class Modules extends SuperModules{
             jenkins: document.querySelector('#moduleJenkins'),
             cheatSheet: document.querySelector('#moduleCheatSheet'),
             rocketChat: document.querySelector('#moduleRocketChat'),
+            googleChat: document.querySelector('#moduleGoogleChat'),
             gitLab: document.querySelector('#moduleGitLab'),
         }
 
@@ -15,6 +16,7 @@ export class Modules extends SuperModules{
             jenkins: document.querySelector('#jenkins-tab'),
             cheatSheet: document.querySelector('#cheat-sheet-tab'),
             rocketChat: document.querySelector('#rocket-chat-tab'),
+            googleChat: document.querySelector('#google-chat-tab'),
             gitLab: document.querySelector('#gitLab-tab'),
         }
     }

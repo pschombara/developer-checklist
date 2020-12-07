@@ -240,6 +240,7 @@ const checkModules = (data) => {
         'jenkins',
         'cheatSheet',
         'rocketChat',
+        'googleChat',
         'gitLab',
     ];
 
@@ -247,6 +248,7 @@ const checkModules = (data) => {
         jenkins: 'boolean',
         cheatSheet: 'boolean',
         rocketChat: 'boolean',
+        googleChat: 'boolean',
         gitLab: 'boolean',
     };
 

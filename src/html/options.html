@@ -26,6 +26,9 @@
                 <li class="nav-item" data-toggle="popover" data-content="Rocket.Chat" data-placement="bottom">
                     <a class="nav-link" href="#rocket-chat" role="tab" id="rocket-chat-tab" data-toggle="tab"><i class="fab fa-rocketchat"></i></a>
                 </li>
+                <li class="nav-item" data-toggle="popover" data-content="Google Chat" data-placement="bottom">
+                    <a class="nav-link" href="#google-chat" role="tab" id="google-chat-tab" data-toggle="tab"><i class="fas fa-comment"></i></a>
+                </li>
                 <li class="nav-item" data-toggle="popover" data-content="Cheat Sheet" data-placement="bottom">
                     <a class="nav-link" href="#cheat-sheet" role="tab" id="cheat-sheet-tab" data-toggle="tab"><i class="fas fa-terminal"></i></a>
                 </li>
@@ -62,6 +65,14 @@
                                     <div class="custom-control custom-switch">
                                         <input type="checkbox" class="custom-control-input" name="module[rocketChat]" id="moduleRocketChat" />
                                         <label class="custom-control-label" for="moduleRocketChat"><i class="fab fa-rocketchat"></i> RocketChat</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" name="module[googleChat]" id="moduleGoogleChat" />
+                                        <label class="custom-control-label" for="moduleGoogleChat"><i class="fas fa-comment"></i> Google Chat</label>
                                     </div>
                                 </div>
                             </div>
@@ -282,6 +293,15 @@
                                 </div>
                             </div>
                             <datalist id="rc-rooms"></datalist>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="google-chat" role="tabpanel">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <h5 class="col"><i class="fas fa-comment"></i> Google Chat</h5>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -4,7 +4,8 @@
     "description": "This extension helps you remembering all the stuff that needs to be done in order to cover all steps of your definition of done.",
     "scripts": {
         "build": "gulp build",
-        "dev": "gulp watch"
+        "dev": "gulp watch",
+        "lint": "eslint ./src"
     },
     "repository": {
         "url": "https://github.com/pschombara/jira-dev-checklist",

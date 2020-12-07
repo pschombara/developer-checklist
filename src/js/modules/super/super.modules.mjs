@@ -4,7 +4,8 @@ export class SuperModules {
             jenkins: false,
             cheatSheet: false,
             rocketChat: false,
-            gitLab: false
+            googleChat: false,
+            gitLab: false,
         }
     }
 
