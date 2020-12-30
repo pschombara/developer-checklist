@@ -310,7 +310,23 @@
                                             <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='googleChatRooms']">Rooms</button>
                                         </h2>
                                     </div>
-                                    <div class="collapse" data-collapse="googleChatRooms" data-parent="#googleChatAccordion">TODO</div>
+                                    <div class="collapse" data-collapse="googleChatRooms" data-parent="#googleChatAccordion">
+                                        <div class="card-body">
+                                            <div class="row mb-2">
+                                                <div class="col-3 offset-1 text-center font-weight-bold">Name</div>
+                                                <div class="col-6 text-center font-weight-bold">
+                                                    Webhook Url
+                                                </div>
+                                            </div>
+                                            <div class="row mt-4">
+                                                <div class="col">
+                                                    <button type="button" class="btn btn-success" data-gc-room data-toggle="modal" data-target="#gc-modal-room">
+                                                        <i class="fas fa-plus"></i> Add room
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="card">
                                     <div class="card-header">
@@ -1736,6 +1752,29 @@
     </div>
 </div>
 </template>
+<template data-template="gc-room">
+    <div class="row mb-2" draggable="true">
+        <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
+        <div class="col-3"></div>
+        <div class="col-6"></div>
+        <div class="col-2 custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" name="gc-room-delete[]" id="gc-room-delete-%gcrUuid%" value="%gcrUuid%" />
+            <label class="custom-control-label" for="gc-room-delete-%gcrUuid%">Delete</label>
+        </div>
+    </div>
+</template>
+<template data-template="gc-message">
+    <div class="row mb-2" draggable="true">
+        <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
+        <div class="col-3"></div>
+        <div class="col-6"></div>
+        <div class="col-2 custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" name="gc-message-delete[]" id="gc-message-delete-%gcmUuid%" value="%gcmUuid%" />
+            <label class="custom-control-label" for="gc-message-delete-%gcmUuid%">Delete</label>
+        </div>
+    </div>
+</template>
+<template data-template="gc-message"></template>
 <div class="modal" tabindex="-1" role="dialog" id="rc-modal-user">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -1827,6 +1866,51 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-rc-dismiss="google" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" data-rc-login="google">Login</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" tabindex="-1" role="dialog" id="gc-modal-room">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add room</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="alert alert-info">
+                            <ol>
+                                <li>Open Google Chat</li>
+                                <li>Click on the root name</li>
+                                <li>Choose "Manage webhooks"</li>
+                                <li>Create new webhook</li>
+                                <li>Copy the webhook url</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <form id="gc-room">
+                    <div class="row">
+                        <label for="gc-room-name" class="col-form-label col-4">Name</label>
+                        <div class="col-6">
+                            <input type="text" name="name" id="gc-room-name" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label for="gc-room-url" class="col-form-label col-4">Webhook Url</label>
+                        <div class="col-6">
+                            <input type="url" name="name" id="gc-room-url" pattern="https:\/\/chat\.googleapis\.com\/.*" class="form-control" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-gc-dismiss="room" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-gc-add="room"><i class="fas fa-plus"></i> Add</button>
             </div>
         </div>
     </div>
