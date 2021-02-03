@@ -1,8 +1,8 @@
 export class SuperGoogleChat {
     constructor() {
         this._options = {
-            room: {},
-            message: {}
+            rooms: {},
+            messages: {}
         }
     }
 

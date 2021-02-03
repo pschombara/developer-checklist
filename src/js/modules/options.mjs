@@ -9,6 +9,7 @@ import {Jenkins} from "./options/jenkins";
 import {Modules} from './options/modules';
 import {GitLab} from './options/gitLab';
 import {Migration} from './migration/migration';
+import {GoogleChat} from './options/google.chat.mjs';
 
 export class Options {
     constructor() {
@@ -17,6 +18,7 @@ export class Options {
         this._validator = new Validator();
         this._config = new Config(this._storage, this._validator);
         this._rocketChat = new OptionsRocketChat();
+        this._googleChat = new GoogleChat();
         this._cheatSheet = new CheatSheet();
         this._jenkins = new Jenkins();
         this._gitLab = new GitLab();
@@ -60,6 +62,10 @@ export class Options {
         return this._jira;
     }
 
+    get googleChat() {
+        return this._googleChat;
+    }
+
     get rocketChat() {
         return this._rocketChat;
     }
@@ -99,6 +105,7 @@ export class Options {
                 this.config.init();
                 this.gitLab.init();
                 this.jira.init();
+                this.googleChat.init();
 
                 this._buttonRestoreOptions.addEventListener('click', () => {
                     ConfirmationPrompt.fire({
@@ -187,6 +194,10 @@ const create = (op) => {
 
         if (op.options.hasOwnProperty('rocketChat')) {
             op.rocketChat.options = op.options.rocketChat;
+        }
+
+        if (op.options.hasOwnProperty('googleChat')) {
+            op.googleChat.options = op.options.googleChat;
         }
 
         // need user action to request permission

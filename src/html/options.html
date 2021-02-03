@@ -318,6 +318,7 @@
                                                     Webhook Url
                                                 </div>
                                             </div>
+                                            <div data-gc-rooms data-draggable></div>
                                             <div class="row mt-4">
                                                 <div class="col">
                                                     <button type="button" class="btn btn-success" data-gc-room data-toggle="modal" data-target="#gc-modal-room">
@@ -1755,8 +1756,12 @@
 <template data-template="gc-room">
     <div class="row mb-2" draggable="true">
         <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
-        <div class="col-3"></div>
-        <div class="col-6"></div>
+        <div class="col-3">
+            <input type="text" name="gc-room-name[]" class="form-control" value="%gcrName%" />
+        </div>
+        <div class="col-6">
+            <input type="url" name="gc-room-url[]" class="form-control" value="%gcrUrl%" pattern="^https:\/\/chat\.googleapis\.com\/.*" />
+        </div>
         <div class="col-2 custom-control custom-switch">
             <input type="checkbox" class="custom-control-input" name="gc-room-delete[]" id="gc-room-delete-%gcrUuid%" value="%gcrUuid%" />
             <label class="custom-control-label" for="gc-room-delete-%gcrUuid%">Delete</label>
@@ -1774,7 +1779,6 @@
         </div>
     </div>
 </template>
-<template data-template="gc-message"></template>
 <div class="modal" tabindex="-1" role="dialog" id="rc-modal-user">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -1885,7 +1889,7 @@
                         <div class="alert alert-info">
                             <ol>
                                 <li>Open Google Chat</li>
-                                <li>Click on the root name</li>
+                                <li>Click on the room name</li>
                                 <li>Choose "Manage webhooks"</li>
                                 <li>Create new webhook</li>
                                 <li>Copy the webhook url</li>
@@ -1897,13 +1901,13 @@
                     <div class="row">
                         <label for="gc-room-name" class="col-form-label col-4">Name</label>
                         <div class="col-6">
-                            <input type="text" name="name" id="gc-room-name" class="form-control" />
+                            <input type="text" name="name" id="gc-room-name" required class="form-control" />
                         </div>
                     </div>
                     <div class="row mt-2">
                         <label for="gc-room-url" class="col-form-label col-4">Webhook Url</label>
                         <div class="col-6">
-                            <input type="url" name="name" id="gc-room-url" pattern="https:\/\/chat\.googleapis\.com\/.*" class="form-control" />
+                            <input type="url" name="url" id="gc-room-url" required pattern="https:\/\/chat\.googleapis\.com\/.*" class="form-control" />
                         </div>
                     </div>
                 </form>

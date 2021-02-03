@@ -256,7 +256,7 @@ const migrateTo0_5_0 = (options) => {
     options.jira.checklists = checklists;
     options.modules['googleChat'] = false;
     options.googleChat = {
-        room: {},
-        message: {}
+        rooms: {},
+        messages: {}
     };
 };
