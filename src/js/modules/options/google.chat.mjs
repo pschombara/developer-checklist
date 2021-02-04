@@ -17,6 +17,7 @@ export class GoogleChat extends SuperGoogleChat {
 
         this._form = {
             room: document.querySelector('#gc-room'),
+            rooms: document.querySelector('form[data-gc-rooms]'),
         }
 
         this._content = {
@@ -26,6 +27,13 @@ export class GoogleChat extends SuperGoogleChat {
 
     init() {
         this._buttons.addRoom.addEventListener('click', () => { this.addRoom() });
+
+
+        for (let uuid of Object.keys(this.options.rooms)) {
+            let room = this.options.rooms[uuid];
+
+            this.createRoom(room.name, room.url, uuid);
+        }
     }
 
     addRoom() {
@@ -42,14 +50,35 @@ export class GoogleChat extends SuperGoogleChat {
         this._buttons.closeRoom.click();
     }
 
-    createRoom(name, webhookUrl) {
+    createRoom(name, webhookUrl, uuid = '') {
         const elem = document.createElement('div');
 
         elem.innerHTML = this._templates.room.innerHTML;
-        elem.innerHTML = elem.innerHTML.replace(new RegExp('%gcrUuid%', 'g'), Uuid.generate());
+        elem.innerHTML = elem.innerHTML.replace(new RegExp('%gcrUuid%', 'g'), '' !== uuid ? uuid : Uuid.generate());
         elem.innerHTML = elem.innerHTML.replace(new RegExp('%gcrName%', 'g'), name);
         elem.innerHTML = elem.innerHTML.replace(new RegExp('%gcrUrl%', 'g'), webhookUrl);
 
         this._content.room.append(elem.children[0]);
+    }
+
+    save() {
+        let formData = new FormData(this._form.rooms);
+
+        let rooms = {};
+        let messages = {};
+
+        for (let uuid of formData.getAll('gc-room[]')) {
+            if (false === formData.has(`gc-room[delete][${uuid}]`)) {
+                rooms[uuid] = {
+                    name: formData.get(`gc-room[name][${uuid}]`),
+                    url: formData.get(`gc-room[url][${uuid}]`),
+                };
+            }
+        }
+
+        return {
+            rooms: rooms,
+            messages: messages
+        };
     }
 }

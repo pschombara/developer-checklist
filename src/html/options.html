@@ -318,7 +318,7 @@
                                                     Webhook Url
                                                 </div>
                                             </div>
-                                            <div data-gc-rooms data-draggable></div>
+                                            <form data-gc-rooms data-draggable></form>
                                             <div class="row mt-4">
                                                 <div class="col">
                                                     <button type="button" class="btn btn-success" data-gc-room data-toggle="modal" data-target="#gc-modal-room">
@@ -1757,13 +1757,14 @@
     <div class="row mb-2" draggable="true">
         <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
         <div class="col-3">
-            <input type="text" name="gc-room-name[]" class="form-control" value="%gcrName%" />
+            <input type="text" name="gc-room[name][%gcrUuid%]" class="form-control" value="%gcrName%" />
+            <input type="hidden" name="gc-room[]" value="%gcrUuid%" />
         </div>
         <div class="col-6">
-            <input type="url" name="gc-room-url[]" class="form-control" value="%gcrUrl%" pattern="^https:\/\/chat\.googleapis\.com\/.*" />
+            <input type="url" name="gc-room[url][%gcrUuid%]" class="form-control" value="%gcrUrl%" pattern="^https:\/\/chat\.googleapis\.com\/.*" />
         </div>
         <div class="col-2 custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" name="gc-room-delete[]" id="gc-room-delete-%gcrUuid%" value="%gcrUuid%" />
+            <input type="checkbox" class="custom-control-input" name="gc-room[delete][%gcrUuid%]" id="gc-room-delete-%gcrUuid%" value="%gcrUuid%" />
             <label class="custom-control-label" for="gc-room-delete-%gcrUuid%">Delete</label>
         </div>
     </div>
