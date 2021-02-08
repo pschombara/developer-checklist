@@ -149,6 +149,7 @@ export class Options {
         this.options.jira = this.jira.save();
         this.options.jenkins = this.jenkins.save();
         this.options.rocketChat = this.rocketChat.options;
+        this.options.googleChat = this.googleChat.save();
         this.options.cheatSheet = this.cheatSheet.save();
         this.options.gitLab = this.gitLab.save();
         this.options.modules = this.modules.save();

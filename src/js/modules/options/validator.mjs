@@ -100,7 +100,7 @@ const checkChecklistsBtn = (data, key) => {
     }
 
     return errors;
-}
+};
 
 const checkChecklists = (data, key, enabled, parentKey) => {
     let errors = [];
@@ -133,7 +133,7 @@ const checkChecklists = (data, key, enabled, parentKey) => {
     }
 
     return errors;
-}
+};
 
 const checkJira = (data) => {
     const requiredKeys = ['url', 'cleanup', 'maximumIssues', 'boards', 'checklists'];
@@ -188,7 +188,7 @@ const checkJira = (data) => {
     });
 
     return errors;
-}
+};
 
 const checkRocketChat = (data) => {
     const requiredKeys = [
@@ -212,7 +212,21 @@ const checkRocketChat = (data) => {
     };
 
     return checkObjectContainsKeys(data, requiredKeys, types, 'rocketChat');
-}
+};
+
+const checkGoogleChat = (data) => {
+    const requiredKeys = [
+        'rooms',
+        'messages',
+    ];
+
+    const types = {
+        rooms: 'object',
+        messages: 'object',
+    }
+
+    return checkObjectContainsKeys(data, requiredKeys, types, 'googleChat');
+};
 
 const checkCheatSheet = (data) => {
     if (false === Array.isArray(data)) {
@@ -233,7 +247,7 @@ const checkCheatSheet = (data) => {
     });
 
     return errors;
-}
+};
 
 const checkModules = (data) => {
     const requiredKeys = [
@@ -343,6 +357,7 @@ const check = {
     jenkins: checkJenkins,
     jira: checkJira,
     rocketChat: checkRocketChat,
+    googleChat: checkGoogleChat,
     cheatSheet: checkCheatSheet,
     modules: checkModules,
     gitLab: checkGitLab,
@@ -367,7 +382,7 @@ const checkIsObject = (data) => {
 
 const checkRootSchema = (data) => {
     let errors = [];
-    let requiredOptions = ['jenkins', 'jira', 'rocketChat', 'cheatSheet', 'modules', 'gitLab', 'version'];
+    let requiredOptions = ['jenkins', 'jira', 'googleChat', 'rocketChat', 'cheatSheet', 'modules', 'gitLab', 'version'];
 
     for (let option of requiredOptions) {
         if (false === data.hasOwnProperty(option)) {
