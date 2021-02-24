@@ -4,31 +4,29 @@ export class Modules extends SuperModules{
     constructor() {
         super();
 
-        this._toogles = {
+        this._toggles = {
             jenkins: document.querySelector('#moduleJenkins'),
             cheatSheet: document.querySelector('#moduleCheatSheet'),
-            rocketChat: document.querySelector('#moduleRocketChat'),
-            googleChat: document.querySelector('#moduleGoogleChat'),
+            chat: document.querySelector('#moduleChat'),
             gitLab: document.querySelector('#moduleGitLab'),
         }
 
         this._tabs = {
             jenkins: document.querySelector('#jenkins-tab'),
             cheatSheet: document.querySelector('#cheat-sheet-tab'),
-            rocketChat: document.querySelector('#rocket-chat-tab'),
-            googleChat: document.querySelector('#google-chat-tab'),
+            chat: document.querySelector('#chat-tab'),
             gitLab: document.querySelector('#gitLab-tab'),
         }
     }
 
     init() {
         Object.keys(this.options).forEach((module) => {
-            this._toogles[module].addEventListener('change', () => {
-                this.options[module] = this._toogles[module].checked;
+            this._toggles[module].addEventListener('change', () => {
+                this.options[module] = this._toggles[module].checked;
                 this.changeVisibility(module);
             });
 
-            this._toogles[module].checked = this.options[module];
+            this._toggles[module].checked = this.options[module];
 
             this.changeVisibility(module);
         });

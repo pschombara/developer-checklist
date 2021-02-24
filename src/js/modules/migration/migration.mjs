@@ -254,9 +254,55 @@ const migrateTo0_5_0 = (options) => {
     });
 
     options.jira.checklists = checklists;
-    options.modules['googleChat'] = false;
-    options.googleChat = {
-        rooms: {},
-        messages: {}
-    };
+
+    options.modules['chat'] = false;
+    options.chat = {
+        rocket: {
+            enabled: options.modules['rocketChat'],
+            rooms: {
+                'fc8f6d32-dcde-486f-a07c-8e1604e022b4': {
+                    name: 'internal',
+                    url: options.rocketChat.internalRoom,
+                },
+                'a6676206-adc4-4863-bcee-789b71a177d8': {
+                    name: 'external',
+                    url: options.rocketChat.externalRoom,
+                }
+            },
+            messages: {},
+            url: options.rocketChat.url,
+            authToken: options.rocketChat.authToken,
+            userId: options.rocketChat.userId
+        },
+        google: {
+            enabled: false,
+            rooms: {},
+            messages: {}
+        },
+        discord: {
+            enabled: false,
+            rooms: {},
+            messages: {}
+        }
+    }
+
+    for (let type of ['internal', 'external']) {
+        if ('' !== options.rocketChat[`${type}Room`]) {
+            options.chat.rocket.rooms[Uuid.generate()] = {
+                name: type,
+                url: options.rocketChat[`${type}Room`],
+            }
+        }
+
+        if ('' !== options.rocketChat[`${type}Message`]) {
+            options.chat.rocket.rooms[Uuid.generate()] = {
+                name: type,
+                message: options.rocketChat[`${type}Message`],
+            }
+        }
+    }
+
+    delete options.modules['googleChat'];
+    delete options.modules['rocketChat'];
+    delete options.rocketChat;
 };

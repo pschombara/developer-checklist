@@ -188,14 +188,47 @@
             <div class="tab-pane fade" id="chat" role="tabpanel">
                 <div class="card-body">
                     <div class="container-fluid">
-                        <div class="row"><div class="col">TODO</div></div>
+                        <div class="row mt-1">
+                            <div class="col">
+                                <h4><i class="fas fa-comment"></i> Chat Notifications</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <select class="form-control" disabled>
+                                    <option value="google-chat" selected>Google Chat</option>
+                                    <option value="rocket-chat">Rocket-Chat</option>
+                                    <option value="discord" disabled>Discord(Coming Soon..)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col">
+                                <input type="text" class="form-control" placeholder="Room" list="chatRoomList" />
+                                <datalist id="chatRoomList"></datalist>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col input-group">
+                                <input type="text" class="form-control" placeholder="Message" list="chatMessageList" />
+                                <datalist id="chatMessageList"></datalist>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-success"><i class="fas fa-play"></i></button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="tab-pane fade" id="cheat-sheet" role="tabpanel">
                 <div class="card-body">
                     <div class="container-fluid">
-                        <div class="row">
+                        <div class="row mt-1">
+                            <div class="col">
+                                <h4><i class="fas fa-terminal"></i> Cheat Sheet</h4>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
                             <div class="col">
                                 <input class="form-control" list="cheatSheetList"/>
                                 <datalist id="cheatSheetList" data-cheat-sheet-labels></datalist>

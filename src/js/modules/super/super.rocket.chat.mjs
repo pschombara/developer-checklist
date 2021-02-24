@@ -4,6 +4,8 @@ export class SuperRocketChat {
             url: '',
             authToken: '',
             userId: '',
+            rooms: [],
+            messages: [],
             internalRoom: '',
             externalRoom: '',
             internalMessage: '',

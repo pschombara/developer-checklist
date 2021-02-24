@@ -1,6 +1,5 @@
 import {Validator} from "./options/validator";
 import {ConfirmationPrompt, SuccessPrompt} from "./sweet";
-import {OptionsRocketChat} from "./options/rocket.chat";
 import {Jira} from "./options/jira";
 import {Storage} from "./storage";
 import {Config} from "./options/config";
@@ -9,7 +8,7 @@ import {Jenkins} from "./options/jenkins";
 import {Modules} from './options/modules';
 import {GitLab} from './options/gitLab';
 import {Migration} from './migration/migration';
-import {GoogleChat} from './options/google.chat.mjs';
+import {Chat} from './options/chat.mjs';
 
 export class Options {
     constructor() {
@@ -17,8 +16,7 @@ export class Options {
         this._jira = new Jira();
         this._validator = new Validator();
         this._config = new Config(this._storage, this._validator);
-        this._rocketChat = new OptionsRocketChat();
-        this._googleChat = new GoogleChat();
+        this._chat = new Chat();
         this._cheatSheet = new CheatSheet();
         this._jenkins = new Jenkins();
         this._gitLab = new GitLab();
@@ -62,12 +60,8 @@ export class Options {
         return this._jira;
     }
 
-    get googleChat() {
-        return this._googleChat;
-    }
-
-    get rocketChat() {
-        return this._rocketChat;
+    get chat() {
+        return this._chat;
     }
 
     get gitLab() {
@@ -105,7 +99,6 @@ export class Options {
                 this.config.init();
                 this.gitLab.init();
                 this.jira.init();
-                this.googleChat.init();
 
                 this._buttonRestoreOptions.addEventListener('click', () => {
                     ConfirmationPrompt.fire({
@@ -148,8 +141,6 @@ export class Options {
         this.options = {};
         this.options.jira = this.jira.save();
         this.options.jenkins = this.jenkins.save();
-        this.options.rocketChat = this.rocketChat.options;
-        this.options.googleChat = this.googleChat.save();
         this.options.cheatSheet = this.cheatSheet.save();
         this.options.gitLab = this.gitLab.save();
         this.options.modules = this.modules.save();
@@ -193,18 +184,9 @@ const create = (op) => {
             op.jira.options = op.options.jira;
         }
 
-        if (op.options.hasOwnProperty('rocketChat')) {
-            op.rocketChat.options = op.options.rocketChat;
+        if (op.options.hasOwnProperty('chat')) {
+            op.chat.options = op.options.chat;
         }
-
-        if (op.options.hasOwnProperty('googleChat')) {
-            op.googleChat.options = op.options.googleChat;
-        }
-
-        // need user action to request permission
-        document.querySelector('#rocket-chat-tab').addEventListener('click', () => {
-            op.rocketChat.init();
-        });
 
         resolve();
     });

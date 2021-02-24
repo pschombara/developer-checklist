@@ -1,11 +1,11 @@
-export class SuperModules {
+export class SuperChat {
     constructor() {
         this._options = {
-            jenkins: false,
-            cheatSheet: false,
-            chat: false,
-            gitLab: false,
+            rooms: {},
+            messages: {}
         }
+
+        this._name = '';
     }
 
     get options() {
@@ -18,5 +18,9 @@ export class SuperModules {
                 this._options[key] = options[key];
             }
         });
+    }
+
+    get name() {
+        return this._name;
     }
 }
