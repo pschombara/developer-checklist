@@ -1,11 +1,13 @@
 export class SuperChat {
-    constructor() {
+    constructor(name, identifier) {
         this._options = {
             rooms: {},
             messages: {}
         }
 
-        this._name = '';
+        this._name = name;
+        this._identifier = identifier;
+        this._content = document.querySelector(`[data-chat="${this._identifier}"]`);
     }
 
     get options() {
@@ -22,5 +24,13 @@ export class SuperChat {
 
     get name() {
         return this._name;
+    }
+
+    changeVisibility(identifier) {
+        if (identifier === this._identifier) {
+            this._content.classList.remove('d-none');
+        } else {
+            this._content.classList.add('d-none');
+        }
     }
 }

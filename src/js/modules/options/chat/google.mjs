@@ -1,10 +1,8 @@
 import {SuperChat} from '../../super/super.chat.mjs';
 
-export class Google extends SuperChat{
+export class Google extends SuperChat {
     constructor() {
-        super();
-
-        this._name = 'Google Chat';
+        super('Google Chat', 'google');
     }
 
     save() {

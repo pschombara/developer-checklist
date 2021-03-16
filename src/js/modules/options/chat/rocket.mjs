@@ -1,10 +1,8 @@
 import {SuperChat} from '../../super/super.chat.mjs';
 
-export class Rocket extends SuperChat{
+export class Rocket extends SuperChat {
     constructor() {
-        super();
-
-        this._name = 'Rocket Chat';
+        super('Rocket Chat', 'rocket');
 
         this._options['url'] = '';
         this._options['authToken'] = '';

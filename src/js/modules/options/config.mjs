@@ -26,8 +26,8 @@ export class Config {
         let elem = document.createElement('a');
 
         // for security reasons reset user id and authToken
-        options.rocketChat.userId = '';
-        options.rocketChat.authToken = '';
+        options.chat.rocket.userId = '';
+        options.chat.rocket.authToken = '';
 
         elem.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(options)));
         elem.setAttribute('download', 'jira-dev-checklist-options');
@@ -109,7 +109,11 @@ const uploadFile = (file, storage, validator, migration) =>  {
             }
 
             storage.loadOptions().then(stored => {
-                if (0 !== Object.keys(stored).length) {
+                if (0 !== Object.keys(stored).length
+                    && stored.hasOwnProperty('chat')
+                    && stored.chat.hasOwnProperty('rocket')
+                ) {
+                    console.log(data.chat, stored)
                     data.chat.rocket.userId = stored.chat.rocket.userId;
                     data.chat.rocket.authToken = stored.chat.rocket.authToken;
                 }

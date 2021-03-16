@@ -99,6 +99,7 @@ export class Options {
                 this.config.init();
                 this.gitLab.init();
                 this.jira.init();
+                this.chat.init();
 
                 this._buttonRestoreOptions.addEventListener('click', () => {
                     ConfirmationPrompt.fire({

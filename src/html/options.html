@@ -232,7 +232,16 @@
                                 <h5 class="col"><i class="fas fa-comment"></i> Chat</h5>
                             </div>
 
-                            <div class="accordion mt-2" data-accordion="googleChat" id="googleChatAccordion">
+                            <div class="row my-3">
+                                <label for="chatClient" class="col-2">Client</label>
+                                <div class="col-6">
+                                    <select class="form-control" id="chatClient">
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="accordion mt-2" data-chat="google" data-accordion="googleChat" id="googleChatAccordion">
                                 <div class="card">
                                     <div class="card-header">
                                         <h2 class="mb-0">
@@ -267,6 +276,8 @@
                                     <div class="collapse" data-collapse="googleChatMessages" data-parent="#googleChatAccordion">TODO</div>
                                 </div>
                             </div>
+                            <div class="accordion mt-2 d-none" data-chat="rocket" data-accordion="rocketChat" id="rocketChatAccordion"></div>
+                            <div class="accordion mt-2 d-none" data-chat="discord" data-accordion="discord" id="discordAccordion"></div>
                         </div>
                     </div>
                 </div>

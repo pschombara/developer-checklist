@@ -9,6 +9,8 @@ export class Chat {
             rocket: new Rocket(),
             discord: new Discord(),
         }
+
+        this._chatClient = document.querySelector('#chatClient');
     }
 
     set options (options) {
@@ -16,6 +18,22 @@ export class Chat {
             if (this._chats.hasOwnProperty(key)) {
                 this._chats[key].options = options[key];
             }
+        });
+    }
+
+    init() {
+        Object.keys(this._chats).forEach(key => {
+           let option = document.createElement('option');
+           option.value = key;
+           option.innerHTML = this._chats[key].name;
+
+           this._chatClient.appendChild(option);
+        });
+
+        this._chatClient.addEventListener('change', () => {
+            Object.keys(this._chats).forEach(key => {
+                this._chats[key].changeVisibility(this._chatClient.value);
+            });
         });
     }
 
