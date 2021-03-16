@@ -110,8 +110,8 @@ const uploadFile = (file, storage, validator, migration) =>  {
 
             storage.loadOptions().then(stored => {
                 if (0 !== Object.keys(stored).length) {
-                    data.rocketChat.userId = stored.rocketChat.userId;
-                    data.rocketChat.authToken = stored.rocketChat.authToken;
+                    data.chat.rocket.userId = stored.chat.rocket.userId;
+                    data.chat.rocket.authToken = stored.chat.rocket.authToken;
                 }
 
                 storage.write('options', data);

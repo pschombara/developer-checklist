@@ -144,6 +144,7 @@ export class Options {
         this.options.cheatSheet = this.cheatSheet.save();
         this.options.gitLab = this.gitLab.save();
         this.options.modules = this.modules.save();
+        this.options.chat = this.chat.save();
         this.options.version = this._migration.currentVersion;
 
         if (false === this.validator.validate(this.options)) {

@@ -1,14 +1,13 @@
 import {SuperMigration} from './super-migration';
 import {Uuid} from '../options/uuid';
 import {StorageChecklist} from './storage-checklist';
+import * as semver from 'semver';
 
 export class Migration extends SuperMigration {
     constructor() {
         super();
         this._migrations = {
             '0.3.1': migrateTo0_4_0,
-            '0.4.0': '0.4.1',
-            '0.4.1': '0.4.2',
             '0.4.2': migrateTo0_5_0,
         };
 
@@ -20,21 +19,19 @@ export class Migration extends SuperMigration {
             options.version = '0.3.1';
         }
 
-        if (options.version !== this.currentVersion) {
-            Object.keys(this._migrations).forEach((version) => {
-                if (options.version === version) {
-                    if ('function' === typeof this._migrations[version]) {
-                        this._migrations[version](options);
-                    } else if ('string' === typeof this._migrations['version']) {
-                        options.version = this._migrations[version];
-                    }
-                }
-            });
-
-            // Finally set to new version
-            options.version = this.currentVersion;
-            this.migrated = true;
+        if (semver.eq(this.currentVersion, options.version)) {
+            return options;
         }
+
+        Object.keys(this._migrations).forEach((version) => {
+            if (semver.lte(options.version, version)) {
+                this._migrations[version](options);
+            }
+        });
+
+        // Finally set to new version
+        options.version = this.currentVersion;
+        this.migrated = true;
 
         this._storageMigration.migrate();
 

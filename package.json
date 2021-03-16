@@ -47,5 +47,8 @@
     "browserslist": [
         "last 2 versions",
         "> 2%"
-    ]
+    ],
+    "dependencies": {
+        "semver": "^7.3.4"
+    }
 }

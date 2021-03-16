@@ -190,6 +190,11 @@ const checkJira = (data) => {
     return errors;
 };
 
+const checkChat = data => {
+ // todo
+    return [];
+}
+
 const checkRocketChat = (data) => {
     const requiredKeys = [
         'url',
@@ -253,16 +258,14 @@ const checkModules = (data) => {
     const requiredKeys = [
         'jenkins',
         'cheatSheet',
-        'rocketChat',
-        'googleChat',
+        'chat',
         'gitLab',
     ];
 
     const types = {
         jenkins: 'boolean',
         cheatSheet: 'boolean',
-        rocketChat: 'boolean',
-        googleChat: 'boolean',
+        chat: 'boolean',
         gitLab: 'boolean',
     };
 
@@ -356,8 +359,7 @@ const checkVersion = (data) => {
 const check = {
     jenkins: checkJenkins,
     jira: checkJira,
-    rocketChat: checkRocketChat,
-    googleChat: checkGoogleChat,
+    chat: checkChat,
     cheatSheet: checkCheatSheet,
     modules: checkModules,
     gitLab: checkGitLab,
@@ -382,7 +384,7 @@ const checkIsObject = (data) => {
 
 const checkRootSchema = (data) => {
     let errors = [];
-    let requiredOptions = ['jenkins', 'jira', 'googleChat', 'rocketChat', 'cheatSheet', 'modules', 'gitLab', 'version'];
+    let requiredOptions = ['jenkins', 'jira', 'chat', 'cheatSheet', 'modules', 'gitLab', 'version'];
 
     for (let option of requiredOptions) {
         if (false === data.hasOwnProperty(option)) {
