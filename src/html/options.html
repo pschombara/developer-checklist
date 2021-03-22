@@ -235,14 +235,20 @@
                             <div class="row my-3">
                                 <label for="chatClient" class="col-2">Client</label>
                                 <div class="col-6">
-                                    <select class="form-control" id="chatClient">
-
-                                    </select>
+                                    <select class="form-control" id="chatClient"></select>
                                 </div>
                             </div>
 
-                            <div class="accordion mt-2" data-chat="google" data-accordion="googleChat" id="googleChatAccordion">
+                            <form class="accordion mt-2" data-chat="google" data-accordion="googleChat" id="googleChatAccordion">
                                 <div class="card">
+                                    <div class="row my-3">
+                                        <div class="col">
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" name="enabled" id="chatGoogleEnabled" />
+                                                <label class="custom-control-label" for="chatGoogleEnabled">Aktiv</label>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="card-header">
                                         <h2 class="mb-0">
                                             <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='googleChatRooms']">Rooms</button>
@@ -252,11 +258,9 @@
                                         <div class="card-body">
                                             <div class="row mb-2">
                                                 <div class="col-3 offset-1 text-center font-weight-bold">Name</div>
-                                                <div class="col-6 text-center font-weight-bold">
-                                                    Webhook Url
-                                                </div>
+                                                <div class="col-6 text-center font-weight-bold">Webhook Url</div>
                                             </div>
-                                            <form data-gc-rooms data-draggable></form>
+                                            <div data-gc-rooms data-draggable></div>
                                             <div class="row mt-4">
                                                 <div class="col">
                                                     <button type="button" class="btn btn-success" data-gc-room data-toggle="modal" data-target="#gc-modal-room">
@@ -273,13 +277,28 @@
                                             <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='googleChatMessages']">Messages</button>
                                         </h2>
                                     </div>
-                                    <div class="collapse" data-collapse="googleChatMessages" data-parent="#googleChatAccordion">TODO</div>
+                                    <div class="collapse" data-collapse="googleChatMessages" data-parent="#googleChatAccordion">
+                                        <div class="card-body">
+                                            <div class="row mb-2">
+                                                <div class="col-3 offset-1 text-center font-weight-bold">Name</div>
+                                                <div class="col-6 text-center font-weight-bold">Message</div>
+                                            </div>
+                                            <div data-gc-messages data-draggable></div>
+                                            <div class="row mt-4">
+                                                <div class="col">
+                                                    <button type="button" class="btn btn-success" data-gc-message data-toggle="modal" data-target="#gc-modal-message">
+                                                        <i class="fas fa-plus"></i> Add message
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="accordion mt-2 d-none" data-chat="rocket" data-accordion="rocketChat" id="rocketChatAccordion"></div>
-                            <div class="accordion mt-2 d-none" data-chat="discord" data-accordion="discord" id="discordAccordion"></div>
-                        </div>
+                            </form>
+                            <form class="accordion mt-2 d-none" data-chat="rocket" data-accordion="rocketChat" id="rocketChatAccordion"></form>
+                            <form class="accordion mt-2 d-none" data-chat="discord" data-accordion="discord" id="discordAccordion"></form>
                     </div>
+                </div>
                 </div>
                 <div class="tab-pane fade" id="jenkins" role="tabpanel">
                     <div class="card">
@@ -1712,8 +1731,17 @@
 <template data-template="gc-message">
     <div class="row mb-2" draggable="true">
         <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
-        <div class="col-3"></div>
-        <div class="col-6"></div>
+        <div class="col-3">
+            <input type="text" name="gc-message[name][%gcmUuid%]" class="form-control" value="%gcmName%" />
+            <input type="hidden" name="gc-message[]" value="%gcmUuid%" />
+        </div>
+        <div class="col-5">
+            <div>%gcmContentShort%</div>
+            <input type="hidden" name="gc-message[content][%gcmUuid%]" value="%gcmContent%" />
+        </div>
+        <div class="col-1">
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#gc-modal-message"><i class="fas fa-pencil"></i></button>
+        </div>
         <div class="col-2 custom-control custom-switch">
             <input type="checkbox" class="custom-control-input" name="gc-message-delete[]" id="gc-message-delete-%gcmUuid%" value="%gcmUuid%" />
             <label class="custom-control-label" for="gc-message-delete-%gcmUuid%">Delete</label>
@@ -1816,7 +1844,7 @@
     </div>
 </div>
 <div class="modal" tabindex="-1" role="dialog" id="gc-modal-room">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Add room</h5>
@@ -1856,6 +1884,46 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-gc-dismiss="room" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" data-gc-add="room"><i class="fas fa-plus"></i> Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" tabindex="-1" role="dialog" id="gc-modal-message">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add room</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="alert alert-info">
+                        </div>
+                    </div>
+                </div>
+                <form id="gc-message">
+                    <div class="row">
+                        <label for="gc-message-name" class="col-form-label col-4">Name</label>
+                        <div class="col-6">
+                            <input type="text" name="name" id="gc-message-name" required class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label for="gc-message-content" class="col-form-label col-4">Message</label>
+                        <div class="col-6">
+                            <textarea name="content" id="gc-message-content" required class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <input type="hidden" name="identifier" value="" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-gc-dismiss="room" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-gc-add="message"><i class="fas fa-plus"></i> Add</button>
+                <button type="button" class="btn btn-primary" data-gc-save="message"><i class="fas fa-save"></i> Save</button>
             </div>
         </div>
     </div>

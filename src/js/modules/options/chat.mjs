@@ -22,18 +22,19 @@ export class Chat {
     }
 
     init() {
-        Object.keys(this._chats).forEach(key => {
-           let option = document.createElement('option');
-           option.value = key;
-           option.innerHTML = this._chats[key].name;
+        for (let [key, chat] of Object.entries(this._chats)) {
+            let option = document.createElement('option');
+            option.value = key;
+            option.innerHTML = chat.name;
 
-           this._chatClient.appendChild(option);
-        });
+            this._chatClient.appendChild(option);
+            chat.init();
+        }
 
         this._chatClient.addEventListener('change', () => {
-            Object.keys(this._chats).forEach(key => {
-                this._chats[key].changeVisibility(this._chatClient.value);
-            });
+            for (let chat of Object.values(this._chats)) {
+                chat.changeVisibility(this._chatClient.value);
+            }
         });
     }
 

@@ -19,7 +19,8 @@ export class Rocket extends SuperChat {
             },
             url: '',
             authToken: '',
-            userId: ''
+            userId: '',
+            enabled: false,
         };
     }
 }

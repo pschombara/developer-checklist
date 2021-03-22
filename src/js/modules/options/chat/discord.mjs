@@ -12,7 +12,8 @@ export class Discord extends SuperChat {
             },
             messages: {
 
-            }
+            },
+            enabled: false,
         };
     }
 }

@@ -2,7 +2,8 @@ export class SuperChat {
     constructor(name, identifier) {
         this._options = {
             rooms: {},
-            messages: {}
+            messages: {},
+            enabled: false,
         }
 
         this._name = name;
@@ -32,5 +33,8 @@ export class SuperChat {
         } else {
             this._content.classList.add('d-none');
         }
+    }
+
+    init() {
     }
 }
