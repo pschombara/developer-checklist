@@ -28,10 +28,30 @@ export class Google extends SuperChat {
             rooms: document.querySelector('[data-gc-rooms]'),
             messages: document.querySelector('[data-gc-messages]'),
         }
+
+        this._modal = {
+            message: document.querySelector('#gc-modal-message'),
+        }
     }
 
-    openMessageModal() {
-        
+    openMessageModal(e) {
+        const gc = e.data.gc;
+        const saveButton = gc._modal.message.querySelector('[data-gc-save="message"]')
+        const addButton = gc._modal.message.querySelector('[data-gc-add="message"]')
+        const name = gc._modal.message.querySelector('input[name="name"]');
+        const msg = gc._modal.message.querySelector('input[name="content"]');
+        const identifier = gc._modal.message.querySelector('input[name="identifier"]');
+        const trigger = e.relatedTarget;
+
+        if ('new' === trigger.getAttribute('data-message')) {
+            saveButton.classList.add('d-none');
+            addButton.classList.remove('d-none');
+            gc._form.message.reset();
+        } else {
+            saveButton.classList.remove('d-none');
+            addButton.classList.add('d-none');
+            identifier.value = trigger.getAttribute('data-message');
+        }
     }
 
     addRoom() {
@@ -141,5 +161,8 @@ export class Google extends SuperChat {
         }
 
         this._form.data.querySelector('[name="enabled"]').checked = this.options.enabled;
+
+        // open message modal
+        $(this._modal.message).on('show.bs.modal', {gc: this}, this.openMessageModal);
     }
 }

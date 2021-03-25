@@ -286,7 +286,7 @@
                                             <div data-gc-messages data-draggable></div>
                                             <div class="row mt-4">
                                                 <div class="col">
-                                                    <button type="button" class="btn btn-success" data-gc-message data-toggle="modal" data-target="#gc-modal-message">
+                                                    <button type="button" class="btn btn-success" data-gc-message data-toggle="modal" data-target="#gc-modal-message" data-message="new">
                                                         <i class="fas fa-plus"></i> Add message
                                                     </button>
                                                 </div>
@@ -1740,7 +1740,7 @@
             <input type="hidden" name="gc-message[content][%gcmUuid%]" value="%gcmContent%" />
         </div>
         <div class="col-1">
-            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#gc-modal-message"><i class="fas fa-pencil"></i></button>
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#gc-modal-message" data-message="%gcmUuid%"><i class="fas fa-pencil"></i></button>
         </div>
         <div class="col-2 custom-control custom-switch">
             <input type="checkbox" class="custom-control-input" name="gc-message-delete[]" id="gc-message-delete-%gcmUuid%" value="%gcmUuid%" />
@@ -1921,7 +1921,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-gc-dismiss="room" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-gc-dismiss="message" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" data-gc-add="message"><i class="fas fa-plus"></i> Add</button>
                 <button type="button" class="btn btn-primary" data-gc-save="message"><i class="fas fa-save"></i> Save</button>
             </div>
