@@ -10,7 +10,7 @@ export class Google extends SuperChat {
             closeRoom: document.querySelector('button[data-gc-dismiss="room"]'),
             addMessage: document.querySelector('button[data-gc-add="message"]'),
             saveMessage: document.querySelector('button[data-gc-save="message"]'),
-            closeMessage: document.querySelector('button[data-dismiss="message"]'),
+            closeMessage: document.querySelector('button[data-gc-dismiss="message"]'),
         }
 
         this._templates = {
@@ -39,7 +39,7 @@ export class Google extends SuperChat {
         const saveButton = gc._modal.message.querySelector('[data-gc-save="message"]')
         const addButton = gc._modal.message.querySelector('[data-gc-add="message"]')
         const name = gc._modal.message.querySelector('input[name="name"]');
-        const msg = gc._modal.message.querySelector('input[name="content"]');
+        const msg = gc._modal.message.querySelector('textarea[name="content"]');
         const identifier = gc._modal.message.querySelector('input[name="identifier"]');
         const trigger = e.relatedTarget;
 
@@ -51,6 +51,11 @@ export class Google extends SuperChat {
             saveButton.classList.remove('d-none');
             addButton.classList.add('d-none');
             identifier.value = trigger.getAttribute('data-message');
+
+            let row = trigger.closest('.row');
+
+            name.value = row.querySelector('input[type=text]').value;
+            msg.innerHTML = row.querySelector('input[data-msg-content]').value;
         }
     }
 
@@ -110,6 +115,14 @@ export class Google extends SuperChat {
         elem.innerHTML = elem.innerHTML.replace(new RegExp('%gcmUuid%', 'g'), '' !== uuid ? uuid : Uuid.generate());
         elem.innerHTML = elem.innerHTML.replace(new RegExp('%gcmName%', 'g'), name);
         elem.innerHTML = elem.innerHTML.replace(new RegExp('%gcmContent%', 'g'), content);
+
+        let shorten = content.substr(0, 20);
+
+        if (shorten.length < content.length) {
+            shorten += '...';
+        }
+
+        elem.innerHTML = elem.innerHTML.replace(new RegExp('%gcmContentShort%', 'g'), shorten);
 
         this._container.messages.append(elem.children[0]);
     }
