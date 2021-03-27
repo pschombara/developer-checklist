@@ -89,21 +89,6 @@
             <div class="tab-pane fade" id="special" role="tabpanel">
                 <div class="card-body">
                     <div class="container-fluid">
-                        <div data-module="rocketChat">
-                            <div class="row">
-                                <div class="col">
-                                    <h4><i class="fab fa-rocketchat"></i> Team planing</h4>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-3">
-                                    <button type="button" class="btn btn-primary btn-sm btn-block" data-chat="internal">Internal</button>
-                                </div>
-                                <div class="col-3">
-                                    <button type="button" class="btn btn-primary btn-sm btn-block" data-chat="external">External</button>
-                                </div>
-                            </div>
-                        </div>
                         <div data-module="jenkins">
                             <div class="row mt-3">
                                 <div class="col">
@@ -191,36 +176,43 @@
                                 <h4><i class="fas fa-comment"></i> Chat Notifications</h4>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col">
-                                <select class="form-control" id="chatClient" disabled>
-                                    <option value="google-chat" selected>Google Chat</option>
-                                    <option value="rocket-chat">Rocket-Chat</option>
-                                    <option value="discord" disabled>Discord(Coming Soon..)</option>
-                                </select>
+                        <div data-chat="content">
+                            <div class="row">
+                                <div class="col">
+                                    <select class="form-control" id="chatClient"></select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col">
-                                <input type="text" class="form-control" placeholder="Room" list="chatRoomList" />
-                                <datalist id="chatRoomList"></datalist>
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <input type="text" class="form-control" placeholder="Room" list="chatRoomList" />
+                                    <datalist id="chatRoomList"></datalist>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col input-group">
-                                <input type="text" class="form-control" placeholder="Message" list="chatMessageList" />
-                                <datalist id="chatMessageList"></datalist>
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-outline-success" id="chatSend" disabled><i class="fas fa-play"></i></button>
+                            <div class="row mt-2">
+                                <div class="col input-group">
+                                    <input type="text" class="form-control" placeholder="Message" list="chatMessageList" />
+                                    <datalist id="chatMessageList"></datalist>
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-outline-success" id="chatSend" disabled><i class="fas fa-play"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col input-group">
+                                    <select id="chatBoardList" data-select="board" class="custom-select"></select>
+                                    <input id="chatIssue" type="text" class="form-control" />
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-outline-success" id="chatAddIssue">Add</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-2">
-                            <div class="col input-group">
-                                <select id="chatBoardList" data-select="board" class="custom-select"></select>
-                                <input id="chatIssue" type="text" class="form-control" />
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-outline-success" id="chatAddIssue">Add</button>
+                        <div class="d-none" data-chat="info">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="alert alert-warning">
+                                        Please configure a chat client first. <a href="#" data-open="options" data-open-extra="chat">Configure chat</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

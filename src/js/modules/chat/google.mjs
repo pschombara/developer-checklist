@@ -4,5 +4,4 @@ export class Google extends SuperChat {
     constructor() {
         super('Google Chat', 'google');
     }
-
 }
