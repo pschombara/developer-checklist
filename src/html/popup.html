@@ -193,7 +193,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <select class="form-control" disabled>
+                                <select class="form-control" id="chatClient" disabled>
                                     <option value="google-chat" selected>Google Chat</option>
                                     <option value="rocket-chat">Rocket-Chat</option>
                                     <option value="discord" disabled>Discord(Coming Soon..)</option>
@@ -211,16 +211,16 @@
                                 <input type="text" class="form-control" placeholder="Message" list="chatMessageList" />
                                 <datalist id="chatMessageList"></datalist>
                                 <div class="input-group-append">
-                                    <button type="button" class="btn btn-outline-success"><i class="fas fa-play"></i></button>
+                                    <button type="button" class="btn btn-outline-success" id="chatSend" disabled><i class="fas fa-play"></i></button>
                                 </div>
                             </div>
                         </div>
                         <div class="row mt-2">
                             <div class="col input-group">
-                                <select data-select="board" class="custom-select"></select>
-                                <input type="text" class="form-control" />
+                                <select id="chatBoardList" data-select="board" class="custom-select"></select>
+                                <input id="chatIssue" type="text" class="form-control" />
                                 <div class="input-group-append">
-                                    <button type="button" class="btn btn-outline-success issue">Add</button>
+                                    <button type="button" class="btn btn-outline-success" id="chatAddIssue">Add</button>
                                 </div>
                             </div>
                         </div>

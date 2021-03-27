@@ -96,7 +96,7 @@ const checkOptions = (cl) => {
         }
     }
 
-    // todo chat
+    cl._chat.options = cl._options;
 
     if (cl._options.hasOwnProperty('modules')) {
         cl._modules.options = cl._options.modules;
@@ -192,6 +192,7 @@ const initOverview = (cl) => {
         });
     }
 
+    cl._chat.init();
     cl._jenkins.init();
     cl._gitLab.init();
     cheatSheet.init(cl._options.cheatSheet ? cl._options.cheatSheet : []);
