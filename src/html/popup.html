@@ -58,14 +58,12 @@
                         <div class="col font-weight-bold">Go to</div>
                     </div>
                     <div class="row mt-2">
-                        <div class="col-4">
-                            <select data-select="board" class="form-control"></select>
-                        </div>
-                        <div class="col-5">
+                        <div class="col-10 input-group">
+                            <select data-select="board" class="custom-select"></select>
                             <input id="issue" type="text" class="form-control" />
-                        </div>
-                        <div class="col-3">
-                            <button type="button" id="buttonIssue" class="btn btn-primary issue">GO!</button>
+                            <div class="input-group-append">
+                                <button type="button" id="buttonIssue" class="btn btn-primary issue">GO!</button>
+                            </div>
                         </div>
                     </div>
                     <div class="row mt-4" data-issues>
@@ -214,6 +212,15 @@
                                 <datalist id="chatMessageList"></datalist>
                                 <div class="input-group-append">
                                     <button type="button" class="btn btn-outline-success"><i class="fas fa-play"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col input-group">
+                                <select data-select="board" class="custom-select"></select>
+                                <input type="text" class="form-control" />
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-success issue">Add</button>
                                 </div>
                             </div>
                         </div>

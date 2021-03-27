@@ -1,11 +1,8 @@
-import {SuperRocketChat} from '../super/super.rocket.chat';
 import {Permissions} from "./permissions";
 import {Toast} from "../sweet";
 
-export class OptionsRocketChat extends SuperRocketChat{
+export class OptionsRocketChat{
     constructor() {
-        super();
-
         this._inputs = {
             url: document.querySelector('#rc-url'),
             internal: document.querySelector('#rc-channel-internal'),

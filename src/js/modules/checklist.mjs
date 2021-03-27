@@ -1,5 +1,4 @@
 import * as cheatSheet from './cheat-sheet.mjs';
-import {RocketChat} from "./rocket.chat";
 import {Storage} from "./storage";
 import {Jira} from "./jira";
 import {Jenkins} from "./jenkins";
@@ -9,6 +8,7 @@ import {GitLab} from './gitLab';
 import './jquery.mjs';
 import 'bootstrap';
 import {Migration} from './migration/migration';
+import {Chat} from './chat.mjs';
 
 export class Checklist {
     constructor(url) {
@@ -19,13 +19,13 @@ export class Checklist {
         this._issuePattern = new RegExp('[a-zA-Z]+-\\d+');
         this._identifier = '';
         this._options = {};
-        this._rocketChat = new RocketChat();
         this._storage = new Storage();
         this._jira = new Jira();
         this._jenkins = new Jenkins();
         this._gitLab = new GitLab();
         this._modules = new Modules();
         this._migration = new Migration();
+        this._chat = new Chat();
         this._issue = document.querySelector('#issue');
         this._url = url;
     }
@@ -96,9 +96,7 @@ const checkOptions = (cl) => {
         }
     }
 
-    if (cl._options.hasOwnProperty('rocketChat')) {
-        cl._rocketChat.options = cl._options.rocketChat;
-    }
+    // todo chat
 
     if (cl._options.hasOwnProperty('modules')) {
         cl._modules.options = cl._options.modules;
@@ -151,15 +149,19 @@ const initOverview = (cl) => {
            cl._browser.tabs.create({url: `${cl._options.jira.url}/browse/${select.value}-${cl._issue.value}`});
         });
 
-        cl._issue.addEventListener('keyup', (e) => {
+        buttonIssue.disabled = '' === cl._issue.value;
+
+        cl._issue.addEventListener('keyup', e => {
             e.preventDefault();
 
-            if ('Enter' === e.key) {
+            buttonIssue.disabled = '' === cl._issue.value;
+
+            if ('Enter' === e.key && '' !== cl._issue.value) {
                 buttonIssue.click();
             }
         });
 
-        cl._storage.loadIdentifiers().then((identifiers) => {
+        cl._storage.loadIdentifiers().then(identifiers => {
             let issues = 0;
 
             for (let identifier of identifiers) {
@@ -193,10 +195,6 @@ const initOverview = (cl) => {
     cl._jenkins.init();
     cl._gitLab.init();
     cheatSheet.init(cl._options.cheatSheet ? cl._options.cheatSheet : []);
-
-    cl._rocketChat.board = cl._options.jira.url;
-    cl._rocketChat.identifier = cl._identifier;
-    cl._rocketChat.init();
 };
 
 const initIssue = (cl) => {

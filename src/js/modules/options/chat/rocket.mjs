@@ -1,6 +1,6 @@
-import {SuperChat} from '../../super/super.chat.mjs';
+import {SuperChatOptions} from '../../super/super.chat.options.mjs';
 
-export class Rocket extends SuperChat {
+export class Rocket extends SuperChatOptions {
     constructor() {
         super('Rocket Chat', 'rocket');
 

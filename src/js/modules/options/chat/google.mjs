@@ -1,7 +1,7 @@
-import {SuperChat} from '../../super/super.chat.mjs';
+import {SuperChatOptions} from '../../super/super.chat.options.mjs';
 import {Uuid} from '../uuid.mjs';
 
-export class Google extends SuperChat {
+export class Google extends SuperChatOptions {
     constructor() {
         super('Google Chat', 'google');
 
@@ -116,7 +116,7 @@ export class Google extends SuperChat {
         elem.innerHTML = elem.innerHTML.replace(new RegExp('%gcmName%', 'g'), name);
         elem.innerHTML = elem.innerHTML.replace(new RegExp('%gcmContent%', 'g'), content);
 
-        let shorten = content.substr(0, 20);
+        let shorten = content.substr(0, 50);
 
         if (shorten.length < content.length) {
             shorten += '...';

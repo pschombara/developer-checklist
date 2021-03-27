@@ -76,11 +76,6 @@ export class Options {
         return this.storage.loadOptions().then(stored => {
             if (0 === Object.keys(stored).length) {
                 this.config.restore().then(stored => {
-                    if (this.options.hasOwnProperty('rocketChat')) {
-                        stored.rocketChat.userId = this.options.rocketChat.userId;
-                        stored.rocketChat.authToken = this.options.rocketChat.authToken;
-                    }
-
                     this.options = stored;
                     this.storage.write('options', stored);
                 });
@@ -109,11 +104,6 @@ export class Options {
                     }).then((result) => {
                         if (result.value) {
                             this.config.restore().then(options => {
-                                if (this.options.hasOwnProperty('rocketChat')) {
-                                    options.rocketChat.userId = this.options.rocketChat.userId;
-                                    options.rocketChat.authToken = this.options.rocketChat.authToken;
-                                }
-
                                 this.storage.write('options', options);
 
                                 SuccessPrompt.fire({

@@ -1,10 +1,6 @@
-import {SuperRocketChat} from "./super/super.rocket.chat";
-
-export class RocketChat extends SuperRocketChat
+export class RocketChat
 {
     constructor() {
-        super();
-
         this._btn = {
             internal: document.querySelector('[data-chat="internal"]'),
             external: document.querySelector('[data-chat="external"]'),
