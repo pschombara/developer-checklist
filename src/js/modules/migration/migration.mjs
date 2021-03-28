@@ -260,13 +260,27 @@ const migrateTo0_5_0 = (options) => {
                 'fc8f6d32-dcde-486f-a07c-8e1604e022b4': {
                     name: 'internal',
                     url: options.rocketChat.internalRoom,
+                    order: 0,
                 },
                 'a6676206-adc4-4863-bcee-789b71a177d8': {
                     name: 'external',
                     url: options.rocketChat.externalRoom,
+                    order: 1,
                 }
             },
-            messages: {},
+            messages: {
+                'ea5de1ed-295a-4560-adc2-bdbb3aab18d5': {
+                    name: 'internal',
+                    content: options.rocketChat.internalMessage,
+                    order: 0,
+
+                },
+                '50d4bcaa-4fba-4675-9824-eca2f8533c10': {
+                    name: 'external',
+                    content: options.rocketChat.externalMessage,
+                    order: 1,
+                }
+            },
             url: options.rocketChat.url,
             authToken: options.rocketChat.authToken,
             userId: options.rocketChat.userId
@@ -280,22 +294,6 @@ const migrateTo0_5_0 = (options) => {
             enabled: false,
             rooms: {},
             messages: {}
-        }
-    }
-
-    for (let type of ['internal', 'external']) {
-        if ('' !== options.rocketChat[`${type}Room`]) {
-            options.chat.rocket.rooms[Uuid.generate()] = {
-                name: type,
-                url: options.rocketChat[`${type}Room`],
-            }
-        }
-
-        if ('' !== options.rocketChat[`${type}Message`]) {
-            options.chat.rocket.rooms[Uuid.generate()] = {
-                name: type,
-                message: options.rocketChat[`${type}Message`],
-            }
         }
     }
 

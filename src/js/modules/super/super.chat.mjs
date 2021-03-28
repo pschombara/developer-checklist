@@ -34,11 +34,7 @@ export class SuperChat {
         return this.options.messages;
     }
 
-    room (id) {
-        return this.options.rooms[id];
-    }
+    send (roomId, messageId) {
 
-    message (id) {
-        return this.options.messages[id];
     }
 }

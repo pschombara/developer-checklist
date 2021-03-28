@@ -1,5 +1,6 @@
 import {SuperChatOptions} from '../../super/super.chat.options.mjs';
 import {Uuid} from '../uuid.mjs';
+import {DragDrop} from '../drag-drop.mjs';
 
 export class Google extends SuperChatOptions {
     constructor() {
@@ -46,13 +47,15 @@ export class Google extends SuperChatOptions {
         if ('new' === trigger.getAttribute('data-message')) {
             saveButton.classList.add('d-none');
             addButton.classList.remove('d-none');
-            gc._form.message.reset();
+            name.value = '';
+            msg.innerHTML = '';
+            identifier.value = '';
         } else {
             saveButton.classList.remove('d-none');
             addButton.classList.add('d-none');
             identifier.value = trigger.getAttribute('data-message');
 
-            let row = trigger.closest('.row');
+            let row = document.querySelector(`[data-message-id="${identifier.value}"]`);
 
             name.value = row.querySelector('input[type=text]').value;
             msg.innerHTML = row.querySelector('input[data-msg-content]').value;
@@ -95,6 +98,27 @@ export class Google extends SuperChatOptions {
         }
 
         const formData = new FormData(this._form.message);
+
+        let row = document.querySelector(`[data-message-id="${formData.get('identifier')}"]`);
+        let name = row.querySelector('input[type=text]');
+        let content = row.querySelector('input[data-msg-content]');
+        let shortContent = row.querySelector('div[data-gc-message-short]');
+
+        name.value = formData.get('name');
+        content.value = formData.get('content');
+
+        shortContent.innerHTML = this.shortenMessage(content.value);
+        this._buttons.closeMessage.click();
+    }
+
+    shortenMessage(str) {
+        let shorten = str.substr(0, 50);
+
+        if (shorten.length < str.length) {
+            shorten += '...';
+        }
+
+        return String(shorten).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
     createRoom(name, webhookUrl, uuid = '') {
@@ -115,16 +139,13 @@ export class Google extends SuperChatOptions {
         elem.innerHTML = elem.innerHTML.replace(new RegExp('%gcmUuid%', 'g'), '' !== uuid ? uuid : Uuid.generate());
         elem.innerHTML = elem.innerHTML.replace(new RegExp('%gcmName%', 'g'), name);
         elem.innerHTML = elem.innerHTML.replace(new RegExp('%gcmContent%', 'g'), content);
+        elem.innerHTML = elem.innerHTML.replace(new RegExp('%gcmContentShort%', 'g'), this.shortenMessage(content));
 
-        let shorten = content.substr(0, 50);
+        const item = elem.children[0];
 
-        if (shorten.length < content.length) {
-            shorten += '...';
-        }
+        this._container.messages.append(item);
 
-        elem.innerHTML = elem.innerHTML.replace(new RegExp('%gcmContentShort%', 'g'), shorten);
-
-        this._container.messages.append(elem.children[0]);
+        new DragDrop(item).init();
     }
 
     save() {
@@ -133,28 +154,30 @@ export class Google extends SuperChatOptions {
         let rooms = {};
         let messages = {};
 
-        for (let uuid of formData.getAll('gc-room[]')) {
+        formData.getAll('gc-room[]').forEach((uuid, key) => {
             if (false === formData.has(`gc-room[delete][${uuid}]`)) {
                 rooms[uuid] = {
                     name: formData.get(`gc-room[name][${uuid}]`),
                     url: formData.get(`gc-room[url][${uuid}]`),
+                    order: key,
                 };
             }
-        }
+        });
 
-        for (let uuid of formData.getAll('gc-message[]')) {
+        formData.getAll('gc-message[]').forEach((uuid, key) => {
             if (false === formData.has(`gc-message[delete][${uuid}]`)) {
                 messages[uuid] = {
                     name: formData.get(`gc-message[name][${uuid}]`),
                     content: formData.get(`gc-message[content][${uuid}]`),
+                    order: key,
                 };
             }
-        }
+        });
 
         return {
             rooms: rooms,
             messages: messages,
-            enabled: formData.has('enabled')
+            enabled: formData.has('enabled'),
         };
     }
 
@@ -165,11 +188,11 @@ export class Google extends SuperChatOptions {
         this._buttons.addMessage.addEventListener('click', () => { this.addMessage() });
         this._buttons.saveMessage.addEventListener('click', () => { this.saveMessage() });
 
-        for (let [uuid, room] of Object.entries(this.options.rooms)) {
+        for (let [uuid, room] of Object.entries(this.options.rooms).sort((a, b) => a[1].order - b[1].order)) {
             this.createRoom(room.name, room.url, uuid);
         }
 
-        for (let [uuid, message] of Object.entries(this.options.messages)) {
+        for (let [uuid, message] of Object.entries(this.options.messages).sort((a, b) => a[1].order - b[1].order)) {
             this.createMessage(message.name, message.content, uuid);
         }
 

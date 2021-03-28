@@ -1,4 +1,5 @@
 import {Google} from './chat/google.mjs';
+import {Toast} from './sweet';
 
 export class Chat {
     constructor() {
@@ -78,7 +79,7 @@ export class Chat {
         this._list.messages.addEventListener('change', () => { this.checkSendReady() });
         this._list.rooms.addEventListener('change', () => { this.checkSendReady() });
 
-        console.log('?Hallo?');
+        this._buttons.send.addEventListener('click', () => { this.sendMessage() });
     }
 
     fillRooms() {
@@ -96,7 +97,7 @@ export class Chat {
     fillContent(data, target) {
         target.innerHTML = '';
 
-        for (let [id, value] of Object.entries(data)) {
+        for (let [id, value] of Object.entries(data).sort((a, b) => a[1].order - b[1].order)) {
             let option = document.createElement('option');
 
             option.value = value.name;
@@ -108,9 +109,38 @@ export class Chat {
 
     checkSendReady() {
         let room = this._fields.rooms.querySelector(`option[value="${this._list.rooms.value}"]`);
-        let message = this._fields.rooms.querySelector(`option[value="${this._list.messages.value}"]`);
+        let message = this._fields.messages.querySelector(`option[value="${this._list.messages.value}"]`);
 
         this._buttons.send.disabled = null === room || null === message;
+    }
+
+    sendMessage() {
+        try {
+            let room = this._fields.rooms.querySelector(`option[value="${this._list.rooms.value}"]`);
+            let message = this._fields.messages.querySelector(`option[value="${this._list.messages.value}"]`);
+            let chat = this._chats[this._fields.client.value];
+
+            chat
+                .send(room.getAttribute('data-id'), message.getAttribute('data-id'))
+                .then(() => {
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Message send',
+                        position: 'bottom',
+                    });
+                })
+                .catch((e) => {
+                    console.error(e);
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Error during message transfer',
+                        position: 'bottom',
+                    });
+                })
+            ;
+        } catch (e) {
+            console.log('error:', e);
+        }
     }
 
     fillBoards() {
