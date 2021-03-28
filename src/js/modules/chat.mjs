@@ -77,7 +77,9 @@ export class Chat {
         this.fillMessages();
 
         this._list.messages.addEventListener('change', () => { this.checkSendReady() });
+        this._list.messages.addEventListener('keyup', () => { this.checkSendReady() });
         this._list.rooms.addEventListener('change', () => { this.checkSendReady() });
+        this._list.rooms.addEventListener('keyup', () => { this.checkSendReady() });
 
         this._buttons.send.addEventListener('click', () => { this.sendMessage() });
     }
