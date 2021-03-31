@@ -5,7 +5,7 @@ export class GitLab extends SuperGitLab {
     constructor() {
         super();
 
-        this._gitMergeUrl = `[{aliasUrl}|{host}{domain}/{project}/merge_requests/{number}]`;
+        this._gitMergeUrl = '[{aliasUrl}|{host}{domain}/{project}/merge_requests/{number}]';
         this._mergeRequestUrl = document.querySelector('[data-gitLab-url]');
         this._copyBtn = document.querySelector('[data-copy="gitLab-url"]');
         this._tab = document.querySelector('#special-tab');
@@ -45,12 +45,12 @@ export class GitLab extends SuperGitLab {
             this._input.project.value = '';
         });
 
-        this._input.project.addEventListener('change', () => { this.buildUrl() } );
-        this._input.mergeNumber.addEventListener('change', () => { this.buildUrl() } );
-        this._input.mergeNumber.addEventListener('keyup', () => { this.buildUrl() } );
+        this._input.project.addEventListener('change', () => { this.buildUrl(); } );
+        this._input.mergeNumber.addEventListener('change', () => { this.buildUrl(); } );
+        this._input.mergeNumber.addEventListener('keyup', () => { this.buildUrl(); } );
 
-        this._mergeRequestUrl.addEventListener('click', () => { this.copy() } );
-        this._copyBtn.addEventListener('click', () => { this.copy() } );
+        this._mergeRequestUrl.addEventListener('click', () => { this.copy(); } );
+        this._copyBtn.addEventListener('click', () => { this.copy(); } );
     }
 
     buildUrl(branch = '') {
@@ -59,7 +59,7 @@ export class GitLab extends SuperGitLab {
         if ('' === this._input.mergeNumber.value || null === selected) {
             this._mergeRequestUrl.value = '';
         } else {
-            this._mergeRequestUrl.value = this._gitMergeUrl.replace(new RegExp('\{host\}', 'g'), this.options.host)
+            this._mergeRequestUrl.value = this._gitMergeUrl.replace(new RegExp('\{host\}', 'g'), this.options.host);
             this._mergeRequestUrl.value = this._mergeRequestUrl.value.replace(new RegExp('\{aliasUrl\}', 'g'), '' !== branch ? `${selected.value}:${branch}` : selected.value);
             this._mergeRequestUrl.value = this._mergeRequestUrl.value.replace(new RegExp('\{project\}', 'g'), selected.value);
             this._mergeRequestUrl.value = this._mergeRequestUrl.value.replace(new RegExp('\{domain\}', 'g'), selected.getAttribute('data-domain'));
@@ -70,9 +70,9 @@ export class GitLab extends SuperGitLab {
     copy() {
         if ('' === this._mergeRequestUrl.value) {
             Toast.fire({
-                icon: "error",
-                title: "First fill out project and merge request number.",
-                position: "bottom"
+                icon: 'error',
+                title: 'First fill out project and merge request number.',
+                position: 'bottom'
             });
 
             return;
@@ -83,9 +83,9 @@ export class GitLab extends SuperGitLab {
         window.getSelection().removeAllRanges();
 
         Toast.fire({
-            icon: "success",
-            title: "Copied to clipboard",
-            position: "bottom"
+            icon: 'success',
+            title: 'Copied to clipboard',
+            position: 'bottom'
         });
     }
 

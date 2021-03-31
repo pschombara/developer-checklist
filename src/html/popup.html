@@ -206,6 +206,12 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row mt-3">
+                                <h6>Attached Issues <span class="badge badge-primary" data-chat-issues-count>0</span></h6>
+                            </div>
+                            <div class="chat-issue-list" data-chat-issues>
+
+                            </div>
                         </div>
                         <div class="d-none" data-chat="info">
                             <div class="row">
@@ -284,6 +290,16 @@
                     <ul data-content="%number%"></ul>
                 </div>
             </div>
+        </div>
+    </div>
+</template>
+<template data-template="chat-issue">
+    <div class="row mt-2">
+        <div class="col-10" data-chat-issue="%issueNumber%">%issueNumber%</div>
+        <div class="col-2">
+            <button type="button" class="btn btn-danger">
+                <i class="fas fa-trash"></i>
+            </button>
         </div>
     </div>
 </template>

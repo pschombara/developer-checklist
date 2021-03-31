@@ -1,4 +1,4 @@
-import {Toast} from "./sweet.mjs";
+import {Toast} from './sweet.mjs';
 import {SuperJenkins} from './super/super.jenkins';
 
 export class Jenkins extends SuperJenkins {
@@ -46,12 +46,12 @@ export class Jenkins extends SuperJenkins {
             this._jobInput.value = '';
         });
 
-        this._jobInput.addEventListener('change', () => { this.buildUrl() });
-        this._build.addEventListener('change', () => { this.buildUrl() });
-        this._build.addEventListener('keyup', () => { this.buildUrl() });
+        this._jobInput.addEventListener('change', () => { this.buildUrl(); });
+        this._build.addEventListener('change', () => { this.buildUrl(); });
+        this._build.addEventListener('keyup', () => { this.buildUrl(); });
 
-        this._embeddableUrl.addEventListener('click', () => { this.copy() });
-        this._copyBtn.addEventListener('click', () => { this.copy() });
+        this._embeddableUrl.addEventListener('click', () => { this.copy(); });
+        this._copyBtn.addEventListener('click', () => { this.copy(); });
     }
 
     buildUrl() {
@@ -66,14 +66,14 @@ export class Jenkins extends SuperJenkins {
             this._embeddableUrl.value = this._embeddableUrl.value.replace(new RegExp('\{name\}', 'g'), '' !== selected.getAttribute('data-label') ? selected.getAttribute('data-label') : selected.value);
             this._embeddableUrl.value = this._embeddableUrl.value.replace(new RegExp('\{build\}', 'g'), this._build.value);
         }
-    };
+    }
 
     copy() {
         if ('' === this._embeddableUrl.value) {
             Toast.fire({
-                icon: "error",
-                title: "First fill out job and build number.",
-                position: "bottom"
+                icon: 'error',
+                title: 'First fill out job and build number.',
+                position: 'bottom'
             });
 
             return;
@@ -84,11 +84,11 @@ export class Jenkins extends SuperJenkins {
         window.getSelection().removeAllRanges();
 
         Toast.fire({
-            icon: "success",
-            title: "Copied to clipboard",
-            position: "bottom"
+            icon: 'success',
+            title: 'Copied to clipboard',
+            position: 'bottom'
         });
-    };
+    }
 
     checkUrl(url) {
         if (false === this._enabled || '' === this.options.host || false === url.startsWith(this.options.host)) {

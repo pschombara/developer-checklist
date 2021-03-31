@@ -1,4 +1,4 @@
-import {SuperJira} from "./super/super.jira";
+import {SuperJira} from './super/super.jira';
 
 export class Jira extends SuperJira{
     constructor() {
@@ -10,7 +10,7 @@ export class Jira extends SuperJira{
             2: document.querySelector('#cl2-tab'),
             3: document.querySelector('#cl3-tab'),
             4: document.querySelector('#cl4-tab'),
-        }
+        };
 
         this._checklistContent = {
             0: document.querySelector('#cl0'),
@@ -18,7 +18,7 @@ export class Jira extends SuperJira{
             2: document.querySelector('#cl2'),
             3: document.querySelector('#cl3'),
             4: document.querySelector('#cl4'),
-        }
+        };
 
         this._templateContent = document.querySelector('[data-template="jira-checklist-content"]');
         this._templateCategory = document.querySelector('[data-template="jira-checklist-category"]');
@@ -115,7 +115,7 @@ const jiraApplyComment = (comment, submit) => {
     text.value = comment;
 
     let send = document.querySelector('#issue-comment-add-submit');
-    send.removeAttribute("disabled");
+    send.removeAttribute('disabled');
 
     if (submit) {
         send.click();
@@ -129,7 +129,7 @@ const sendComment = (comment, submit) => {
     chrome.tabs.executeScript({
         code: '(' + jiraApplyComment + ')(' + `"${comment}", ${submit}` + ')',
     });
-}
+};
 
 const fillTab = (checklist, tab, number) => {
     const name = '' !== checklist.name ? checklist.name : `Checklist ${number}`
@@ -145,7 +145,7 @@ const fillTab = (checklist, tab, number) => {
     }
 
     tab.parentNode.classList.remove('d-none');
-}
+};
 
 const fillContent = (checklist, issue, number, instance) => {
     const element = document.createElement('div');
@@ -176,7 +176,7 @@ const fillContent = (checklist, issue, number, instance) => {
             if (e.detail === number ) {
                 buttonSuccess.removeAttribute('disabled');
             }
-        })
+        });
 
         document.addEventListener('checkListEntryUnchecked', (e) => {
             if (e.detail === number ) {
@@ -199,7 +199,7 @@ const fillContent = (checklist, issue, number, instance) => {
     registerButtonClear(buttonClear, content);
 
     instance._checklistContent[number].appendChild(content);
-}
+};
 
 const createCategories = (categories, categoryTarget, issue, number, instance) => {
     for (let category of categories) {
@@ -258,7 +258,7 @@ const createCategories = (categories, categoryTarget, issue, number, instance) =
 
         categoryTarget.append(categoryContent);
     }
-}
+};
 
 const registerButtonClear = (buttonClear, content) => {
     buttonClear.addEventListener('click', () => {
@@ -270,5 +270,4 @@ const registerButtonClear = (buttonClear, content) => {
 
         document.dispatchEvent(new CustomEvent('saveChecklist'));
     });
-}
-
+};

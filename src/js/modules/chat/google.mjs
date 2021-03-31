@@ -5,7 +5,7 @@ export class Google extends SuperChat {
         super('Google Chat', 'google');
     }
 
-    send(roomId, messageId) {
+    send(roomId, messageId, issueList) {
         return new Promise((resolve, reject) => {
             const request = new XMLHttpRequest();
 
@@ -16,7 +16,6 @@ export class Google extends SuperChat {
 
             request.onreadystatechange = () => {
                 if (XMLHttpRequest.DONE === request.readyState) {
-                    console.log(request.status, request.response);
                     if (200 === request.status) {
                         resolve();
                     } else {
@@ -27,37 +26,45 @@ export class Google extends SuperChat {
 
             request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
 
-            request.send(this.formatMessage(message));
+            request.send(this.formatMessage(message, issueList));
         });
     }
 
-    formatMessage(message) {
-        let formattedMessage = message.content;
+    formatMessage(message, issueList) {
+        let formattedMessage = {
+            text: message.content,
+        };
 
-
-        // todo issue list
-
-
-        return JSON.stringify({
-            text: formattedMessage,
-            cards: [
+        if (issueList.length > 0) {
+            formattedMessage.cards = [
                 {
                     header: {
-                        title: "Test",
+                        title: 'Issues',
                     },
                     sections: [
                         {
-                            widgets: [
-                                {
-                                    textParagraph: {
-                                        text: "Test 123"
-                                    }
-                                }
-                            ],
+                            widgets: [],
                         }
                     ],
                 }
-            ]
-        });
+            ];
+        }
+
+        for (let issue of issueList) {
+            formattedMessage.cards[0].sections[0].widgets.push({
+                buttons: {
+                    textButton: {
+                        text: issue.text,
+                        onClick: {
+                            openLink: {
+                                url: issue.url,
+                            },
+                        },
+                    },
+                },
+            });
+        }
+
+        return JSON.stringify(formattedMessage);
     }
 }

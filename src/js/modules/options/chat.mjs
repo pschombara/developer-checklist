@@ -1,14 +1,10 @@
 import {Google} from './chat/google.mjs';
-import {Rocket} from './chat/rocket.mjs';
-import {Discord} from './chat/discord.mjs';
 
 export class Chat {
     constructor() {
         this._chats = {
             google: new Google(),
-            rocket: new Rocket(),
-            discord: new Discord(),
-        }
+        };
 
         this._chatClient = document.querySelector('#chatClient');
     }

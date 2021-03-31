@@ -34,7 +34,7 @@ export class SuperChat {
         return this.options.messages;
     }
 
-    send (roomId, messageId) {
+    send (roomId, messageId, issueList) {
 
     }
 }

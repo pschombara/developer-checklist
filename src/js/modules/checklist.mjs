@@ -1,7 +1,7 @@
 import * as cheatSheet from './cheat-sheet.mjs';
-import {Storage} from "./storage";
-import {Jira} from "./jira";
-import {Jenkins} from "./jenkins";
+import {Storage} from './storage';
+import {Jira} from './jira';
+import {Jenkins} from './jenkins';
 import {Modules} from './modules';
 import {GitLab} from './gitLab';
 
@@ -68,7 +68,7 @@ export class Checklist {
 
             $('[data-toggle="tooltip"]').tooltip();
             $('[data-toggle="popover"]').popover({
-                trigger: "hover",
+                trigger: 'hover',
             });
         });
     }
@@ -134,7 +134,7 @@ const initView = (cl) => {
         cl._modules.hideModules();
 
         showContent('checklist', cl);
-    })
+    });
 };
 
 const initOverview = (cl) => {
@@ -146,7 +146,7 @@ const initOverview = (cl) => {
         buttonIssue.disabled = true;
     } else {
         buttonIssue.addEventListener('click', () => {
-           cl._browser.tabs.create({url: `${cl._options.jira.url}/browse/${select.value}-${cl._issue.value}`});
+            cl._browser.tabs.create({url: `${cl._options.jira.url}/browse/${select.value}-${cl._issue.value}`});
         });
 
         buttonIssue.disabled = '' === cl._issue.value;
@@ -204,7 +204,7 @@ const initIssue = (cl) => {
             save(cl).then(data => {
                 cl._storage.write(cl._identifier, data);
             });
-        })
+        });
 
         cl._storage.loadIssue(cl._identifier).then((stored) => {
             if (stored.hasOwnProperty('openTab')) {
@@ -221,6 +221,7 @@ const initIssue = (cl) => {
             }
 
             cl._jira.createChecklists(stored);
+            cl._chat.initIssue(cl._identifier);
 
             Array.prototype.map.call(document.querySelectorAll('#listTab .nav-item'), (nav) => {
                 $(nav).on('shown.bs.tab', () => {
@@ -264,12 +265,12 @@ const save = (cl) => {
             title: '',
             checklist: cl._jira.checkedEntries(),
             version: cl._migration.currentVersion,
-        }
+        };
 
         cl._jira.getIssueTitle().then(result => {
             data.title = result;
 
             resolve(data);
-        })
+        });
     });
-}
+};
