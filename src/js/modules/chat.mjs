@@ -217,7 +217,7 @@ export class Chat {
     }
 
     removeIssue(e) {
-        let wrapper = e.target.parentNode;
+        let wrapper = e.target.parentNode.parentNode;
 
         this._container.issues.removeChild(wrapper);
         this._issues.count.innerHTML = this._container.issues.children.length.toString();
