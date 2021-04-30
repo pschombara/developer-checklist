@@ -1,14 +1,14 @@
 import * as cheatSheet from './cheat-sheet.mjs';
-import {RocketChat} from "./rocket.chat";
-import {Storage} from "./storage";
-import {Jira} from "./jira";
-import {Jenkins} from "./jenkins";
+import {Storage} from './storage';
+import {Jira} from './jira';
+import {Jenkins} from './jenkins';
 import {Modules} from './modules';
 import {GitLab} from './gitLab';
 
 import './jquery.mjs';
 import 'bootstrap';
 import {Migration} from './migration/migration';
+import {Chat} from './chat.mjs';
 
 export class Checklist {
     constructor(url) {
@@ -19,13 +19,13 @@ export class Checklist {
         this._issuePattern = new RegExp('[a-zA-Z]+-\\d+');
         this._identifier = '';
         this._options = {};
-        this._rocketChat = new RocketChat();
         this._storage = new Storage();
         this._jira = new Jira();
         this._jenkins = new Jenkins();
         this._gitLab = new GitLab();
         this._modules = new Modules();
         this._migration = new Migration();
+        this._chat = new Chat();
         this._issue = document.querySelector('#issue');
         this._url = url;
     }
@@ -68,7 +68,7 @@ export class Checklist {
 
             $('[data-toggle="tooltip"]').tooltip();
             $('[data-toggle="popover"]').popover({
-                trigger: "hover",
+                trigger: 'hover',
             });
         });
     }
@@ -96,9 +96,7 @@ const checkOptions = (cl) => {
         }
     }
 
-    if (cl._options.hasOwnProperty('rocketChat')) {
-        cl._rocketChat.options = cl._options.rocketChat;
-    }
+    cl._chat.options = cl._options;
 
     if (cl._options.hasOwnProperty('modules')) {
         cl._modules.options = cl._options.modules;
@@ -136,7 +134,7 @@ const initView = (cl) => {
         cl._modules.hideModules();
 
         showContent('checklist', cl);
-    })
+    });
 };
 
 const initOverview = (cl) => {
@@ -148,18 +146,22 @@ const initOverview = (cl) => {
         buttonIssue.disabled = true;
     } else {
         buttonIssue.addEventListener('click', () => {
-           cl._browser.tabs.create({url: `${cl._options.jira.url}/browse/${select.value}-${cl._issue.value}`});
+            cl._browser.tabs.create({url: `${cl._options.jira.url}/browse/${select.value}-${cl._issue.value}`});
         });
 
-        cl._issue.addEventListener('keyup', (e) => {
+        buttonIssue.disabled = '' === cl._issue.value;
+
+        cl._issue.addEventListener('keyup', e => {
             e.preventDefault();
 
-            if ('Enter' === e.key) {
+            buttonIssue.disabled = '' === cl._issue.value;
+
+            if ('Enter' === e.key && '' !== cl._issue.value) {
                 buttonIssue.click();
             }
         });
 
-        cl._storage.loadIdentifiers().then((identifiers) => {
+        cl._storage.loadIdentifiers().then(identifiers => {
             let issues = 0;
 
             for (let identifier of identifiers) {
@@ -190,13 +192,10 @@ const initOverview = (cl) => {
         });
     }
 
+    cl._chat.init();
     cl._jenkins.init();
     cl._gitLab.init();
     cheatSheet.init(cl._options.cheatSheet ? cl._options.cheatSheet : []);
-
-    cl._rocketChat.board = cl._options.jira.url;
-    cl._rocketChat.identifier = cl._identifier;
-    cl._rocketChat.init();
 };
 
 const initIssue = (cl) => {
@@ -205,7 +204,7 @@ const initIssue = (cl) => {
             save(cl).then(data => {
                 cl._storage.write(cl._identifier, data);
             });
-        })
+        });
 
         cl._storage.loadIssue(cl._identifier).then((stored) => {
             if (stored.hasOwnProperty('openTab')) {
@@ -222,6 +221,7 @@ const initIssue = (cl) => {
             }
 
             cl._jira.createChecklists(stored);
+            cl._chat.initIssue(cl._identifier);
 
             Array.prototype.map.call(document.querySelectorAll('#listTab .nav-item'), (nav) => {
                 $(nav).on('shown.bs.tab', () => {
@@ -265,12 +265,12 @@ const save = (cl) => {
             title: '',
             checklist: cl._jira.checkedEntries(),
             version: cl._migration.currentVersion,
-        }
+        };
 
         cl._jira.getIssueTitle().then(result => {
             data.title = result;
 
             resolve(data);
-        })
+        });
     });
-}
+};

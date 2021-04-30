@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
     <title>JIRA Checklist Options</title>
     <meta charset="UTF-8">
@@ -23,8 +23,8 @@
                 <li class="nav-item" data-toggle="popover" data-content="GitLab" data-placement="bottom">
                     <a class="nav-link" href="#gitLab" role="tab" id="gitLab-tab" data-toggle="tab"><i class="fab fa-gitlab"></i></a>
                 </li>
-                <li class="nav-item" data-toggle="popover" data-content="Rocket.Chat" data-placement="bottom">
-                    <a class="nav-link" href="#rocket-chat" role="tab" id="rocket-chat-tab" data-toggle="tab"><i class="fab fa-rocketchat"></i></a>
+                <li class="nav-item" data-toggle="popover" data-content="Chat Notifications" data-placement="bottom">
+                    <a class="nav-link" href="#chat" role="tab" id="chat-tab" data-toggle="tab"><i class="fas fa-comment"></i></a>
                 </li>
                 <li class="nav-item" data-toggle="popover" data-content="Cheat Sheet" data-placement="bottom">
                     <a class="nav-link" href="#cheat-sheet" role="tab" id="cheat-sheet-tab" data-toggle="tab"><i class="fas fa-terminal"></i></a>
@@ -60,8 +60,8 @@
                             <div class="row mb-2">
                                 <div class="col">
                                     <div class="custom-control custom-switch">
-                                        <input type="checkbox" class="custom-control-input" name="module[rocketChat]" id="moduleRocketChat" />
-                                        <label class="custom-control-label" for="moduleRocketChat"><i class="fab fa-rocketchat"></i> RocketChat</label>
+                                        <input type="checkbox" class="custom-control-input" name="module[chat]" id="moduleChat" />
+                                        <label class="custom-control-label" for="moduleChat"><i class="fas fa-comment"></i> Chat</label>
                                     </div>
                                 </div>
                             </div>
@@ -225,65 +225,80 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="rocket-chat" role="tabpanel">
+                <div class="tab-pane fade" id="chat" role="tabpanel">
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <h5 class="col"><i class="fab fa-rocketchat"></i> Rocket.Chat</h5>
+                                <h5 class="col"><i class="fas fa-comment"></i> Chat</h5>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <label for="rc-url" class="col-form-label">Rocket.Chat Url</label>
-                                    <div class="input-group"  data-toggle="tooltip" data-placement="right" title="The base URL of your company's rocket chat application. Login with Google or Rocket.Chat credentials.">
-                                        <input class="form-control" type="text" id="rc-url" placeholder="https://www.rocket.chat" />
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">/api</span>
-                                        </div>
-                                        <div class="input-group-append">
-                                            <button type="button" class="btn btn-outline-danger" data-rc-user data-toggle="modal" data-target="#rc-modal-user">
-                                                <i class="fas fa-sign-in-alt"></i>
-                                            </button>
-                                        </div>
-                                        <div class="input-group-append">
-                                            <button type="button" class="btn btn-outline-danger" data-rc-google data-toggle="modal" data-target="#rc-modal-google">
-                                                <i class="fab fa-google"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mt-4">
-                                <div class="col-sm-6">
-                                    <label for="rc-channel-internal" class="col-form-label">Internal Channel</label>
-                                    <input class="form-control" list="rc-rooms" id="rc-channel-internal" placeholder="Internal Channel" data-toggle="tooltip" data-placement="right" title="Select channel to be used for internal team planning messages."/>
-                                </div>
-                            </div>
-                            <div class="row mt-4">
-                                <div class="col-sm-6">
-                                    <label for="rc-channel-external" class="col-form-label">External Channel</label>
-                                    <input class="form-control" list="rc-rooms" id="rc-channel-external" placeholder="External Channel"  data-toggle="tooltip" data-placement="right" title="Select channel to be used for external team planning messages."/>
-                                </div>
-                            </div>
-                            <div class="row mt-4">
-                                <div class="col-sm-6">
-                                    <label for="rc-message-internal" class="col-form-label">Message for Internal</label>
-                                    <div class="input-group">
 
-                                        <input class="form-control" type="text" id="rc-message-internal" placeholder="@here team planning for {issue}" data-toggle="tooltip" data-placement="right" title="Customize your team planning message for internal channel. Add {issue} as a placeholder for an external link to the issue."/>
-                                    </div>
+                            <div class="row my-3">
+                                <label for="chatClient" class="col-2">Client</label>
+                                <div class="col-6">
+                                    <select class="form-control" id="chatClient"></select>
                                 </div>
                             </div>
-                            <div class="row mt-4">
-                                <div class="col-sm-6">
-                                    <label for="rc-message-external" class="col-form-label" data-toggle="tooltip">Message for External</label>
-                                    <div class="input-group">
-                                        <input class="form-control" type="text" id="rc-message-external" placeholder="@here team planning for {issue}" data-toggle="tooltip" data-placement="right" title="Customize your team planning message for external channel. Add {issue} as a placeholder for an external link to the issue."/>
+
+                            <form class="accordion mt-2" data-chat="google" data-accordion="googleChat" id="googleChatAccordion">
+                                <div class="card">
+                                    <div class="row my-3">
+                                        <div class="col">
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" name="enabled" id="chatGoogleEnabled" />
+                                                <label class="custom-control-label" for="chatGoogleEnabled">Aktiv</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-header">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='googleChatRooms']">Rooms</button>
+                                        </h2>
+                                    </div>
+                                    <div class="collapse" data-collapse="googleChatRooms" data-parent="#googleChatAccordion">
+                                        <div class="card-body">
+                                            <div class="row mb-2">
+                                                <div class="col-3 offset-1 text-center font-weight-bold">Name</div>
+                                                <div class="col-6 text-center font-weight-bold">Webhook Url</div>
+                                            </div>
+                                            <div data-gc-rooms data-draggable></div>
+                                            <div class="row mt-4">
+                                                <div class="col">
+                                                    <button type="button" class="btn btn-success" data-gc-room data-toggle="modal" data-target="#gc-modal-room">
+                                                        <i class="fas fa-plus"></i> Add room
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <datalist id="rc-rooms"></datalist>
-                        </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="[data-collapse='googleChatMessages']">Messages</button>
+                                        </h2>
+                                    </div>
+                                    <div class="collapse" data-collapse="googleChatMessages" data-parent="#googleChatAccordion">
+                                        <div class="card-body">
+                                            <div class="row mb-2">
+                                                <div class="col-3 offset-1 text-center font-weight-bold">Name</div>
+                                                <div class="col-6 text-center font-weight-bold">Message</div>
+                                            </div>
+                                            <div data-gc-messages data-draggable></div>
+                                            <div class="row mt-4">
+                                                <div class="col">
+                                                    <button type="button" class="btn btn-success" data-gc-message data-toggle="modal" data-target="#gc-modal-message" data-message="new">
+                                                        <i class="fas fa-plus"></i> Add message
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <form class="accordion mt-2 d-none" data-chat="rocket" data-accordion="rocketChat" id="rocketChatAccordion"></form>
+                            <form class="accordion mt-2 d-none" data-chat="discord" data-accordion="discord" id="discordAccordion"></form>
                     </div>
+                </div>
                 </div>
                 <div class="tab-pane fade" id="jenkins" role="tabpanel">
                     <div class="card">
@@ -1697,6 +1712,42 @@
     </div>
 </div>
 </template>
+<template data-template="gc-room">
+    <div class="row mb-2 align-items-center" draggable="true">
+        <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
+        <div class="col-3">
+            <input type="text" name="gc-room[name][%gcrUuid%]" class="form-control" value="%gcrName%" />
+            <input type="hidden" name="gc-room[]" value="%gcrUuid%" />
+        </div>
+        <div class="col-6">
+            <input type="url" name="gc-room[url][%gcrUuid%]" class="form-control" value="%gcrUrl%" pattern="^https:\/\/chat\.googleapis\.com\/.*" />
+        </div>
+        <div class="col-2 custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" name="gc-room[delete][%gcrUuid%]" id="gc-room-delete-%gcrUuid%" value="%gcrUuid%" />
+            <label class="custom-control-label" for="gc-room-delete-%gcrUuid%">Delete</label>
+        </div>
+    </div>
+</template>
+<template data-template="gc-message">
+    <div class="row mb-2 align-items-center" data-message-id="%gcmUuid%" draggable="true">
+        <div class="col-1 align-items-center justify-content-center d-flex"><i class="fas fa-bars"></i></div>
+        <div class="col-3">
+            <input type="text" name="gc-message[name][%gcmUuid%]" class="form-control" value="%gcmName%" />
+            <input type="hidden" name="gc-message[]" value="%gcmUuid%" />
+        </div>
+        <div class="col-5">
+            <div data-gc-message-short="%gcmUuid%">%gcmContentShort%</div>
+            <input type="hidden" name="gc-message[content][%gcmUuid%]" value="%gcmContent%" data-msg-content />
+        </div>
+        <div class="col-1">
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#gc-modal-message" data-message="%gcmUuid%"><i class="fas fa-edit"></i></button>
+        </div>
+        <div class="col-2 custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" name="gc-message-delete[]" id="gc-message-delete-%gcmUuid%" value="%gcmUuid%" />
+            <label class="custom-control-label" for="gc-message-delete-%gcmUuid%">Delete</label>
+        </div>
+    </div>
+</template>
 <div class="modal" tabindex="-1" role="dialog" id="rc-modal-user">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -1788,6 +1839,118 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-rc-dismiss="google" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" data-rc-login="google">Login</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" tabindex="-1" role="dialog" id="gc-modal-room">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add room</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="alert alert-info">
+                            <ol>
+                                <li>Open Google Chat</li>
+                                <li>Click on the room name</li>
+                                <li>Choose "Manage webhooks"</li>
+                                <li>Create new webhook</li>
+                                <li>Copy the webhook url</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <form id="gc-room">
+                    <div class="row">
+                        <label for="gc-room-name" class="col-form-label col-4">Name</label>
+                        <div class="col-6">
+                            <input type="text" name="name" id="gc-room-name" required class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label for="gc-room-url" class="col-form-label col-4">Webhook Url</label>
+                        <div class="col-6">
+                            <input type="url" name="url" id="gc-room-url" required pattern="https:\/\/chat\.googleapis\.com\/.*" class="form-control" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-gc-dismiss="room" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-gc-add="room"><i class="fas fa-plus"></i> Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" tabindex="-1" role="dialog" id="gc-modal-message">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add room</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="alert alert-info">
+                            <div class="collapse show" data-collapse='gc-message-help'>
+                                <button type="button" data-toggle="collapse" data-target="[data-collapse='gc-message-help']" class="btn btn-link">Open help</button>
+
+                            </div>
+                            <div class="collapse" data-collapse='gc-message-help'>
+                                <button type="button" data-toggle="collapse" data-target="[data-collapse='gc-message-help']" class="btn btn-link">Close help</button>
+                            </div>
+                            <ul class="collapse" data-collapse='gc-message-help'>
+                                <li>
+                                    Text Format Options:
+                                    <ul>
+                                        <li>&#42;: Bold</li>
+                                        <li>&#95; (Underscore): Italic</li>
+                                        <li>&thicksim;: Strikethrough</li>
+                                        <li>&backprime; (Backquote): Monospace</li>
+                                        <li>&backprime;&backprime;&backprime; (3x Backquote): Monospace block</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    Mention user
+                                    <ul>
+                                        <li>All user: &lt;users&#47;all&gt;</li>
+                                        <li>Special user: &lt;users&#47;USERID&gt;</li>
+                                    </ul>
+                                </li>
+                                <li>Links to the issues are attached automatically below when indicated.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <form id="gc-message">
+                    <div class="row">
+                        <label for="gc-message-name" class="col-form-label col-4">Name</label>
+                        <div class="col-6">
+                            <input type="text" name="name" id="gc-message-name" required class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <label for="gc-message-content" class="col-form-label col-4">Message</label>
+                        <div class="col-6">
+                            <textarea name="content" id="gc-message-content" required class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <input type="hidden" name="identifier" value="" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-gc-dismiss="message" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-gc-add="message"><i class="fas fa-plus"></i> Add</button>
+                <button type="button" class="btn btn-primary" data-gc-save="message"><i class="fas fa-save"></i> Save</button>
             </div>
         </div>
     </div>

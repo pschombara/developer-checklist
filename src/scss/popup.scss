@@ -36,4 +36,9 @@
     .collapsible {
         cursor: pointer;
     }
+
+    .chat-issue-list {
+        max-height: 125px;
+        overflow-y: scroll;
+    }
 }

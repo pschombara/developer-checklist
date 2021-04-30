@@ -1,6 +1,5 @@
 import {Validator} from "./options/validator";
 import {ConfirmationPrompt, SuccessPrompt} from "./sweet";
-import {OptionsRocketChat} from "./options/rocket.chat";
 import {Jira} from "./options/jira";
 import {Storage} from "./storage";
 import {Config} from "./options/config";
@@ -9,6 +8,7 @@ import {Jenkins} from "./options/jenkins";
 import {Modules} from './options/modules';
 import {GitLab} from './options/gitLab';
 import {Migration} from './migration/migration';
+import {Chat} from './options/chat.mjs';
 
 export class Options {
     constructor() {
@@ -16,7 +16,7 @@ export class Options {
         this._jira = new Jira();
         this._validator = new Validator();
         this._config = new Config(this._storage, this._validator);
-        this._rocketChat = new OptionsRocketChat();
+        this._chat = new Chat();
         this._cheatSheet = new CheatSheet();
         this._jenkins = new Jenkins();
         this._gitLab = new GitLab();
@@ -60,8 +60,8 @@ export class Options {
         return this._jira;
     }
 
-    get rocketChat() {
-        return this._rocketChat;
+    get chat() {
+        return this._chat;
     }
 
     get gitLab() {
@@ -76,11 +76,6 @@ export class Options {
         return this.storage.loadOptions().then(stored => {
             if (0 === Object.keys(stored).length) {
                 this.config.restore().then(stored => {
-                    if (this.options.hasOwnProperty('rocketChat')) {
-                        stored.rocketChat.userId = this.options.rocketChat.userId;
-                        stored.rocketChat.authToken = this.options.rocketChat.authToken;
-                    }
-
                     this.options = stored;
                     this.storage.write('options', stored);
                 });
@@ -99,6 +94,7 @@ export class Options {
                 this.config.init();
                 this.gitLab.init();
                 this.jira.init();
+                this.chat.init();
 
                 this._buttonRestoreOptions.addEventListener('click', () => {
                     ConfirmationPrompt.fire({
@@ -108,11 +104,6 @@ export class Options {
                     }).then((result) => {
                         if (result.value) {
                             this.config.restore().then(options => {
-                                if (this.options.hasOwnProperty('rocketChat')) {
-                                    options.rocketChat.userId = this.options.rocketChat.userId;
-                                    options.rocketChat.authToken = this.options.rocketChat.authToken;
-                                }
-
                                 this.storage.write('options', options);
 
                                 SuccessPrompt.fire({
@@ -141,10 +132,10 @@ export class Options {
         this.options = {};
         this.options.jira = this.jira.save();
         this.options.jenkins = this.jenkins.save();
-        this.options.rocketChat = this.rocketChat.options;
         this.options.cheatSheet = this.cheatSheet.save();
         this.options.gitLab = this.gitLab.save();
         this.options.modules = this.modules.save();
+        this.options.chat = this.chat.save();
         this.options.version = this._migration.currentVersion;
 
         if (false === this.validator.validate(this.options)) {
@@ -185,14 +176,9 @@ const create = (op) => {
             op.jira.options = op.options.jira;
         }
 
-        if (op.options.hasOwnProperty('rocketChat')) {
-            op.rocketChat.options = op.options.rocketChat;
+        if (op.options.hasOwnProperty('chat')) {
+            op.chat.options = op.options.chat;
         }
-
-        // need user action to request permission
-        document.querySelector('#rocket-chat-tab').addEventListener('click', () => {
-            op.rocketChat.init();
-        });
 
         resolve();
     });

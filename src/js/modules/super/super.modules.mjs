@@ -3,8 +3,8 @@ export class SuperModules {
         this._options = {
             jenkins: false,
             cheatSheet: false,
-            rocketChat: false,
-            gitLab: false
+            chat: false,
+            gitLab: false,
         }
     }
 

@@ -1,6 +1,6 @@
-import {ErrorPrompt, Toast} from "../sweet";
-import {Validator} from "./validator";
-import {Storage} from "../storage";
+import {ErrorPrompt, Toast} from '../sweet';
+import {Validator} from './validator';
+import {Storage} from '../storage';
 import {Migration} from '../migration/migration';
 
 export class Config {
@@ -18,16 +18,12 @@ export class Config {
         });
 
         this._fileUpload.addEventListener('change', (e) => {
-           this.importFromJson(e);
+            this.importFromJson(e);
         });
     }
 
     exportToJson(options) {
         let elem = document.createElement('a');
-
-        // for security reasons reset user id and authToken
-        options.rocketChat.userId = '';
-        options.rocketChat.authToken = '';
 
         elem.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(options)));
         elem.setAttribute('download', 'jira-dev-checklist-options');
@@ -41,8 +37,8 @@ export class Config {
     importFromJson(e) {
         if (0 === e.target.files.length) {
             Toast.fire({
-                icon: "error",
-                title: "No file selected"
+                icon: 'error',
+                title: 'No file selected'
             });
 
             return;
@@ -52,8 +48,8 @@ export class Config {
 
         if (file.size <= 0) {
             Toast.fire({
-                icon: "error",
-                title: "File is empty"
+                icon: 'error',
+                title: 'File is empty'
             });
 
             return;
@@ -61,8 +57,8 @@ export class Config {
 
         if ('application/json' !== file.type) {
             Toast.fire({
-                icon: "error",
-                title: "Wrong file type"
+                icon: 'error',
+                title: 'Wrong file type'
             });
 
             return;
@@ -100,8 +96,8 @@ const uploadFile = (file, storage, validator, migration) =>  {
 
             if (false === validator.validate(data)) {
                 ErrorPrompt.fire({
-                    icon: "error",
-                    title: "JSON is invalid",
+                    icon: 'error',
+                    title: 'JSON is invalid',
                     html: validator.htmlErrors
                 });
 
@@ -109,9 +105,13 @@ const uploadFile = (file, storage, validator, migration) =>  {
             }
 
             storage.loadOptions().then(stored => {
-                if (0 !== Object.keys(stored).length) {
-                    data.rocketChat.userId = stored.rocketChat.userId;
-                    data.rocketChat.authToken = stored.rocketChat.authToken;
+                if (0 !== Object.keys(stored).length
+                    && stored.hasOwnProperty('chat')
+                    && stored.chat.hasOwnProperty('rocket')
+                ) {
+                    console.log(data.chat, stored);
+                    data.chat.rocket.userId = stored.chat.rocket.userId;
+                    data.chat.rocket.authToken = stored.chat.rocket.authToken;
                 }
 
                 storage.write('options', data);

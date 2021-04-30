@@ -389,13 +389,11 @@
             }
         }
     },
-    "rocketChat": {
-        "url": "",
-        "authToken": "",
-        "userId": "",
-        "internalRoom": "",
-        "externalRoom": "",
-        "internalMessage": "@here team planning for {issue}",
-        "externalMessage": "@here team planning for {issue}"
+    "chat": {
+        "google": {
+            "rooms": {},
+            "messages": {},
+            "enabled": false
+        }
     }
 }

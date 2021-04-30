@@ -44,6 +44,9 @@
             <li class="nav-item" data-tab-show="all" data-module="special" data-toggle="popover" data-content="Special" data-placement="bottom">
                 <a class="nav-link" href="#special" role="tab" id="special-tab" data-toggle="tab"><i class="fas fa-toilet-paper"></i></a>
             </li>
+            <li class="nav-item" data-tab-show="checklist" data-module="chat" data-toggle="popover" data-content="Chat Notifications" data-placement="bottom">
+                <a class="nav-link" href="#chat" role="tab" id="chat-tab" data-toggle="tab"><i class="fas fa-comment"></i></a>
+            </li>
             <li class="nav-item" data-tab-show="all" data-module="cheatSheet" data-toggle="popover" data-content="Cheat Sheet" data-placement="bottom">
                 <a class="nav-link" href="#cheat-sheet" role="tab" id="cheat-sheet-tab" data-toggle="tab"><i class="fas fa-terminal"></i></a>
             </li>
@@ -55,14 +58,12 @@
                         <div class="col font-weight-bold">Go to</div>
                     </div>
                     <div class="row mt-2">
-                        <div class="col-4">
-                            <select data-select="board" class="form-control"></select>
-                        </div>
-                        <div class="col-5">
+                        <div class="col-10 input-group">
+                            <select data-select="board" class="custom-select"></select>
                             <input id="issue" type="text" class="form-control" />
-                        </div>
-                        <div class="col-3">
-                            <button type="button" id="buttonIssue" class="btn btn-primary issue">GO!</button>
+                            <div class="input-group-append">
+                                <button type="button" id="buttonIssue" class="btn btn-primary issue">GO!</button>
+                            </div>
                         </div>
                     </div>
                     <div class="row mt-4" data-issues>
@@ -88,21 +89,6 @@
             <div class="tab-pane fade" id="special" role="tabpanel">
                 <div class="card-body">
                     <div class="container-fluid">
-                        <div data-module="rocketChat">
-                            <div class="row">
-                                <div class="col">
-                                    <h4><i class="fab fa-rocketchat"></i> Team planing</h4>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-3">
-                                    <button type="button" class="btn btn-primary btn-sm btn-block" data-chat="internal">Internal</button>
-                                </div>
-                                <div class="col-3">
-                                    <button type="button" class="btn btn-primary btn-sm btn-block" data-chat="external">External</button>
-                                </div>
-                            </div>
-                        </div>
                         <div data-module="jenkins">
                             <div class="row mt-3">
                                 <div class="col">
@@ -182,10 +168,72 @@
                     </div>
                 </div>
             </div>
+            <div class="tab-pane fade" id="chat" role="tabpanel">
+                <div class="card-body">
+                    <div class="container-fluid">
+                        <div class="row mt-1">
+                            <div class="col">
+                                <h4><i class="fas fa-comment"></i> Chat Notifications</h4>
+                            </div>
+                        </div>
+                        <div data-chat="content">
+                            <div class="row">
+                                <div class="col">
+                                    <select class="form-control" id="chatClient"></select>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <input type="text" class="form-control" placeholder="Room" list="chatRoomList" />
+                                    <datalist id="chatRoomList"></datalist>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col input-group">
+                                    <input type="text" class="form-control" placeholder="Message" list="chatMessageList" />
+                                    <datalist id="chatMessageList"></datalist>
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-outline-success" id="chatSend" disabled><i class="fas fa-play"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col input-group">
+                                    <select id="chatBoardList" data-select="board" class="custom-select"></select>
+                                    <input id="chatIssue" type="text" class="form-control" />
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-outline-success" id="chatAddIssue">Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <h6>Attached Issues <span class="badge badge-primary" data-chat-issues-count>0</span></h6>
+                            </div>
+                            <div class="chat-issue-list" data-chat-issues>
+
+                            </div>
+                        </div>
+                        <div class="d-none" data-chat="info">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="alert alert-warning">
+                                        Please configure a chat client first. <a href="#" data-open="options" data-open-extra="chat">Configure chat</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="tab-pane fade" id="cheat-sheet" role="tabpanel">
                 <div class="card-body">
                     <div class="container-fluid">
-                        <div class="row">
+                        <div class="row mt-1">
+                            <div class="col">
+                                <h4><i class="fas fa-terminal"></i> Cheat Sheet</h4>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
                             <div class="col">
                                 <input class="form-control" list="cheatSheetList"/>
                                 <datalist id="cheatSheetList" data-cheat-sheet-labels></datalist>
@@ -242,6 +290,16 @@
                     <ul data-content="%number%"></ul>
                 </div>
             </div>
+        </div>
+    </div>
+</template>
+<template data-template="chat-issue">
+    <div class="row mt-2">
+        <div class="col-10" data-chat-issue="%issueNumber%">%issueNumber%</div>
+        <div class="col-2">
+            <button type="button" class="btn btn-danger">
+                <i class="fas fa-trash"></i>
+            </button>
         </div>
     </div>
 </template>

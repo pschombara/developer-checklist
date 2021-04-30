@@ -69,7 +69,7 @@ export class Storage {
                     }
                 }
             });
-        })
+        });
     }
 
     write(identifier, data) {
