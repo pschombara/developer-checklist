@@ -1,0 +1,91 @@
+<template>
+    <v-card>
+        <v-card-title>
+            <v-spacer></v-spacer>
+            <v-btn icon @click="openOptions('cheatSheet')"><v-icon>fas fa-cog</v-icon></v-btn>
+        </v-card-title>
+        <v-card-text>
+            <v-row>
+                <v-col cols="12">
+                    <v-autocomplete
+                        :items="cheats"
+                        item-text="label"
+                        item-value="command"
+                        v-model="command"
+                    ></v-autocomplete>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="10">
+                    <v-text-field
+                        outlined
+                        readonly
+                        :disabled="'' === command"
+                        :value="command"
+                        ref="copyCommand"
+                        @click="copy"
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="2">
+                    <v-btn
+                        block
+                        x-large
+                        outlined
+                        color="success"
+                        :disabled="'' === command"
+                        @click="copy"
+                    >
+                        <v-icon>fas fa-copy</v-icon>
+                    </v-btn>
+                </v-col>
+            </v-row>
+        </v-card-text>
+        <v-snackbar
+            v-model="hint"
+            :timeout="2200"
+        >
+            <v-icon left color="success">fas fa-check</v-icon>
+            Copied to clipboard
+
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                    color="blue"
+                    text
+                    v-bind="attrs"
+                    @click="hint = false"
+                >
+                    Close
+                </v-btn>
+            </template>
+        </v-snackbar>
+    </v-card>
+</template>
+
+<script>
+export default {
+    name: 'CheatSheet',
+    computed: {
+        cheats: function () {
+            return this.$store.getters['cheatSheet/getItems']
+        },
+    },
+    methods: {
+        openOptions: function (tab) {
+            this.$store.dispatch('changeMainTab', tab)
+            chrome.runtime.openOptionsPage()
+        },
+        copy: function () {
+            this.$refs.copyCommand.$refs.input.select()
+            document.execCommand('copy')
+            window.getSelection().removeAllRanges()
+            this.hint = true
+        },
+    },
+    data: () => {
+        return {
+            command: '',
+            hint: false,
+        }
+    },
+}
+</script>

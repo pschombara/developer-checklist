@@ -1,0 +1,270 @@
+<template>
+    <v-card v-if="optionsValid">
+        <v-card-title>
+            Merge Requests
+            <v-spacer></v-spacer>
+            <v-btn icon @click="openOptions('gitLab')"><v-icon>fas fa-cog</v-icon></v-btn>
+        </v-card-title>
+        <v-card-text>
+            <v-row>
+                <v-col cols="8">
+                    <v-autocomplete
+                        :items="projects"
+                        item-value="uuid"
+                        item-text="project"
+                        v-model="project"
+                        :label="text.project"
+                        dense
+                    ></v-autocomplete>
+                </v-col>
+                <v-col cols="4">
+                    <v-text-field
+                        type="number"
+                        min="1"
+                        v-model="number"
+                        label="Merge Number"
+                        dense
+                    ></v-text-field>
+                </v-col>
+            </v-row>
+            <v-row class="mt-0">
+                <v-col cols="10">
+                    <v-text-field
+                        outlined
+                        readonly
+                        ref="copyMergeUrl"
+                        :value="mergeUrl"
+                        @click="copy"
+                        :disabled="!readyToCopy"
+                        dense
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="2">
+                    <v-btn
+                        block
+                        color="success"
+                        @click="copy"
+                        :disabled="!readyToCopy"
+                    ><v-icon small>fas fa-copy</v-icon></v-btn>
+                </v-col>
+            </v-row>
+            <v-row class="mt-0">
+                <v-col cols="12">
+                    <v-data-table
+                        :items="issueData.mergeRequests"
+                        :headers="issueHeader"
+                        :items-per-page="3"
+                        :footer-props="{disableItemsPerPage: true, itemsPerPageOptions:[3]}"
+                    >
+                        <template v-slot:top>
+                            <v-toolbar flat>
+                                <v-autocomplete
+                                    :items="issues"
+                                    item-text="name"
+                                    item-value="name"
+                                    v-model="issue"
+                                    label="Attach to Issue"
+                                    class="mt-7"
+                                ></v-autocomplete>
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                    color="success"
+                                    @click="attachToIssue"
+                                    :disabled="!readyToCopy || null === issue"
+                                ><v-icon small>fas fa-plus</v-icon></v-btn>
+                            </v-toolbar>
+                        </template>
+                        <template v-slot:item.id="{item}">
+                            {{ projectName(item.id) }}
+                        </template>
+                        <template v-slot:item.action="{item}">
+                            <v-btn icon small @click="copyMergeRequest(item.id, item.number, item.source)">
+                                <v-icon small>fas fa-copy</v-icon>
+                            </v-btn>
+                            <v-btn icon small @click="openMergeRequest(item.id, item.number)">
+                                <v-icon small>fas fa-external-link-alt</v-icon>
+                            </v-btn>
+                            <v-btn icon @click="removeFromIssue(item.id, item.number)" small>
+                                <v-icon color="red darken-2" small>fas fa-trash</v-icon>
+                            </v-btn>
+                        </template>
+                    </v-data-table>
+                </v-col>
+            </v-row>
+        </v-card-text>
+        <v-snackbar
+            v-model="hint"
+            :timeout="2200"
+        >
+            <v-icon left color="success">fas fa-check</v-icon>
+            {{text.copiedToClipboard}}
+
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                    color="blue"
+                    text
+                    v-bind="attrs"
+                    @click="hint = false"
+                >
+                    {{text.close}}
+                </v-btn>
+            </template>
+        </v-snackbar>
+    </v-card>
+    <v-card v-else>
+        <v-card-text>
+            Missing Options
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" plain @click="openOptions('gitLab')">{{text.openOptions}}</v-btn>
+            <v-spacer></v-spacer>
+        </v-card-actions>
+    </v-card>
+</template>
+
+<script>
+import _ from 'lodash'
+
+export default {
+    name: 'GitLab',
+    created() {
+        this.optionsValid = '' !== this.$store.getters['gitLab/getHost']
+            && 0 < this.$store.getters['gitLab/getProjects'].length
+
+        if (false === this.optionsValid) {
+            return
+        }
+
+        this.$store.dispatch('gitLab/checkUrl').then(() => {
+            this.project = this.$store.getters['gitLab/currentProject']
+            this.number = this.$store.getters['gitLab/currentNumber']
+        })
+
+        this.issues = _.cloneDeep(this.$store.getters['issues/list'])
+
+        this.issues.sort(function (a, b) {
+            if (a.work || b.work) {
+                return a.work ? -1 : 1
+            }
+
+            if ((a.pinned || b.pinned) && a.pinned !== b.pinned) {
+                return a.pinned ? -1 : 1
+            }
+
+            return a.date > b.date ? -1 : 1
+        })
+
+        if (this.issues.length > 0) {
+            this.issue = this.issues[0].name
+        }
+    },
+    computed: {
+        projects: function () {
+            return this.$store.getters['gitLab/getProjects']
+        },
+        readyToCopy: function () {
+            const host = this.$store.getters['gitLab/getHost']
+
+            return '' !== host && '' !== this.project && null !== this.number && '' !== this.number
+        },
+        mergeUrl: function () {
+            if (false === this.readyToCopy) {
+                return ''
+            }
+
+            const source = this.$store.getters['gitLab/currentSource']
+
+            return this.$store.getters['gitLab/url'](this.project, this.number, source, true)
+        },
+        issueData: function () {
+            return this.$store.getters['issues/issue'](this.issue)
+        },
+        issueHeader: function () {
+            return [
+                { text: 'Project', value: 'id'},
+                { text: 'Number', value: 'number'},
+                { text: '', value: 'action', sortable: false, align:'right'},
+            ]
+        },
+    },
+    methods: {
+        openOptions: function (tab) {
+            this.$store.dispatch('changeMainTab', tab)
+            chrome.runtime.openOptionsPage()
+        },
+        copy: function () {
+            if (this.readyToCopy) {
+                this.$refs.copyMergeUrl.$refs.input.select()
+                document.execCommand('copy')
+                window.getSelection().removeAllRanges()
+                this.hint = true
+            }
+        },
+        attachToIssue: function () {
+            this.$store.dispatch('issues/attachMergeRequest', {
+                issue: this.issue,
+                id: this.project,
+                number: this.number,
+                source: this.$store.getters['gitLab/currentSource'] ?? '',
+            })
+        },
+        removeFromIssue: function (id, number) {
+            this.$store.dispatch('issues/removeMergeRequest', {
+                issue: this.issue,
+                id,
+                number,
+            })
+        },
+        projectName: function (id) {
+            return this.projects.find(project => project.uuid === id).project
+        },
+        openMergeRequest: function (id, number) {
+            const url = this.$store.getters['gitLab/url'](id, number, '', false)
+
+            if ('' === url) {
+                return
+            }
+
+            chrome.tabs.create({url})
+        },
+        copyMergeRequest: function (id, number, source) {
+            const url = this.$store.getters['gitLab/url'](id, number, source, true)
+
+            if ('' === url) {
+                return
+            }
+
+            const input = document.createElement('input')
+            input.classList.add('d-none')
+            input.value = url
+
+            document.querySelector('body').append(input)
+            input.select()
+
+            document.execCommand('copy')
+            window.getSelection().removeAllRanges()
+            this.hint = true
+
+            document.querySelector('body').removeChild(input)
+        },
+    },
+    data: () => {
+        return {
+            optionsValid: true,
+            i18n: chrome.i18n,
+            text: {
+                openOptions: chrome.i18n.getMessage('openOptions'),
+                close: chrome.i18n.getMessage('Close'),
+                copiedToClipboard: chrome.i18n.getMessage('copiedToClipboard'),
+                project: chrome.i18n.getMessage('Project'),
+            },
+            project: '',
+            number: null,
+            hint: false,
+            issue: null,
+            issues: [],
+        }
+    },
+}
+</script>
