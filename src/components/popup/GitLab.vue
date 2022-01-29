@@ -51,6 +51,7 @@
             <v-row class="mt-0">
                 <v-col cols="12">
                     <v-data-table
+                        v-if="issueData"
                         :items="issueData.mergeRequests"
                         :headers="issueHeader"
                         :items-per-page="3"

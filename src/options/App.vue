@@ -365,9 +365,9 @@ export default {
             this.$store.dispatch('import', {
                 options: this.importOptions,
                 importSettings: this.importModules,
-            }).then(
-                this.loading = false,
-            )
+            }).then(() => {
+                this.loading = false
+            })
         },
     },
     created() {
