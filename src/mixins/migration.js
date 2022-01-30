@@ -3,7 +3,7 @@ import semver from 'semver'
 
 export default class Migration {
     constructor () {
-        this._version = '0.6.0'
+        this._version = '0.6.1'
         this.migrations = [
             new V0_6_0(),
         ]
