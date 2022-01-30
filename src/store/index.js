@@ -50,7 +50,11 @@ export default new Vuex.Store({
     state,
     mutations: {
         SET_MODULES: (state, modules) => {
-            state.modules = modules
+            for (let module in modules) {
+                if (undefined !== state.modules[module]) {
+                    state.modules[module] = modules[module]
+                }
+            }
         },
         SWITCH_MODULE: (state, data) => {
             state.modules[data.module] = data.value
@@ -162,12 +166,16 @@ export default new Vuex.Store({
                 configRequest.send()
             })
         },
-        import: ({dispatch}, {options, importSettings}) => {
+        import: ({dispatch, commit}, {options, importSettings}) => {
             return new Promise(resolve => {
                 const promises = []
 
                 for (let setting of importSettings) {
-                    promises.push(dispatch(setting + '/init', options[setting]))
+                    if ('modules' === setting) {
+                        commit('SET_MODULES', options.modules)
+                    } else {
+                        promises.push(dispatch(setting + '/init', options[setting]))
+                    }
                 }
 
                 Promise.all(promises).then(() => {

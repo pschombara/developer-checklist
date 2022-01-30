@@ -352,7 +352,7 @@ export default {
             return typeof data === 'object'
                 && Object.prototype.hasOwnProperty.call(data, 'exported')
                 && Object.prototype.hasOwnProperty.call(data, 'options')
-                && semver.eq(data.options.version, manifest.version)
+                && semver.gte(data.options.version, manifest.version)
         },
         closeAlerts: function () {
             this.alert.import.type = false
@@ -365,9 +365,9 @@ export default {
             this.$store.dispatch('import', {
                 options: this.importOptions,
                 importSettings: this.importModules,
-            }).then(
-                this.loading = false,
-            )
+            }).then(() => {
+                this.loading = false
+            })
         },
     },
     created() {
