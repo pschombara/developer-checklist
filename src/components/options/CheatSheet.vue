@@ -80,7 +80,7 @@
 
 <script>
 export default {
-    name: 'CheatSheet',
+    name: 'OptionCheatSheet',
     computed: {
         items() {
             return this.$store.getters['cheatSheet/getItems']

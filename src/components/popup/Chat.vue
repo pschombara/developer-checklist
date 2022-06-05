@@ -77,7 +77,7 @@
 
 <script>
 export default {
-    name: 'Chat',
+    name: 'PopupChat',
     created() {
         for (let client of this.clients) {
             if (client.main) {

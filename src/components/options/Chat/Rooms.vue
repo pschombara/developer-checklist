@@ -92,7 +92,7 @@
 import Helper from '@/mixins/helper'
 
 export default {
-    name: 'Rooms',
+    name: 'ChatRooms',
     props: {
         client: {
             type: String,

@@ -39,7 +39,7 @@
 <script>
 
 export default {
-    name: 'Chrome',
+    name: 'OptionChrome',
     created() {
         chrome.permissions.contains({
             permissions: ['tabGroups'],

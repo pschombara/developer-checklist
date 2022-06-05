@@ -12,7 +12,7 @@
                             <v-icon small color="success" v-if="checkGroupCompleted(item.uid)">fas fa-check</v-icon>
                         </v-list-item-icon>
                         <v-list-item-content>
-                            <v-list-item-title :class="(checkGroupCompleted(item.uid) ? 'text-decoration-line-through' : '')" v-text="item.title"></v-list-item-title>
+                            <v-list-item-title :class="(checkGroupCompleted(item.uid) ? 'text-decoration-line-through' : '')" :is="item.title"></v-list-item-title>
                         </v-list-item-content>
                     </template>
                     <v-list-item
@@ -24,7 +24,7 @@
                             <v-icon small color="success" v-if="isChecked(entry.id)">fas fa-check</v-icon>
                         </v-list-item-icon>
                         <v-list-item-content>
-                            <v-list-item-title :class="'cursor-pointer text-wrap' + (isChecked(entry.id) ? ' text-decoration-line-through' : '')" v-text="entry.text" @click="toggleCheck(entry.id)" ></v-list-item-title>
+                            <v-list-item-title :class="'cursor-pointer text-wrap' + (isChecked(entry.id) ? ' text-decoration-line-through' : '')" :is="entry.text" @click="toggleCheck(entry.id)" ></v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                 </v-list-group>
@@ -59,7 +59,7 @@
 
 <script>
 export default {
-    name: 'Checklist',
+    name: 'JiraChecklist',
     props: {
         uuid: {
             type: String,

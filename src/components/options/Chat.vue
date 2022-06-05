@@ -56,7 +56,7 @@ import Messages from './Chat/Messages'
 import Rooms from './Chat/Rooms'
 
 export default {
-    name: 'Chat',
+    name: 'OptionChat',
     components: {General, Messages, Rooms},
     methods: {
         chooseClient: function (client) {

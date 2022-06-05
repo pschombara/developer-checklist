@@ -128,7 +128,7 @@
 import _ from 'lodash'
 
 export default {
-    name: 'GitLab',
+    name: 'PopupGitLab',
     created() {
         this.optionsValid = '' !== this.$store.getters['gitLab/getHost']
             && 0 < this.$store.getters['gitLab/getProjects'].length

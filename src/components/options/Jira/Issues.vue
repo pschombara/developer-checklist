@@ -49,7 +49,7 @@
 import Helper from '../../../mixins/helper'
 
 export default {
-    name: 'Issues',
+    name: 'JiraIssues',
     methods: {
         reload: function () {
             this.load = true

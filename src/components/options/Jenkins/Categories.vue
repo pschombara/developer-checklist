@@ -76,7 +76,7 @@
 import Helper from '@/mixins/helper'
 
 export default {
-    name: 'Jenkins',
+    name: 'JenkinsCategories',
     computed: {
         host: {
             get() {

@@ -128,7 +128,7 @@
 import _ from 'lodash'
 
 export default {
-    name: 'Jenkins',
+    name: 'PopupJenkins',
     created() {
         this.optionsValid = '' !== this.$store.getters['jenkins/getHost']
             && 0 < this.$store.getters['jenkins/getBuilds'].length

@@ -12,7 +12,7 @@
 import Helper from '@/mixins/helper'
 
 export default {
-    name: 'Jenkins',
+    name: 'JenkinsGeneral',
     computed: {
         host: {
             get() {

@@ -1,6 +1,3 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-
 import chat from '@/store/modules/chat'
 import cheatSheet from '@/store/modules/cheatSheet'
 import gitLab from '@/store/modules/gitLab'
@@ -11,8 +8,7 @@ import Migration from '@/mixins/migration'
 import icons from '@/store/modules/icons'
 import issues from '@/store/modules/issues'
 import Helper from '../mixins/helper'
-
-Vue.use(Vuex)
+import {createStore} from 'vuex'
 
 const migration = new Migration()
 
@@ -45,7 +41,7 @@ const state = {
     ],
 }
 
-export default new Vuex.Store({
+const store = createStore({
     strict: process.env.NODE_ENV !== 'production',
     state,
     mutations: {
@@ -333,3 +329,6 @@ export default new Vuex.Store({
         issues,
     },
 })
+
+
+export default store

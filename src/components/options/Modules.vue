@@ -26,7 +26,7 @@
 
 <script>
 export default {
-    name: 'Modules',
+    name: 'OptionModules',
     methods: {
         switchChanged: function (module, value) {
             this.$store.dispatch('switchModule', {module, value})

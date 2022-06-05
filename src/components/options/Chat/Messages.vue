@@ -90,7 +90,7 @@
 
 <script>
 export default {
-    name: 'Messages',
+    name: 'ChatMessages',
     props: {
         client: {
             type: String,

@@ -52,7 +52,7 @@ import Categories from './Jenkins/Categories'
 import General from './Jenkins/General'
 
 export default {
-    name: 'Jenkins',
+    name: 'OptionJenkins',
     components: {Builds, Categories, General},
     data() {
         return {

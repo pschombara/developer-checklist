@@ -100,7 +100,7 @@ import Checklist from '@/components/popup/Jira/Checklist'
 import Templates from '@/components/popup/Jira/Templates'
 
 export default {
-    name: 'Jira',
+    name: 'PopupJira',
     components: {Templates, Checklist},
     created() {
         this.checklists = this.$store.getters['jira/getChecklists'].filter(checklist => checklist.enabled)

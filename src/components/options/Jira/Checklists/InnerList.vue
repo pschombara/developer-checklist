@@ -105,10 +105,10 @@
 <script>
 import Helper from '@/mixins/helper'
 import _ from 'lodash'
-import {Uuid} from '../../../../mixins/uuid'
+import {Uuid} from '@/mixins/uuid'
 
 export default  {
-    name: 'InnerList',
+    name: 'ChecklistsInnerList',
     props: ['uuid', 'uid', 'text'],
     created() {
         this.getCategory()

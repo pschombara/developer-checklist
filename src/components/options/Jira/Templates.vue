@@ -111,7 +111,7 @@
 
 <script>
 export default {
-    name: 'Templates',
+    name: 'JiraTemplates',
     methods: {
         openTemplate: function (template) {
             this.editTemplate = {

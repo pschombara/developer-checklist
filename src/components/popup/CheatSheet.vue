@@ -63,7 +63,7 @@
 
 <script>
 export default {
-    name: 'CheatSheet',
+    name: 'PopupCheatSheet',
     computed: {
         cheats: function () {
             return this.$store.getters['cheatSheet/getItems']

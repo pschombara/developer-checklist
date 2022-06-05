@@ -125,7 +125,7 @@
 <script>
 
 export default {
-    name: 'Jenkins',
+    name: 'JenkinsBuilds',
     computed: {
         builds() {
             return this.$store.getters['jenkins/getBuilds']

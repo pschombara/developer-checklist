@@ -64,7 +64,7 @@
 <script>
 
 export default {
-    name: 'QuickList',
+    name: 'PopupQuickList',
     methods: {
         openIssue: function (issueNumber) {
             chrome.tabs.create({url: `${this.jiraUrl}/browse/${issueNumber}`})

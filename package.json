@@ -1,43 +1,41 @@
 {
-  "name": "jdc",
-  "version": "0.6.1",
-  "private": true,
-  "scripts": {
-    "serve": "vue-cli-service build --mode development --watch",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
-  },
-  "dependencies": {
-    "core-js": "^3.20",
-    "lodash": "^4.17",
-    "semver": "^7.3",
-    "vue": "^2.6",
-    "vue-router": "^3.2.0",
-    "vuetify": "^2.6",
-    "vuex": "^3.6"
-  },
-  "devDependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.3",
-    "@vue/cli-plugin-babel": "^4.5",
-    "@vue/cli-plugin-eslint": "^4.5",
-    "@vue/cli-plugin-router": "^4.5",
-    "@vue/cli-plugin-vuex": "^4.5",
-    "@vue/cli-service": "^4.5",
-    "@vue/eslint-config-standard": "^5.1.2",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7",
-    "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.0",
-    "eslint-plugin-vue": "^6.2",
-    "patch-package": "^6.4.7",
-    "postinstall-postinstall": "^2.1.0",
-    "sass": "^1.32.0",
-    "sass-loader": "^10.0.0",
-    "vue-cli-plugin-browser-extension": "^0.25",
-    "vue-cli-plugin-vuetify": "~2.3.1",
-    "vue-template-compiler": "^2.6.11",
-    "vuetify-loader": "^1.7.0"
-  }
+    "name": "developer-checklist",
+    "version": "0.6.2",
+    "private": true,
+    "scripts": {
+        "serve": "vue-cli-service build --mode development --watch",
+        "build": "vue-cli-service build",
+        "lint": "vue-cli-service lint"
+    },
+    "dependencies": {
+        "@vitejs/plugin-vue": "^2.3.3",
+        "core-js": "^3.20",
+        "lodash": "^4.17",
+        "semver": "^7.3",
+        "vite": "^2.9.9",
+        "vue": "^3.2.36",
+        "vuetify": "^3.0.0-beta.3",
+        "vuex": "^4.0.2"
+    },
+    "devDependencies": {
+        "@fortawesome/fontawesome-free": "^5.15.3",
+        "@vue/cli-plugin-babel": "^5.0.4",
+        "@vue/cli-plugin-eslint": "^5.0.4",
+        "@vue/cli-plugin-router": "^5.0.4",
+        "@vue/cli-plugin-vuex": "^5.0.4",
+        "@vue/cli-service": "^5.0.4",
+        "@vue/compiler-sfc": "^3.2.36",
+        "@vue/eslint-config-standard": "^7.0.0",
+        "babel-eslint": "^10.1.0",
+        "eslint": "^7.32.0",
+        "eslint-plugin-import": "^2.20.2",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-promise": "^4.2.1",
+        "eslint-plugin-standard": "^4.0.0",
+        "eslint-plugin-vue": "^9.1.0",
+        "postinstall-postinstall": "^2.1.0",
+        "sass": "^1.32.0",
+        "sass-loader": "^10.0.0",
+        "vue-cli-plugin-vuetify": "^2.5.1"
+    }
 }

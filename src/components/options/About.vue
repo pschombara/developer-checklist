@@ -2,7 +2,7 @@
     <v-card flat class="mt-5">
         <v-card-text>
             <v-row>
-                <v-col cols="12" v-html="about"></v-col>
+                <v-col cols="12" :is="about"></v-col>
             </v-row>
             <v-row class="mt-3">
                 <v-col cols="12">
@@ -21,7 +21,7 @@
 
 <script>
 export default {
-    name: 'About',
+    name: 'OptionAbout',
     data() {
         return {
             about: chrome.i18n.getMessage('extAbout'),

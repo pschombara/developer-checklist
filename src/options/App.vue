@@ -4,7 +4,7 @@
             <v-container fluid>
                 <div v-if="loading">
                     <v-overlay opacity=".75">
-                        <v-progress-circular size="256" width="10" color="orange" indeterminate></v-progress-circular>
+                        <v-progress-circular size="256" width="10" color="orange" indeterminate=""></v-progress-circular>
                     </v-overlay>
                 </div>
                 <v-alert v-model="alert.saved" type="success" dismissible>
@@ -19,13 +19,13 @@
                     <v-spacer></v-spacer>
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn class="mr-2" color="success" fab icon v-bind="attrs" v-on="on" @click="save"><v-icon>fas fa-save</v-icon></v-btn>
+                            <v-btn class="mr-2" color="success" fab icon="" v-bind="attrs" v-on="on" @click="save"><v-icon>fas fa-save</v-icon></v-btn>
                         </template>
                         <span>{{text.save}}</span>
                     </v-tooltip>
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn class="mr-2" fab icon v-bind="attrs" v-on="on" @click="saveExportStart"><v-icon>fas fa-download</v-icon></v-btn>
+                            <v-btn class="mr-2" fab icon="" v-bind="attrs" v-on="on" @click="saveExportStart"><v-icon>fas fa-download</v-icon></v-btn>
                             <v-dialog v-model="dialog.export" max-width="800">
                                 <v-card>
                                     <v-card-title>{{text.export}}</v-card-title>
@@ -37,9 +37,8 @@
                                                 v-model="exportModules"
                                                 multiple
                                             >
-                                                <template v-for="setting in settings">
+                                                <template v-for="setting in settings" :key="setting.id">
                                                     <v-list-item
-                                                        :key="setting.id"
                                                         :value="setting.id"
                                                     >
                                                         <template v-slot:default="{ active }">
@@ -89,9 +88,8 @@
                                                 v-model="importModules"
                                                 multiple
                                             >
-                                                <template v-for="setting in settings">
+                                                <template v-for="setting in settings" :key="setting.id">
                                                     <v-list-item
-                                                        :key="setting.id"
                                                         :value="setting.id"
                                                         :disabled="!importAvailableModules.includes(setting.id)"
                                                     >

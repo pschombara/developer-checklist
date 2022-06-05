@@ -141,7 +141,7 @@
 import Helper from '@/mixins/helper'
 
 export default {
-    name: 'General',
+    name: 'JiraGeneral',
     computed: {
         host: {
             get() {

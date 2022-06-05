@@ -22,7 +22,7 @@
 
 <script>
 export default {
-    name: 'General',
+    name: 'ChatGeneral',
     props: {
         client: {
             type: String,

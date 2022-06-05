@@ -65,7 +65,7 @@ import Templates from '@/components/options/Jira/Templates'
 import Issues from '@/components/options/Jira/Issues'
 
 export default {
-    name: 'Jira',
+    name: 'OptionJira',
     components: {Issues, General, Checklists, Templates},
     data: function() {
         return {

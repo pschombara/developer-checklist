@@ -1,20 +1,23 @@
 import '@fortawesome/fontawesome-free/css/all.min.css'
-import Vue from 'vue'
-import Vuetify from 'vuetify/lib/framework'
-import en from 'vuetify/es5/locale/en'
-import de from 'vuetify/es5/locale/de'
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
+import {de, en} from 'vuetify/lib/locale'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
 
-Vue.use(Vuetify)
-
-export default new Vuetify({
+const vuetify = createVuetify({
+    components,
+    directives,
     icons: {
         iconfont: 'fa',
-    },
-    theme: {
+    },    theme: {
         dark: window.matchMedia('(prefers-color-scheme: dark)').matches,
     },
     lang: {
         locales: { en, de },
         current: chrome.i18n.getUILanguage(),
     },
+
 })
+
+export default vuetify

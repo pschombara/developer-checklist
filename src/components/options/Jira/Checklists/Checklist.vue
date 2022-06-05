@@ -240,7 +240,7 @@
 import InnerList from '@/components/options/Jira/Checklists/InnerList'
 
 export default {
-    name: 'Checklist',
+    name: 'ChecklistsChecklist',
     components: {InnerList},
     props: ['uuid'],
     created() {

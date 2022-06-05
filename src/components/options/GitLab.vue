@@ -189,7 +189,7 @@
 import Helper from '@/mixins/helper'
 
 export default {
-    name: 'GitLab',
+    name: 'OptionGitLab',
     computed: {
         host: {
             get() {

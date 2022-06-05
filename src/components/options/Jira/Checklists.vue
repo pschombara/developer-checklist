@@ -31,7 +31,7 @@
 import Checklist from '@/components/options/Jira/Checklists/Checklist'
 
 export default {
-    name: 'Checklists',
+    name: 'JiraChecklists',
     components: {Checklist},
     computed: {
         checklists() {

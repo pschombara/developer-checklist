@@ -30,7 +30,7 @@
 
 <script>
 export default {
-    name: 'Templates',
+    name: 'JiraTemplates',
     computed: {
         templates: function () {
             return this.$store.getters['jira/templates']

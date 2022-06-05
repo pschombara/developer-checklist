@@ -21,5 +21,10 @@ module.exports = {
         'quotes': ['error', 'single'],
         'semi': ['error', 'never'],
         'comma-dangle': ['error', 'always-multiline'],
+        'vue/valid-v-slot': ['error', {
+            allowModifiers: true,
+        }],
+        'vue/no-v-for-template-key-on-child': 2,
+        'vue/no-v-for-template-key': 0,
     },
 }
