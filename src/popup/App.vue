@@ -19,41 +19,39 @@
                                 v-for="item in tabs"
                                 :key="item.id"
                                 bottom>
-                                <template v-slot:activator="{on, attr}">
+                                <template v-slot:activator="{props}">
                                     <v-tab
                                         v-show="showTab(item)"
-                                        v-on="on"
-                                        v-bind="attr"
+                                        v-bind="props"
+                                        :value="item.id"
                                     >
-
                                         <v-icon>{{ item.icon }}</v-icon>
-
                                     </v-tab>
                                 </template>
                                 {{ item.name }}
                             </v-tooltip>
                         </v-tabs>
 
-                        <v-tabs-items v-model="tab">
-                            <v-tab-item>
+                        <v-window v-model="tab">
+                            <v-window-item value="bookmark">
                                 <quick-list></quick-list>
-                            </v-tab-item>
-                            <v-tab-item>
+                            </v-window-item>
+                            <v-window-item value="jira">
                                 <Jira></Jira>
-                            </v-tab-item>
-                            <v-tab-item>
+                            </v-window-item>
+                            <v-window-item value="jenkins">
                                 <Jenkins></Jenkins>
-                            </v-tab-item>
-                            <v-tab-item>
+                            </v-window-item>
+                            <v-window-item value="gitlab">
                                 <GitLab></GitLab>
-                            </v-tab-item>
-                            <v-tab-item>
+                            </v-window-item>
+                            <v-window-item value="chat">
                                 <Chat></Chat>
-                            </v-tab-item>
-                            <v-tab-item>
+                            </v-window-item>
+                            <v-window-item value="cheatSheet">
                                 <CheatSheet></CheatSheet>
-                            </v-tab-item>
-                        </v-tabs-items>
+                            </v-window-item>
+                        </v-window>
                     </v-card>
                 </v-col>
             </v-row>

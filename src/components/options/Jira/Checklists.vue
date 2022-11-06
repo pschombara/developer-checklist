@@ -15,14 +15,14 @@
                     <v-icon v-else>fas fa-icons</v-icon>
                 </v-tab>
             </v-tabs>
-            <v-tabs-items v-model="tab">
-                <v-tab-item
+            <v-window v-model="tab">
+                <v-window-item
                     v-for="checklist in checklists"
                     :key="checklist.uuid"
                 >
                     <Checklist :uuid="checklist.uuid"></Checklist>
-                </v-tab-item>
-            </v-tabs-items>
+                </v-window-item>
+            </v-window>
         </v-card-text>
     </v-card>
 </template>

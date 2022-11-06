@@ -228,6 +228,10 @@ export default {
                 commit('SET_CLEANUP', options.cleanup)
                 commit('SET_MAXIMUM_ISSUES', options.maximumIssues)
 
+                options.boards = Helper.convertToArray(options.boards)
+                options.checklists = Helper.convertToArray(options.checklists)
+                options.templates = Helper.convertToArray(options.templates)
+
                 for (let board of options.boards) {
                     commit('ADD_BOARD', {
                         id: board.id,

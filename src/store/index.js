@@ -30,7 +30,7 @@ const state = {
     switchTab: null,
     openTab: null,
     optionTabs: [
-        { id: 'modules', name: 'Modules', icon: 'fas fa-cogs', settings: true },
+        { id: 'general', name: chrome.i18n.getMessage('general'), icon: 'fas fa-cogs', settings: true },
         { id: 'jira', name: 'Jira', icon: 'fab fa-jira', settings: true },
         { id: 'jenkins', name: 'Jenkins', icon: 'fab fa-jenkins', settings: true },
         { id: 'gitLab', name: 'GitLab', icon: 'fab fa-gitlab', settings: true },

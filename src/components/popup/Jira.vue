@@ -63,6 +63,7 @@
                     v-model="tab"
                     v-for="checklist in checklists"
                     :key="checklist.uuid"
+                    :value="checklist.uuid"
                 >
                     <v-tooltip right>
                         <template v-slot:activator="{on, attr}">
@@ -75,7 +76,7 @@
                         <span>{{ checklist.name }}</span>
                     </v-tooltip>
                 </v-tab>
-                <v-tab v-model="tab">
+                <v-tab v-model="tab" value="templates">
                     <v-tooltip right>
                         <template v-slot:activator="{on, attr}">
                             <v-icon v-bind="attr" v-on="on">fas fa-clipboard</v-icon>
@@ -83,14 +84,16 @@
                         <span>Templates</span>
                     </v-tooltip>
                 </v-tab>
-
-                <v-tab-item v-for="checklist in checklists" :key="checklist.uuid">
-                    <checklist :uuid="checklist.uuid" :issue="issueName"></checklist>
-                </v-tab-item>
-                <v-tab-item>
-                    <templates></templates>
-                </v-tab-item>
             </v-tabs>
+
+            <v-window>
+                <v-window-item v-for="checklist in checklists" :key="checklist.uuid" :value="checklist.uuid">
+                    <checklist :uuid="checklist.uuid" :issue="issueName"></checklist>
+                </v-window-item>
+                <v-window-item value="templates">
+                    <templates></templates>
+                </v-window-item>
+            </v-window>
         </v-card-text>
     </v-card>
 </template>

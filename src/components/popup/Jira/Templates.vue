@@ -3,7 +3,7 @@
         <v-card-text>
             <v-autocomplete
                 :items="templates"
-                item-text="title"
+                item-title="title"
                 return-object
                 v-model="template"
                 :label="text.templates"

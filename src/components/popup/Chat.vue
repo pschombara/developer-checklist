@@ -9,7 +9,7 @@
                 <v-col cols="12">
                     <v-autocomplete
                         :items="clients"
-                        item-text="client"
+                        item-title="client"
                         item-value="client"
                         v-model="client"
                         label="Client"
@@ -22,7 +22,7 @@
                         <v-autocomplete
                             :items="rooms"
                             item-value="id"
-                            item-text="name"
+                            item-title="name"
                             v-model="room"
                             label="Room"
                         ></v-autocomplete>
@@ -33,7 +33,7 @@
                         <v-autocomplete
                             :items="messages"
                             item-value="id"
-                            item-text="name"
+                            item-title="name"
                             v-model="message"
                             label="Message"
                         ></v-autocomplete>

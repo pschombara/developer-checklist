@@ -1,8 +1,10 @@
 <template>
-    <v-card flat class="mt-5">
+    <v-card flat="" class="mt-5">
         <v-card-text>
             <v-row>
-                <v-col cols="12" :is="about"></v-col>
+                <v-col cols="12">
+                    <div v-html="about"></div>
+                </v-col>
             </v-row>
             <v-row class="mt-3">
                 <v-col cols="12">

@@ -46,7 +46,7 @@
                                                             v-model="dialogProject.item.domain"
                                                             :items="categories"
                                                             :label="text.category"
-                                                            item-text="name"
+                                                            item-title="name"
                                                             item-value="name"
                                                             :rules="domainRules"
                                                             required

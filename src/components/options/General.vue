@@ -3,16 +3,16 @@
         <v-card-text>
             <v-row>
                 <v-col cols="12">
-                    <v-switch :value="modules.jenkins" @change="switchChanged('jenkins', $event)">
+                    <v-switch :model-value="modules.jenkins" @change="switchChanged('jenkins', $event)">
                         <template v-slot:label><v-icon class="mx-2">fab fa-jenkins</v-icon> Jenkins</template>
                     </v-switch>
-                    <v-switch :value="modules.gitLab" @change="switchChanged('gitLab', $event)">
+                    <v-switch :model-value="modules.gitLab" @change="switchChanged('gitLab', $event)">
                         <template v-slot:label><v-icon class="mx-2">fab fa-gitlab</v-icon> GitLab</template>
                     </v-switch>
-                    <v-switch :value="modules.chat" @change="switchChanged('chat', $event)">
+                    <v-switch :model-value="modules.chat" @change="switchChanged('chat', $event)">
                         <template v-slot:label><v-icon class="mx-2">fas fa-comments</v-icon> Chat</template>
                     </v-switch>
-                    <v-switch :value="modules.cheatSheet" @change="switchChanged('cheatSheet', $event)">
+                    <v-switch :model-value="modules.cheatSheet" @change="switchChanged('cheatSheet', $event)">
                         <template v-slot:label><v-icon class="mx-2">fas fa-terminal</v-icon> Cheat Sheet</template>
                     </v-switch>
 <!--                    <v-switch :value="modules.chrome" @change="switchChanged('chrome', $event)">
@@ -28,8 +28,8 @@
 export default {
     name: 'OptionModules',
     methods: {
-        switchChanged: function (module, value) {
-            this.$store.dispatch('switchModule', {module, value})
+        switchChanged: function (module, event) {
+            this.$store.dispatch('switchModule', {module, value: event.target.checked})
         },
     },
     computed: {

@@ -1,4 +1,5 @@
 import {Uuid} from '@/mixins/uuid'
+import Helper from '@/mixins/helper'
 
 const state = {
     categories: [],
@@ -77,6 +78,9 @@ export default {
                 commit('CLEAR')
 
                 commit('SET_HOST', options.host)
+
+                options.categories = Helper.convertToArray(options.categories)
+                options.projects = Helper.convertToArray(options.projects)
 
                 for (let category of options.categories) {
                     commit('ADD_CATEGORY', category)

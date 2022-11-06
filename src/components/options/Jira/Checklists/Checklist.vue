@@ -23,12 +23,13 @@
                         label="Icon"
                     >
                         <template v-slot:selection="{item}">
-                            <v-icon left>fas fa-{{ item }}</v-icon>
-                            {{ item }}
+                            <v-icon left>fas fa-{{ item.value }}</v-icon>
+                            {{ item.value }}
                         </template>
                         <template v-slot:item="{item}">
-                            <v-icon left>fas fa-{{ item }}</v-icon>
-                            {{ item }}
+                            <v-icon left>fas fa-{{ item.value }}</v-icon>
+                            {{ item.value }}
+                            <v-spacer></v-spacer>
                         </template>
                     </v-combobox>
                 </v-col>
@@ -66,19 +67,16 @@
                                         :label="text.comment"
                                         v-model="dialogBtnSuccess.item.comment"
                                         :items="templates"
-                                        item-text="title"
+                                        item-title="title"
                                         item-value="id"
                                         :menu-props="{closeOnContentClick: true}"
                                     >
                                         <template v-slot:prepend-item>
                                             <v-list-item
-                                                ripple
                                                 @click="dialogBtnSuccess.item.comment = null"
                                                 v-if="null !== dialogBtnSuccess.item.comment"
                                             >
-                                                <v-list-item-content>
-                                                    <v-list-item-title>No Comment (TODO)</v-list-item-title>
-                                                </v-list-item-content>
+                                                <v-list-item-title>No Comment (TODO)</v-list-item-title>
                                             </v-list-item>
                                         </template>
                                     </v-select>
@@ -132,7 +130,7 @@
                                         :label="text.comment"
                                         v-model="dialogBtnFailed.item.comment"
                                         :items="templates"
-                                        item-text="title"
+                                        item-title="title"
                                         item-value="id"
                                     ></v-select>
                                     <v-switch

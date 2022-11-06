@@ -186,6 +186,9 @@ export default {
                     commit('CHANGE_MAIN', client)
                 }
 
+                data.messages = Helper.convertToArray(data.messages)
+                data.rooms = Helper.convertToArray(data.rooms)
+
                 for (let message of data.messages) {
                     commit('ADD_MESSAGE', {
                         client,

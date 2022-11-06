@@ -4,14 +4,20 @@ import { createVuetify } from 'vuetify'
 import {de, en} from 'vuetify/lib/locale'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
+import themes from '@/plugins/themes'
 
+
+console.log(themes)
 const vuetify = createVuetify({
     components,
     directives,
     icons: {
         iconfont: 'fa',
-    },    theme: {
-        dark: window.matchMedia('(prefers-color-scheme: dark)').matches,
+    },
+    theme: {
+        defaultTheme: 'darkOrange',
+        themes: themes.themes,
+        //dark: window.matchMedia('(prefers-color-scheme: dark)').matches,
     },
     lang: {
         locales: { en, de },

@@ -11,40 +11,41 @@
                         <v-col class="text-center">{{client.name}}</v-col>
                     </v-row>
                 </v-tab>
+            </v-tabs>
 
-                <v-tabs-items v-model="client">
-                    <v-tab-item v-for="client in clients" :key="client.id">
+
+            <v-window v-model="client">
+                    <v-window-item v-for="client in clients" :key="client.id">
                         <v-card>
                             <v-card-text>
                                 <v-row>
                                     <v-col cols="12">
                                         <v-expansion-panels mandatory>
                                             <v-expansion-panel>
-                                                <v-expansion-panel-header>{{ text.general }}</v-expansion-panel-header>
-                                                <v-expansion-panel-content>
+                                                <v-expansion-panel-title>{{ text.general }}</v-expansion-panel-title>
+                                                <v-expansion-panel-text>
                                                     <General :client="client.name"></General>
-                                                </v-expansion-panel-content>
+                                                </v-expansion-panel-text>
                                             </v-expansion-panel>
                                             <v-expansion-panel>
-                                                <v-expansion-panel-header>{{ text.rooms }}</v-expansion-panel-header>
-                                                <v-expansion-panel-content>
+                                                <v-expansion-panel-title>{{ text.rooms }}</v-expansion-panel-title>
+                                                <v-expansion-panel-text>
                                                     <Rooms :url-start="client.urlStart" :client="client.name"></Rooms>
-                                                </v-expansion-panel-content>
+                                                </v-expansion-panel-text>
                                             </v-expansion-panel>
                                             <v-expansion-panel>
-                                                <v-expansion-panel-header>{{ text.messages }}</v-expansion-panel-header>
-                                                <v-expansion-panel-content>
+                                                <v-expansion-panel-title>{{ text.messages }}</v-expansion-panel-title>
+                                                <v-expansion-panel-text>
                                                     <Messages :client="client.name"></Messages>
-                                                </v-expansion-panel-content>
+                                                </v-expansion-panel-text>
                                             </v-expansion-panel>
                                         </v-expansion-panels>
                                     </v-col>
                                 </v-row>
                             </v-card-text>
                         </v-card>
-                    </v-tab-item>
-                </v-tabs-items>
-            </v-tabs>
+                    </v-window-item>
+                </v-window>
         </v-card-text>
     </v-card>
 </template>

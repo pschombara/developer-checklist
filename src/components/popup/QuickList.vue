@@ -24,7 +24,7 @@
             <v-row v-if="maximumIssues > 0 && issues.length > 0">
                 <v-col><h3>{{text.lastOpened}}</h3></v-col>
             </v-row>
-            <v-data-iterator
+<!--            <v-data-iterator
                 :items="issues"
                 :items-per-page="maximumIssues"
                 :sort-by="['pinned', 'updateDate']"
@@ -40,23 +40,22 @@
                             :key="issue.name"
                         >
                             <v-tooltip top>
-                                <template v-slot:activator="{on, attr}">
+                                <template v-slot:activator="{props}">
                                     <v-btn
                                         :color="buttonColor(issue)"
-                                        v-bind="attr"
-                                        v-on="on"
+                                        v-bind="props"
                                         @click="openIssue(issue.name)"
                                         block
                                     >{{ issue.name }}
                                     </v-btn>
                                 </template>
-                                <span class="success--text" v-if="issue.pinned">{{ text.pinned }}: </span>
+                                <span class="success&#45;&#45;text" v-if="issue.pinned">{{ text.pinned }}: </span>
                                 <span>{{ issue.title }}</span>
                             </v-tooltip>
                         </v-col>
                     </v-row>
                 </template>
-            </v-data-iterator>
+            </v-data-iterator>-->
         </v-card-text>
     </v-card>
 </template>

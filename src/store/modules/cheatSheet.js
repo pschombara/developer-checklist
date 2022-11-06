@@ -1,3 +1,5 @@
+import Helper from '@/mixins/helper'
+
 const state = {
     items: [],
 }
@@ -32,6 +34,8 @@ export default {
         init: ({commit}, options) => {
             return new Promise(resolve => {
                 commit('CLEAR')
+
+                options = Helper.convertToArray(options)
 
                 for (let item of options) {
                     commit('ADD_ITEM', {

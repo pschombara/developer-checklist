@@ -11,7 +11,7 @@
                     <v-autocomplete
                         :items="builds"
                         item-value="job"
-                        item-text="name"
+                        item-title="name"
                         v-model="job"
                         label="Job"
                         dense
@@ -61,7 +61,7 @@
                             <v-toolbar flat>
                                 <v-autocomplete
                                     :items="issues"
-                                    item-text="name"
+                                    item-title="name"
                                     item-value="name"
                                     v-model="issue"
                                     label="Attach to Issue"
@@ -194,9 +194,7 @@ export default {
         },
         copy: function () {
             if (this.readyToCopy) {
-                this.$refs.copyBuild.$refs.input.select()
-                document.execCommand('copy')
-                window.getSelection().removeAllRanges()
+                navigator.clipboard.writeText(this.$refs.copyBuild.$refs.input.value)
                 this.hint = true
             }
         },

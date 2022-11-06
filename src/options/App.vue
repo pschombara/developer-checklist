@@ -14,26 +14,26 @@
                     {{text.importWrongType}}
                 </v-alert>
                 <v-toolbar flat>
-                    <v-img src="icons/48.png" max-height="24" max-width="24" class="mr-2"></v-img>
+                    <v-img src="icons/48.png" max-height="24" max-width="24" class="ml-4"></v-img>
                     <v-toolbar-title>{{ text.title }}</v-toolbar-title>
                     <v-spacer></v-spacer>
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn class="mr-2" color="success" fab icon="" v-bind="attrs" v-on="on" @click="save"><v-icon>fas fa-save</v-icon></v-btn>
+                    <v-tooltip location="bottom">
+                        <template v-slot:activator="{ props }">
+                            <v-btn class="mr-2" color="success" fab icon="" v-bind="props" @click="save"><v-icon>fas fa-save</v-icon></v-btn>
                         </template>
                         <span>{{text.save}}</span>
                     </v-tooltip>
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn class="mr-2" fab icon="" v-bind="attrs" v-on="on" @click="saveExportStart"><v-icon>fas fa-download</v-icon></v-btn>
+                    <v-tooltip location="bottom">
+                        <template v-slot:activator="{ props }">
+                            <v-btn class="mr-2" fab icon="" v-bind="props" @click="saveExportStart"><v-icon>fas fa-download</v-icon></v-btn>
                             <v-dialog v-model="dialog.export" max-width="800">
                                 <v-card>
                                     <v-card-title>{{text.export}}</v-card-title>
                                     <v-card-text>
                                         <v-list flat>
-                                            <v-subheader>Select settings to export</v-subheader>
+                                            <v-list-subheader>Select settings to export</v-list-subheader>
 
-                                            <v-list-item-group
+                                            <v-list-group
                                                 v-model="exportModules"
                                                 multiple
                                             >
@@ -45,13 +45,13 @@
                                                             <v-list-item-action>
                                                                 <v-checkbox :input-value="active" color="primary"></v-checkbox>
                                                             </v-list-item-action>
-                                                            <v-list-item-content>
+                                                            <v-list-item-header>
                                                                 <v-list-item-title>{{setting.name}}</v-list-item-title>
-                                                            </v-list-item-content>
+                                                            </v-list-item-header>
                                                         </template>
                                                     </v-list-item>
                                                 </template>
-                                            </v-list-item-group>
+                                            </v-list-group>
                                         </v-list>
                                     </v-card-text>
                                     <v-card-actions>
@@ -65,26 +65,24 @@
                         </template>
                         <span>{{text.export}}</span>
                     </v-tooltip>
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
+                    <v-tooltip location="bottom">
+                        <template v-slot:activator="{ props }">
                             <v-btn
                                 class="mr-2"
                                 fab
-                                icon
-                                v-bind="attrs"
-                                v-on="on"
+                                icon="fas fa-upload"
+                                v-bind="props"
                                 @click="openFileInput"
                             >
-                                <v-icon>fas fa-upload</v-icon>
                             </v-btn>
                             <v-dialog v-model="dialog.import" max-width="800">
                                 <v-card>
                                     <v-card-title>{{text.import}}</v-card-title>
                                     <v-card-text>
                                         <v-list flat>
-                                            <v-subheader>Select settings to import</v-subheader>
+                                            <v-list-subheader>Select settings to import</v-list-subheader>
 
-                                            <v-list-item-group
+                                            <v-list-group
                                                 v-model="importModules"
                                                 multiple
                                             >
@@ -94,16 +92,16 @@
                                                         :disabled="!importAvailableModules.includes(setting.id)"
                                                     >
                                                         <template v-slot:default="{ active }">
-                                                            <v-list-item-action>
-                                                                <v-checkbox :input-value="active" color="primary"></v-checkbox>
-                                                            </v-list-item-action>
-                                                            <v-list-item-content>
+                                                            <v-list-item-avatar>
+                                                                <v-checkbox :modal-value="active" color="primary" hide-details></v-checkbox>
+                                                            </v-list-item-avatar>
+                                                            <v-list-item-header>
                                                                 <v-list-item-title>{{setting.name}}</v-list-item-title>
-                                                            </v-list-item-content>
+                                                            </v-list-item-header>
                                                         </template>
                                                     </v-list-item>
                                                 </template>
-                                            </v-list-item-group>
+                                            </v-list-group>
                                         </v-list>
                                     </v-card-text>
                                     <v-card-actions>
@@ -119,14 +117,14 @@
                                 hide-input
                                 class="d-none"
                                 accept="application/json"
-                                @change="fileSelected"
+                                @update:modelValue="fileSelected"
                             ></v-file-input>
                         </template>
                         <span>{{text.import}}</span>
                     </v-tooltip>
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn class="mr-2" fab icon v-bind="attrs" v-on="on" @click="openRestore"><v-icon>fas fa-eraser</v-icon></v-btn>
+                    <v-tooltip location="bottom">
+                        <template v-slot:activator="{ props }">
+                            <v-btn class="mr-2" fab icon="fas fa-eraser" v-bind="props" @click="openRestore"></v-btn>
                             <v-dialog v-model="dialog.restore" max-width="600">
                                 <v-card>
                                     <v-card-title>{{text.reset}}?</v-card-title>
@@ -152,42 +150,40 @@
                         <v-card>
                             <v-tabs
                                 show-arrows
-                                icons-and-text
+                                stacked
                                 v-model="tab"
                             >
-                                <v-tab v-for="item in tabs" :key="item.id" v-show="showTab(item)">
+                                <v-tab v-for="item in tabs" :key="item.id" v-show="showTab(item)" :value="item.id">
+                                    <v-icon class="mb-2">{{ item.icon }}</v-icon>
                                     {{ item.name }}
-                                    <v-icon>{{ item.icon }}</v-icon>
                                 </v-tab>
                             </v-tabs>
-
-                            <v-tabs-items v-model="tab">
-                                <v-tab-item>
-                                    <modules></modules>
-                                </v-tab-item>
-                                <v-tab-item>
-                                    <jira></jira>
-                                </v-tab-item>
-                                <v-tab-item>
-                                    <jenkins></jenkins>
-                                </v-tab-item>
-                                <v-tab-item>
-                                    <git-lab></git-lab>
-                                </v-tab-item>
-                                <v-tab-item>
-                                    <chat></chat>
-                                </v-tab-item>
-                                <v-tab-item>
-                                    <cheat-sheet></cheat-sheet>
-                                </v-tab-item>
-<!--                                <v-tab-item>
-                                    <chrome></chrome>
-                                </v-tab-item>-->
-                                <v-tab-item>
-                                    <about></about>
-                                </v-tab-item>
-                            </v-tabs-items>
                         </v-card>
+                        <v-card-text>
+                            <v-window v-model="tab">
+                                <v-window-item value="general">
+                                    <general></general>
+                                </v-window-item>
+                                <v-window-item value="jira">
+                                    <jira></jira>
+                                </v-window-item>
+                                <v-window-item value="jenkins">
+                                    <jenkins></jenkins>
+                                </v-window-item>
+                                <v-window-item value="gitLab">
+                                    <git-lab></git-lab>
+                                </v-window-item>
+                                <v-window-item value="chat">
+                                    <chat></chat>
+                                </v-window-item>
+                                <v-window-item value="cheatSheet">
+                                    <cheat-sheet></cheat-sheet>
+                                </v-window-item>
+                                <v-window-item value="about">
+                                    <about></about>
+                                </v-window-item>
+                            </v-window>
+                        </v-card-text>
                     </v-col>
                 </v-row>
             </v-container>
@@ -196,7 +192,6 @@
 </template>
 <script>
 
-import Modules from '@/components/options/Modules'
 import Jira from '@/components/options/Jira'
 import Jenkins from '@/components/options/Jenkins'
 import GitLab from '@/components/options/GitLab'
@@ -206,10 +201,11 @@ import About from '@/components/options/About'
 import Theme from '@/mixins/theme'
 /* import Chrome from '@/components/options/Chrome' */
 import semver from 'semver'
+import General from '@/components/options/General'
 
 export default {
     name: 'App',
-    components: {Modules, Jira, Jenkins, GitLab, Chat, CheatSheet, /*Chrome,*/ About },
+    components: {General, Jira, Jenkins, GitLab, Chat, CheatSheet, /*Chrome,*/ About },
     computed: {
         modules()  {
             return this.$store.getters['modules']
@@ -283,7 +279,7 @@ export default {
         },
         cancelImport: function () {
             this.dialog.import = false
-            this.$refs.importConfig.$refs.input.value = ''
+            this.$refs.importConfig.reset()
             this.importOptions = {}
         },
         saveExport: function () {
@@ -310,17 +306,23 @@ export default {
         },
         openFileInput: function () {
             this.closeAlerts()
-            this.$refs.importConfig.$refs.input.click()
+            this.$refs.importConfig.click()
         },
-        fileSelected: function (e) {
-            if (e.size <= 0) {
-                this.dialog.import.error.empty = true
+        fileSelected: function (files) {
+            if (null === files) {
+                return
+            }
+
+            const file = files[0]
+
+            if (file.size <= 0) {
+                this.dialog.error.empty = true
 
                 return
             }
 
-            if ('application/json' !== e.type) {
-                this.dialog.import.error.type = true
+            if ('application/json' !== file.type) {
+                this.dialog.error.type = true
 
                 return
             }
@@ -342,7 +344,7 @@ export default {
                 }
             })
 
-            fileReader.readAsText(e, 'utf-8')
+            fileReader.readAsText(file, 'utf-8')
         },
         validateImportFile: function (data) {
             const manifest = chrome.runtime.getManifest()
@@ -397,6 +399,10 @@ export default {
                 restore: false,
                 export: false,
                 import: false,
+                error: {
+                    empty: false,
+                    type: false,
+                },
             },
             alert: {
                 import: {

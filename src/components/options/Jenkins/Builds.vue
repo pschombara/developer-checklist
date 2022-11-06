@@ -41,7 +41,7 @@
                                             :items="categories"
                                             :rules="buildTypeRules"
                                             :label="text.category"
-                                            item-text="name"
+                                            item-title="name"
                                             item-value="name"
                                             required
                                             @change="$refs.buildForm.validate()"

@@ -11,7 +11,7 @@
                     <v-autocomplete
                         :items="projects"
                         item-value="uuid"
-                        item-text="project"
+                        item-title="project"
                         v-model="project"
                         :label="text.project"
                         dense
@@ -61,7 +61,7 @@
                             <v-toolbar flat>
                                 <v-autocomplete
                                     :items="issues"
-                                    item-text="name"
+                                    item-title="name"
                                     item-value="name"
                                     v-model="issue"
                                     label="Attach to Issue"
@@ -196,9 +196,7 @@ export default {
         },
         copy: function () {
             if (this.readyToCopy) {
-                this.$refs.copyMergeUrl.$refs.input.select()
-                document.execCommand('copy')
-                window.getSelection().removeAllRanges()
+                navigator.clipboard.writeText(this.$refs.copyMergeUrl.$refs.input.value)
                 this.hint = true
             }
         },

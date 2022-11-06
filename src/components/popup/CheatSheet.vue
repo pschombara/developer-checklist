@@ -9,7 +9,7 @@
                 <v-col cols="12">
                     <v-autocomplete
                         :items="cheats"
-                        item-text="label"
+                        item-title="label"
                         item-value="command"
                         v-model="command"
                     ></v-autocomplete>
@@ -75,9 +75,7 @@ export default {
             chrome.runtime.openOptionsPage()
         },
         copy: function () {
-            this.$refs.copyCommand.$refs.input.select()
-            document.execCommand('copy')
-            window.getSelection().removeAllRanges()
+            navigator.clipboard.writeText(this.$refs.copyCommand.$refs.input.value)
             this.hint = true
         },
     },
