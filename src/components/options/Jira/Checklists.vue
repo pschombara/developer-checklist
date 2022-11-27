@@ -3,16 +3,16 @@
         <v-card-text>
             <v-tabs
                 v-model="tab"
-                icons-and-text
+                stacked
                 show-arrows
             >
                 <v-tab
                     v-for="checklist in checklists"
                     :key="checklist.uuid"
                 >
+                    <v-icon class="mb-2" v-if="!!checklist.icon">fas fa-{{checklist.icon}}</v-icon>
+                    <v-icon class="mb-2" v-else>fas fa-icons</v-icon>
                     {{checklist.name}}
-                    <v-icon v-if="!!checklist.icon">fas fa-{{checklist.icon}}</v-icon>
-                    <v-icon v-else>fas fa-icons</v-icon>
                 </v-tab>
             </v-tabs>
             <v-window v-model="tab">

@@ -58,7 +58,7 @@
                 <v-window-item value="templates">
                     <templates></templates>
                 </v-window-item>
-                <v-window-item issues>
+                <v-window-item value="issues">
                     <issues></issues>
                 </v-window-item>
             </v-window>

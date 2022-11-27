@@ -1,6 +1,6 @@
 {
     "name": "developer-checklist",
-    "version": "0.6.2",
+    "version": "0.7.0",
     "private": true,
     "scripts": {
         "serve": "vue-cli-service build --mode development --watch",
@@ -14,7 +14,7 @@
         "semver": "^7.3",
         "vite": "^2.9.9",
         "vue": "^3.2.36",
-        "vuetify": "^3.0.0",
+        "vuetify": "^3.0",
         "vuex": "^4.0.2"
     },
     "devDependencies": {

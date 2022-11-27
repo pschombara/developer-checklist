@@ -42,7 +42,7 @@
                             <v-window-item value="jenkins">
                                 <Jenkins></Jenkins>
                             </v-window-item>
-                            <v-window-item value="gitlab">
+                            <v-window-item value="gitLab">
                                 <GitLab></GitLab>
                             </v-window-item>
                             <v-window-item value="chat">

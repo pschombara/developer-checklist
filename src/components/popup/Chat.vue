@@ -1,8 +1,12 @@
 <template>
     <v-card>
         <v-card-title>
-            <v-spacer></v-spacer>
-            <v-btn icon @click="openOptions('chat')"><v-icon>fas fa-cog</v-icon></v-btn>
+            <v-row>
+                <v-col cols="10">Chat Notifications</v-col>
+                <v-col cols="2">
+                    <v-btn variant="text" @click="openOptions('chat')"><v-icon>fas fa-cog</v-icon></v-btn>
+                </v-col>
+            </v-row>
         </v-card-title>
         <v-card-text>
             <v-row>

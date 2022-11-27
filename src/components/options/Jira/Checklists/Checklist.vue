@@ -54,6 +54,7 @@
                             <v-card-text>
                                 <v-form v-model="dialogBtnSuccess.valid" ref="formBtnSuccess">
                                     <v-switch
+                                        color="primary"
                                         :label="text.buttonEnabled"
                                         v-model="dialogBtnSuccess.item.enabled"
                                     ></v-switch>

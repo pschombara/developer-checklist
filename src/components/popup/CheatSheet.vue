@@ -1,8 +1,12 @@
 <template>
     <v-card>
         <v-card-title>
-            <v-spacer></v-spacer>
-            <v-btn icon @click="openOptions('cheatSheet')"><v-icon>fas fa-cog</v-icon></v-btn>
+            <v-row>
+                <v-col cols="10">Cheat Sheet</v-col>
+                <v-col cols="2">
+                    <v-btn variant="text" @click="openOptions('cheatSheet')"><v-icon>fas fa-cog</v-icon></v-btn>
+                </v-col>
+            </v-row>
         </v-card-title>
         <v-card-text>
             <v-row>
@@ -45,7 +49,7 @@
             :timeout="2200"
         >
             <v-icon left color="success">fas fa-check</v-icon>
-            Copied to clipboard
+            {{ text.copiedToClipboard }}
 
             <template v-slot:action="{ attrs }">
                 <v-btn
@@ -54,7 +58,7 @@
                     v-bind="attrs"
                     @click="hint = false"
                 >
-                    Close
+                    {{text.close}}
                 </v-btn>
             </template>
         </v-snackbar>
@@ -75,7 +79,7 @@ export default {
             chrome.runtime.openOptionsPage()
         },
         copy: function () {
-            navigator.clipboard.writeText(this.$refs.copyCommand.$refs.input.value)
+            navigator.clipboard.writeText(this.$refs.copyCommand.value)
             this.hint = true
         },
     },
@@ -83,6 +87,10 @@ export default {
         return {
             command: '',
             hint: false,
+            text: {
+                close: chrome.i18n.getMessage('Close'),
+                copiedToClipboard: chrome.i18n.getMessage('copiedToClipboard'),
+            },
         }
     },
 }

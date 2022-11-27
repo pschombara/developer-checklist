@@ -1,22 +1,28 @@
-const themeLightOrange = {
+const themeLight = {
     dark: false,
     colors: {
-        primary: '#ffb300',
-        secondary: '#039be5',
+        primary: '#00639a',
+        secondary: '#51606f',
+        tertiary: '#68587a',
+        error: '#ba1a1a',
+        surface: '#fcfcff',
     },
 }
 
-const themeDarkOrange = {
+const themeDark = {
     dark: true,
     colors: {
-        primary: '#ffb300',
-        secondary: '#039be5',
+        primary: '#96ccff',
+        secondary: '#b9c8da',
+        tertiary: '#d3bfe6',
+        error: '#ffb4ab',
+        surface: '#1a1c1e',
     },
 }
 
 export default {
     themes: {
-        lightOrange: themeLightOrange,
-        darkOrange: themeDarkOrange,
+        light: themeLight,
+        dark: themeDark,
     },
 }

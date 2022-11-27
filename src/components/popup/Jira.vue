@@ -1,92 +1,97 @@
 <template>
     <v-card flat>
         <v-card-title>
-            {{ issueName }}
-            <v-spacer></v-spacer>
-            <v-spacer></v-spacer>
-            <v-tooltip bottom>
-                <template v-slot:activator="{on, attr}">
-                    <v-btn
-                        v-bind="attr"
-                        v-on="on"
-                        color="red lighten-3"
-                        text
-                        @click="stopWork(issueName)"
-                        v-if="issue.work"
-                    ><v-icon small left>fas fa-stop</v-icon> Stop Work</v-btn>
-                    <v-btn
-                        v-bind="attr"
-                        v-on="on"
-                        color="green lighten-3"
-                        text
-                        @click="startWork(issueName)"
-                        v-else
-                    ><v-icon small left>fas fa-play</v-icon> Start Work</v-btn>
-                </template>
-                <span>Issue will be preselected for CI-Builds and Merge Requests</span>
-            </v-tooltip>
-            <v-spacer></v-spacer>
-            <v-tooltip bottom>
-                <template v-slot:activator="{on, attr}">
-                    <v-btn
-                        v-bind="attr"
-                        v-on="on"
-                        icon
-                        v-bind:color="issue.pinned ? 'success' : 'grey'"
-                        @click="issue.pinned ? unpin(issueName) : pin(issueName)"
-                    >
-                        <v-icon v-bind:class="issue.pinned ? '' : 'rotate--45-inverted'" small>fas fa-thumbtack</v-icon>
-                    </v-btn>
-                </template>
-                <span>When active, issue is pinned, so it is sorted to the front in the quick select and is not automatically cleaned up.</span>
-            </v-tooltip>
-            <v-tooltip bottom>
-                <template v-slot:activator="{on, attr}">
-                    <v-btn
-                        v-bind="attr"
-                        v-on="on"
-                        icon
-                        @click="openOptions('jira')"
-                    >
-                        <v-icon small>fas fa-cog</v-icon>
-                    </v-btn>
-                </template>
-                <span>Settings</span>
-            </v-tooltip>
-        </v-card-title>
-        <v-card-text>
-            <v-tabs
-                vertical
-                show-arrows
-            >
-                <v-tab
-                    v-model="tab"
-                    v-for="checklist in checklists"
-                    :key="checklist.uuid"
-                    :value="checklist.uuid"
-                >
-                    <v-tooltip right>
+            <v-row>
+                <v-col cols="5">{{ issueName }}</v-col>
+                <v-col cols="4">
+                    <v-tooltip bottom>
                         <template v-slot:activator="{on, attr}">
-                            <v-icon
+                            <v-btn
                                 v-bind="attr"
                                 v-on="on"
-                            >fas fa-{{ checklist.icon }}
-                            </v-icon>
+                                color="red lighten-3"
+                                text
+                                @click="stopWork(issueName)"
+                                v-if="issue.work"
+                            ><v-icon small left>fas fa-stop</v-icon> Stop Work</v-btn>
+                            <v-btn
+                                v-bind="attr"
+                                v-on="on"
+                                color="green lighten-3"
+                                variant="text"
+                                @click="startWork(issueName)"
+                                v-else
+                            ><v-icon small left>fas fa-play</v-icon> Start Work</v-btn>
                         </template>
-                        <span>{{ checklist.name }}</span>
+                        <span>Issue will be preselected for CI-Builds and Merge Requests</span>
                     </v-tooltip>
-                </v-tab>
-                <v-tab v-model="tab" value="templates">
-                    <v-tooltip right>
+                </v-col>
+                <v-col cols="3">
+                    <v-tooltip bottom>
                         <template v-slot:activator="{on, attr}">
-                            <v-icon v-bind="attr" v-on="on">fas fa-clipboard</v-icon>
+                            <v-btn
+                                v-bind="attr"
+                                v-on="on"
+                                variant="text"
+                                v-bind:color="issue.pinned ? 'success' : 'grey'"
+                                @click="issue.pinned ? unpin(issueName) : pin(issueName)"
+                            >
+                                <v-icon v-bind:class="issue.pinned ? '' : 'rotate--45-inverted'" small>fas fa-thumbtack</v-icon>
+                            </v-btn>
                         </template>
-                        <span>Templates</span>
+                        <span>When active, issue is pinned, so it is sorted to the front in the quick select and is not automatically cleaned up.</span>
                     </v-tooltip>
-                </v-tab>
-            </v-tabs>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{on, attr}">
+                            <v-btn
+                                v-bind="attr"
+                                v-on="on"
+                                variant="text"
+                                @click="openOptions('jira')"
+                            >
+                                <v-icon small>fas fa-cog</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Settings</span>
+                    </v-tooltip>
+                </v-col>
+            </v-row>
+        </v-card-title>
+        <v-card-text>
+            <div class="d-flex flex-row">
+                <v-tabs
+                    direction="vertical"
+                    show-arrows
+                >
+                    <v-tab
+                        v-model="tab"
+                        v-for="checklist in checklists"
+                        :key="checklist.uuid"
+                        :value="checklist.uuid"
+                    >
+                        <v-tooltip right>
+                            <template v-slot:activator="{on, attr}">
+                                <v-icon
+                                    v-bind="attr"
+                                    v-on="on"
+                                >fas fa-{{ checklist.icon }}
+                                </v-icon>
+                            </template>
+                            <span>{{ checklist.name }}</span>
+                        </v-tooltip>
+                    </v-tab>
+                    <v-tab v-model="tab" value="templates">
+                        <v-tooltip right>
+                            <template v-slot:activator="{on, attr}">
+                                <v-icon v-bind="attr" v-on="on">fas fa-clipboard</v-icon>
+                            </template>
+                            <span>Templates</span>
+                        </v-tooltip>
+                    </v-tab>
+                </v-tabs>
+            </div>
 
-            <v-window>
+            <v-window class="flex-fill">
                 <v-window-item v-for="checklist in checklists" :key="checklist.uuid" :value="checklist.uuid">
                     <checklist :uuid="checklist.uuid" :issue="issueName"></checklist>
                 </v-window-item>

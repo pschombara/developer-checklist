@@ -4,6 +4,7 @@
             <v-row>
                 <v-col cols="12" md="2">
                     <v-switch
+                        color="primary"
                         v-model="main"
                         :disabled="main"
                         :label="text.main"
@@ -11,6 +12,7 @@
                 </v-col>
                 <v-col cols="12" md="2">
                     <v-switch
+                        color="primary"
                         v-model="enabled"
                         :label="text.enabled"
                     ></v-switch>
@@ -60,4 +62,3 @@ export default {
     },
 }
 </script>
-

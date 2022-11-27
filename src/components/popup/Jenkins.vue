@@ -1,9 +1,12 @@
 <template>
     <v-card v-if="optionsValid">
         <v-card-title>
-            Embeddable Build Status
-            <v-spacer></v-spacer>
-            <v-btn icon @click="openOptions('jenkins')"><v-icon>fas fa-cog</v-icon></v-btn>
+            <v-row>
+                <v-col cols="10">Embeddable Build Status</v-col>
+                <v-col cols="2">
+                    <v-btn variant="text" @click="openOptions('jenkins')"><v-icon>fas fa-cog</v-icon></v-btn>
+                </v-col>
+            </v-row>
         </v-card-title>
         <v-card-text>
             <v-row>
@@ -194,7 +197,7 @@ export default {
         },
         copy: function () {
             if (this.readyToCopy) {
-                navigator.clipboard.writeText(this.$refs.copyBuild.$refs.input.value)
+                navigator.clipboard.writeText(this.$refs.copyBuild.value)
                 this.hint = true
             }
         },
@@ -244,7 +247,8 @@ export default {
             document.querySelector('body').append(input)
             input.select()
 
-            document.execCommand('copy')
+            navigator.clipboard.readText()
+
             window.getSelection().removeAllRanges()
             this.hint = true
 
