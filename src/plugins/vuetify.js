@@ -7,6 +7,8 @@ import * as directives from 'vuetify/directives'
 import themes from '@/plugins/themes'
 import { md3 } from 'vuetify/blueprints'
 
+const preferDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+
 const vuetify = createVuetify({
     components,
     directives,
@@ -15,15 +17,14 @@ const vuetify = createVuetify({
     },
     blueprint: md3,
     theme: {
-        defaultTheme: 'dark',
+        defaultTheme: preferDark ? 'dark' :'light',
         themes: themes.themes,
-        //dark: window.matchMedia('(prefers-color-scheme: dark)').matches,
+        dark: preferDark,
     },
     lang: {
         locales: { en, de },
         current: chrome.i18n.getUILanguage(),
     },
-
 })
 
 export default vuetify

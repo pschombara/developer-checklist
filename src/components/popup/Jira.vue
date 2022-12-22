@@ -4,19 +4,17 @@
             <v-row>
                 <v-col cols="5">{{ issueName }}</v-col>
                 <v-col cols="4">
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{on, attr}">
+                    <v-tooltip location="bottom">
+                        <template v-slot:activator="{props}">
                             <v-btn
-                                v-bind="attr"
-                                v-on="on"
+                                v-bind="props"
                                 color="red lighten-3"
                                 text
                                 @click="stopWork(issueName)"
                                 v-if="issue.work"
                             ><v-icon small left>fas fa-stop</v-icon> Stop Work</v-btn>
                             <v-btn
-                                v-bind="attr"
-                                v-on="on"
+                                v-bind="props"
                                 color="green lighten-3"
                                 variant="text"
                                 @click="startWork(issueName)"
@@ -27,11 +25,10 @@
                     </v-tooltip>
                 </v-col>
                 <v-col cols="3">
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{on, attr}">
+                    <v-tooltip location="bottom">
+                        <template v-slot:activator="{props}">
                             <v-btn
-                                v-bind="attr"
-                                v-on="on"
+                                v-bind="props"
                                 variant="text"
                                 v-bind:color="issue.pinned ? 'success' : 'grey'"
                                 @click="issue.pinned ? unpin(issueName) : pin(issueName)"
@@ -41,11 +38,10 @@
                         </template>
                         <span>When active, issue is pinned, so it is sorted to the front in the quick select and is not automatically cleaned up.</span>
                     </v-tooltip>
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{on, attr}">
+                    <v-tooltip location="bottom">
+                        <template v-slot:activator="{props}">
                             <v-btn
-                                v-bind="attr"
-                                v-on="on"
+                                v-bind="props"
                                 variant="text"
                                 @click="openOptions('jira')"
                             >
@@ -69,36 +65,32 @@
                         :key="checklist.uuid"
                         :value="checklist.uuid"
                     >
-                        <v-tooltip right>
-                            <template v-slot:activator="{on, attr}">
-                                <v-icon
-                                    v-bind="attr"
-                                    v-on="on"
-                                >fas fa-{{ checklist.icon }}
-                                </v-icon>
+                        <v-tooltip location="right">
+                            <template v-slot:activator="{props}">
+                                <v-icon v-bind="props" center>fas fa-{{ checklist.icon }}</v-icon>
                             </template>
                             <span>{{ checklist.name }}</span>
                         </v-tooltip>
                     </v-tab>
                     <v-tab v-model="tab" value="templates">
-                        <v-tooltip right>
-                            <template v-slot:activator="{on, attr}">
-                                <v-icon v-bind="attr" v-on="on">fas fa-clipboard</v-icon>
+                        <v-tooltip location="right">
+                            <template v-slot:activator="{props}">
+                                <v-icon v-bind="props">fas fa-clipboard</v-icon>
                             </template>
                             <span>Templates</span>
                         </v-tooltip>
                     </v-tab>
                 </v-tabs>
-            </div>
 
-            <v-window class="flex-fill">
-                <v-window-item v-for="checklist in checklists" :key="checklist.uuid" :value="checklist.uuid">
-                    <checklist :uuid="checklist.uuid" :issue="issueName"></checklist>
-                </v-window-item>
-                <v-window-item value="templates">
-                    <templates></templates>
-                </v-window-item>
-            </v-window>
+                <v-window>
+                    <v-window-item v-for="checklist in checklists" :key="checklist.uuid" :value="checklist.uuid">
+                        <checklist :uuid="checklist.uuid" :issue="issueName"></checklist>
+                    </v-window-item>
+                    <v-window-item value="templates">
+                        <templates></templates>
+                    </v-window-item>
+                </v-window>
+            </div>
         </v-card-text>
     </v-card>
 </template>

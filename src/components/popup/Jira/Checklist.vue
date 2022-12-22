@@ -1,31 +1,29 @@
 <template>
     <v-card flat>
         <v-card-text>
-            <v-list dense>
+            <v-list>
                 <v-list-group
                     v-for="item in checklist.checklist"
                     :key="item.uid"
-                    no-action
+                    :value="item"
                 >
-                    <template v-slot:activator>
-                        <v-list-item-icon class="mr-2">
-                            <v-icon small color="success" v-if="checkGroupCompleted(item.uid)">fas fa-check</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-header>
-                            <v-list-item-title :class="(checkGroupCompleted(item.uid) ? 'text-decoration-line-through' : '')" :is="item.title"></v-list-item-title>
-                        </v-list-item-header>
+                    <template v-slot:activator="{props}">
+                        <v-list-item v-bind="props">
+                            <template v-slot:prepend>
+                                <v-icon small color="success" v-if="checkGroupCompleted(item.uid)">fas fa-check</v-icon>
+                            </template>
+                            <v-list-item-title :class="(checkGroupCompleted(item.uid) ? 'text-decoration-line-through' : '')" :v-text="item.title"></v-list-item-title>
+                        </v-list-item>
                     </template>
                     <v-list-item
                         v-for="entry in item.items"
                         :key="entry.id"
-                        class="pl-10"
+                        :value="entry"
                     >
-                        <v-list-item-icon class="mr-2">
+                        <template v-slot:prepend>
                             <v-icon small color="success" v-if="isChecked(entry.id)">fas fa-check</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-header>
-                            <v-list-item-title :class="'cursor-pointer text-wrap' + (isChecked(entry.id) ? ' text-decoration-line-through' : '')" :is="entry.text" @click="toggleCheck(entry.id)" ></v-list-item-title>
-                        </v-list-item-header>
+                        </template>
+                        <v-list-item-title :class="'cursor-pointer text-wrap' + (isChecked(entry.id) ? ' text-decoration-line-through' : '')" :v-text="entry.text" @click="toggleCheck(entry.id)" ></v-list-item-title>
                     </v-list-item>
                 </v-list-group>
             </v-list>

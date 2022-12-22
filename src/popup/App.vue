@@ -5,8 +5,14 @@
                 <v-progress-circular size="256" width="10" color="orange" indeterminate></v-progress-circular>
             </v-overlay>
             <v-toolbar flat>
-                <v-img src="icons/48.png" max-height="24" max-width="24" class="mr-2"></v-img>
-                <v-toolbar-title>{{ title }}</v-toolbar-title>
+                <v-row>
+                    <v-col cols="1" class="align-center">
+                        <v-img src="icons/48.png" max-height="24" max-width="24" class="mr-2"></v-img>
+                    </v-col>
+                    <v-col cols="11">
+                        <v-toolbar-title>{{ title }}</v-toolbar-title>
+                    </v-col>
+                </v-row>
             </v-toolbar>
             <v-row v-if="modules && optionsValid">
                 <v-col>
@@ -114,15 +120,7 @@ export default {
             })
         },
         checkSwitchTab: function () {
-            const switchTab = this.$store.getters['switchTab']
-
-            if ('jira' === switchTab) {
-                this.tab = 1
-            } else if ('jenkins' === switchTab) {
-                this.tab = 2
-            } else if ('gitLab' === switchTab) {
-                this.tab = 3
-            }
+            this.tab = this.$store.getters['switchTab']
         },
         showTab: function (tab) {
             if ('jira' === tab.id) {
@@ -139,7 +137,7 @@ export default {
             chrome.storage.local.set({'optionsTab': tab}, () => {
                 chrome.runtime.openOptionsPage()
             })
-        },
+        }
     },
     created() {
         this.load()
