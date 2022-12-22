@@ -1,6 +1,6 @@
 {
   "name": "jdc",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service build --mode development --watch",
@@ -31,11 +31,9 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.2",
-    "patch-package": "^6.4.7",
     "postinstall-postinstall": "^2.1.0",
     "sass": "^1.32.0",
     "sass-loader": "^10.0.0",
-    "vue-cli-plugin-browser-extension": "^0.25",
     "vue-cli-plugin-vuetify": "~2.3.1",
     "vue-template-compiler": "^2.6.11",
     "vuetify-loader": "^1.7.0"

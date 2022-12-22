@@ -1,16 +1,14 @@
-import {V0_6_0} from '@/mixins/migrations/v0.6.0'
 import semver from 'semver'
 
 export default class Migration {
     constructor () {
-        this._version = '0.6.1'
+        this._version = '0.6.2'
         this.migrations = [
-            new V0_6_0(),
         ]
     }
 
-    migrate = (options) => {
-        if (undefined === options.version || semver.lt(options.version, '0.5.0')) {
+    migrate = (options, storeInStorage = true) => {
+        if (undefined === options.version || semver.lt(options.version, '0.5.0', 1)) {
             throw Error('Unsupported version')
         }
 
@@ -26,7 +24,9 @@ export default class Migration {
 
         obj.options = options
 
-        chrome.storage.local.set(obj)
+        if (storeInStorage) {
+            chrome.storage.local.set(obj)
+        }
 
         return options
     }

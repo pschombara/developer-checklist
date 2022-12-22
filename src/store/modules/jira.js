@@ -194,6 +194,8 @@ export default {
             template.subTitle = updateData.subTitle
             template.content = updateData.content
             template.sort = updateData.sort
+
+            state.templates.sort(((a, b) => a.sort > b.sort ? 1 : -1))
         },
         REMOVE_TEMPLATE: (state, id) => {
             const index = state.templates.findIndex(template => template.id === id)
@@ -473,7 +475,7 @@ export default {
 
             return  checklist.checklist.find(category => category.uid === categoryId)
         },
-        templates: state => state.templates.sort(((a, b) => a.sort > b.sort ? 1 : -1)),
+        templates: state => state.templates,
         nextTemplateSort: state => Math.max(...state.templates.map(template => template.sort)) + 1,
     },
 }

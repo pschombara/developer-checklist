@@ -69,12 +69,6 @@
                                                 <v-card-text>
                                                     <v-form ref="formBoard" v-model="dialogBoard.valid">
                                                         <v-text-field
-                                                            v-model="dialogBoard.item.identifier"
-                                                            :label="text.boardId"
-                                                            :rules="boardIdRules"
-                                                            type="number"
-                                                        ></v-text-field>
-                                                        <v-text-field
                                                             v-model="dialogBoard.item.key"
                                                             :label="text.boardKey"
                                                             :rules="boardKeyRules"
@@ -174,7 +168,6 @@ export default {
         },
         boardHeaders() {
             return [
-                { text: this.text.boardId, value: 'identifier'},
                 { text: this.text.boardKey, value: 'key'},
                 { text: this.text.default, value: 'default', sortable: false},
                 { text: '', value: 'actions', sortable: false, align: 'end'},
@@ -271,7 +264,6 @@ export default {
                 cancel: chrome.i18n.getMessage('Cancel'),
                 delete: chrome.i18n.getMessage('Delete'),
                 boardKey: chrome.i18n.getMessage('BoardKey'),
-                boardId: chrome.i18n.getMessage('BoardId'),
                 boards: chrome.i18n.getMessage('Boards'),
                 newBoard: chrome.i18n.getMessage('NewBoard'),
                 default: chrome.i18n.getMessage('Default'),

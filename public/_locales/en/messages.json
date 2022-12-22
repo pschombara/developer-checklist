@@ -170,9 +170,6 @@
     "CleanupInterval": {
         "message": "Cleanup interval"
     },
-    "BoardId": {
-        "message": "Board Id"
-    },
     "BoardKey": {
         "message": "Board Key"
     },

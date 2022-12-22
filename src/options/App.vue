@@ -208,6 +208,7 @@ import About from '@/components/options/About'
 import Theme from '@/mixins/theme'
 /* import Chrome from '@/components/options/Chrome' */
 import semver from 'semver'
+import Migration from '@/mixins/migration'
 
 export default {
     name: 'App',
@@ -332,11 +333,12 @@ export default {
             fileReader.addEventListener('load', e => {
                 try {
                     const data = JSON.parse(e.target.result.toString())
+                    const migration = new Migration()
 
                     if (this.validateImportFile(data)) {
                         this.importAvailableModules = data.exported
                         this.importModules = data.exported
-                        this.importOptions = data.options
+                        this.importOptions = migration.migrate(data.options, false)
                         this.dialog.import = true
                     }
                 } catch (e) {
@@ -352,7 +354,7 @@ export default {
             return typeof data === 'object'
                 && Object.prototype.hasOwnProperty.call(data, 'exported')
                 && Object.prototype.hasOwnProperty.call(data, 'options')
-                && semver.gte(data.options.version, manifest.version)
+                && semver.lte('0.6.0', manifest.version, 1)
         },
         closeAlerts: function () {
             this.alert.import.type = false
