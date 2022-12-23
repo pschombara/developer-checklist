@@ -241,10 +241,8 @@ export default {
             input.value = url
 
             document.querySelector('body').append(input)
-            input.select()
 
-            document.execCommand('copy')
-            window.getSelection().removeAllRanges()
+            navigator.clipboard.writeText(input.value)
             this.hint = true
 
             document.querySelector('body').removeChild(input)

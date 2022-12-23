@@ -23,6 +23,7 @@
         <v-card-actions v-if="template">
             <v-spacer></v-spacer>
             <v-btn @click="addComment" outlined color="success">{{ text.comment }}</v-btn>
+            <v-btn @click="copyComment" outlined color="secondary"><v-icon>fas fa-copy</v-icon></v-btn>
             <v-spacer></v-spacer>
         </v-card-actions>
     </v-card>
@@ -48,6 +49,20 @@ export default {
                 autoComment: false,
             })
         },
+        copyComment: function () {
+            let comment = this.$store.getters['jira/getTemplate'](this.template.id).content
+
+            this.$store.dispatch('jira/commentReplacePlaceholders', comment)
+                .then(result => {
+                    let blob = new Blob([result], {type: 'text/html'})
+
+                    navigator.clipboard.write(
+                        [
+                            new ClipboardItem({[blob.type]: blob}),
+                        ],
+                    )
+                })
+        },
     },
     data() {
         return {
@@ -55,6 +70,7 @@ export default {
                 templates: chrome.i18n.getMessage('Templates'),
                 preview: chrome.i18n.getMessage('Preview'),
                 comment: chrome.i18n.getMessage('Comment'),
+                copy: chrome.i18n.getMessage('Copy'),
             },
             template: null,
         }

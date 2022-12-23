@@ -193,8 +193,6 @@ export default {
             template.subTitle = updateData.subTitle
             template.content = updateData.content
             template.sort = updateData.sort
-
-            state.templates.sort(((a, b) => a.sort > b.sort ? 1 : -1))
         },
         REMOVE_TEMPLATE: (state, id) => {
             const index = state.templates.findIndex(template => template.id === id)
@@ -376,7 +374,7 @@ export default {
         },
         addComment: ({rootGetters, getters, dispatch}, data) => {
             const currentTab = rootGetters['currentTab']
-            const template = getters['templates'].find(template => template.id === data.uuid)
+            const template = getters['getTemplate'](data.uuid)
             let comment = ''
 
             if (undefined !== template) {
@@ -465,6 +463,7 @@ export default {
             return  checklist.checklist.find(category => category.uid === categoryId)
         },
         templates: state => state.templates,
+        getTemplate: state => uuid => state.templates.find(template => template.id === uuid),
         nextTemplateSort: state => Math.max(...state.templates.map(template => template.sort)) + 1,
     },
 }

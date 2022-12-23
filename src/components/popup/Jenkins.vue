@@ -194,9 +194,7 @@ export default {
         },
         copy: function () {
             if (this.readyToCopy) {
-                this.$refs.copyBuild.$refs.input.select()
-                document.execCommand('copy')
-                window.getSelection().removeAllRanges()
+                navigator.clipboard.writeText(this.$refs.copyBuild.$refs.input.value)
                 this.hint = true
             }
         },

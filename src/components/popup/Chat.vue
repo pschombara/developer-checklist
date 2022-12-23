@@ -92,6 +92,21 @@ export default {
         if (null !== currentIssue) {
             this.attachedIssues.push(currentIssue)
         }
+
+        let rooms = this.$store.getters['chat/listRooms'](this.client)
+
+        if (0 === rooms.length) {
+            return
+        }
+        this.room = rooms[0]
+
+        let messages = this.$store.getters['chat/listMessages'](this.client)
+
+        if (0 === messages.length) {
+            return
+        }
+
+        this.message = messages[0]
     },
     computed: {
         clients: function () {
