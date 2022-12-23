@@ -27,7 +27,6 @@ export default {
         },
         ADD_BOARD: (state , board) => {
             state.boards.push({
-                identifier: board.id,
                 key: board.key,
                 default: board.default,
             })
@@ -232,7 +231,6 @@ export default {
 
                 for (let board of options.boards) {
                     commit('ADD_BOARD', {
-                        id: board.id,
                         key: board.key,
                         default: board.default,
                     })
@@ -273,7 +271,6 @@ export default {
         },
         addBoard: ({commit}, board) => {
             commit('ADD_BOARD', {
-                id: board.identifier,
                 key: board.key,
                 default: board.default,
             })
@@ -387,36 +384,27 @@ export default {
             }
 
             dispatch('commentReplacePlaceholders', comment).then(result => {
-                console.log(result)
                 currentTab.then(tab => {
                     chrome.scripting.executeScript({
                         target: {tabId: tab.id},
                         func: (comment, sendImmediately) => {
-                            const commentBtn = document.querySelector('#footer-comment-button')
+                            document.dispatchEvent(new KeyboardEvent('keydown', {key: 'm'}))
 
-                            if (null === commentBtn) {
-                                return
-                            }
+                            window.setTimeout(() => {
+                                const commentArea = document.querySelector('.ak-editor-content-area > div[role=textbox]')
 
-                            // start comment
-                            commentBtn.click()
+                                if (null === commentArea) {
+                                    return
+                                }
 
-                            const sourceEditor = document.querySelector('[data-mode="source"] > a')
-                            const content = document.querySelector('#comment')
+                                commentArea.innerHTML = comment
 
-                            // Switch to source editor
-                            if (null !== sourceEditor) {
-                                sourceEditor.click()
-                            }
+                                const sendButton = document.querySelector('button[data-testid="comment-save-button"]')
 
-                            content.value = comment
-
-                            const sendButton = document.querySelector('#issue-comment-add-submit')
-                            sendButton.removeAttribute('disabled')
-
-                            if (sendImmediately) {
-                                sendButton.click()
-                            }
+                                if (sendImmediately) {
+                                    sendButton.click()
+                                }
+                            }, 300)
                         },
                         args: [result, data.autoComment],
                     })
@@ -438,28 +426,29 @@ export default {
 
                 for (let mergeRequest of issue.mergeRequests ?? []) {
                     mergeRequests.push(
-                        '* ' + rootGetters['gitLab/url'](
+
+                        '<li>' + rootGetters['gitLab/url'](
                             mergeRequest.id,
                             mergeRequest.number,
                             mergeRequest.source,
                             true,
-                        ),
+                        ) + '</li>',
                     )
                 }
 
                 for (let ciBuild of issue.ciBuilds ?? []) {
                     ciBuilds.push(
-                        '* ' + rootGetters['jenkins/url'](
+                        '<li>' + rootGetters['jenkins/url'](
                             ciBuild.job,
                             ciBuild.build,
                             true,
-                        ),
+                        ) + '</li>',
                     )
                 }
 
-                comment = comment.replace('[mergeRequests]', mergeRequests.join('\n'))
+                comment = comment.replace('[mergeRequests]', `<ul>${mergeRequests.join('\n')}</ul>`)
 
-                resolve(comment.replace('[ciBuilds]', ciBuilds.join('\n')))
+                resolve(comment.replace('[ciBuilds]', `<ul>${ciBuilds.join('\n')}</ul>`))
             })
         },
     },

@@ -222,7 +222,9 @@ export default {
             let name = '' !== data.label ? data.label : data.name
 
             if (withAlias) {
-                return `[!${state.host}buildStatus/icon?job=${data.job}&build=${build}&style=flat-square&subject=${name}!|${state.host}view/${data.type}/job/${data.job}/${build}/]`
+                return `<a href="${state.host}view/${data.type}/job/${data.job}/${build}/">
+                    <img src="${state.host}buildStatus/icon?job=${data.job}&build=${build}&style=flat-square&subject=${name}" alt="build status"/>
+                </a>`
             }
 
             return `${state.host}view/${data.type}/job/${data.job}/${build}/`
