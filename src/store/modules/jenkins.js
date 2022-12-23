@@ -219,15 +219,14 @@ export default {
                 return ''
             }
 
-            let name = '' !== data.label ? data.label : data.name
+            const name = '' !== data.label ? data.label : data.name
+            const url = encodeURI(`${state.host}view/${data.type}/job/${data.job}/${build}/`)
 
             if (withAlias) {
-                return `<a href="${state.host}view/${data.type}/job/${data.job}/${build}/">
-                    <img src="${state.host}buildStatus/icon?job=${data.job}&build=${build}&style=flat-square&subject=${name}" alt="build status"/>
-                </a>`
+                return `<a href="${url}">${name}</a>`
             }
 
-            return `${state.host}view/${data.type}/job/${data.job}/${build}/`
+            return url
         },
     },
 }

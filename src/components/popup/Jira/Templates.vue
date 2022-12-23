@@ -59,6 +59,7 @@ export default {
 
             this.$store.dispatch('jira/commentReplacePlaceholders', comment)
                 .then(result => {
+                    console.log(result)
                     let blob = new Blob([result], {type: 'text/html'})
 
                     navigator.clipboard.write(

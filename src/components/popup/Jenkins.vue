@@ -179,8 +179,12 @@ export default {
         },
         copy: function () {
             if (this.readyToCopy) {
-                navigator.clipboard.writeText(this.$refs.copyBuild.$refs.input.value)
-                this.$refs.message.show()
+                let blob = new Blob([this.$refs.copyBuild.$refs.input.value], {type: 'text/html'})
+
+                navigator.clipboard.write([new ClipboardItem({[blob.type]: blob})])
+                    .then(() => {
+                        this.$refs.message.show()
+                    })
             }
         },
         attachToIssue: function () {
@@ -222,15 +226,12 @@ export default {
                 return
             }
 
-            const input = document.createElement('input')
-            input.classList.add('d-none')
-            input.value = url
+            let blob = new Blob([url], {type: 'text/html'})
 
-            document.querySelector('body').append(input)
-            navigator.clipboard.writeText(input.value)
-            this.$refs.message.show()
-
-            document.querySelector('body').removeChild(input)
+            navigator.clipboard.write([new ClipboardItem({[blob.type]: blob})])
+                .then(() => {
+                    this.$refs.message.show()
+                })
         },
     },
     data: () => {
