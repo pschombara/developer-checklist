@@ -93,24 +93,7 @@
                 </v-col>
             </v-row>
         </v-card-text>
-        <v-snackbar
-            v-model="hint"
-            :timeout="2200"
-        >
-            <v-icon left color="success">fas fa-check</v-icon>
-            {{text.copiedToClipboard}}
-
-            <template v-slot:action="{ attrs }">
-                <v-btn
-                    color="blue"
-                    text
-                    v-bind="attrs"
-                    @click="hint = false"
-                >
-                    {{text.close}}
-                </v-btn>
-            </template>
-        </v-snackbar>
+        <copied-to-clipboard ref="message"></copied-to-clipboard>
     </v-card>
     <v-card v-else>
         <v-card-text>
@@ -126,9 +109,11 @@
 
 <script>
 import _ from 'lodash'
+import CopiedToClipboard from '@/components/popup/mixed/CopiedToClipboard.vue'
 
 export default {
     name: 'GitLab',
+    components: {CopiedToClipboard},
     created() {
         this.optionsValid = '' !== this.$store.getters['gitLab/getHost']
             && 0 < this.$store.getters['gitLab/getProjects'].length
@@ -196,10 +181,8 @@ export default {
         },
         copy: function () {
             if (this.readyToCopy) {
-                this.$refs.copyMergeUrl.$refs.input.select()
-                document.execCommand('copy')
-                window.getSelection().removeAllRanges()
-                this.hint = true
+                navigator.clipboard.writeText(this.$refs.copyMergeUrl.$refs.input.value)
+                this.$refs.message.show()
             }
         },
         attachToIssue: function () {
@@ -243,7 +226,7 @@ export default {
             document.querySelector('body').append(input)
 
             navigator.clipboard.writeText(input.value)
-            this.hint = true
+            this.$refs.message.show()
 
             document.querySelector('body').removeChild(input)
         },
@@ -254,13 +237,10 @@ export default {
             i18n: chrome.i18n,
             text: {
                 openOptions: chrome.i18n.getMessage('openOptions'),
-                close: chrome.i18n.getMessage('Close'),
-                copiedToClipboard: chrome.i18n.getMessage('copiedToClipboard'),
                 project: chrome.i18n.getMessage('Project'),
             },
             project: '',
             number: null,
-            hint: false,
             issue: null,
             issues: [],
         }

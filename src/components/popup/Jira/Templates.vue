@@ -26,12 +26,17 @@
             <v-btn @click="copyComment" outlined color="secondary"><v-icon>fas fa-copy</v-icon></v-btn>
             <v-spacer></v-spacer>
         </v-card-actions>
+
+        <copied-to-clipboard ref="message"></copied-to-clipboard>
     </v-card>
 </template>
 
 <script>
+import CopiedToClipboard from '@/components/popup/mixed/CopiedToClipboard.vue'
+
 export default {
     name: 'Templates',
+    components: {CopiedToClipboard},
     computed: {
         templates: function () {
             return this.$store.getters['jira/templates']
@@ -60,7 +65,9 @@ export default {
                         [
                             new ClipboardItem({[blob.type]: blob}),
                         ],
-                    )
+                    ).then(() => {
+                        this.$refs.message.show()
+                    })
                 })
         },
     },
