@@ -394,16 +394,27 @@ export default {
 
                     btnComment.click()
 
-                    window.setTimeout(() => resolve(), 150)
+                    window.setTimeout(() => resolve(), 300)
                 }).then(() => {
-                    document.dispatchEvent(new KeyboardEvent('keydown', {key: 'm'}))
+                    let commentArea = document.querySelector('.ak-editor-content-area > div[role=textbox]')
 
-                    window.setTimeout(() => {
-                        const commentArea = document.querySelector('.ak-editor-content-area > div[role=textbox]')
+                    new Promise(resolve => {
+                        if (null === commentArea) {
+                            document.dispatchEvent(new KeyboardEvent('keydown', {key: 'm'}))
 
+                            window.setTimeout(() => {
+                                commentArea = document.querySelector('.ak-editor-content-area > div[role=textbox]')
+
+                                resolve()
+                            }, 300)
+                        } else {
+                            resolve()
+                        }
+                    }).then(() => {
                         if (null === commentArea) {
                             return
                         }
+
                         commentArea.innerHTML = comment
 
                         const sendButton = document.querySelector('button[data-testid="comment-save-button"]')
@@ -411,7 +422,7 @@ export default {
                         if (sendImmediately) {
                             sendButton.click()
                         }
-                    }, 150)
+                    })
                 })
             }
 
