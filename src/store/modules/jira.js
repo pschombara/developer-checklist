@@ -381,30 +381,54 @@ export default {
                 comment = template.content
             }
 
+            const createComment = async (comment, sendImmediately) => {
+                new Promise(resolve => {
+                    // try to find button on detail page
+                    let btnComment = document.querySelector('button[data-testid="issue-activity-feed.ui.buttons.Comments"]')
+
+                    if (null === btnComment) {
+                        resolve()
+
+                        return
+                    }
+
+                    btnComment.click()
+
+                    window.setTimeout(() => resolve(), 150)
+                }).then(() => {
+                    document.dispatchEvent(new KeyboardEvent('keydown', {key: 'm'}))
+
+                    window.setTimeout(() => {
+                        const commentArea = document.querySelector('.ak-editor-content-area > div[role=textbox]')
+
+                        if (null === commentArea) {
+                            return
+                        }
+                        commentArea.innerHTML = comment
+
+                        const sendButton = document.querySelector('button[data-testid="comment-save-button"]')
+
+                        if (sendImmediately) {
+                            sendButton.click()
+                        }
+                    }, 150)
+                })
+            }
+
             dispatch('commentReplacePlaceholders', comment).then(result => {
                 currentTab.then(tab => {
                     chrome.scripting.executeScript({
                         target: {tabId: tab.id},
-                        func: (comment, sendImmediately) => {
-                            document.dispatchEvent(new KeyboardEvent('keydown', {key: 'm'}))
-
-                            window.setTimeout(() => {
-                                const commentArea = document.querySelector('.ak-editor-content-area > div[role=textbox]')
-
-                                if (null === commentArea) {
-                                    return
-                                }
-
-                                commentArea.innerHTML = comment
-
-                                const sendButton = document.querySelector('button[data-testid="comment-save-button"]')
-
-                                if (sendImmediately) {
-                                    sendButton.click()
-                                }
-                            }, 300)
-                        },
+                        func: createComment,
                         args: [result, data.autoComment],
+                    },
+                    (injectionResults) => {
+                        let result = injectionResults[0]
+
+                        console.log(result)
+                        if (false === result.result) {
+                            throw new Error('Could add comment')
+                        }
                     })
                 })
             })
