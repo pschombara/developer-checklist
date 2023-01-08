@@ -19,13 +19,13 @@
                     <v-spacer></v-spacer>
                     <v-tooltip location="bottom">
                         <template v-slot:activator="{ props }">
-                            <v-btn class="mr-2" color="success" fab icon="" v-bind="props" @click="save"><v-icon>fas fa-save</v-icon></v-btn>
+                            <v-btn class="mr-2" color="success" fab icon="fas fa-save" v-bind="props" @click="save"></v-btn>
                         </template>
                         <span>{{text.save}}</span>
                     </v-tooltip>
                     <v-tooltip location="bottom">
                         <template v-slot:activator="{ props }">
-                            <v-btn class="mr-2" fab icon="" v-bind="props" @click="saveExportStart"><v-icon>fas fa-download</v-icon></v-btn>
+                            <v-btn class="mr-2" fab icon="fas fa-download" v-bind="props" @click="saveExportStart"></v-btn>
                             <v-dialog v-model="dialog.export" max-width="800">
                                 <v-card>
                                     <v-card-title>{{text.export}}</v-card-title>
@@ -42,12 +42,10 @@
                                                         :value="setting.id"
                                                     >
                                                         <template v-slot:default="{ active }">
-                                                            <v-list-item-action>
+                                                            <v-list-item-action start>
                                                                 <v-checkbox :input-value="active" color="primary"></v-checkbox>
                                                             </v-list-item-action>
-                                                            <v-list-item-header>
-                                                                <v-list-item-title>{{setting.name}}</v-list-item-title>
-                                                            </v-list-item-header>
+                                                            <v-list-item-title>{{setting.name}}</v-list-item-title>
                                                         </template>
                                                     </v-list-item>
                                                 </template>
@@ -92,12 +90,10 @@
                                                         :disabled="!importAvailableModules.includes(setting.id)"
                                                     >
                                                         <template v-slot:default="{ active }">
-                                                            <v-list-item-avatar>
+                                                            <v-list-item-action start>
                                                                 <v-checkbox :modal-value="active" color="primary" hide-details></v-checkbox>
-                                                            </v-list-item-avatar>
-                                                            <v-list-item-header>
-                                                                <v-list-item-title>{{setting.name}}</v-list-item-title>
-                                                            </v-list-item-header>
+                                                            </v-list-item-action>
+                                                            <v-list-item-title>{{setting.name}}</v-list-item-title>
                                                         </template>
                                                     </v-list-item>
                                                 </template>
@@ -202,6 +198,7 @@ import Theme from '@/mixins/theme'
 /* import Chrome from '@/components/options/Chrome' */
 import semver from 'semver'
 import General from '@/components/options/General'
+import Migration from '@/mixins/migration'
 
 export default {
     name: 'App',
@@ -332,11 +329,12 @@ export default {
             fileReader.addEventListener('load', e => {
                 try {
                     const data = JSON.parse(e.target.result.toString())
+                    const migration = new Migration()
 
                     if (this.validateImportFile(data)) {
                         this.importAvailableModules = data.exported
                         this.importModules = data.exported
-                        this.importOptions = data.options
+                        this.importOptions = migration.migrate(data.options, false)
                         this.dialog.import = true
                     }
                 } catch (e) {
@@ -352,7 +350,7 @@ export default {
             return typeof data === 'object'
                 && Object.prototype.hasOwnProperty.call(data, 'exported')
                 && Object.prototype.hasOwnProperty.call(data, 'options')
-                && semver.gte(data.options.version, manifest.version)
+                && semver.lte('0.6.0', manifest.version, 1)
         },
         closeAlerts: function () {
             this.alert.import.type = false

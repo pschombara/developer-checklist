@@ -23,14 +23,20 @@
         <v-card-actions v-if="template">
             <v-spacer></v-spacer>
             <v-btn @click="addComment" outlined color="success">{{ text.comment }}</v-btn>
+            <v-btn @click="copyComment" outlined color="secondary"><v-icon>fas fa-copy</v-icon></v-btn>
             <v-spacer></v-spacer>
         </v-card-actions>
+
+        <copied-to-clipboard ref="message"></copied-to-clipboard>
     </v-card>
 </template>
 
 <script>
+import CopiedToClipboard from '@/components/popup/mixed/CopiedToClipboard.vue'
+
 export default {
     name: 'JiraTemplates',
+    components: {CopiedToClipboard},
     computed: {
         templates: function () {
             return this.$store.getters['jira/templates']
@@ -48,6 +54,23 @@ export default {
                 autoComment: false,
             })
         },
+        copyComment: function () {
+            let comment = this.$store.getters['jira/getTemplate'](this.template.id).content
+
+            this.$store.dispatch('jira/commentReplacePlaceholders', comment)
+                .then(result => {
+                    console.log(result)
+                    let blob = new Blob([result], {type: 'text/html'})
+
+                    navigator.clipboard.write(
+                        [
+                            new ClipboardItem({[blob.type]: blob}),
+                        ],
+                    ).then(() => {
+                        this.$refs.message.show()
+                    })
+                })
+        },
     },
     data() {
         return {
@@ -55,6 +78,7 @@ export default {
                 templates: chrome.i18n.getMessage('Templates'),
                 preview: chrome.i18n.getMessage('Preview'),
                 comment: chrome.i18n.getMessage('Comment'),
+                copy: chrome.i18n.getMessage('Copy'),
             },
             template: null,
         }

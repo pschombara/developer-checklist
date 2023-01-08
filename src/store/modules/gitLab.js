@@ -226,7 +226,7 @@ export default {
             let aliasUrl = project.project + ('' !== source ? `:${source}` : '')
 
             if (withAlias) {
-                return `[${aliasUrl}|${state.host}${project.domain}/${project.project}/merge_requests/${number}]`
+                return `<a href="${state.host}${project.domain}/${project.project}/merge_requests/${number}">${aliasUrl}</a>`
             }
 
             return `${state.host}${project.domain}/${project.project}/merge_requests/${number}`

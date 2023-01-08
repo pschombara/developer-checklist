@@ -96,24 +96,7 @@
                 </v-col>
             </v-row>
         </v-card-text>
-        <v-snackbar
-            v-model="hint"
-            :timeout="2200"
-        >
-            <v-icon left color="success">fas fa-check</v-icon>
-            Copied to clipboard
-
-            <template v-slot:action="{ attrs }">
-                <v-btn
-                    color="blue"
-                    text
-                    v-bind="attrs"
-                    @click="hint = false"
-                >
-                    Close
-                </v-btn>
-            </template>
-        </v-snackbar>
+        <copied-to-clipboard ref="message"></copied-to-clipboard>
     </v-card>
     <v-card v-else>
         <v-card-text>
@@ -129,9 +112,11 @@
 
 <script>
 import _ from 'lodash'
+import CopiedToClipboard from '@/components/popup/mixed/CopiedToClipboard.vue'
 
 export default {
     name: 'PopupJenkins',
+    components: {CopiedToClipboard},
     created() {
         this.optionsValid = '' !== this.$store.getters['jenkins/getHost']
             && 0 < this.$store.getters['jenkins/getBuilds'].length
@@ -197,8 +182,12 @@ export default {
         },
         copy: function () {
             if (this.readyToCopy) {
-                navigator.clipboard.writeText(this.$refs.copyBuild.value)
-                this.hint = true
+                let blob = new Blob([this.$refs.copyBuild.$refs.input.value], {type: 'text/html'})
+
+                navigator.clipboard.write([new ClipboardItem({[blob.type]: blob})])
+                    .then(() => {
+                        this.$refs.message.show()
+                    })
             }
         },
         attachToIssue: function () {
@@ -240,19 +229,12 @@ export default {
                 return
             }
 
-            const input = document.createElement('input')
-            input.classList.add('d-none')
-            input.value = url
+            let blob = new Blob([url], {type: 'text/html'})
 
-            document.querySelector('body').append(input)
-            input.select()
-
-            navigator.clipboard.readText()
-
-            window.getSelection().removeAllRanges()
-            this.hint = true
-
-            document.querySelector('body').removeChild(input)
+            navigator.clipboard.write([new ClipboardItem({[blob.type]: blob})])
+                .then(() => {
+                    this.$refs.message.show()
+                })
         },
     },
     data: () => {
@@ -261,7 +243,6 @@ export default {
             build: null,
             i18n: chrome.i18n,
             optionsValid: false,
-            hint: false,
             issue: null,
             issues: [],
         }
