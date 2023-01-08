@@ -202,7 +202,7 @@ export default {
                         {
                             target: {tabId: tab.id},
                             func: () => {
-                                return document.querySelector('#summary-val').innerText
+                                return document.querySelector('h1[data-testid="issue.views.issue-base.foundation.summary.heading"]').innerText
                             },
                         },
                         injectionResult => {
@@ -211,7 +211,6 @@ export default {
                             let storeObject = {}
 
                             dispatch('initChecklists', issue).then(result => {
-                                console.log(result)
                                 commit('ADD_ISSUE', result)
 
                                 let copy = _.cloneDeep(result)
