@@ -6,11 +6,15 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import themes from '@/plugins/themes'
 import { md3 } from 'vuetify/blueprints'
+import {VDataTable} from 'vuetify/lib/labs/VDataTable'
 
 const preferDark = window.matchMedia('(prefers-color-scheme: dark)').matches
 
 const vuetify = createVuetify({
-    components,
+    components: {
+        ...components,
+        VDataTable,
+    },
     directives,
     icons: {
         iconfont: 'fa',

@@ -137,7 +137,7 @@ export default {
             chrome.storage.local.set({'optionsTab': tab}, () => {
                 chrome.runtime.openOptionsPage()
             })
-        }
+        },
     },
     created() {
         this.load()
