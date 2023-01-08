@@ -10,7 +10,7 @@
             <v-data-table
                 :items="checklist.items"
                 :headers="header"
-                sort-by="sort"
+                :sort-by="['sort']"
                 :items-per-page=-1
                 :item-class="activeSortClass"
                 :hide-default-footer=true
@@ -116,8 +116,8 @@ export default  {
     computed: {
         header() {
             return [
-                { text: this.text.name, value: 'text', sortable: false },
-                { text: '', value: 'actions', align: 'end', sortable: false},
+                { title: this.text.name, value: 'text', sortable: false },
+                { title: '', value: 'actions', align: 'end', sortable: false},
             ]
         },
     },

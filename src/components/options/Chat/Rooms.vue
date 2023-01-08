@@ -4,7 +4,7 @@
             <v-data-table
                 :headers="roomsHeader"
                 :items="rooms"
-                sort-by="sort"
+                :sort-by="['sort']"
                 :items-per-page="-1"
                 :item-class="itemRowSortActiveClass"
                 :hide-default-footer="true"
@@ -109,9 +109,9 @@ export default {
         },
         roomsHeader() {
             return [
-                {text: 'Name', value: 'name', sortable: false, width: '15%'},
-                {text: 'URL', value: 'url', sortable: false, width: '75%'},
-                {text: '', value: 'actions', align: 'end', sortable: false, width: '10%'},
+                {title: 'Name', value: 'name', sortable: false, width: '15%'},
+                {title: 'URL', value: 'url', sortable: false, width: '75%'},
+                {title: '', value: 'actions', align: 'end', sortable: false, width: '10%'},
             ]
         },
     },

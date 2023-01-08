@@ -18,7 +18,7 @@
                                 :sort-by="['domain', 'project']"
                                 multi-sort
                                 show-group-by
-                                group-by="domain"
+                                :group-by="['domain']"
                             >
                                 <template v-slot:top>
                                     <v-toolbar flat>
@@ -116,7 +116,7 @@
                                 :headers="categoriesHeader"
                                 :items="categories"
                                 :search="searchCategory"
-                                sort-by="name"
+                                :sort-by="['name']"
                             >
                                 <template v-slot:top>
                                     <v-toolbar flat>
@@ -209,15 +209,15 @@ export default {
         },
         categoriesHeader() {
             return [
-                { text: this.text.category, value: 'name' },
-                { text: '', value: 'actions', sortable: false, align:'right' },
+                { title: this.text.category, value: 'name' },
+                { title: '', value: 'actions', sortable: false, align:'right' },
             ]
         },
         projectsHeader() {
             return [
-                { text: this.text.category, value: 'domain' },
-                { text: this.text.project, value: 'project', groupable: false },
-                { text: '', value: 'actions', sortable: false, align:'right', groupable: false },
+                { title: this.text.category, value: 'domain' },
+                { title: this.text.project, value: 'project', groupable: false },
+                { title: '', value: 'actions', sortable: false, align:'right', groupable: false },
             ]
         },
     },

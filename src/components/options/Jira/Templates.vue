@@ -9,7 +9,7 @@
                         :items-per-page="-1"
                         :item-class="activeSortClass"
                         :hide-default-footer="true"
-                        sort-by="sort"
+                        :sort-by="['sort']"
                     >
                         <template v-slot:top>
                             <v-toolbar flat>
@@ -238,8 +238,8 @@ export default {
         },
         templateHeaders: function () {
             return [
-                { text: this.text.template, value: 'template', sortable: false},
-                { text: '', value: 'actions', align: 'end', sortable: false},
+                { title: this.text.template, value: 'template', sortable: false},
+                { title: '', value: 'actions', align: 'end', sortable: false},
             ]
         },
     },

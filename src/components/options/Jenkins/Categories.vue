@@ -6,7 +6,7 @@
                 :headers="categoriesHeader"
                 :items="categories"
                 :search="searchCategory"
-                sort-by="name"
+                :sort-by="['name']"
             >
                 <template v-slot:top>
                     <v-toolbar flat>
@@ -93,8 +93,8 @@ export default {
         },
         categoriesHeader() {
             return [
-                { text: this.text.category, value: 'name' },
-                { text: '', value: 'actions', sortable: false, align:'end' },
+                { title: this.text.category, value: 'name' },
+                { title: '', value: 'actions', sortable: false, align:'end' },
             ]
         },
     },

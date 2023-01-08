@@ -171,9 +171,9 @@ export default {
         },
         issueHeader: function () {
             return [
-                { text: 'Project', value: 'id'},
-                { text: 'Number', value: 'number'},
-                { text: '', value: 'action', sortable: false, align:'right'},
+                { title: 'Project', value: 'id'},
+                { title: 'Number', value: 'number'},
+                { title: '', value: 'action', sortable: false, align:'right'},
             ]
         },
     },

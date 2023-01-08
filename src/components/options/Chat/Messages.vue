@@ -4,7 +4,7 @@
             <v-data-table
                 :headers="messagesHeader"
                 :items="messages"
-                sort-by="sort"
+                :sort-by="['sort']"
                 :items-per-page="-1"
                 :item-class="itemRowSortActiveClass"
                 :hide-default-footer="true"
@@ -103,9 +103,9 @@ export default {
         },
         messagesHeader() {
             return [
-                {text: 'Name', value: 'name', sortable: false, width: '15%'},
-                {text: 'Content', value: 'content', sortable: false, width: '75%'},
-                {text: '', value: 'actions', align: 'end', sortable: false, width: '10%'},
+                {title: 'Name', value: 'name', sortable: false, width: '15%'},
+                {title: 'Content', value: 'content', sortable: false, width: '75%'},
+                {title: '', value: 'actions', align: 'end', sortable: false, width: '10%'},
             ]
         },
     },

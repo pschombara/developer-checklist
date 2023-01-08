@@ -162,7 +162,7 @@
                     <v-data-table
                         :items="categories"
                         :headers="categoriesHeader"
-                        sort-by="sort"
+                        :sort-by="['sort']"
                         :items-per-page=-1
                         :item-class="itemRowSortActiveClass"
                         :hide-default-footer=true
@@ -274,8 +274,8 @@ export default {
         },
         categoriesHeader() {
             return [
-                {text: this.text.name, value: 'title', sortable: false},
-                {text: '', value: 'actions', align: 'end', sortable: false},
+                {title: this.text.name, value: 'title', sortable: false},
+                {title: '', value: 'actions', align: 'end', sortable: false},
             ]
         },
         enabled: {

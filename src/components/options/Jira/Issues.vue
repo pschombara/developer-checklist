@@ -86,11 +86,11 @@ export default {
     computed: {
         issueHeader() {
             return [
-                {text: 'Identifier', value: 'name', sortable: false},
-                {text: 'Title', value: 'title', sortable: false},
-                {text: 'Last Update', value: 'date', align: 'end', sortable: false},
-                {text: '', value: 'pinned', sortable: false},
-                {text: '', value: 'action', align: 'end', sortable: false},
+                {title: 'Identifier', value: 'name', sortable: false},
+                {title: 'Title', value: 'title', sortable: false},
+                {title: 'Last Update', value: 'date', align: 'end', sortable: false},
+                {title: '', value: 'pinned', sortable: false},
+                {title: '', value: 'action', align: 'end', sortable: false},
             ]
         },
         issues() {

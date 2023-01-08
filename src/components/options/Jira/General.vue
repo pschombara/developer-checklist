@@ -168,9 +168,9 @@ export default {
         },
         boardHeaders() {
             return [
-                { text: this.text.boardKey, value: 'key'},
-                { text: this.text.default, value: 'default', sortable: false},
-                { text: '', value: 'actions', sortable: false, align: 'end'},
+                { title: this.text.boardKey, value: 'key'},
+                { title: this.text.default, value: 'default', sortable: false},
+                { title: '', value: 'actions', sortable: false, align: 'end'},
             ]
         },
     },

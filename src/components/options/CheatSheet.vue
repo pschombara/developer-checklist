@@ -87,9 +87,9 @@ export default {
         },
         headers() {
             return [
-                {text: this.text.label, value: 'label'},
-                {text: this.text.commandOrContent, value: 'command'},
-                {text: '', value: 'actions', align: 'right'},
+                {title: this.text.label, value: 'label'},
+                {title: this.text.commandOrContent, value: 'command'},
+                {title: '', value: 'actions', align: 'right'},
             ]
         },
     },

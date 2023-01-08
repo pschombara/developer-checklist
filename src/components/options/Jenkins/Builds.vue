@@ -6,10 +6,10 @@
                 :headers="buildHeaders"
                 :items="builds"
                 :search="searchBuild"
-                sort-by="name"
+                :sort-by="['name']"
                 multi-sort
                 show-group-by
-                group-by="type"
+                :group-by="['type']"
             >
                 <template v-slot:top>
                     <v-toolbar flat>
@@ -132,11 +132,11 @@ export default {
         },
         buildHeaders() {
             return [
-                {text: this.text.category, value: 'type'},
-                {text: this.text.name, value: 'name', groupable: false},
-                {text: this.text.label, value: 'label', groupable: false},
-                {text: this.text.job, value: 'job', groupable: false},
-                {text: '', value: 'actions', sortable: false, align: 'end', groupable: false},
+                {title: this.text.category, value: 'type'},
+                {title: this.text.name, value: 'name', groupable: false},
+                {title: this.text.label, value: 'label', groupable: false},
+                {title: this.text.job, value: 'job', groupable: false},
+                {title: '', value: 'actions', sortable: false, align: 'end', groupable: false},
             ]
         },
         categories() {

@@ -169,9 +169,9 @@ export default {
         },
         issueHeader: function () {
             return [
-                { text: 'Job', value: 'job'},
-                { text: 'Build', value: 'build'},
-                { text: '', value: 'action', sortable: false, align:'right'},
+                { title: 'Job', value: 'job'},
+                { title: 'Build', value: 'build'},
+                { title: '', value: 'action', sortable: false, align:'right'},
             ]
         },
     },
