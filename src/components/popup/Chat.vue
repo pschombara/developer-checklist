@@ -102,7 +102,7 @@ export default {
         if (0 === rooms.length) {
             return
         }
-        this.room = rooms[0]
+        this.room = rooms[0].id
 
         let messages = this.$store.getters['chat/listMessages'](this.client)
 
@@ -110,7 +110,7 @@ export default {
             return
         }
 
-        this.message = messages[0]
+        this.message = messages[0].id
     },
     computed: {
         clients: function () {
