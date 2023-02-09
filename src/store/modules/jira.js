@@ -114,6 +114,7 @@ export default {
             state.maximumIssues = 6
             state.boards = []
             state.checklists = []
+            state.templates = []
         },
         CATEGORY_MOVE_BEFORE: (state, data) => {
             const checklist = state.checklists.find(checklist => checklist.uuid === data.uuid)
