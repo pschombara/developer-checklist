@@ -4,19 +4,19 @@
             <v-row>
                 <v-col cols="4">
                     <v-switch color="primary" :model-value="modules.jenkins" @change="switchChanged('jenkins', $event)">
-                        <template v-slot:label><v-icon class="mx-2">fab fa-jenkins</v-icon> Jenkins</template>
+                        <template v-slot:label><v-icon icon="fab fa-jenkins" class="mx-2" /> Jenkins</template>
                     </v-switch>
                     <v-switch color="primary" :model-value="modules.gitLab" @change="switchChanged('gitLab', $event)">
-                        <template v-slot:label><v-icon class="mx-2">fab fa-gitlab</v-icon> GitLab</template>
+                        <template v-slot:label><v-icon icon="fab fa-gitlab" class="mx-2" /> GitLab</template>
                     </v-switch>
                     <v-switch color="primary" :model-value="modules.chat" @change="switchChanged('chat', $event)">
-                        <template v-slot:label><v-icon class="mx-2">fas fa-comments</v-icon> Chat</template>
+                        <template v-slot:label><v-icon icon="fas fa-comments" class="mx-2" /> Chat</template>
                     </v-switch>
                     <v-switch color="primary" :model-value="modules.cheatSheet" @change="switchChanged('cheatSheet', $event)">
-                        <template v-slot:label><v-icon class="mx-2">fas fa-terminal</v-icon> Cheat Sheet</template>
+                        <template v-slot:label><v-icon icon="fas fa-terminal" class="mx-2" /> Cheat Sheet</template>
                     </v-switch>
 <!--                    <v-switch color="primary" :model-value="modules.chrome" @change="switchChanged('chrome', $event)">
-                        <template v-slot:label><v-icon class="mx-2">fab fa-chrome</v-icon> Chrome</template>
+                        <template v-slot:label><v-icon icon="fab fa-chrome" class="mx-2" /> Chrome</template>
                     </v-switch>-->
                 </v-col>
             </v-row>

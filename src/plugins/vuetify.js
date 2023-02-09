@@ -1,4 +1,4 @@
-import '@fortawesome/fontawesome-free/css/all.min.css'
+import '@fortawesome/fontawesome-free/css/all.css'
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import {de, en} from 'vuetify/lib/locale'
@@ -7,6 +7,7 @@ import * as directives from 'vuetify/directives'
 import themes from '@/plugins/themes'
 import { md3 } from 'vuetify/blueprints'
 import {VDataTable} from 'vuetify/lib/labs/VDataTable'
+import { aliases, fa } from 'vuetify/iconsets/fa'
 
 const preferDark = window.matchMedia('(prefers-color-scheme: dark)').matches
 
@@ -17,7 +18,11 @@ const vuetify = createVuetify({
     },
     directives,
     icons: {
-        iconfont: 'fa',
+        defaultSet: 'fa',
+        aliases,
+        sets: {
+            fa,
+        },
     },
     blueprint: md3,
     theme: {

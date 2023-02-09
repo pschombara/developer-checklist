@@ -17,7 +17,7 @@
                         clearable
                     ></v-text-field>
                     <v-spacer></v-spacer>
-                    <v-btn color="primary" @click="openNewCommand"><v-icon left x-small>fas fa-plus</v-icon> {{text.add}}</v-btn>
+                    <v-btn color="primary" @click="openNewCommand"><v-icon icon="fas fa-plus" left x-small />{{text.add}}</v-btn>
                     <v-dialog v-model="dialogCommand.open" max-width="600">
                         <v-card>
                             <v-card-title>{{dialogCommand.title}}</v-card-title>
@@ -68,10 +68,10 @@
             </template>
             <template v-slot:item.actions="{item}">
                 <v-btn icon @click="openCommand(item)" small>
-                    <v-icon small>fas fa-edit</v-icon>
+                    <v-icon icon="fas fa-edit" small />
                 </v-btn>
                 <v-btn icon @click="openDialogDeleteCommand(item)" small>
-                    <v-icon small color="red darken-2">fas fa-trash</v-icon>
+                    <v-icon icon="fas fa-trash" small color="red darken-2" />
                 </v-btn>
             </template>
         </v-data-table>

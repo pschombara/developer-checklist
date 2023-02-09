@@ -5,7 +5,7 @@
                 <v-tab class="mt-5">
                     <v-row align="center">
                         <v-col class="text-start">
-                            <v-icon>fas fa-sliders-h</v-icon>
+                            <v-icon icon="fas fa-sliders-h"/>
                         </v-col>
                         <v-col class="text-center">
                             {{ text.general }}
@@ -15,7 +15,7 @@
                 <v-tab class="mt-5">
                     <v-row align="center">
                         <v-col class="text-start">
-                            <v-icon>fas fa-cubes</v-icon>
+                            <v-icon icon="fas fa-cubes"/>
                         </v-col>
                         <v-col class="text-center">
                             {{ text.builds }}
@@ -25,7 +25,7 @@
                 <v-tab class="mt-5">
                     <v-row align="center">
                         <v-col class="text-start">
-                            <v-icon>fas fa-sitemap</v-icon>
+                            <v-icon icon="fas fa-sitemap"/>
                         </v-col>
                         <v-col class="text-center">
                             {{ text.categories }}

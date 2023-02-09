@@ -8,7 +8,7 @@
                 <v-tab class="mt-5" value="general">
                     <v-row align="center">
                         <v-col class="text-start">
-                            <v-icon>fas fa-sliders-h</v-icon>
+                            <v-icon icon="fas fa-sliders-h" />
                         </v-col>
                         <v-col class="text-center">
                             {{ text.general }}
@@ -18,7 +18,7 @@
                 <v-tab class="mt-5" value="checklists">
                     <v-row align="center">
                         <v-col class="text-start">
-                            <v-icon>fas fa-tasks</v-icon>
+                            <v-icon icon="fas fa-tasks" />
                         </v-col>
                         <v-col class="text-center">
                             {{ text.checklists }}
@@ -28,7 +28,7 @@
                 <v-tab class="mt-5" value="templates">
                     <v-row align="center">
                         <v-col class="text-start">
-                            <v-icon>fas fa-clipboard</v-icon>
+                            <v-icon icon="fas fa-clipboard" />
                         </v-col>
                         <v-col class="text-center">
                             {{ text.templates }}
@@ -38,7 +38,7 @@
                 <v-tab class="mt-5" value="issues">
                     <v-row align="center">
                         <v-col class="text-start">
-                            <v-icon>fas fa-history</v-icon>
+                            <v-icon icon="fas fa-history" />
                         </v-col>
                         <v-col class="text-center">
                             {{ text.issues }}

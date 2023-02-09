@@ -26,7 +26,7 @@
     <v-card v-else>
         <v-card-text>
             <v-row>
-                <v-col><v-icon>fas fa-lock</v-icon></v-col>
+                <v-col><v-icon icon="fas fa-lock"/></v-col>
                 <v-col></v-col>
             </v-row>
         </v-card-text>

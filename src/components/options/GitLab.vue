@@ -89,18 +89,18 @@
                                         <v-icon small>fas fa-edit</v-icon>
                                     </v-btn>
                                     <v-btn icon @click="openDialogDeleteProject(item)" small>
-                                        <v-icon color="red darken-2" small>fas fa-trash</v-icon>
+                                        <v-icon icon="fas fa-trash" color="red darken-2" small />
                                     </v-btn>
                                 </template>
                                 <template v-slot:group.header="{headers, isOpen, toggle, remove, group}">
                                     <th :colspan="headers.length - 1">
                                         <v-btn icon @click="toggle" class="mr-2" small>
-                                            <v-icon>{{ isOpen ? 'fas fa-caret-up' : 'fas fa-caret-down'}}</v-icon>
+                                            <v-icon :icon="isOpen ? 'fas fa-caret-up' : 'fas fa-caret-down'"/>
                                         </v-btn>{{group}}
                                     </th>
                                     <th class="text-right">
                                         <v-btn icon @click="remove" x-small>
-                                            <v-icon>fas fa-times</v-icon>
+                                            <v-icon icon="fas fa-times"/>
                                         </v-btn>
                                     </th>
                                 </template>
@@ -170,10 +170,10 @@
                                 </template>
                                 <template v-slot:item.actions="{item}">
                                     <v-btn icon @click="openCategory(item)" small>
-                                        <v-icon small>fas fa-edit</v-icon>
+                                        <v-icon icon="fas fa-edit" small />
                                     </v-btn>
                                     <v-btn icon @click="openDialogDeleteCategory(item)" small>
-                                        <v-icon small color="red darken-2">fas fa-trash</v-icon>
+                                        <v-icon icon="fas fa-trash" small color="red darken-2" />
                                     </v-btn>
                                 </template>
                             </v-data-table>

@@ -6,7 +6,7 @@
                 <v-tab v-for="client in clients" :key="client.id">
                     <v-row align="center">
                         <v-col class="text-start">
-                            <v-icon>{{client.icon}}</v-icon>
+                            <v-icon :icon="client.icon"/>
                         </v-col>
                         <v-col class="text-center">{{client.name}}</v-col>
                     </v-row>
