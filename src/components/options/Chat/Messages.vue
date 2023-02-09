@@ -58,10 +58,10 @@
                 </template>
                 <template v-slot:item.actions="{item}">
                     <v-btn icon small @click="openMessage(item)" v-if="!sortMessage">
-                        <v-icon small>fas fa-edit</v-icon>
+                        <v-icon icon="fas fa-edit" small />
                     </v-btn>
                     <v-btn icon small @click="startSort(item)" v-if="!sortMessage" :disabled="messages.length < 2">
-                        <v-icon small>fas fa-sort</v-icon>
+                        <v-icon icon="fas fa-sort" small />
                     </v-btn>
                     <v-btn icon small @click="openDeleteMessage(item)" v-if="!sortMessage">
                         <v-icon small color="red darken-2">fas fa-trash</v-icon>
@@ -70,17 +70,17 @@
                            @click="sortBefore(item)"
                            v-if="sortMessage && sortMessage.id !== item.id"
                            :disabled="item.sort - 1 === sortMessage.sort">
-                        <v-icon small>fas fa-sort-up</v-icon>
+                        <v-icon icon="fas fa-sort-up" small />
                     </v-btn>
                     <v-btn icon small
                            @click="sortAfter(item)"
                            v-if="sortMessage && sortMessage.id !== item.id"
                            :disabled="item.sort + 1 === sortMessage.sort">
-                        <v-icon small>fas fa-sort-down</v-icon>
+                        <v-icon icon="fas fa-sort-down" small />
                     </v-btn>
                     <v-btn icon small @click="closeSort"
                            v-if="sortMessage && sortMessage.id === item.id">
-                        <v-icon small>fas fa-times</v-icon>
+                        <v-icon icon="fas fa-times" small />
                     </v-btn>
                 </template>
             </v-data-table>

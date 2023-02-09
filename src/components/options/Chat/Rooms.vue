@@ -58,10 +58,10 @@
                 </template>
                 <template v-slot:item.actions="{item}">
                     <v-btn icon small @click="openRoom(item)" v-if="!sortRoom">
-                        <v-icon small>fas fa-edit</v-icon>
+                        <v-icon icon="fas fa-edit" small/>
                     </v-btn>
                     <v-btn icon small @click="startSort(item)" v-if="!sortRoom" :disabled="rooms.length < 2">
-                        <v-icon small>fas fa-sort</v-icon>
+                        <v-icon icon="fas fa-sort" small/>
                     </v-btn>
                     <v-btn icon small @click="openDeleteRoom(item)" v-if="!sortRoom">
                         <v-icon small color="red darken-2">fas fa-trash</v-icon>
@@ -70,17 +70,17 @@
                            @click="sortBefore(item)"
                            v-if="sortRoom && sortRoom.id !== item.id"
                            :disabled="item.sort - 1 === sortRoom.sort">
-                        <v-icon small>fas fa-sort-up</v-icon>
+                        <v-icon icon="fas fa-sort-up" small/>
                     </v-btn>
                     <v-btn icon small
                            @click="sortAfter(item)"
                            v-if="sortRoom && sortRoom.id !== item.id"
                            :disabled="item.sort + 1 === sortRoom.sort">
-                        <v-icon small>fas fa-sort-down</v-icon>
+                        <v-icon icon="fas fa-sort-down" small/>
                     </v-btn>
                     <v-btn icon small @click="closeSort"
                            v-if="sortRoom && sortRoom.id === item.id">
-                        <v-icon small>fas fa-times</v-icon>
+                        <v-icon icon="fas fa-times" small/>
                     </v-btn>
                 </template>
             </v-data-table>
