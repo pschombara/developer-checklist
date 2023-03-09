@@ -35,7 +35,7 @@
                         block
                         x-large
                         outlined
-                        color="success"
+                        color="primary"
                         :disabled="'' === command"
                         @click="copy"
                     >

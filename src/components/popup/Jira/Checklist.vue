@@ -30,7 +30,7 @@
         </v-card-text>
         <v-card-actions>
             <v-btn
-                color="success"
+                color="primary"
                 outlined
                 v-if="checklist.buttons.success.enabled"
                 @click="addComment(checklist.buttons.success)"

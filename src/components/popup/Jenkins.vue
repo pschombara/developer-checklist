@@ -45,7 +45,7 @@
                 <v-col cols="2">
                     <v-btn
                         block
-                        color="success"
+                        color="primary"
                         @click="copy"
                         :disabled="!readyToCopy"
                     ><v-icon small>fas fa-copy</v-icon></v-btn>

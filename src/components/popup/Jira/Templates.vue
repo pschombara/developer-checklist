@@ -22,7 +22,7 @@
         </v-card-text>
         <v-card-actions v-if="template">
             <v-spacer></v-spacer>
-            <v-btn @click="addComment" outlined color="success">{{ text.comment }}</v-btn>
+            <v-btn @click="addComment" outlined color="primary">{{ text.comment }}</v-btn>
             <v-btn @click="copyComment" outlined color="secondary"><v-icon>fas fa-copy</v-icon></v-btn>
             <v-spacer></v-spacer>
         </v-card-actions>

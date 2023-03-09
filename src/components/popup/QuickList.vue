@@ -24,6 +24,17 @@
             <v-row v-if="maximumIssues > 0 && issues.length > 0">
                 <v-col><h3>{{text.lastOpened}}</h3></v-col>
             </v-row>
+            <v-row  class="mt-3">
+                <template v-for="issue in issues" :key="issue.id">
+                    <v-col cols="4">
+                        <v-btn :color="buttonColor(issue)" block>
+                            {{issue.name}}
+                        </v-btn>
+                    </v-col>
+                </template>
+            </v-row>
+
+
 <!--            <v-data-iterator
                 :items="issues"
                 :items-per-page="maximumIssues"
@@ -82,7 +93,7 @@ export default {
             this.openIssue(`${this.board}-${this.issueNumber}`)
         },
         buttonColor: function (item) {
-            return item.pinned ? 'success' : 'secondary'
+            return item.pinned ? 'primary' : 'secondary'
         },
     },
     created() {
@@ -100,7 +111,7 @@ export default {
     },
     computed: {
         issues() {
-            return this.$store.getters['issues/list']
+            return  this.$store.getters['issues/list']
         },
         maximumIssues() {
             return this.$store.getters['jira/getMaximumIssues']

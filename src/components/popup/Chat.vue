@@ -45,7 +45,7 @@
                     <v-col cols="2" class="align-self-center">
                         <v-btn
                             :disabled="!sendReady"
-                            color="success"
+                            color="primary"
                             @click="send"
                             outlined
                             large
