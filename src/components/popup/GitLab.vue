@@ -79,17 +79,14 @@
                             </v-toolbar>
                         </template>
                         <template v-slot:item.id="{item}">
-                            {{ projectName(item.id) }}
+                            {{ projectName(item.value) }}
                         </template>
                         <template v-slot:item.action="{item}">
-                            <v-btn icon small @click="copyMergeRequest(item.id, item.number, item.source)">
-                                <v-icon small>fas fa-copy</v-icon>
+                            <v-btn variant="plain" icon="fas fa-copy" size="small" @click="copyMergeRequest(item.id, item.number, item.source)">
                             </v-btn>
-                            <v-btn icon small @click="openMergeRequest(item.id, item.number)">
-                                <v-icon small>fas fa-external-link-alt</v-icon>
+                            <v-btn variant="plain" icon="fas fa-external-link-alt" size="small" @click="openMergeRequest(item.id, item.number)">
                             </v-btn>
-                            <v-btn icon @click="removeFromIssue(item.id, item.number)" small>
-                                <v-icon color="red darken-2" small>fas fa-trash</v-icon>
+                            <v-btn variant="plain" icon="fas fa-trash" color="red darken-2" @click="removeFromIssue(item.id, item.number)" size="small">
                             </v-btn>
                         </template>
                     </v-data-table>
@@ -171,9 +168,9 @@ export default {
         },
         issueHeader: function () {
             return [
-                { title: 'Project', value: 'id'},
-                { title: 'Number', value: 'number'},
-                { title: '', value: 'action', sortable: false, align:'right'},
+                { title: 'Project', key: 'id'},
+                { title: 'Number', key: 'number'},
+                { title: '', key: 'action', sortable: false, align:'end'},
             ]
         },
     },
@@ -208,6 +205,7 @@ export default {
             })
         },
         projectName: function (id) {
+            console.log(id)
             return this.projects.find(project => project.uuid === id).project
         },
         openMergeRequest: function (id, number) {

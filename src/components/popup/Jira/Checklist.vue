@@ -1,32 +1,73 @@
 <template>
-    <v-card flat>
+    <v-card class="mx-auto" flat>
         <v-card-text>
             <v-list>
                 <v-list-group
                     v-for="item in checklist.checklist"
                     :key="item.uid"
-                    :value="item"
+                    :value="item.title"
                 >
-                    <template v-slot:activator="{props}">
-                        <v-list-item v-bind="props">
+                    <template v-slot:activator="{ props }">
+                        <v-list-item
+                            v-bind="props"
+                        >
                             <template v-slot:prepend>
                                 <v-icon small color="success" v-if="checkGroupCompleted(item.uid)">fas fa-check</v-icon>
                             </template>
-                            <v-list-item-title :class="(checkGroupCompleted(item.uid) ? 'text-decoration-line-through' : '')" :v-text="item.title"></v-list-item-title>
+                            <template v-slot:title>
+                                <span :class="(checkGroupCompleted(item.uid) ? 'text-decoration-line-through' : '')">
+                                    {{ item.title }}
+                                </span>
+                            </template>
                         </v-list-item>
                     </template>
+
                     <v-list-item
                         v-for="entry in item.items"
                         :key="entry.id"
-                        :value="entry"
+                        :title="entry.text"
+                        :value="entry.id"
+                        @click="toggleCheck(entry.id)"
                     >
                         <template v-slot:prepend>
                             <v-icon small color="success" v-if="isChecked(entry.id)">fas fa-check</v-icon>
+                            <v-icon small color="grey" v-else>fas fa-check</v-icon>
                         </template>
-                        <v-list-item-title :class="'cursor-pointer text-wrap' + (isChecked(entry.id) ? ' text-decoration-line-through' : '')" :v-text="entry.text" @click="toggleCheck(entry.id)" ></v-list-item-title>
+                        <template v-slot:title>
+                            <span :class="'cursor-pointer text-wrap' + (isChecked(entry.id) ? ' text-decoration-line-through' : '')">
+                                {{ entry.text }}
+                            </span>
+                        </template>
                     </v-list-item>
+
                 </v-list-group>
             </v-list>
+<!--            <v-list>-->
+<!--                <v-list-group-->
+<!--                    v-for="item in checklist.checklist"-->
+<!--                    :key="item.uid"-->
+<!--                    :value="item"-->
+<!--                >-->
+<!--                    <template v-slot:activator="{props}">-->
+<!--                        <v-list-item v-bind="props">-->
+<!--                            <template v-slot:prepend>-->
+<!--                                <v-icon small color="success" v-if="checkGroupCompleted(item.uid)">fas fa-check</v-icon>-->
+<!--                            </template>-->
+<!--                            <v-list-item-title :class="" :v-text="item.title"></v-list-item-title>-->
+<!--                        </v-list-item>-->
+<!--                    </template>-->
+<!--                    <v-list-item-->
+<!--                        v-for="entry in item.items"-->
+<!--                        :key="entry.id"-->
+<!--                        :value="entry"-->
+<!--                    >-->
+<!--                        <template v-slot:prepend>-->
+<!--                            <v-icon small color="success" v-if="isChecked(entry.id)">fas fa-check</v-icon>-->
+<!--                        </template>-->
+<!--                        <v-list-item-title :class="'cursor-pointer text-wrap' + (isChecked(entry.id) ? ' text-decoration-line-through' : '')" :v-text="entry.text" @click="toggleCheck(entry.id)" ></v-list-item-title>-->
+<!--                    </v-list-item>-->
+<!--                </v-list-group>-->
+<!--            </v-list>-->
         </v-card-text>
         <v-card-actions>
             <v-btn
@@ -56,6 +97,7 @@
 </template>
 
 <script>
+
 export default {
     name: 'JiraChecklist',
     props: {
@@ -106,6 +148,11 @@ export default {
                 uuid: button.comment,
                 autoComment: button.autoComment,
             })
+        },
+        test: function (item) {
+            console.log(item, item.name)
+
+            return 'test'
         },
     },
     data: () => {

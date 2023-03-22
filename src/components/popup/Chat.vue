@@ -69,7 +69,12 @@
                             label="Issue to attach (optional)"
                         >
                             <template v-slot:selection="{item, parent}">
-                                <v-chip>{{item}} <v-btn class="ml-2" icon x-small @click="parent.selectItem(item)"><v-icon>fas fa-times</v-icon></v-btn></v-chip>
+                                <v-chip
+                                    closable
+                                    @click:close="parent.selectItem(item)"
+                                >
+                                    {{item.title}}
+                                </v-chip>
                             </template>
                         </v-combobox>
                     </v-col>

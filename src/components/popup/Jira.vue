@@ -9,17 +9,17 @@
                             <v-btn
                                 v-bind="props"
                                 color="red lighten-3"
-                                text
+                                variant="text"
                                 @click="stopWork(issueName)"
                                 v-if="issue.work"
-                            ><v-icon small left>fas fa-stop</v-icon> Stop Work</v-btn>
+                            ><v-icon small left>fas fa-stop</v-icon>&nbsp;Stop Work</v-btn>
                             <v-btn
                                 v-bind="props"
                                 color="green lighten-3"
                                 variant="text"
                                 @click="startWork(issueName)"
                                 v-else
-                            ><v-icon small left>fas fa-play</v-icon> Start Work</v-btn>
+                            ><v-icon small left>fas fa-play</v-icon>&nbsp; Start Work</v-btn>
                         </template>
                         <span>Issue will be preselected for CI-Builds and Merge Requests</span>
                     </v-tooltip>
