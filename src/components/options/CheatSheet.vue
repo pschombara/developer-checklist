@@ -5,7 +5,7 @@
             :items="items"
             :search="searchCommand"
         >
-            <template v-slot:top>
+            <template #top>
                 <v-toolbar flat>
                     <v-text-field
                         v-model="searchCommand"
@@ -45,8 +45,8 @@
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn color="grey" plain @click="closeCommand">{{ text.cancel }}</v-btn>
-                                <v-btn color="primary" plain v-if="null === dialogCommand.current" :disabled="!dialogCommand.valid" @click="addCommand">{{ text.add }}</v-btn>
-                                <v-btn color="primary" plain v-else :disabled="!dialogCommand.valid" @click="saveCommand">{{ text.save }}</v-btn>
+                                <v-btn v-if="null === dialogCommand.current" color="primary" plain :disabled="!dialogCommand.valid" @click="addCommand">{{ text.add }}</v-btn>
+                                <v-btn v-else color="primary" plain :disabled="!dialogCommand.valid" @click="saveCommand">{{ text.save }}</v-btn>
                                 <v-spacer></v-spacer>
                             </v-card-actions>
                         </v-card>
@@ -66,11 +66,11 @@
                     </v-dialog>
                 </v-toolbar>
             </template>
-            <template v-slot:item.actions="{item}">
-                <v-btn icon @click="openCommand(item)" small>
+            <template #item.actions="{item}">
+                <v-btn icon small @click="openCommand(item)">
                     <v-icon icon="fas fa-edit" small />
                 </v-btn>
-                <v-btn icon @click="openDialogDeleteCommand(item)" small>
+                <v-btn icon small @click="openDialogDeleteCommand(item)">
                     <v-icon icon="fas fa-trash" small color="red darken-2" />
                 </v-btn>
             </template>
@@ -81,6 +81,53 @@
 <script>
 export default {
     name: 'OptionCheatSheet',
+    data() {
+        return {
+            searchCommand: '',
+            text: {
+                search: chrome.i18n.getMessage('Search'),
+                add: chrome.i18n.getMessage('Add'),
+                save: chrome.i18n.getMessage('Save'),
+                cancel: chrome.i18n.getMessage('Cancel'),
+                delete: chrome.i18n.getMessage('Delete'),
+                label: chrome.i18n.getMessage('Label'),
+                commandOrContent: chrome.i18n.getMessage('commandOrContent'),
+                hint: {
+                    command: chrome.i18n.getMessage('hintCommand'),
+                    label: chrome.i18n.getMessage('hintCommandLabel'),
+                },
+            },
+            i18n: chrome.i18n,
+            labelRules: [
+                value => !!value || chrome.i18n.getMessage('errNotBlank'),
+                value => value.length <= 30 || chrome.i18n.getMessage('errMaxLength', '30'),
+                value => false === this.checkDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
+            ],
+            commandRules: [
+                value => !!value || chrome.i18n.getMessage('errNotBlank'),
+                value => value.length <= 128 || chrome.i18n.getMessage('errMaxLength', '128'),
+            ],
+            dialogCommand: {
+                open: false,
+                valid: false,
+                title: '',
+                item: {
+                    label: '',
+                    command: '',
+                },
+                current: null,
+            },
+            dialogDeleteCommand: false,
+            deleteCommand: {
+                label: '',
+                command: '',
+            },
+            defaultCommand: {
+                label: '',
+                command: '',
+            },
+        }
+    },
     computed: {
         items() {
             return this.$store.getters['cheatSheet/getItems']
@@ -170,53 +217,6 @@ export default {
 
             return this.dialogCommand.current.label !== value
         },
-    },
-    data() {
-        return {
-            searchCommand: '',
-            text: {
-                search: chrome.i18n.getMessage('Search'),
-                add: chrome.i18n.getMessage('Add'),
-                save: chrome.i18n.getMessage('Save'),
-                cancel: chrome.i18n.getMessage('Cancel'),
-                delete: chrome.i18n.getMessage('Delete'),
-                label: chrome.i18n.getMessage('Label'),
-                commandOrContent: chrome.i18n.getMessage('commandOrContent'),
-                hint: {
-                    command: chrome.i18n.getMessage('hintCommand'),
-                    label: chrome.i18n.getMessage('hintCommandLabel'),
-                },
-            },
-            i18n: chrome.i18n,
-            labelRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-                value => value.length <= 30 || chrome.i18n.getMessage('errMaxLength', '30'),
-                value => false === this.checkDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
-            ],
-            commandRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-                value => value.length <= 128 || chrome.i18n.getMessage('errMaxLength', '128'),
-            ],
-            dialogCommand: {
-                open: false,
-                valid: false,
-                title: '',
-                item: {
-                    label: '',
-                    command: '',
-                },
-                current: null,
-            },
-            dialogDeleteCommand: false,
-            deleteCommand: {
-                label: '',
-                command: '',
-            },
-            defaultCommand: {
-                label: '',
-                command: '',
-            },
-        }
     },
 }
 </script>

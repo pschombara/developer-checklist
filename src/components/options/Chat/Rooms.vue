@@ -9,7 +9,7 @@
                 :item-class="itemRowSortActiveClass"
                 :hide-default-footer="true"
             >
-                <template v-slot:top>
+                <template #top>
                     <v-toolbar flat>
                         <v-spacer></v-spacer>
                         <v-btn color="primary" @click="openAddRoom"><v-icon left>fas fa-plus</v-icon>{{text.add}}</v-btn>
@@ -19,15 +19,15 @@
                         <v-card>
                             <v-card-title>{{editRoom.title}}</v-card-title>
                             <v-card-text>
-                                <v-form v-model="formValid" ref="roomForm">
+                                <v-form ref="roomForm" v-model="formValid">
                                     <v-text-field
                                         v-model="editRoom.name"
                                         :label="text.name"
                                         counter="20"
                                         :rules="nameRules"></v-text-field>
                                     <v-text-field
-                                        type="url"
                                         v-model="editRoom.url"
+                                        type="url"
                                         label="URL"
                                         counter="500"
                                         :rules="urlRules"></v-text-field>
@@ -36,8 +36,8 @@
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn color="grey" plain @click="closeRoom">{{ text.cancel }}</v-btn>
-                                <v-btn color="primary" plain @click="saveRoom" v-if="!!editRoom.id" :disabled="!formValid">{{ text.save }}</v-btn>
-                                <v-btn color="primary" plain @click="addRoom" v-else :disabled="!formValid">{{ text.add }}</v-btn>
+                                <v-btn v-if="!!editRoom.id" color="primary" plain :disabled="!formValid" @click="saveRoom">{{ text.save }}</v-btn>
+                                <v-btn v-else color="primary" plain :disabled="!formValid" @click="addRoom">{{ text.add }}</v-btn>
                                 <v-spacer></v-spacer>
                             </v-card-actions>
                         </v-card>
@@ -56,30 +56,33 @@
                         </v-card>
                     </v-dialog>
                 </template>
-                <template v-slot:item.actions="{item}">
-                    <v-btn icon small @click="openRoom(item)" v-if="!sortRoom">
+                <template #item.actions="{item}">
+                    <v-btn v-if="!sortRoom" icon small @click="openRoom(item)">
                         <v-icon icon="fas fa-edit" small/>
                     </v-btn>
-                    <v-btn icon small @click="startSort(item)" v-if="!sortRoom" :disabled="rooms.length < 2">
+                    <v-btn v-if="!sortRoom" icon small :disabled="rooms.length < 2" @click="startSort(item)">
                         <v-icon icon="fas fa-sort" small/>
                     </v-btn>
-                    <v-btn icon small @click="openDeleteRoom(item)" v-if="!sortRoom">
+                    <v-btn v-if="!sortRoom" icon small @click="openDeleteRoom(item)">
                         <v-icon small color="red darken-2">fas fa-trash</v-icon>
                     </v-btn>
-                    <v-btn icon small
-                           @click="sortBefore(item)"
-                           v-if="sortRoom && sortRoom.id !== item.id"
-                           :disabled="item.sort - 1 === sortRoom.sort">
+                    <v-btn
+v-if="sortRoom && sortRoom.id !== item.id" icon
+                           small
+                           :disabled="item.sort - 1 === sortRoom.sort"
+                           @click="sortBefore(item)">
                         <v-icon icon="fas fa-sort-up" small/>
                     </v-btn>
-                    <v-btn icon small
-                           @click="sortAfter(item)"
-                           v-if="sortRoom && sortRoom.id !== item.id"
-                           :disabled="item.sort + 1 === sortRoom.sort">
+                    <v-btn
+v-if="sortRoom && sortRoom.id !== item.id" icon
+                           small
+                           :disabled="item.sort + 1 === sortRoom.sort"
+                           @click="sortAfter(item)">
                         <v-icon icon="fas fa-sort-down" small/>
                     </v-btn>
-                    <v-btn icon small @click="closeSort"
-                           v-if="sortRoom && sortRoom.id === item.id">
+                    <v-btn
+v-if="sortRoom && sortRoom.id === item.id" icon small
+                           @click="closeSort">
                         <v-icon icon="fas fa-times" small/>
                     </v-btn>
                 </template>
@@ -102,6 +105,42 @@ export default {
             type: String,
             required: true,
         },
+    },
+    data() {
+        return {
+            sortRoom: null,
+            editRoom: {
+                open: false,
+                id: null,
+                name: '',
+                url: '',
+                title: '',
+            },
+            deleteRoom: {
+                open: false,
+                id: null,
+                name: '',
+            },
+            i18n: chrome.i18n,
+            text: {
+                add: chrome.i18n.getMessage('Add'),
+                save: chrome.i18n.getMessage('Save'),
+                cancel: chrome.i18n.getMessage('Cancel'),
+                delete: chrome.i18n.getMessage('Delete'),
+                name: chrome.i18n.getMessage('Name'),
+            },
+            nameRules: [
+                value => !!value || chrome.i18n.getMessage('errNotBlank'),
+                value => value.length <= 20 || chrome.i18n.getMessage('errMaxLength', '20'),
+                value => false === this.checkDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
+            ],
+            urlRules: [
+                value => !!value || chrome.i18n.getMessage('errNotBlank'),
+                value => Helper.isURL(value, this.urlStart) || chrome.i18n.getMessage('errUrlInvalid'),
+                value => value.length <= 500 || chrome.i18n.getMessage('errMaxLength', '500'),
+            ],
+            formValid: false,
+        }
     },
     computed: {
         rooms() {
@@ -227,42 +266,6 @@ export default {
 
             return this.editRoom.name !== value
         },
-    },
-    data() {
-        return {
-            sortRoom: null,
-            editRoom: {
-                open: false,
-                id: null,
-                name: '',
-                url: '',
-                title: '',
-            },
-            deleteRoom: {
-                open: false,
-                id: null,
-                name: '',
-            },
-            i18n: chrome.i18n,
-            text: {
-                add: chrome.i18n.getMessage('Add'),
-                save: chrome.i18n.getMessage('Save'),
-                cancel: chrome.i18n.getMessage('Cancel'),
-                delete: chrome.i18n.getMessage('Delete'),
-                name: chrome.i18n.getMessage('Name'),
-            },
-            nameRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-                value => value.length <= 20 || chrome.i18n.getMessage('errMaxLength', '20'),
-                value => false === this.checkDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
-            ],
-            urlRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-                value => Helper.isURL(value, this.urlStart) || chrome.i18n.getMessage('errUrlInvalid'),
-                value => value.length <= 500 || chrome.i18n.getMessage('errMaxLength', '500'),
-            ],
-            formValid: false,
-        }
     },
 }
 </script>

@@ -3,7 +3,7 @@
         <v-card-text>
             <v-row>
                 <v-col cols="12" sm="6" md="3">
-                    <v-text-field :label="text.host" :rules="hostRules" v-model="host" clearable clear-icon="fas fa-times"></v-text-field>
+                    <v-text-field v-model="host" :label="text.host" :rules="hostRules" clearable clear-icon="fas fa-times"></v-text-field>
                 </v-col>
             </v-row>
             <v-row>
@@ -20,7 +20,7 @@
                                 show-group-by
                                 :group-by="['domain']"
                             >
-                                <template v-slot:top>
+                                <template #top>
                                     <v-toolbar flat>
                                         <v-text-field
                                             v-model="searchProject"
@@ -63,8 +63,8 @@
                                                 <v-card-actions>
                                                     <v-spacer></v-spacer>
                                                     <v-btn color="grey" plain @click="closeProject">{{ text.cancel }}</v-btn>
-                                                    <v-btn color="primary" plain v-if="null === dialogProject.item.uuid" :disabled="!dialogProject.valid" @click="addProject">{{ text.add }}</v-btn>
-                                                    <v-btn color="primary" plain v-else :disabled="!dialogProject.valid" @click="saveProject">{{ text.save }}</v-btn>
+                                                    <v-btn v-if="null === dialogProject.item.uuid" color="primary" plain :disabled="!dialogProject.valid" @click="addProject">{{ text.add }}</v-btn>
+                                                    <v-btn v-else color="primary" plain :disabled="!dialogProject.valid" @click="saveProject">{{ text.save }}</v-btn>
                                                     <v-spacer></v-spacer>
                                                 </v-card-actions>
                                             </v-card>
@@ -84,22 +84,22 @@
                                         </v-dialog>
                                     </v-toolbar>
                                 </template>
-                                <template v-slot:item.actions="{item}">
-                                    <v-btn icon @click="openProject(item)" small>
+                                <template #item.actions="{item}">
+                                    <v-btn icon small @click="openProject(item)">
                                         <v-icon small>fas fa-edit</v-icon>
                                     </v-btn>
-                                    <v-btn icon @click="openDialogDeleteProject(item)" small>
+                                    <v-btn icon small @click="openDialogDeleteProject(item)">
                                         <v-icon icon="fas fa-trash" color="red darken-2" small />
                                     </v-btn>
                                 </template>
-                                <template v-slot:group.header="{headers, isOpen, toggle, remove, group}">
+                                <template #group.header="{headers, isOpen, toggle, remove, group}">
                                     <th :colspan="headers.length - 1">
-                                        <v-btn icon @click="toggle" class="mr-2" small>
+                                        <v-btn icon class="mr-2" small @click="toggle">
                                             <v-icon :icon="isOpen ? 'fas fa-caret-up' : 'fas fa-caret-down'"/>
                                         </v-btn>{{group}}
                                     </th>
                                     <th class="text-right">
-                                        <v-btn icon @click="remove" x-small>
+                                        <v-btn icon x-small @click="remove">
                                             <v-icon icon="fas fa-times"/>
                                         </v-btn>
                                     </th>
@@ -118,7 +118,7 @@
                                 :search="searchCategory"
                                 :sort-by="['name']"
                             >
-                                <template v-slot:top>
+                                <template #top>
                                     <v-toolbar flat>
                                         <v-text-field
                                             v-model="searchCategory"
@@ -146,8 +146,8 @@
                                                 <v-card-actions>
                                                     <v-spacer></v-spacer>
                                                     <v-btn color="grey" plain @click="closeDialogCategory">{{ text.cancel }}</v-btn>
-                                                    <v-btn color="primary" plain v-if="null === dialogCategory.current" :disabled="!dialogCategory.valid" @click="addCategory">{{ text.add }}</v-btn>
-                                                    <v-btn color="primary" plain v-else :disabled="!dialogCategory.valid" @click="saveCategory">{{ text.save }}</v-btn>
+                                                    <v-btn v-if="null === dialogCategory.current" color="primary" plain :disabled="!dialogCategory.valid" @click="addCategory">{{ text.add }}</v-btn>
+                                                    <v-btn v-else color="primary" plain :disabled="!dialogCategory.valid" @click="saveCategory">{{ text.save }}</v-btn>
                                                     <v-spacer></v-spacer>
                                                 </v-card-actions>
                                             </v-card>
@@ -168,11 +168,11 @@
                                         </v-dialog>
                                     </v-toolbar>
                                 </template>
-                                <template v-slot:item.actions="{item}">
-                                    <v-btn icon @click="openCategory(item)" small>
+                                <template #item.actions="{item}">
+                                    <v-btn icon small @click="openCategory(item)">
                                         <v-icon icon="fas fa-edit" small />
                                     </v-btn>
-                                    <v-btn icon @click="openDialogDeleteCategory(item)" small>
+                                    <v-btn icon small @click="openDialogDeleteCategory(item)">
                                         <v-icon icon="fas fa-trash" small color="red darken-2" />
                                     </v-btn>
                                 </template>
@@ -190,6 +190,75 @@ import Helper from '@/mixins/helper'
 
 export default {
     name: 'OptionGitLab',
+    data() {
+        return {
+            dialogCategory: {
+                open: false,
+                title: '',
+                item: {
+                    name: null,
+                },
+                current: null,
+                valid: false,
+            },
+            dialogDeleteCategory: false,
+            searchCategory: '',
+            dialogProject: {
+                open: false,
+                title: '',
+                item: {
+                    domain: null,
+                    project: null,
+                    uuid: null,
+                },
+                current: null,
+                valid: false,
+            },
+            dialogDeleteProject: false,
+            searchProject: '',
+            hostRules: [
+                value => Helper.isURL(value) || chrome.i18n.getMessage('errUrlInvalid'),
+            ],
+            domainRules: [
+                value => !!value || chrome.i18n.getMessage('errNotBlank'),
+            ],
+            projectRules: [
+                value => !!value || chrome.i18n.getMessage('errNotBlank'),
+                value => false === this.checkProjectDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
+            ],
+            categoryRules: [
+                value => !!value || chrome.i18n.getMessage('errNotBlank'),
+                value => false === this.checkCategoryDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
+            ],
+            text: {
+                host: chrome.i18n.getMessage('Host'),
+                categories: chrome.i18n.getMessage('Categories'),
+                category: chrome.i18n.getMessage('Category'),
+                newCategory: chrome.i18n.getMessage('NewCategory'),
+                projects: chrome.i18n.getMessage('Projects'),
+                project: chrome.i18n.getMessage('Project'),
+                newProject: chrome.i18n.getMessage('NewProject'),
+                save: chrome.i18n.getMessage('Save'),
+                cancel: chrome.i18n.getMessage('Cancel'),
+                delete: chrome.i18n.getMessage('Delete'),
+                search: chrome.i18n.getMessage('Search'),
+                subTitleDeleteCategory: chrome.i18n.getMessage('SubTitleDeleteCategory'),
+                add: chrome.i18n.getMessage('Add'),
+                name: chrome.i18n.getMessage('Name'),
+            },
+            i18n: chrome.i18n,
+            deleteCategory: {},
+            deleteProject: {},
+            defaultCategory: {
+                name: '',
+            },
+            defaultProject: {
+                domain: null,
+                project: null,
+                uuid: null,
+            },
+        }
+    },
     computed: {
         host: {
             get() {
@@ -361,75 +430,6 @@ export default {
 
             this.closeProject()
         },
-    },
-    data() {
-        return {
-            dialogCategory: {
-                open: false,
-                title: '',
-                item: {
-                    name: null,
-                },
-                current: null,
-                valid: false,
-            },
-            dialogDeleteCategory: false,
-            searchCategory: '',
-            dialogProject: {
-                open: false,
-                title: '',
-                item: {
-                    domain: null,
-                    project: null,
-                    uuid: null,
-                },
-                current: null,
-                valid: false,
-            },
-            dialogDeleteProject: false,
-            searchProject: '',
-            hostRules: [
-                value => Helper.isURL(value) || chrome.i18n.getMessage('errUrlInvalid'),
-            ],
-            domainRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-            ],
-            projectRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-                value => false === this.checkProjectDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
-            ],
-            categoryRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-                value => false === this.checkCategoryDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
-            ],
-            text: {
-                host: chrome.i18n.getMessage('Host'),
-                categories: chrome.i18n.getMessage('Categories'),
-                category: chrome.i18n.getMessage('Category'),
-                newCategory: chrome.i18n.getMessage('NewCategory'),
-                projects: chrome.i18n.getMessage('Projects'),
-                project: chrome.i18n.getMessage('Project'),
-                newProject: chrome.i18n.getMessage('NewProject'),
-                save: chrome.i18n.getMessage('Save'),
-                cancel: chrome.i18n.getMessage('Cancel'),
-                delete: chrome.i18n.getMessage('Delete'),
-                search: chrome.i18n.getMessage('Search'),
-                subTitleDeleteCategory: chrome.i18n.getMessage('SubTitleDeleteCategory'),
-                add: chrome.i18n.getMessage('Add'),
-                name: chrome.i18n.getMessage('Name'),
-            },
-            i18n: chrome.i18n,
-            deleteCategory: {},
-            deleteProject: {},
-            defaultCategory: {
-                name: '',
-            },
-            defaultProject: {
-                domain: null,
-                project: null,
-                uuid: null,
-            },
-        }
     },
 }
 </script>

@@ -11,7 +11,7 @@
                         :hide-default-footer="true"
                         :sort-by="['sort']"
                     >
-                        <template v-slot:top>
+                        <template #top>
                             <v-toolbar flat>
                                 <v-spacer></v-spacer>
                                 <v-btn color="primary" @click="openTemplate(newTemplate)">
@@ -22,15 +22,15 @@
                                     <v-card>
                                         <v-card-title>{{editTemplate.title}}</v-card-title>
                                         <v-card-text>
-                                            <v-form v-model="editTemplate.valid" ref="templateForm">
+                                            <v-form ref="templateForm" v-model="editTemplate.valid">
                                                 <v-text-field
+                                                    v-model="editTemplate.title"
                                                     counter="25"
-                                                    :rules="titleRules"
-                                                    v-model="editTemplate.title"></v-text-field>
+                                                    :rules="titleRules"></v-text-field>
                                                 <v-text-field
+                                                    v-model="editTemplate.subTitle"
                                                     counter="50"
-                                                    :rules="subTitleRules"
-                                                    v-model="editTemplate.subTitle"></v-text-field>
+                                                    :rules="subTitleRules"></v-text-field>
                                                 <v-btn @click="addToContent('[ciBuilds]')">
                                                     <v-icon>fab fa-jenkins</v-icon>
                                                 </v-btn>
@@ -38,19 +38,19 @@
                                                     <v-icon>fab fa-gitlab</v-icon>
                                                 </v-btn>
                                                 <v-textarea
+                                                    v-model="editTemplate.content"
                                                     counter="500"
                                                     :rules="contentRules"
-                                                    v-model="editTemplate.content"
-                                                    v-on:keyup="keyUpTemplateContent"
-                                                    v-on:mouseup="keyUpTemplateContent"
-                                                    v-on:select="keyUpTemplateContent"></v-textarea>
+                                                    @keyup="keyUpTemplateContent"
+                                                    @mouseup="keyUpTemplateContent"
+                                                    @select="keyUpTemplateContent"></v-textarea>
                                             </v-form>
                                         </v-card-text>
                                         <v-card-actions>
                                             <v-spacer></v-spacer>
                                             <v-btn color="grey" plain @click="closeTemplate">{{ text.cancel }}</v-btn>
-                                            <v-btn color="success" plain @click="updateTemplate" v-if="null !== editTemplate.id" :disabled="!editTemplate.valid">{{text.save}}</v-btn>
-                                            <v-btn color="success" plain @click="addTemplate" v-else :disabled="!editTemplate.valid">{{text.add}}</v-btn>
+                                            <v-btn v-if="null !== editTemplate.id" color="success" plain :disabled="!editTemplate.valid" @click="updateTemplate">{{text.save}}</v-btn>
+                                            <v-btn v-else color="success" plain :disabled="!editTemplate.valid" @click="addTemplate">{{text.add}}</v-btn>
                                             <v-spacer></v-spacer>
                                         </v-card-actions>
                                     </v-card>
@@ -72,33 +72,35 @@
                                 </v-dialog>
                             </v-toolbar>
                         </template>
-                        <template v-slot:item.template="{ item }">
+                        <template #item.template="{ item }">
                             <div>{{ item.title }}</div>
                             <small class="text--secondary font-weight-light">{{ item.subTitle }}</small>
                         </template>
-                        <template v-slot:item.actions="{ item }">
-                            <v-btn icon small v-if="!sortTemplate" @click="openTemplate(item)">
+                        <template #item.actions="{ item }">
+                            <v-btn v-if="!sortTemplate" icon small @click="openTemplate(item)">
                                 <v-icon small>fas fa-edit</v-icon>
                             </v-btn>
-                            <v-btn icon small v-if="!sortTemplate" @click="startSort(item)">
+                            <v-btn v-if="!sortTemplate" icon small @click="startSort(item)">
                                 <v-icon small>fas fa-sort</v-icon>
                             </v-btn>
-                            <v-btn icon small v-if="!sortTemplate" @click="openRemoveTemplate(item)">
+                            <v-btn v-if="!sortTemplate" icon small @click="openRemoveTemplate(item)">
                                 <v-icon small color="red darken-2">fas fa-trash</v-icon>
                             </v-btn>
-                            <v-btn icon small
-                                   @click="insertBefore(item)"
-                                   v-if="sortTemplate && sortTemplate.id !== item.id"
-                                   :disabled="item.sort - 1 === sortTemplate.sort">
+                            <v-btn
+v-if="sortTemplate && sortTemplate.id !== item.id" icon
+                                   small
+                                   :disabled="item.sort - 1 === sortTemplate.sort"
+                                   @click="insertBefore(item)">
                                 <v-icon small>fas fa-sort-up</v-icon>
                             </v-btn>
-                            <v-btn icon small
-                                   @click="insertAfter(item)"
-                                   v-if="sortTemplate && sortTemplate.id !== item.id"
-                                   :disabled="item.sort + 1 === sortTemplate.sort">
+                            <v-btn
+v-if="sortTemplate && sortTemplate.id !== item.id" icon
+                                   small
+                                   :disabled="item.sort + 1 === sortTemplate.sort"
+                                   @click="insertAfter(item)">
                                 <v-icon small>fas fa-sort-down</v-icon>
                             </v-btn>
-                            <v-btn icon small @click="cancelSort" v-if="sortTemplate && sortTemplate.id === item.id">
+                            <v-btn v-if="sortTemplate && sortTemplate.id === item.id" icon small @click="cancelSort">
                                 <v-icon small>fas fa-times</v-icon>
                             </v-btn>
                         </template>
@@ -112,6 +114,77 @@
 <script>
 export default {
     name: 'JiraTemplates',
+    data() {
+        return {
+            text: {
+                template: chrome.i18n.getMessage('Template'),
+                templates: chrome.i18n.getMessage('Templates'),
+                save: chrome.i18n.getMessage('Save'),
+                cancel: chrome.i18n.getMessage('Cancel'),
+                delete: chrome.i18n.getMessage('Delete'),
+                add: chrome.i18n.getMessage('Add'),
+                newTemplate: chrome.i18n.getMessage('NewTemplate'),
+                createNewTemplate: chrome.i18n.getMessage('CreateNewTemplate'),
+            },
+            i18n: chrome.i18n,
+            editTemplate: {
+                currentTitle: chrome.i18n.getMessage('NewTemplate'),
+                valid: false,
+                id: null,
+                title: '',
+                subTitle: '',
+                content: '',
+                position: {
+                    start: -1,
+                    end: -1,
+                },
+                sort: -1,
+            },
+            newTemplate: {
+                currentTitle: chrome.i18n.getMessage('NewTemplate'),
+                valid: false,
+                id: null,
+                title: '',
+                subTitle: '',
+                content: '',
+                position: {
+                    start: -1,
+                    end: -1,
+                },
+                sort: -1,
+            },
+            templateToRemove: {
+                title: '',
+                id: null,
+            },
+            titleRules: [
+                value => !!value || chrome.i18n.getMessage('errNotBlank'),
+                value => value.length <= 25 || chrome.i18n.getMessage('errMaxLength', '25'),
+                value => false === this.checkDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
+            ],
+            subTitleRules: [
+                value => value.length <= 50 || chrome.i18n.getMessage('errMaxLength', '50'),
+            ],
+            contentRules: [
+                value => !!value || chrome.i18n.getMessage('errNotBlank'),
+                value => value.length <= 500 || chrome.i18n.getMessage('errMaxLength', '500'),
+            ],
+            dialogEditTemplate: false,
+            deleteTemplate: false,
+            sortTemplate: null,
+        }
+    },
+    computed: {
+        templates: function () {
+            return this.$store.getters['jira/templates']
+        },
+        templateHeaders: function () {
+            return [
+                { title: this.text.template, value: 'template', sortable: false},
+                { title: '', value: 'actions', align: 'end', sortable: false},
+            ]
+        },
+    },
     methods: {
         openTemplate: function (template) {
             this.editTemplate = {
@@ -231,77 +304,6 @@ export default {
 
             return template.id === this.sortTemplate.id ? 'primary' : ''
         },
-    },
-    computed: {
-        templates: function () {
-            return this.$store.getters['jira/templates']
-        },
-        templateHeaders: function () {
-            return [
-                { title: this.text.template, value: 'template', sortable: false},
-                { title: '', value: 'actions', align: 'end', sortable: false},
-            ]
-        },
-    },
-    data() {
-        return {
-            text: {
-                template: chrome.i18n.getMessage('Template'),
-                templates: chrome.i18n.getMessage('Templates'),
-                save: chrome.i18n.getMessage('Save'),
-                cancel: chrome.i18n.getMessage('Cancel'),
-                delete: chrome.i18n.getMessage('Delete'),
-                add: chrome.i18n.getMessage('Add'),
-                newTemplate: chrome.i18n.getMessage('NewTemplate'),
-                createNewTemplate: chrome.i18n.getMessage('CreateNewTemplate'),
-            },
-            i18n: chrome.i18n,
-            editTemplate: {
-                currentTitle: chrome.i18n.getMessage('NewTemplate'),
-                valid: false,
-                id: null,
-                title: '',
-                subTitle: '',
-                content: '',
-                position: {
-                    start: -1,
-                    end: -1,
-                },
-                sort: -1,
-            },
-            newTemplate: {
-                currentTitle: chrome.i18n.getMessage('NewTemplate'),
-                valid: false,
-                id: null,
-                title: '',
-                subTitle: '',
-                content: '',
-                position: {
-                    start: -1,
-                    end: -1,
-                },
-                sort: -1,
-            },
-            templateToRemove: {
-                title: '',
-                id: null,
-            },
-            titleRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-                value => value.length <= 25 || chrome.i18n.getMessage('errMaxLength', '25'),
-                value => false === this.checkDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
-            ],
-            subTitleRules: [
-                value => value.length <= 50 || chrome.i18n.getMessage('errMaxLength', '50'),
-            ],
-            contentRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-                value => value.length <= 500 || chrome.i18n.getMessage('errMaxLength', '500'),
-            ],
-            dialogEditTemplate: false,
-            deleteTemplate: false,
-            sortTemplate: null,
-        }
     },
 }
 </script>

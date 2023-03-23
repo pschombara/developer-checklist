@@ -1,4 +1,4 @@
-import App from './App.vue'
+import App from './popup/App.vue'
 import store from '@/store'
 import {createApp} from 'vue'
 import vuetify from '@/plugins/vuetify'

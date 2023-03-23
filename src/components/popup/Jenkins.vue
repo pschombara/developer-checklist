@@ -12,19 +12,19 @@
             <v-row>
                 <v-col cols="8">
                     <v-autocomplete
+                        v-model="job"
                         :items="builds"
                         item-value="job"
                         item-title="name"
-                        v-model="job"
                         label="Job"
                         dense
                     ></v-autocomplete>
                 </v-col>
                 <v-col cols="4">
                     <v-text-field
+                        v-model="build"
                         type="number"
                         min="1"
-                        v-model="build"
                         label="Build Number"
                         dense
                     ></v-text-field>
@@ -33,21 +33,21 @@
             <v-row class="mt-0">
                 <v-col cols="10">
                     <v-text-field
+                        ref="copyBuild"
                         outlined
                         readonly
-                        ref="copyBuild"
                         :value="buildUrl"
-                        @click="copy"
                         :disabled="!readyToCopy"
                         dense
+                        @click="copy"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="2">
                     <v-btn
                         block
                         color="primary"
-                        @click="copy"
                         :disabled="!readyToCopy"
+                        @click="copy"
                     ><v-icon small>fas fa-copy</v-icon></v-btn>
                 </v-col>
             </v-row>
@@ -60,35 +60,35 @@
                         :items-per-page="3"
                         :footer-props="{disableItemsPerPage: true, itemsPerPageOptions:[3]}"
                     >
-                        <template v-slot:top>
+                        <template #top>
                             <v-toolbar flat>
                                 <v-autocomplete
+                                    v-model="issue"
                                     :items="issues"
                                     item-title="name"
                                     item-value="name"
-                                    v-model="issue"
                                     label="Attach to Issue"
                                     class="mt-7"
                                 ></v-autocomplete>
                                 <v-spacer></v-spacer>
                                 <v-btn
                                     color="success"
-                                    @click="attachToIssue"
                                     :disabled="!readyToCopy || null === issue"
+                                    @click="attachToIssue"
                                 ><v-icon small>fas fa-plus</v-icon></v-btn>
                             </v-toolbar>
                         </template>
-                        <template v-slot:item.job="{item}">
+                        <template #item.job="{item}">
                             {{buildName(item.job)}}
                         </template>
-                        <template v-slot:item.action="{item}">
+                        <template #item.action="{item}">
                             <v-btn icon small @click="copyBuild(item.job, item.build)">
                                 <v-icon small>fas fa-copy</v-icon>
                             </v-btn>
                             <v-btn icon small @click="openBuild(item.job, item.build)">
                                 <v-icon small>fas fa-external-link-alt</v-icon>
                             </v-btn>
-                            <v-btn icon @click="removeFromIssue(item.job, item.build)" small>
+                            <v-btn icon small @click="removeFromIssue(item.job, item.build)">
                                 <v-icon color="red darken-2" small>fas fa-trash</v-icon>
                             </v-btn>
                         </template>
@@ -117,6 +117,43 @@ import CopiedToClipboard from '@/components/popup/mixed/CopiedToClipboard.vue'
 export default {
     name: 'PopupJenkins',
     components: {CopiedToClipboard},
+    data: () => {
+        return {
+            job: '',
+            build: null,
+            i18n: chrome.i18n,
+            optionsValid: false,
+            issue: null,
+            issues: [],
+        }
+    },
+    computed: {
+        builds: function () {
+            return this.$store.getters['jenkins/getBuilds']
+        },
+        readyToCopy: function () {
+            const host = this.$store.getters['jenkins/getHost']
+
+            return '' !== host && '' !== this.job && null !== this.build && '' !== this.build
+        },
+        buildUrl: function () {
+            if (false === this.readyToCopy) {
+                return ''
+            }
+
+            return this.$store.getters['jenkins/url'](this.job, this.build, true)
+        },
+        issueData: function () {
+            return this.$store.getters['issues/issue'](this.issue)
+        },
+        issueHeader: function () {
+            return [
+                { title: 'Job', value: 'job'},
+                { title: 'Build', value: 'build'},
+                { title: '', value: 'action', sortable: false, align:'right'},
+            ]
+        },
+    },
     created() {
         this.optionsValid = '' !== this.$store.getters['jenkins/getHost']
             && 0 < this.$store.getters['jenkins/getBuilds'].length
@@ -147,33 +184,6 @@ export default {
         if (this.issues.length > 0) {
             this.issue = this.issues[0].name
         }
-    },
-    computed: {
-        builds: function () {
-            return this.$store.getters['jenkins/getBuilds']
-        },
-        readyToCopy: function () {
-            const host = this.$store.getters['jenkins/getHost']
-
-            return '' !== host && '' !== this.job && null !== this.build && '' !== this.build
-        },
-        buildUrl: function () {
-            if (false === this.readyToCopy) {
-                return ''
-            }
-
-            return this.$store.getters['jenkins/url'](this.job, this.build, true)
-        },
-        issueData: function () {
-            return this.$store.getters['issues/issue'](this.issue)
-        },
-        issueHeader: function () {
-            return [
-                { title: 'Job', value: 'job'},
-                { title: 'Build', value: 'build'},
-                { title: '', value: 'action', sortable: false, align:'right'},
-            ]
-        },
     },
     methods: {
         openOptions: function (tab) {
@@ -236,16 +246,6 @@ export default {
                     this.$refs.message.show()
                 })
         },
-    },
-    data: () => {
-        return {
-            job: '',
-            build: null,
-            i18n: chrome.i18n,
-            optionsValid: false,
-            issue: null,
-            issues: [],
-        }
     },
 }
 </script>

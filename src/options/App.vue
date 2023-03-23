@@ -18,13 +18,13 @@
                     <v-toolbar-title>{{ text.title }}</v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-tooltip location="bottom">
-                        <template v-slot:activator="{ props }">
+                        <template #activator="{ props }">
                             <v-btn class="mr-2" color="success" fab icon="fas fa-save" v-bind="props" @click="save"></v-btn>
                         </template>
                         <span>{{text.save}}</span>
                     </v-tooltip>
                     <v-tooltip location="bottom">
-                        <template v-slot:activator="{ props }">
+                        <template #activator="{ props }">
                             <v-btn class="mr-2" fab icon="fas fa-download" v-bind="props" @click="saveExportStart"></v-btn>
                             <v-dialog v-model="dialog.export" max-width="800">
                                 <v-card>
@@ -41,7 +41,7 @@
                                                     <v-list-item
                                                         :value="setting.id"
                                                     >
-                                                        <template v-slot:default="{ active }">
+                                                        <template #default="{ active }">
                                                             <v-list-item-action start>
                                                                 <v-checkbox :input-value="active" color="primary"></v-checkbox>
                                                             </v-list-item-action>
@@ -64,7 +64,7 @@
                         <span>{{text.export}}</span>
                     </v-tooltip>
                     <v-tooltip location="bottom">
-                        <template v-slot:activator="{ props }">
+                        <template #activator="{ props }">
                             <v-btn
                                 class="mr-2"
                                 fab
@@ -89,7 +89,7 @@
                                                         :value="setting.id"
                                                         :disabled="!importAvailableModules.includes(setting.id)"
                                                     >
-                                                        <template v-slot:default="{ active }">
+                                                        <template #default="{ active }">
                                                             <v-list-item-action start>
                                                                 <v-checkbox :modal-value="active" color="primary" hide-details></v-checkbox>
                                                             </v-list-item-action>
@@ -103,7 +103,7 @@
                                     <v-card-actions>
                                         <v-spacer></v-spacer>
                                         <v-btn color="grey" plain @click="cancelImport">{{text.cancel}}</v-btn>
-                                        <v-btn color="success" plain @click="storeImportedOptions" :disabled="0 === importModules.length">{{text.import}}</v-btn>
+                                        <v-btn color="success" plain :disabled="0 === importModules.length" @click="storeImportedOptions">{{text.import}}</v-btn>
                                         <v-spacer></v-spacer>
                                     </v-card-actions>
                                 </v-card>
@@ -113,13 +113,13 @@
                                 hide-input
                                 class="d-none"
                                 accept="application/json"
-                                @update:modelValue="fileSelected"
+                                @update:model-value="fileSelected"
                             ></v-file-input>
                         </template>
                         <span>{{text.import}}</span>
                     </v-tooltip>
                     <v-tooltip location="bottom">
-                        <template v-slot:activator="{ props }">
+                        <template #activator="{ props }">
                             <v-btn class="mr-2" fab icon="fas fa-eraser" v-bind="props" @click="openRestore"></v-btn>
                             <v-dialog v-model="dialog.restore" max-width="600">
                                 <v-card>
@@ -145,11 +145,11 @@
                     <v-col>
                         <v-card>
                             <v-tabs
+                                v-model="tab"
                                 show-arrows
                                 stacked
-                                v-model="tab"
                             >
-                                <v-tab v-for="item in tabs" :key="item.id" v-show="showTab(item)" :value="item.id">
+                                <v-tab v-for="item in tabs" v-show="showTab(item)" :key="item.id" :value="item.id">
                                     <v-icon class="mb-2">{{ item.icon }}</v-icon>
                                     {{ item.name }}
                                 </v-tab>
@@ -188,21 +188,57 @@
 </template>
 <script>
 
-import Jira from '@/components/options/Jira'
-import Jenkins from '@/components/options/Jenkins'
-import GitLab from '@/components/options/GitLab'
-import Chat from '@/components/options/Chat'
-import CheatSheet from '@/components/options/CheatSheet'
-import About from '@/components/options/About'
+import Jira from '@/components/options/Jira.vue'
+import Jenkins from '@/components/options/Jenkins.vue'
+import GitLab from '@/components/options/GitLab.vue'
+import Chat from '@/components/options/Chat.vue'
+import CheatSheet from '@/components/options/CheatSheet.vue'
+import About from '@/components/options/About.vue'
 import Theme from '@/mixins/theme'
-/* import Chrome from '@/components/options/Chrome' */
+/* import Chrome from '@/components/options/Chrome.vue' */
 import semver from 'semver'
-import General from '@/components/options/General'
+import General from '@/components/options/General.vue'
 import Migration from '@/mixins/migration'
 
 export default {
     name: 'App',
     components: {General, Jira, Jenkins, GitLab, Chat, CheatSheet, /*Chrome,*/ About },
+    data() {
+        return {
+            loading: true,
+            text: {
+                title: chrome.i18n.getMessage('extOptionsTitle'),
+                save: chrome.i18n.getMessage('Save'),
+                export: chrome.i18n.getMessage('Export'),
+                import: chrome.i18n.getMessage('Import'),
+                restore: chrome.i18n.getMessage('Restore'),
+                reset: chrome.i18n.getMessage('Reset'),
+                cancel: chrome.i18n.getMessage('Cancel'),
+                close: chrome.i18n.getMessage('Close'),
+                importWrongType: chrome.i18n.getMessage('importWrongType'),
+                settingsSaved: chrome.i18n.getMessage('settingsSaved'),
+            },
+            exportModules: [],
+            importModules: [],
+            importAvailableModules: [],
+            importOptions: {},
+            dialog: {
+                restore: false,
+                export: false,
+                import: false,
+                error: {
+                    empty: false,
+                    type: false,
+                },
+            },
+            alert: {
+                import: {
+                    type: false,
+                },
+                saved: false,
+            },
+        }
+    },
     computed: {
         modules()  {
             return this.$store.getters['modules']
@@ -221,6 +257,12 @@ export default {
         settings() {
             return this.$store.getters['optionTabs'].filter(tab => tab.settings)
         },
+    },
+    created() {
+        this.load()
+
+        const theme = new Theme()
+        theme.registerThemeChanged(this)
     },
     methods: {
         load: function () {
@@ -338,6 +380,7 @@ export default {
                         this.dialog.import = true
                     }
                 } catch (e) {
+                    // eslint-disable-next-line no-console
                     console.error(e)
                 }
             })
@@ -367,48 +410,6 @@ export default {
                 this.loading = false
             })
         },
-    },
-    created() {
-        this.load()
-
-        const theme = new Theme()
-        theme.registerThemeChanged(this)
-    },
-    data() {
-        return {
-            loading: true,
-            text: {
-                title: chrome.i18n.getMessage('extOptionsTitle'),
-                save: chrome.i18n.getMessage('Save'),
-                export: chrome.i18n.getMessage('Export'),
-                import: chrome.i18n.getMessage('Import'),
-                restore: chrome.i18n.getMessage('Restore'),
-                reset: chrome.i18n.getMessage('Reset'),
-                cancel: chrome.i18n.getMessage('Cancel'),
-                close: chrome.i18n.getMessage('Close'),
-                importWrongType: chrome.i18n.getMessage('importWrongType'),
-                settingsSaved: chrome.i18n.getMessage('settingsSaved'),
-            },
-            exportModules: [],
-            importModules: [],
-            importAvailableModules: [],
-            importOptions: {},
-            dialog: {
-                restore: false,
-                export: false,
-                import: false,
-                error: {
-                    empty: false,
-                    type: false,
-                },
-            },
-            alert: {
-                import: {
-                    type: false,
-                },
-                saved: false,
-            },
-        }
     },
 }
 </script>

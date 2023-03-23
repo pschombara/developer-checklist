@@ -10,10 +10,10 @@
                 </v-col>
                 <v-col cols="12" sm="4" md="3">
                     <v-text-field
+                        ref="name"
                         v-model="name"
                         :label="text.name"
                         counter="20"
-                        ref="name"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="4" md="3">
@@ -22,11 +22,11 @@
                         :items="icons"
                         label="Icon"
                     >
-                        <template v-slot:selection="{item}">
+                        <template #selection="{item}">
                             <v-icon left>fas fa-{{ item.value }}</v-icon>
                             {{ item.value }}
                         </template>
-                        <template v-slot:item="{item}">
+                        <template #item="{item}">
                             <v-icon left>fas fa-{{ item.value }}</v-icon>
                             {{ item.value }}
                             <v-spacer></v-spacer>
@@ -52,50 +52,51 @@
                         <v-card>
                             <v-card-title>{{ text.success }}</v-card-title>
                             <v-card-text>
-                                <v-form v-model="dialogBtnSuccess.valid" ref="formBtnSuccess">
+                                <v-form ref="formBtnSuccess" v-model="dialogBtnSuccess.valid">
                                     <v-switch
+                                        v-model="dialogBtnSuccess.item.enabled"
                                         color="primary"
                                         :label="text.buttonEnabled"
-                                        v-model="dialogBtnSuccess.item.enabled"
                                     ></v-switch>
                                     <v-text-field
-                                        :label="text.text"
                                         v-model="dialogBtnSuccess.item.text"
+                                        :label="text.text"
                                         :rules="textRules"
                                         counter="15"
                                     ></v-text-field>
                                     <v-select
-                                        :label="text.comment"
                                         v-model="dialogBtnSuccess.item.comment"
+                                        :label="text.comment"
                                         :items="templates"
                                         item-title="title"
                                         item-value="id"
                                         :menu-props="{closeOnContentClick: true}"
                                     >
-                                        <template v-slot:prepend-item>
+                                        <template #prepend-item>
                                             <v-list-item
-                                                @click="dialogBtnSuccess.item.comment = null"
                                                 v-if="null !== dialogBtnSuccess.item.comment"
+                                                @click="dialogBtnSuccess.item.comment = null"
                                             >
                                                 <v-list-item-title>No Comment (TODO)</v-list-item-title>
                                             </v-list-item>
                                         </template>
                                     </v-select>
                                     <v-switch
-                                        :label="text.sendCommentImmediately"
                                         v-model="dialogBtnSuccess.item.autoComment"
+                                        :label="text.sendCommentImmediately"
                                     ></v-switch>
                                     <v-switch
-                                        :label="text.listCompletelyChecked"
                                         v-model="dialogBtnSuccess.item.successRequiredAll"
+                                        :label="text.listCompletelyChecked"
                                     ></v-switch>
                                 </v-form>
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn color="grey" plain @click="closeButtonSuccessDialog">{{ text.cancel }}</v-btn>
-                                <v-btn color="primary" plain @click="saveButtonSuccess"
-                                       :disabled="!dialogBtnSuccess.valid">{{ text.save }}
+                                <v-btn
+color="primary" plain :disabled="!dialogBtnSuccess.valid"
+                                       @click="saveButtonSuccess">{{ text.save }}
                                 </v-btn>
                                 <v-spacer></v-spacer>
                             </v-card-actions>
@@ -116,35 +117,36 @@
                         <v-card>
                             <v-card-title>{{ text.failed }}</v-card-title>
                             <v-card-text>
-                                <v-form v-model="dialogBtnFailed.valid" ref="formBtnFailed">
+                                <v-form ref="formBtnFailed" v-model="dialogBtnFailed.valid">
                                     <v-switch
-                                        :label="text.buttonEnabled"
                                         v-model="dialogBtnFailed.item.enabled"
+                                        :label="text.buttonEnabled"
                                     ></v-switch>
                                     <v-text-field
-                                        :label="text.text"
                                         v-model="dialogBtnFailed.item.text"
+                                        :label="text.text"
                                         :rules="textRules"
                                         counter="15"
                                     ></v-text-field>
                                     <v-select
-                                        :label="text.comment"
                                         v-model="dialogBtnFailed.item.comment"
+                                        :label="text.comment"
                                         :items="templates"
                                         item-title="title"
                                         item-value="id"
                                     ></v-select>
                                     <v-switch
-                                        :label="text.sendCommentImmediately"
                                         v-model="dialogBtnFailed.item.autoComment"
+                                        :label="text.sendCommentImmediately"
                                     ></v-switch>
                                 </v-form>
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn color="grey" plain @click="closeButtonFailedDialog">{{ text.cancel }}</v-btn>
-                                <v-btn color="primary" plain @click="saveButtonFailed"
-                                       :disabled="!dialogBtnFailed.valid">{{ text.save }}
+                                <v-btn
+color="primary" plain :disabled="!dialogBtnFailed.valid"
+                                       @click="saveButtonFailed">{{ text.save }}
                                 </v-btn>
                                 <v-spacer></v-spacer>
                             </v-card-actions>
@@ -167,7 +169,7 @@
                         :item-class="itemRowSortActiveClass"
                         :hide-default-footer=true
                     >
-                        <template v-slot:top>
+                        <template #top>
                             <v-toolbar flat>
                                 <v-spacer></v-spacer>
                                 <v-btn color="primary" @click="openCategory(null)">
@@ -182,8 +184,8 @@
                                     <InnerList
                                         :uuid="uuid"
                                         :uid="categoryId"
-                                        v-on:close="closeCategory"
-                                        :text="text"></InnerList>
+                                        :text="text"
+                                        @close="closeCategory"></InnerList>
                                 </v-dialog>
                                 <v-dialog v-model="deleteCategory.open" max-width="450">
                                     <v-card>
@@ -200,30 +202,33 @@
                                 </v-dialog>
                             </v-toolbar>
                         </template>
-                        <template v-slot:item.actions="{item}">
-                            <v-btn icon small @click="openCategory(item.uid)" v-if="!sortChecklist">
+                        <template #item.actions="{item}">
+                            <v-btn v-if="!sortChecklist" icon small @click="openCategory(item.uid)">
                                 <v-icon small>fas fa-edit</v-icon>
                             </v-btn>
-                            <v-btn icon small @click="categoryStartSort(item)" v-if="!sortChecklist">
+                            <v-btn v-if="!sortChecklist" icon small @click="categoryStartSort(item)">
                                 <v-icon small>fas fa-sort</v-icon>
                             </v-btn>
-                            <v-btn icon small @click="openDialogDeleteCategory(item)" v-if="!sortChecklist">
+                            <v-btn v-if="!sortChecklist" icon small @click="openDialogDeleteCategory(item)">
                                 <v-icon small color="red darken-2">fas fa-trash</v-icon>
                             </v-btn>
-                            <v-btn icon small
-                                   @click="categoryInsertBefore(item)"
-                                   v-if="sortChecklist && sortChecklist.uid !== item.uid"
-                                   :disabled="item.sort - 1 === sortChecklist.sort">
+                            <v-btn
+v-if="sortChecklist && sortChecklist.uid !== item.uid" icon
+                                   small
+                                   :disabled="item.sort - 1 === sortChecklist.sort"
+                                   @click="categoryInsertBefore(item)">
                                 <v-icon small>fas fa-sort-up</v-icon>
                             </v-btn>
-                            <v-btn icon small
-                                   @click="categoryInsertAfter(item)"
-                                   v-if="sortChecklist && sortChecklist.uid !== item.uid"
-                                   :disabled="item.sort + 1 === sortChecklist.sort">
+                            <v-btn
+v-if="sortChecklist && sortChecklist.uid !== item.uid" icon
+                                   small
+                                   :disabled="item.sort + 1 === sortChecklist.sort"
+                                   @click="categoryInsertAfter(item)">
                                 <v-icon small>fas fa-sort-down</v-icon>
                             </v-btn>
-                            <v-btn icon small @click="categoryCancelSort"
-                                   v-if="sortChecklist && sortChecklist.uid === item.uid">
+                            <v-btn
+v-if="sortChecklist && sortChecklist.uid === item.uid" icon small
+                                   @click="categoryCancelSort">
                                 <v-icon small>fas fa-times</v-icon>
                             </v-btn>
                         </template>
@@ -236,14 +241,71 @@
 
 <script>
 
-import InnerList from '@/components/options/Jira/Checklists/InnerList'
+import InnerList from '@/components/options/Jira/Checklists/InnerList.vue'
 
 export default {
     name: 'ChecklistsChecklist',
     components: {InnerList},
-    props: ['uuid'],
-    created() {
-        this.checklist = this.$store.getters['jira/getChecklist'](this.uuid)
+    props: {
+        uuid: {
+            type: String,
+            required: true,
+        },
+    },
+    data() {
+        return {
+            text: {
+                name: chrome.i18n.getMessage('Name'),
+                cancel: chrome.i18n.getMessage('Cancel'),
+                save: chrome.i18n.getMessage('Save'),
+                enabled: chrome.i18n.getMessage('ChecklistEnabled'),
+                buttons: chrome.i18n.getMessage('Buttons'),
+                buttonEnabled: chrome.i18n.getMessage('ButtonEnabled'),
+                success: chrome.i18n.getMessage('Success'),
+                failed: chrome.i18n.getMessage('Failed'),
+                text: chrome.i18n.getMessage('Text'),
+                comment: chrome.i18n.getMessage('comment'),
+                sendCommentImmediately: chrome.i18n.getMessage('SendCommentImmediately'),
+                listCompletelyChecked: chrome.i18n.getMessage('ListCompletelyChecked'),
+                checklists: chrome.i18n.getMessage('Checklists'),
+                add: chrome.i18n.getMessage('Add'),
+                delete: chrome.i18n.getMessage('Delete'),
+            },
+            i18n: chrome.i18n,
+            checklist: {},
+            dialogBtnSuccess: {
+                open: false,
+                item: {
+                    enabled: false,
+                    text: '',
+                    comment: '',
+                    autoComment: false,
+                    successRequiredAll: false,
+                },
+                valid: true,
+            },
+            dialogBtnFailed: {
+                open: false,
+                item: {
+                    enabled: false,
+                    text: '',
+                    comment: '',
+                    autoComment: false,
+                },
+                valid: true,
+            },
+            textRules: [
+                value => value.length <= 15 || chrome.i18n.getMessage('errMaxLength', '15'),
+            ],
+            sortChecklist: null,
+            openChecklistDialog: false,
+            categoryId: null,
+            deleteCategory: {
+                uid: null,
+                title: '',
+                open: false,
+            },
+        }
     },
     computed: {
         name: {
@@ -297,6 +359,9 @@ export default {
         templates() {
             return this.$store.getters['jira/templates']
         },
+    },
+    created() {
+        this.checklist = this.$store.getters['jira/getChecklist'](this.uuid)
     },
     methods: {
         openButtonSuccessDialog: function () {
@@ -391,61 +456,6 @@ export default {
             this.categoryId = null
             this.openChecklistDialog = false
         },
-    },
-    data() {
-        return {
-            text: {
-                name: chrome.i18n.getMessage('Name'),
-                cancel: chrome.i18n.getMessage('Cancel'),
-                save: chrome.i18n.getMessage('Save'),
-                enabled: chrome.i18n.getMessage('ChecklistEnabled'),
-                buttons: chrome.i18n.getMessage('Buttons'),
-                buttonEnabled: chrome.i18n.getMessage('ButtonEnabled'),
-                success: chrome.i18n.getMessage('Success'),
-                failed: chrome.i18n.getMessage('Failed'),
-                text: chrome.i18n.getMessage('Text'),
-                comment: chrome.i18n.getMessage('comment'),
-                sendCommentImmediately: chrome.i18n.getMessage('SendCommentImmediately'),
-                listCompletelyChecked: chrome.i18n.getMessage('ListCompletelyChecked'),
-                checklists: chrome.i18n.getMessage('Checklists'),
-                add: chrome.i18n.getMessage('Add'),
-                delete: chrome.i18n.getMessage('Delete'),
-            },
-            i18n: chrome.i18n,
-            checklist: {},
-            dialogBtnSuccess: {
-                open: false,
-                item: {
-                    enabled: false,
-                    text: '',
-                    comment: '',
-                    autoComment: false,
-                    successRequiredAll: false,
-                },
-                valid: true,
-            },
-            dialogBtnFailed: {
-                open: false,
-                item: {
-                    enabled: false,
-                    text: '',
-                    comment: '',
-                    autoComment: false,
-                },
-                valid: true,
-            },
-            textRules: [
-                value => value.length <= 15 || chrome.i18n.getMessage('errMaxLength', '15'),
-            ],
-            sortChecklist: null,
-            openChecklistDialog: false,
-            categoryId: null,
-            deleteCategory: {
-                uid: null,
-                title: '',
-                open: false,
-            },
-        }
     },
 }
 </script>

@@ -6,13 +6,13 @@
             </v-row>
             <v-row class="d-flex align-center mt-0">
                 <v-col cols="5">
-                    <v-combobox :items="boards" v-model="board"></v-combobox>
+                    <v-combobox v-model="board" :items="boards"></v-combobox>
                 </v-col>
                 <v-col cols="5">
                     <v-text-field
+                        v-model="issueNumber"
                         type="number"
                         min="1"
-                        v-model="issueNumber"
                         autofocus
                         @keypress.enter="open"
                     ></v-text-field>
@@ -75,6 +75,40 @@
 
 export default {
     name: 'PopupQuickList',
+    data() {
+        return {
+            boards: [],
+            board: '',
+            jiraUrl: '',
+            text: {
+                lastOpened: chrome.i18n.getMessage('lastOpenedIssues'),
+                open: chrome.i18n.getMessage('openIssue'),
+                pinned: chrome.i18n.getMessage('pinned'),
+            },
+            issueNumber: null,
+        }
+    },
+    computed: {
+        issues() {
+            return  this.$store.getters['issues/list']
+        },
+        maximumIssues() {
+            return this.$store.getters['jira/getMaximumIssues']
+        },
+    },
+    created() {
+        const boards = this.$store.getters['jira/getBoards']
+
+        for (let board of boards) {
+            this.boards.push(board.key)
+
+            if (board.default) {
+                this.board = board.key
+            }
+        }
+
+        this.jiraUrl = this.$store.getters['jira/getUrl']
+    },
     methods: {
         openIssue: function (issueNumber) {
             chrome.tabs.create({url: `${this.jiraUrl}/browse/${issueNumber}`})
@@ -95,40 +129,6 @@ export default {
         buttonColor: function (item) {
             return item.pinned ? 'primary' : 'secondary'
         },
-    },
-    created() {
-        const boards = this.$store.getters['jira/getBoards']
-
-        for (let board of boards) {
-            this.boards.push(board.key)
-
-            if (board.default) {
-                this.board = board.key
-            }
-        }
-
-        this.jiraUrl = this.$store.getters['jira/getUrl']
-    },
-    computed: {
-        issues() {
-            return  this.$store.getters['issues/list']
-        },
-        maximumIssues() {
-            return this.$store.getters['jira/getMaximumIssues']
-        },
-    },
-    data() {
-        return {
-            boards: [],
-            board: '',
-            jiraUrl: '',
-            text: {
-                lastOpened: chrome.i18n.getMessage('lastOpenedIssues'),
-                open: chrome.i18n.getMessage('openIssue'),
-                pinned: chrome.i18n.getMessage('pinned'),
-            },
-            issueNumber: null,
-        }
     },
 }
 </script>

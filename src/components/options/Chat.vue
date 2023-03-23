@@ -2,7 +2,7 @@
     <v-card flat class="mt-5">
         <v-card-title>Chat</v-card-title>
         <v-card-text>
-            <v-tabs v-model="client" vertical>
+            <v-tabs v-model="selectedClient" vertical>
                 <v-tab v-for="client in clients" :key="client.id">
                     <v-row align="center">
                         <v-col class="text-start">
@@ -14,7 +14,7 @@
             </v-tabs>
 
 
-            <v-window v-model="client">
+            <v-window v-model="selectedClient">
                     <v-window-item v-for="client in clients" :key="client.id">
                         <v-card>
                             <v-card-text>
@@ -59,11 +59,6 @@ import Rooms from './Chat/Rooms'
 export default {
     name: 'OptionChat',
     components: {General, Messages, Rooms},
-    methods: {
-        chooseClient: function (client) {
-            this.client = client
-        },
-    },
     data() {
         return {
             text: {
@@ -85,8 +80,13 @@ export default {
                     urlStart: 'https://discord.com/api/webhooks/',
                 },
             ],
-            client: null,
+            selectedClient: null,
         }
+    },
+    methods: {
+        chooseClient: function (client) {
+            this.selectedClient = client
+        },
     },
 }
 </script>

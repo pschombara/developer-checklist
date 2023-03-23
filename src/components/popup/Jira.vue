@@ -5,20 +5,20 @@
                 <v-col cols="5">{{ issueName }}</v-col>
                 <v-col cols="4">
                     <v-tooltip location="bottom">
-                        <template v-slot:activator="{props}">
+                        <template #activator="{props}">
                             <v-btn
+                                v-if="issue.work"
                                 v-bind="props"
                                 color="red lighten-3"
                                 variant="text"
                                 @click="stopWork(issueName)"
-                                v-if="issue.work"
                             ><v-icon small left>fas fa-stop</v-icon>&nbsp;Stop Work</v-btn>
                             <v-btn
+                                v-else
                                 v-bind="props"
                                 color="green lighten-3"
                                 variant="text"
                                 @click="startWork(issueName)"
-                                v-else
                             ><v-icon small left>fas fa-play</v-icon>&nbsp; Start Work</v-btn>
                         </template>
                         <span>Issue will be preselected for CI-Builds and Merge Requests</span>
@@ -26,20 +26,20 @@
                 </v-col>
                 <v-col cols="3">
                     <v-tooltip location="bottom">
-                        <template v-slot:activator="{props}">
+                        <template #activator="{props}">
                             <v-btn
                                 v-bind="props"
                                 variant="text"
-                                v-bind:color="issue.pinned ? 'success' : 'grey'"
+                                :color="issue.pinned ? 'success' : 'grey'"
                                 @click="issue.pinned ? unpin(issueName) : pin(issueName)"
                             >
-                                <v-icon v-bind:class="issue.pinned ? '' : 'rotate--45-inverted'" small>fas fa-thumbtack</v-icon>
+                                <v-icon :class="issue.pinned ? '' : 'rotate--45-inverted'" small>fas fa-thumbtack</v-icon>
                             </v-btn>
                         </template>
                         <span>When active, issue is pinned, so it is sorted to the front in the quick select and is not automatically cleaned up.</span>
                     </v-tooltip>
                     <v-tooltip location="bottom">
-                        <template v-slot:activator="{props}">
+                        <template #activator="{props}">
                             <v-btn
                                 v-bind="props"
                                 variant="text"
@@ -60,13 +60,13 @@
                     show-arrows
                 >
                     <v-tab
-                        v-model="tab"
                         v-for="checklist in checklists"
                         :key="checklist.uuid"
+                        v-model="tab"
                         :value="checklist.uuid"
                     >
                         <v-tooltip location="right">
-                            <template v-slot:activator="{props}">
+                            <template #activator="{props}">
                                 <v-icon v-bind="props" center>fas fa-{{ checklist.icon }}</v-icon>
                             </template>
                             <span>{{ checklist.name }}</span>
@@ -74,7 +74,7 @@
                     </v-tab>
                     <v-tab v-model="tab" value="templates">
                         <v-tooltip location="right">
-                            <template v-slot:activator="{props}">
+                            <template #activator="{props}">
                                 <v-icon v-bind="props">fas fa-clipboard</v-icon>
                             </template>
                             <span>Templates</span>
@@ -96,20 +96,28 @@
 </template>
 
 <script>
-import Checklist from '@/components/popup/Jira/Checklist'
-import Templates from '@/components/popup/Jira/Templates'
+import Checklist from '@/components/popup/Jira/Checklist.vue'
+import Templates from '@/components/popup/Jira/Templates.vue'
 
 export default {
     name: 'PopupJira',
     components: {Templates, Checklist},
-    created() {
-        this.checklists = this.$store.getters['jira/getChecklists'].filter(checklist => checklist.enabled)
-        this.issueName = this.$store.getters['currentIssue']
+    data: () => {
+        return {
+            tab: null,
+            checklists: [],
+            checked: [],
+            issueName: '',
+        }
     },
     computed: {
         issue: function () {
             return this.$store.getters['issues/issue'](this.issueName)
         },
+    },
+    created() {
+        this.checklists = this.$store.getters['jira/getChecklists'].filter(checklist => checklist.enabled)
+        this.issueName = this.$store.getters['currentIssue']
     },
     methods: {
         pin: function (issue) {
@@ -128,14 +136,6 @@ export default {
         stopWork: function (issue) {
             this.$store.dispatch('issues/stopWork', issue)
         },
-    },
-    data: () => {
-        return {
-            tab: null,
-            checklists: [],
-            checked: [],
-            issueName: '',
-        }
     },
 }
 </script>

@@ -11,7 +11,7 @@ const state = {
 }
 
 export default {
-    strict: process.env.NODE_ENV !== 'production',
+    strict: import.meta.env.NODE_ENV !== 'production',
     namespaced: true,
     modules: {},
     state,
@@ -441,7 +441,6 @@ export default {
                     (injectionResults) => {
                         let result = injectionResults[0]
 
-                        console.log(result)
                         if (false === result.result) {
                             throw new Error('Could add comment')
                         }

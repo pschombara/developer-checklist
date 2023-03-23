@@ -9,7 +9,7 @@
                 :item-class="itemRowSortActiveClass"
                 :hide-default-footer="true"
             >
-                <template v-slot:top>
+                <template #top>
                     <v-toolbar flat>
                         <v-spacer></v-spacer>
                         <v-btn color="primary" @click="openAddMessage"><v-icon left>fas fa-plus</v-icon>{{text.add}}</v-btn>
@@ -18,7 +18,7 @@
                         <v-card>
                             <v-card-title>{{editMessage.title}}</v-card-title>
                             <v-card-text>
-                                <v-form v-model="formValid" ref="messageForm">
+                                <v-form ref="messageForm" v-model="formValid">
                                     <v-text-field
                                         v-model="editMessage.name"
                                         :label="text.name"
@@ -36,8 +36,8 @@
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn color="grey" plain @click="closeMessage">{{ text.cancel }}</v-btn>
-                                <v-btn color="primary" plain @click="saveMessage" v-if="!!editMessage.id" :disabled="!formValid">{{ text.save }}</v-btn>
-                                <v-btn color="primary" plain @click="addMessage" v-else :disabled="!formValid">{{ text.add }}</v-btn>
+                                <v-btn v-if="!!editMessage.id" color="primary" plain :disabled="!formValid" @click="saveMessage">{{ text.save }}</v-btn>
+                                <v-btn v-else color="primary" plain :disabled="!formValid" @click="addMessage">{{ text.add }}</v-btn>
                                 <v-spacer></v-spacer>
                             </v-card-actions>
                         </v-card>
@@ -56,30 +56,33 @@
                         </v-card>
                     </v-dialog>
                 </template>
-                <template v-slot:item.actions="{item}">
-                    <v-btn icon small @click="openMessage(item)" v-if="!sortMessage">
+                <template #item.actions="{item}">
+                    <v-btn v-if="!sortMessage" icon small @click="openMessage(item)">
                         <v-icon icon="fas fa-edit" small />
                     </v-btn>
-                    <v-btn icon small @click="startSort(item)" v-if="!sortMessage" :disabled="messages.length < 2">
+                    <v-btn v-if="!sortMessage" icon small :disabled="messages.length < 2" @click="startSort(item)">
                         <v-icon icon="fas fa-sort" small />
                     </v-btn>
-                    <v-btn icon small @click="openDeleteMessage(item)" v-if="!sortMessage">
+                    <v-btn v-if="!sortMessage" icon small @click="openDeleteMessage(item)">
                         <v-icon small color="red darken-2">fas fa-trash</v-icon>
                     </v-btn>
-                    <v-btn icon small
-                           @click="sortBefore(item)"
-                           v-if="sortMessage && sortMessage.id !== item.id"
-                           :disabled="item.sort - 1 === sortMessage.sort">
+                    <v-btn
+v-if="sortMessage && sortMessage.id !== item.id" icon
+                           small
+                           :disabled="item.sort - 1 === sortMessage.sort"
+                           @click="sortBefore(item)">
                         <v-icon icon="fas fa-sort-up" small />
                     </v-btn>
-                    <v-btn icon small
-                           @click="sortAfter(item)"
-                           v-if="sortMessage && sortMessage.id !== item.id"
-                           :disabled="item.sort + 1 === sortMessage.sort">
+                    <v-btn
+v-if="sortMessage && sortMessage.id !== item.id" icon
+                           small
+                           :disabled="item.sort + 1 === sortMessage.sort"
+                           @click="sortAfter(item)">
                         <v-icon icon="fas fa-sort-down" small />
                     </v-btn>
-                    <v-btn icon small @click="closeSort"
-                           v-if="sortMessage && sortMessage.id === item.id">
+                    <v-btn
+v-if="sortMessage && sortMessage.id === item.id" icon small
+                           @click="closeSort">
                         <v-icon icon="fas fa-times" small />
                     </v-btn>
                 </template>
@@ -96,6 +99,41 @@ export default {
             type: String,
             required: true,
         },
+    },
+    data() {
+        return {
+            sortMessage: null,
+            editMessage: {
+                open: false,
+                id: null,
+                name: '',
+                content: '',
+            },
+            deleteMessage: {
+                open: false,
+                id: null,
+                name: '',
+            },
+            i18n: chrome.i18n,
+            text: {
+                add: chrome.i18n.getMessage('Add'),
+                save: chrome.i18n.getMessage('Save'),
+                cancel: chrome.i18n.getMessage('Cancel'),
+                delete: chrome.i18n.getMessage('Delete'),
+                name: chrome.i18n.getMessage('Name'),
+                content: chrome.i18n.getMessage('TextContent'),
+            },
+            nameRules: [
+                value => !!value || chrome.i18n.getMessage('errNotBlank'),
+                value => value.length <= 20 || chrome.i18n.getMessage('errMaxLength', '20'),
+                value => false === this.checkDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
+            ],
+            contentRules: [
+                value => !!value || chrome.i18n.getMessage('errNotBlank'),
+                value => value.length <= 200 || chrome.i18n.getMessage('errMaxLength', '200'),
+            ],
+            formValid: false,
+        }
     },
     computed: {
         messages() {
@@ -219,41 +257,6 @@ export default {
 
             return this.editMessage.name !== value
         },
-    },
-    data() {
-        return {
-            sortMessage: null,
-            editMessage: {
-                open: false,
-                id: null,
-                name: '',
-                content: '',
-            },
-            deleteMessage: {
-                open: false,
-                id: null,
-                name: '',
-            },
-            i18n: chrome.i18n,
-            text: {
-                add: chrome.i18n.getMessage('Add'),
-                save: chrome.i18n.getMessage('Save'),
-                cancel: chrome.i18n.getMessage('Cancel'),
-                delete: chrome.i18n.getMessage('Delete'),
-                name: chrome.i18n.getMessage('Name'),
-                content: chrome.i18n.getMessage('TextContent'),
-            },
-            nameRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-                value => value.length <= 20 || chrome.i18n.getMessage('errMaxLength', '20'),
-                value => false === this.checkDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
-            ],
-            contentRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-                value => value.length <= 200 || chrome.i18n.getMessage('errMaxLength', '200'),
-            ],
-            formValid: false,
-        }
     },
 }
 </script>

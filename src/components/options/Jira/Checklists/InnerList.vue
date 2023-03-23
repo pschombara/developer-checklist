@@ -15,7 +15,7 @@
                 :item-class="activeSortClass"
                 :hide-default-footer=true
             >
-                <template v-slot:top>
+                <template #top>
                     <v-toolbar flat>
                         <v-spacer></v-spacer>
                         <v-btn color="primary" @click="openEntry(defaultEntry)">
@@ -44,37 +44,39 @@
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
                                     <v-btn color="grey" plain @click="closeEntry">{{text.cancel}}</v-btn>
-                                    <v-btn color="primary" plain @click="saveEntry" v-if="entry.id">{{text.save}}</v-btn>
-                                    <v-btn color="primary" plain @click="addEntry" v-else>{{text.add}}</v-btn>
+                                    <v-btn v-if="entry.id" color="primary" plain @click="saveEntry">{{text.save}}</v-btn>
+                                    <v-btn v-else color="primary" plain @click="addEntry">{{text.add}}</v-btn>
                                     <v-spacer></v-spacer>
                                 </v-card-actions>
                             </v-card>
                         </v-dialog>
                     </v-toolbar>
                 </template>
-                <template v-slot:item.actions="{item}">
-                    <v-btn icon small @click="openEntry(item)" v-if="!sortItem">
+                <template #item.actions="{item}">
+                    <v-btn v-if="!sortItem" icon small @click="openEntry(item)">
                         <v-icon small>fas fa-edit</v-icon>
                     </v-btn>
-                    <v-btn icon small @click="startSort(item)" v-if="!sortItem">
+                    <v-btn v-if="!sortItem" icon small @click="startSort(item)">
                         <v-icon small>fas fa-sort</v-icon>
                     </v-btn>
-                    <v-btn icon small @click="openRemoveEntry(item)" v-if="!sortItem">
+                    <v-btn v-if="!sortItem" icon small @click="openRemoveEntry(item)">
                         <v-icon small color="red darken-2">fas fa-trash</v-icon>
                     </v-btn>
-                    <v-btn icon small
-                           @click="insertBefore(item)"
-                           v-if="sortItem && sortItem.id !== item.id"
-                           :disabled="item.sort - 1 === sortItem.sort">
+                    <v-btn
+v-if="sortItem && sortItem.id !== item.id" icon
+                           small
+                           :disabled="item.sort - 1 === sortItem.sort"
+                           @click="insertBefore(item)">
                         <v-icon small>fas fa-sort-up</v-icon>
                     </v-btn>
-                    <v-btn icon small
-                           @click="insertAfter(item)"
-                           v-if="sortItem && sortItem.id !== item.id"
-                           :disabled="item.sort + 1 === sortItem.sort">
+                    <v-btn
+v-if="sortItem && sortItem.id !== item.id" icon
+                           small
+                           :disabled="item.sort + 1 === sortItem.sort"
+                           @click="insertAfter(item)">
                         <v-icon small>fas fa-sort-down</v-icon>
                     </v-btn>
-                    <v-btn icon small @click="cancelSort" v-if="sortItem && sortItem.id === item.id">
+                    <v-btn v-if="sortItem && sortItem.id === item.id" icon small @click="cancelSort">
                         <v-icon small>fas fa-times</v-icon>
                     </v-btn>
                 </template>
@@ -84,18 +86,18 @@
             <v-spacer></v-spacer>
             <v-btn color="grey" plain @click="$emit('close')">{{ text.cancel }}</v-btn>
             <v-btn
+                v-if="!!checklist.uid"
                 color="primary"
                 plain
-                @click="saveCategory"
                 :disabled="checklist.title.length <= 0 && 0 === checklist.items.length"
-                v-if="!!checklist.uid"
+                @click="saveCategory"
             >{{ text.save }}</v-btn>
             <v-btn
+                v-else
                 color="primary"
                 plain
-                @click="addCategory"
                 :disabled="checklist.title.length <= 0 && 0 === checklist.items.length"
-                v-else
+                @click="addCategory"
             >{{ text.add }}</v-btn>
             <v-spacer></v-spacer>
         </v-card-actions>
@@ -109,9 +111,56 @@ import {Uuid} from '@/mixins/uuid'
 
 export default  {
     name: 'ChecklistsInnerList',
-    props: ['uuid', 'uid', 'text'],
-    created() {
-        this.getCategory()
+    props: {
+        uuid: {
+            type: String,
+            required: true,
+        },
+        uid: {
+            type: String,
+            required: true,
+        },
+        text: {
+            type: String,
+            required: true,
+        },
+    },
+    emits: ['close'],
+    data() {
+        return {
+            nameRules: [
+                value => !!value || chrome.i18n.getMessage('errNotBlank'),
+            ],
+            sortItem: null,
+            checklist: {
+                uid: null,
+                title: '',
+                sort: -1,
+                items: [],
+            },
+            defaultChecklist: {
+                uid: null,
+                title: '',
+                sort: -1,
+                items: [],
+            },
+            i18n: chrome.i18n,
+            deleteElement: {
+                id: null,
+                text: '',
+                open: false,
+            },
+            entry: {
+                id: null,
+                text: '',
+                open: false,
+            },
+            defaultEntry: {
+                id: null,
+                text: '',
+                open: false,
+            },
+        }
     },
     computed: {
         header() {
@@ -125,6 +174,9 @@ export default  {
         uid: function () {
             this.getCategory()
         },
+    },
+    created() {
+        this.getCategory()
     },
     methods: {
         startSort: function (item) {
@@ -221,42 +273,6 @@ export default  {
 
             this.closeEntry()
         },
-    },
-    data() {
-        return {
-            nameRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-            ],
-            sortItem: null,
-            checklist: {
-                uid: null,
-                title: '',
-                sort: -1,
-                items: [],
-            },
-            defaultChecklist: {
-                uid: null,
-                title: '',
-                sort: -1,
-                items: [],
-            },
-            i18n: chrome.i18n,
-            deleteElement: {
-                id: null,
-                text: '',
-                open: false,
-            },
-            entry: {
-                id: null,
-                text: '',
-                open: false,
-            },
-            defaultEntry: {
-                id: null,
-                text: '',
-                open: false,
-            },
-        }
     },
 }
 </script>

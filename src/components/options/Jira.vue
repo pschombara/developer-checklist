@@ -48,7 +48,7 @@
 
             </v-tabs>
 
-            <v-window class="flex-fill" v-model="tab">
+            <v-window v-model="tab" class="flex-fill">
                 <v-window-item value="general">
                     <general></general>
                 </v-window-item>
@@ -67,10 +67,10 @@
 </template>
 
 <script>
-import General from '@/components/options/Jira/General'
-import Checklists from '@/components/options/Jira/Checklists'
-import Templates from '@/components/options/Jira/Templates'
-import Issues from '@/components/options/Jira/Issues'
+import General from '@/components/options/Jira/General.vue'
+import Checklists from '@/components/options/Jira/Checklists.vue'
+import Templates from '@/components/options/Jira/Templates.vue'
+import Issues from '@/components/options/Jira/Issues.vue'
 
 export default {
     name: 'OptionJira',

@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <v-container fluid>
-            <v-overlay opacity=".75" v-if="loading">
+            <v-overlay v-if="loading" opacity=".75">
                 <v-progress-circular size="256" width="10" color="orange" indeterminate></v-progress-circular>
             </v-overlay>
             <v-toolbar flat>
@@ -18,14 +18,14 @@
                 <v-col>
                     <v-card>
                         <v-tabs
-                            show-arrows
                             v-model="tab"
+                            show-arrows
                         >
                             <v-tooltip
                                 v-for="item in tabs"
                                 :key="item.id"
                                 bottom>
-                                <template v-slot:activator="{props}">
+                                <template #activator="{props}">
                                     <v-tab
                                         v-show="showTab(item)"
                                         v-bind="props"
@@ -82,20 +82,44 @@
 <script>
 
 import Theme from '@/mixins/theme'
-import QuickList from '../components/popup/QuickList'
-import Jira from '../components/popup/Jira'
-import Jenkins from '../components/popup/Jenkins'
-import GitLab from '../components/popup/GitLab'
-import Chat from '../components/popup/Chat'
-import CheatSheet from '../components/popup/CheatSheet'
+import QuickList from '../components/popup/QuickList.vue'
+import Jira from '../components/popup/Jira.vue'
+import Jenkins from '../components/popup/Jenkins.vue'
+import GitLab from '../components/popup/GitLab.vue'
+import Chat from '../components/popup/Chat.vue'
+import CheatSheet from '../components/popup/CheatSheet.vue'
 
 export default {
     name: 'App',
     components: {CheatSheet, Chat, GitLab, Jenkins, Jira, QuickList },
+    data() {
+        return {
+            loading: true,
+            title: chrome.i18n.getMessage('extName'),
+            tabs: [
+                { id: 'bookmark', name: 'Quick Select', icon: 'fas fa-bookmark' },
+                { id: 'jira', name: 'Jira', icon: 'fab fa-jira' },
+                { id: 'jenkins', name: 'Jenkins', icon: 'fab fa-jenkins' },
+                { id: 'gitLab', name: 'GitLab', icon: 'fab fa-gitlab' },
+                { id: 'chat', name: 'Chat', icon: 'fas fa-comment' },
+                { id: 'cheatSheet', name: 'Cheat Sheet', icon: 'fas fa-terminal' },
+            ],
+            tab: null,
+            optionsValid: false,
+            optionsUrl: '',
+            i18n: chrome.i18n,
+        }
+    },
     computed: {
         modules()  {
             return this.$store.getters['modules']
         },
+    },
+    created() {
+        this.load()
+
+        const theme = new Theme()
+        theme.registerThemeChanged(this)
     },
     methods: {
         load() {
@@ -138,30 +162,6 @@ export default {
                 chrome.runtime.openOptionsPage()
             })
         },
-    },
-    created() {
-        this.load()
-
-        const theme = new Theme()
-        theme.registerThemeChanged(this)
-    },
-    data() {
-        return {
-            loading: true,
-            title: chrome.i18n.getMessage('extName'),
-            tabs: [
-                { id: 'bookmark', name: 'Quick Select', icon: 'fas fa-bookmark' },
-                { id: 'jira', name: 'Jira', icon: 'fab fa-jira' },
-                { id: 'jenkins', name: 'Jenkins', icon: 'fab fa-jenkins' },
-                { id: 'gitLab', name: 'GitLab', icon: 'fab fa-gitlab' },
-                { id: 'chat', name: 'Chat', icon: 'fas fa-comment' },
-                { id: 'cheatSheet', name: 'Cheat Sheet', icon: 'fas fa-terminal' },
-            ],
-            tab: null,
-            optionsValid: false,
-            optionsUrl: '',
-            i18n: chrome.i18n,
-        }
     },
 }
 </script>

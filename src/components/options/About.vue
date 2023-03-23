@@ -3,6 +3,7 @@
         <v-card-text>
             <v-row>
                 <v-col cols="12">
+                    <!-- eslint-disable-next-line vue/no-v-html -->
                     <div v-html="about"></div>
                 </v-col>
             </v-row>
@@ -11,7 +12,8 @@
                     <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" class="col">
                         <input type="hidden" name="cmd" value="_s-xclick"/>
                         <input type="hidden" name="hosted_button_id" value="X5XGC2J7M2RZ6"/>
-                        <input type="image" src="images/btn_donateCC_LG.gif"
+                        <input
+type="image" src="images/btn_donateCC_LG.gif"
                                name="submit" title="PayPal - The safer, easier way to pay online!"
                                alt="Donate with PayPal button"/>
                     </form>

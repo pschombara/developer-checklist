@@ -7,14 +7,14 @@
                     :key="item.uid"
                     :value="item.title"
                 >
-                    <template v-slot:activator="{ props }">
+                    <template #activator="{ props }">
                         <v-list-item
                             v-bind="props"
                         >
-                            <template v-slot:prepend>
-                                <v-icon small color="success" v-if="checkGroupCompleted(item.uid)">fas fa-check</v-icon>
+                            <template #prepend>
+                                <v-icon v-if="checkGroupCompleted(item.uid)" small color="success">fas fa-check</v-icon>
                             </template>
-                            <template v-slot:title>
+                            <template #title>
                                 <span :class="(checkGroupCompleted(item.uid) ? 'text-decoration-line-through' : '')">
                                     {{ item.title }}
                                 </span>
@@ -29,11 +29,11 @@
                         :value="entry.id"
                         @click="toggleCheck(entry.id)"
                     >
-                        <template v-slot:prepend>
-                            <v-icon small color="success" v-if="isChecked(entry.id)">fas fa-check</v-icon>
-                            <v-icon small color="grey" v-else>fas fa-check</v-icon>
+                        <template #prepend>
+                            <v-icon v-if="isChecked(entry.id)" small color="success">fas fa-check</v-icon>
+                            <v-icon v-else small color="grey">fas fa-check</v-icon>
                         </template>
-                        <template v-slot:title>
+                        <template #title>
                             <span :class="'cursor-pointer text-wrap' + (isChecked(entry.id) ? ' text-decoration-line-through' : '')">
                                 {{ entry.text }}
                             </span>
@@ -42,47 +42,21 @@
 
                 </v-list-group>
             </v-list>
-<!--            <v-list>-->
-<!--                <v-list-group-->
-<!--                    v-for="item in checklist.checklist"-->
-<!--                    :key="item.uid"-->
-<!--                    :value="item"-->
-<!--                >-->
-<!--                    <template v-slot:activator="{props}">-->
-<!--                        <v-list-item v-bind="props">-->
-<!--                            <template v-slot:prepend>-->
-<!--                                <v-icon small color="success" v-if="checkGroupCompleted(item.uid)">fas fa-check</v-icon>-->
-<!--                            </template>-->
-<!--                            <v-list-item-title :class="" :v-text="item.title"></v-list-item-title>-->
-<!--                        </v-list-item>-->
-<!--                    </template>-->
-<!--                    <v-list-item-->
-<!--                        v-for="entry in item.items"-->
-<!--                        :key="entry.id"-->
-<!--                        :value="entry"-->
-<!--                    >-->
-<!--                        <template v-slot:prepend>-->
-<!--                            <v-icon small color="success" v-if="isChecked(entry.id)">fas fa-check</v-icon>-->
-<!--                        </template>-->
-<!--                        <v-list-item-title :class="'cursor-pointer text-wrap' + (isChecked(entry.id) ? ' text-decoration-line-through' : '')" :v-text="entry.text" @click="toggleCheck(entry.id)" ></v-list-item-title>-->
-<!--                    </v-list-item>-->
-<!--                </v-list-group>-->
-<!--            </v-list>-->
         </v-card-text>
         <v-card-actions>
             <v-btn
+                v-if="checklist.buttons.success.enabled"
                 color="primary"
                 outlined
-                v-if="checklist.buttons.success.enabled"
                 @click="addComment(checklist.buttons.success)"
             >
                 <v-icon left>fas fa-check</v-icon>
                 {{checklist.buttons.success.text}}
             </v-btn>
             <v-btn
+                v-if="checklist.buttons.failed.enabled"
                 color="error"
                 outlined
-                v-if="checklist.buttons.failed.enabled"
                 @click="addComment(checklist.buttons.failed)"
             >
                 <v-icon left>fas fa-times</v-icon>
@@ -109,6 +83,11 @@ export default {
             type: String,
             required: true,
         },
+    },
+    data: () => {
+        return {
+            activeItem: null,
+        }
     },
     computed: {
         checklist: function () {
@@ -149,16 +128,6 @@ export default {
                 autoComment: button.autoComment,
             })
         },
-        test: function (item) {
-            console.log(item, item.name)
-
-            return 'test'
-        },
-    },
-    data: () => {
-        return {
-            activeItem: null,
-        }
     },
 }
 </script>

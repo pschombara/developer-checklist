@@ -4,16 +4,16 @@
             <v-row>
                 <v-col cols="12" md="2">
                     <v-switch
-                        color="primary"
                         v-model="main"
+                        color="primary"
                         :disabled="main"
                         :label="text.main"
                     ></v-switch>
                 </v-col>
                 <v-col cols="12" md="2">
                     <v-switch
-                        color="primary"
                         v-model="enabled"
+                        color="primary"
                         :label="text.enabled"
                     ></v-switch>
                 </v-col>
@@ -30,6 +30,14 @@ export default {
             type: String,
             required: true,
         },
+    },
+    data() {
+        return {
+            text: {
+                main: chrome.i18n.getMessage('MainClient'),
+                enabled: chrome.i18n.getMessage('ClientEnabled'),
+            },
+        }
     },
     computed: {
         main: {
@@ -51,14 +59,6 @@ export default {
                 })
             },
         },
-    },
-    data() {
-        return {
-            text: {
-                main: chrome.i18n.getMessage('MainClient'),
-                enabled: chrome.i18n.getMessage('ClientEnabled'),
-            },
-        }
     },
 }
 </script>

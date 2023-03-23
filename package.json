@@ -3,9 +3,10 @@
     "version": "0.7.0",
     "private": true,
     "scripts": {
-        "serve": "vue-cli-service build --mode development --watch",
-        "build": "vue-cli-service build",
-        "lint": "vue-cli-service lint"
+        "dev": "vite",
+        "build": "vite build",
+        "serve": "vite preview",
+        "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src"
     },
     "dependencies": {
         "lodash": ">=4.17",
@@ -15,23 +16,18 @@
         "vuex": ">=4.0"
     },
     "devDependencies": {
-        "@babel/eslint-parser": ">=7.21",
         "@fortawesome/fontawesome-free": ">=5.15.3",
-        "@vue/cli-plugin-babel": ">=5.0.4",
-        "@vue/cli-plugin-eslint": ">=5.0.4",
-        "@vue/cli-plugin-router": ">=5.0.4",
-        "@vue/cli-plugin-vuex": ">=5.0.4",
-        "@vue/cli-service": ">=5.0.4",
+        "@vitejs/plugin-vue": ">=1.6.1",
         "@vue/compiler-sfc": ">=3.2.36",
-        "@vue/eslint-config-standard": ">=7.0.0",
         "eslint": ">=7.32.0",
+        "eslint-config-prettier": "^8.8.0",
         "eslint-plugin-import": ">=2.20.2",
-        "eslint-plugin-node": ">=11.1.0",
+        "eslint-plugin-prettier": "^4.2.1",
         "eslint-plugin-promise": ">=4.2.1",
         "eslint-plugin-vue": ">=9.1.0",
         "postinstall-postinstall": ">=2.1.0",
+        "prettier": "^2.8.6",
         "sass": ">=1.32.0",
-        "sass-loader": ">=10.0.0",
-        "vue-cli-plugin-vuetify": ">=2.5.1"
+        "vite": ">=2.5.4"
     }
 }

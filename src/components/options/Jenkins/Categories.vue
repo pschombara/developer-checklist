@@ -8,7 +8,7 @@
                 :search="searchCategory"
                 :sort-by="['name']"
             >
-                <template v-slot:top>
+                <template #top>
                     <v-toolbar flat>
                         <v-text-field
                             v-model="searchCategory"
@@ -36,8 +36,8 @@
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
                                     <v-btn color="grey" plain @click="closeDialogCategory">{{ text.cancel }}</v-btn>
-                                    <v-btn color="primary" plain v-if="null === dialogCategory.current" :disabled="!dialogCategory.valid" @click="addCategory">{{ text.add }}</v-btn>
-                                    <v-btn color="primary" plain v-else :disabled="!dialogCategory.valid" @click="saveCategory">{{ text.save }}</v-btn>
+                                    <v-btn v-if="null === dialogCategory.current" color="primary" plain :disabled="!dialogCategory.valid" @click="addCategory">{{ text.add }}</v-btn>
+                                    <v-btn v-else color="primary" plain :disabled="!dialogCategory.valid" @click="saveCategory">{{ text.save }}</v-btn>
                                     <v-spacer></v-spacer>
                                 </v-card-actions>
                             </v-card>
@@ -58,11 +58,11 @@
                         </v-dialog>
                     </v-toolbar>
                 </template>
-                <template v-slot:item.actions="{item}">
-                    <v-btn icon @click="openCategory(item)" small>
+                <template #item.actions="{item}">
+                    <v-btn icon small @click="openCategory(item)">
                         <v-icon icon="fas fa-edit" small />
                     </v-btn>
-                    <v-btn icon @click="openDialogDeleteCategory(item)" small>
+                    <v-btn icon small @click="openDialogDeleteCategory(item)">
                         <v-icon icon="fas fa-trash" small color="red darken-2" />
                     </v-btn>
                 </template>
@@ -77,6 +77,42 @@ import Helper from '@/mixins/helper'
 
 export default {
     name: 'JenkinsCategories',
+    data() {
+        return {
+            i18n: chrome.i18n,
+            text: {
+                categories: chrome.i18n.getMessage('Categories'),
+                category: chrome.i18n.getMessage('Category'),
+                newCategory: chrome.i18n.getMessage('NewCategory'),
+                search: chrome.i18n.getMessage('Search'),
+                add: chrome.i18n.getMessage('Add'),
+                save: chrome.i18n.getMessage('Save'),
+                cancel: chrome.i18n.getMessage('Cancel'),
+                delete: chrome.i18n.getMessage('Delete'),
+                label: chrome.i18n.getMessage('Label'),
+                name: chrome.i18n.getMessage('Name'),
+            },
+            categoryRules: [
+                value => !!value || chrome.i18n.getMessage('errNotBlank'),
+                value => false === this.checkCategoryDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
+            ],
+            searchCategory: '',
+            dialogDeleteCategory: false,
+            dialogCategory: {
+                open: false,
+                title: '',
+                valid: false,
+                current: null,
+                item: {
+                    name: '',
+                },
+            },
+            defaultCategory: {
+                name: '',
+            },
+            deleteCategory: {},
+        }
+    },
     computed: {
         host: {
             get() {
@@ -164,42 +200,6 @@ export default {
 
             return value !== this.dialogCategory.current.name
         },
-    },
-    data() {
-        return {
-            i18n: chrome.i18n,
-            text: {
-                categories: chrome.i18n.getMessage('Categories'),
-                category: chrome.i18n.getMessage('Category'),
-                newCategory: chrome.i18n.getMessage('NewCategory'),
-                search: chrome.i18n.getMessage('Search'),
-                add: chrome.i18n.getMessage('Add'),
-                save: chrome.i18n.getMessage('Save'),
-                cancel: chrome.i18n.getMessage('Cancel'),
-                delete: chrome.i18n.getMessage('Delete'),
-                label: chrome.i18n.getMessage('Label'),
-                name: chrome.i18n.getMessage('Name'),
-            },
-            categoryRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-                value => false === this.checkCategoryDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
-            ],
-            searchCategory: '',
-            dialogDeleteCategory: false,
-            dialogCategory: {
-                open: false,
-                title: '',
-                valid: false,
-                current: null,
-                item: {
-                    name: '',
-                },
-            },
-            defaultCategory: {
-                name: '',
-            },
-            deleteCategory: {},
-        }
     },
 }
 </script>

@@ -10,8 +10,8 @@
                     v-for="checklist in checklists"
                     :key="checklist.uuid"
                 >
-                    <v-icon class="mb-2" v-if="!!checklist.icon" :icon="'fas fa-' + checklist.icon"/>
-                    <v-icon class="mb-2" v-else icon="fas fa-icons" />
+                    <v-icon v-if="!!checklist.icon" class="mb-2" :icon="'fas fa-' + checklist.icon"/>
+                    <v-icon v-else class="mb-2" icon="fas fa-icons" />
                     {{checklist.name}}
                 </v-tab>
             </v-tabs>
@@ -28,20 +28,20 @@
 </template>
 
 <script>
-import Checklist from '@/components/options/Jira/Checklists/Checklist'
+import Checklist from '@/components/options/Jira/Checklists/Checklist.vue'
 
 export default {
     name: 'JiraChecklists',
     components: {Checklist},
-    computed: {
-        checklists() {
-            return this.$store.getters['jira/getChecklists']
-        },
-    },
     data() {
         return {
             tab: null,
         }
+    },
+    computed: {
+        checklists() {
+            return this.$store.getters['jira/getChecklists']
+        },
     },
 }
 </script>

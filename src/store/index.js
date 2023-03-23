@@ -42,7 +42,7 @@ const state = {
 }
 
 const store = createStore({
-    strict: process.env.NODE_ENV !== 'production',
+    strict: import.meta.env.NODE_ENV !== 'production',
     state,
     mutations: {
         SET_MODULES: (state, modules) => {

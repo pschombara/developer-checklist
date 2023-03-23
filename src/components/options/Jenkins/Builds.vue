@@ -11,7 +11,7 @@
                 show-group-by
                 :group-by="['type']"
             >
-                <template v-slot:top>
+                <template #top>
                     <v-toolbar flat>
                         <v-text-field
                             v-model="searchBuild"
@@ -67,10 +67,12 @@
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
                                     <v-btn color="grey" plain @click="closeDialogBuild">{{ text.cancel }}</v-btn>
-                                    <v-btn color="primary" plain v-if="null === dialogBuild.item.uuid"
+                                    <v-btn
+v-if="null === dialogBuild.item.uuid" color="primary" plain
                                            :disabled="!dialogBuild.valid" @click="addBuild">{{ text.add }}
                                     </v-btn>
-                                    <v-btn color="primary" plain v-else :disabled="!dialogBuild.valid"
+                                    <v-btn
+v-else color="primary" plain :disabled="!dialogBuild.valid"
                                            @click="saveBuild">{{ text.save }}
                                     </v-btn>
                                     <v-spacer></v-spacer>
@@ -97,23 +99,23 @@
                         </v-dialog>
                     </v-toolbar>
                 </template>
-                <template v-slot:item.actions="{item}">
-                    <v-btn icon @click="openBuild(item)" small>
+                <template #item.actions="{item}">
+                    <v-btn icon small @click="openBuild(item)">
                         <v-icon icon="fas fa-edit" small />
                     </v-btn>
-                    <v-btn icon @click="openDialogDeleteBuild(item)" small>
+                    <v-btn icon small @click="openDialogDeleteBuild(item)">
                         <v-icon icon="fas fa-trash" small color="red darken-2" />
                     </v-btn>
                 </template>
-                <template v-slot:group.header="{headers, isOpen, toggle, remove, group}">
+                <template #group.header="{headers, isOpen, toggle, remove, group}">
                     <th :colspan="headers.length - 1">
-                        <v-btn icon @click="toggle" class="mr-2" small>
+                        <v-btn icon class="mr-2" small @click="toggle">
                             <v-icon :icon="isOpen ? 'fas fa-caret-up' : 'fas fa-caret-down'"/>
                         </v-btn>
                         {{ group }}
                     </th>
                     <th class="text-right">
-                        <v-btn icon @click="remove" x-small>
+                        <v-btn icon x-small @click="remove">
                             <v-icon icon="fas fa-times" />
                         </v-btn>
                     </th>
@@ -126,6 +128,59 @@
 
 export default {
     name: 'JenkinsBuilds',
+    data() {
+        return {
+            buildNameRules: [
+                value => !!value || chrome.i18n.getMessage('errNotBlank'),
+                value => false === this.checkBuildDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
+            ],
+            buildJobRules: [
+                value => !!value || chrome.i18n.getMessage('errNotBlank'),
+            ],
+            buildTypeRules: [
+                value => !!value || chrome.i18n.getMessage('errNotBlank'),
+            ],
+            i18n: chrome.i18n,
+            text: {
+                category: chrome.i18n.getMessage('Category'),
+                newCategory: chrome.i18n.getMessage('NewCategory'),
+                newBuild: chrome.i18n.getMessage('NewBuild'),
+                search: chrome.i18n.getMessage('Search'),
+                add: chrome.i18n.getMessage('Add'),
+                save: chrome.i18n.getMessage('Save'),
+                cancel: chrome.i18n.getMessage('Cancel'),
+                delete: chrome.i18n.getMessage('Delete'),
+                label: chrome.i18n.getMessage('Label'),
+                name: chrome.i18n.getMessage('Name'),
+                build: chrome.i18n.getMessage('Build'),
+                builds: chrome.i18n.getMessage('Builds'),
+                job: chrome.i18n.getMessage('Job'),
+            },
+            searchBuild: '',
+            dialogDeleteBuild: false,
+            dialogBuild: {
+                open: false,
+                title: '',
+                valid: false,
+                current: null,
+                item: {
+                    uuid: null,
+                    type: null,
+                    job: null,
+                    label: '',
+                    name: '',
+                },
+            },
+            defaultBuild: {
+                uuid: null,
+                type: null,
+                job: null,
+                label: '',
+                name: '',
+            },
+            deleteBuild: {},
+        }
+    },
     computed: {
         builds() {
             return this.$store.getters['jenkins/getBuilds']
@@ -218,59 +273,6 @@ export default {
 
             return this.dialogBuild.current.uuid !== item.uuid
         },
-    },
-    data() {
-        return {
-            buildNameRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-                value => false === this.checkBuildDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
-            ],
-            buildJobRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-            ],
-            buildTypeRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-            ],
-            i18n: chrome.i18n,
-            text: {
-                category: chrome.i18n.getMessage('Category'),
-                newCategory: chrome.i18n.getMessage('NewCategory'),
-                newBuild: chrome.i18n.getMessage('NewBuild'),
-                search: chrome.i18n.getMessage('Search'),
-                add: chrome.i18n.getMessage('Add'),
-                save: chrome.i18n.getMessage('Save'),
-                cancel: chrome.i18n.getMessage('Cancel'),
-                delete: chrome.i18n.getMessage('Delete'),
-                label: chrome.i18n.getMessage('Label'),
-                name: chrome.i18n.getMessage('Name'),
-                build: chrome.i18n.getMessage('Build'),
-                builds: chrome.i18n.getMessage('Builds'),
-                job: chrome.i18n.getMessage('Job'),
-            },
-            searchBuild: '',
-            dialogDeleteBuild: false,
-            dialogBuild: {
-                open: false,
-                title: '',
-                valid: false,
-                current: null,
-                item: {
-                    uuid: null,
-                    type: null,
-                    job: null,
-                    label: '',
-                    name: '',
-                },
-            },
-            defaultBuild: {
-                uuid: null,
-                type: null,
-                job: null,
-                label: '',
-                name: '',
-            },
-            deleteBuild: {},
-        }
     },
 }
 </script>

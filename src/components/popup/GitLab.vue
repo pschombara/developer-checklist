@@ -12,19 +12,19 @@
             <v-row>
                 <v-col cols="8">
                     <v-autocomplete
+                        v-model="project"
                         :items="projects"
                         item-value="uuid"
                         item-title="project"
-                        v-model="project"
                         :label="text.project"
                         dense
                     ></v-autocomplete>
                 </v-col>
                 <v-col cols="4">
                     <v-text-field
+                        v-model="number"
                         type="number"
                         min="1"
-                        v-model="number"
                         label="Merge Number"
                         dense
                     ></v-text-field>
@@ -33,21 +33,21 @@
             <v-row class="mt-0">
                 <v-col cols="10">
                     <v-text-field
+                        ref="copyMergeUrl"
                         outlined
                         readonly
-                        ref="copyMergeUrl"
                         :value="mergeUrl"
-                        @click="copy"
                         :disabled="!readyToCopy"
                         dense
+                        @click="copy"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="2">
                     <v-btn
                         block
                         color="primary"
-                        @click="copy"
                         :disabled="!readyToCopy"
+                        @click="copy"
                     ><v-icon small>fas fa-copy</v-icon></v-btn>
                 </v-col>
             </v-row>
@@ -60,33 +60,33 @@
                         :items-per-page="3"
                         :footer-props="{disableItemsPerPage: true, itemsPerPageOptions:[3]}"
                     >
-                        <template v-slot:top>
+                        <template #top>
                             <v-toolbar flat>
                                 <v-autocomplete
+                                    v-model="issue"
                                     :items="issues"
                                     item-title="name"
                                     item-value="name"
-                                    v-model="issue"
                                     label="Attach to Issue"
                                     class="mt-7"
                                 ></v-autocomplete>
                                 <v-spacer></v-spacer>
                                 <v-btn
                                     color="primary"
-                                    @click="attachToIssue"
                                     :disabled="!readyToCopy || null === issue"
+                                    @click="attachToIssue"
                                 ><v-icon small>fas fa-plus</v-icon></v-btn>
                             </v-toolbar>
                         </template>
-                        <template v-slot:item.id="{item}">
+                        <template #item.id="{item}">
                             {{ projectName(item.value) }}
                         </template>
-                        <template v-slot:item.action="{item}">
+                        <template #item.action="{item}">
                             <v-btn variant="plain" icon="fas fa-copy" size="small" @click="copyMergeRequest(item.id, item.number, item.source)">
                             </v-btn>
                             <v-btn variant="plain" icon="fas fa-external-link-alt" size="small" @click="openMergeRequest(item.id, item.number)">
                             </v-btn>
-                            <v-btn variant="plain" icon="fas fa-trash" color="red darken-2" @click="removeFromIssue(item.id, item.number)" size="small">
+                            <v-btn variant="plain" icon="fas fa-trash" color="red darken-2" size="small" @click="removeFromIssue(item.id, item.number)">
                             </v-btn>
                         </template>
                     </v-data-table>
@@ -114,35 +114,18 @@ import CopiedToClipboard from '@/components/popup/mixed/CopiedToClipboard.vue'
 export default {
     name: 'PopupGitLab',
     components: {CopiedToClipboard},
-    created() {
-        this.optionsValid = '' !== this.$store.getters['gitLab/getHost']
-            && 0 < this.$store.getters['gitLab/getProjects'].length
-
-        if (false === this.optionsValid) {
-            return
-        }
-
-        this.$store.dispatch('gitLab/checkUrl').then(() => {
-            this.project = this.$store.getters['gitLab/currentProject']
-            this.number = this.$store.getters['gitLab/currentNumber']
-        })
-
-        this.issues = _.cloneDeep(this.$store.getters['issues/list'])
-
-        this.issues.sort(function (a, b) {
-            if (a.work || b.work) {
-                return a.work ? -1 : 1
-            }
-
-            if ((a.pinned || b.pinned) && a.pinned !== b.pinned) {
-                return a.pinned ? -1 : 1
-            }
-
-            return a.date > b.date ? -1 : 1
-        })
-
-        if (this.issues.length > 0) {
-            this.issue = this.issues[0].name
+    data: () => {
+        return {
+            optionsValid: true,
+            i18n: chrome.i18n,
+            text: {
+                openOptions: chrome.i18n.getMessage('openOptions'),
+                project: chrome.i18n.getMessage('Project'),
+            },
+            project: '',
+            number: null,
+            issue: null,
+            issues: [],
         }
     },
     computed: {
@@ -173,6 +156,37 @@ export default {
                 { title: '', key: 'action', sortable: false, align:'end'},
             ]
         },
+    },
+    created() {
+        this.optionsValid = '' !== this.$store.getters['gitLab/getHost']
+            && 0 < this.$store.getters['gitLab/getProjects'].length
+
+        if (false === this.optionsValid) {
+            return
+        }
+
+        this.$store.dispatch('gitLab/checkUrl').then(() => {
+            this.project = this.$store.getters['gitLab/currentProject']
+            this.number = this.$store.getters['gitLab/currentNumber']
+        })
+
+        this.issues = _.cloneDeep(this.$store.getters['issues/list'])
+
+        this.issues.sort(function (a, b) {
+            if (a.work || b.work) {
+                return a.work ? -1 : 1
+            }
+
+            if ((a.pinned || b.pinned) && a.pinned !== b.pinned) {
+                return a.pinned ? -1 : 1
+            }
+
+            return a.date > b.date ? -1 : 1
+        })
+
+        if (this.issues.length > 0) {
+            this.issue = this.issues[0].name
+        }
     },
     methods: {
         openOptions: function (tab) {
@@ -205,7 +219,6 @@ export default {
             })
         },
         projectName: function (id) {
-            console.log(id)
             return this.projects.find(project => project.uuid === id).project
         },
         openMergeRequest: function (id, number) {
@@ -231,20 +244,6 @@ export default {
                     this.$refs.message.show()
                 })
         },
-    },
-    data: () => {
-        return {
-            optionsValid: true,
-            i18n: chrome.i18n,
-            text: {
-                openOptions: chrome.i18n.getMessage('openOptions'),
-                project: chrome.i18n.getMessage('Project'),
-            },
-            project: '',
-            number: null,
-            issue: null,
-            issues: [],
-        }
     },
 }
 </script>

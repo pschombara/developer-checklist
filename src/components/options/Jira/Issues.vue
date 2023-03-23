@@ -9,7 +9,7 @@
                 multi-sort
                 :loading="load"
             >
-                <template v-slot:top>
+                <template #top>
                     <v-toolbar flat>
                         <v-spacer></v-spacer>
                         <v-btn plain @click="reload"><v-icon left>fas fa-sync</v-icon> {{text.reload}}</v-btn>
@@ -29,14 +29,14 @@
                         </v-dialog>
                     </v-toolbar>
                 </template>
-                <template v-slot:item.date="{item}">
+                <template #item.date="{item}">
                     {{dateFormat(item.updateDate)}}
                 </template>
-                <template v-slot:item.pinned="{item}">
-                    <v-btn color="success" v-if="item.pinned" icon @click="unpin(item)" small><v-icon small>fas fa-thumbtack</v-icon></v-btn>
-                    <v-btn color="grey" v-else icon @click="pin(item)" small><v-icon small>fas fa-thumbtack rotate--45-inverted</v-icon></v-btn>
+                <template #item.pinned="{item}">
+                    <v-btn v-if="item.pinned" color="success" icon small @click="unpin(item)"><v-icon small>fas fa-thumbtack</v-icon></v-btn>
+                    <v-btn v-else color="grey" icon small @click="pin(item)"><v-icon small>fas fa-thumbtack rotate--45-inverted</v-icon></v-btn>
                 </template>
-                <template v-slot:item.action="{item}">
+                <template #item.action="{item}">
                     <v-btn icon color="red darken-2" small @click="openDelete(item)"><v-icon small>fas fa-trash</v-icon></v-btn>
                 </template>
             </v-data-table>
@@ -50,6 +50,35 @@ import Helper from '../../../mixins/helper'
 
 export default {
     name: 'JiraIssues',
+    data: () => {
+        return {
+            text: {
+                reload: chrome.i18n.getMessage('Reload'),
+                cancel: chrome.i18n.getMessage('Cancel'),
+                delete: chrome.i18n.getMessage('Delete'),
+            },
+            load: false,
+            deleteIssue: {
+                open: false,
+                issue: null,
+            },
+            i18n: chrome.i18n,
+        }
+    },
+    computed: {
+        issueHeader() {
+            return [
+                {title: 'Identifier', value: 'name', sortable: false},
+                {title: 'Title', value: 'title', sortable: false},
+                {title: 'Last Update', value: 'date', align: 'end', sortable: false},
+                {title: '', value: 'pinned', sortable: false},
+                {title: '', value: 'action', align: 'end', sortable: false},
+            ]
+        },
+        issues() {
+            return this.$store.getters['issues/list']
+        },
+    },
     methods: {
         reload: function () {
             this.load = true
@@ -82,35 +111,6 @@ export default {
         dateFormat: function (date) {
             return Helper.localeDate(date)
         },
-    },
-    computed: {
-        issueHeader() {
-            return [
-                {title: 'Identifier', value: 'name', sortable: false},
-                {title: 'Title', value: 'title', sortable: false},
-                {title: 'Last Update', value: 'date', align: 'end', sortable: false},
-                {title: '', value: 'pinned', sortable: false},
-                {title: '', value: 'action', align: 'end', sortable: false},
-            ]
-        },
-        issues() {
-            return this.$store.getters['issues/list']
-        },
-    },
-    data: () => {
-        return {
-            text: {
-                reload: chrome.i18n.getMessage('Reload'),
-                cancel: chrome.i18n.getMessage('Cancel'),
-                delete: chrome.i18n.getMessage('Delete'),
-            },
-            load: false,
-            deleteIssue: {
-                open: false,
-                issue: null,
-            },
-            i18n: chrome.i18n,
-        }
     },
 }
 </script>

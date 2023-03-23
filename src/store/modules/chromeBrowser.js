@@ -44,7 +44,7 @@ const state = {
 }
 
 export default {
-    strict: process.env.NODE_ENV !== 'production',
+    strict: import.meta.env.NODE_ENV !== 'production',
     namespaced: true,
     modules: {},
     actions: {

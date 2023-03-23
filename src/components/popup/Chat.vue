@@ -12,10 +12,10 @@
             <v-row>
                 <v-col cols="12">
                     <v-autocomplete
+                        v-model="client"
                         :items="clients"
                         item-title="client"
                         item-value="client"
-                        v-model="client"
                         label="Client"
                     ></v-autocomplete>
                 </v-col>
@@ -24,10 +24,10 @@
                 <v-row>
                     <v-col cols="12">
                         <v-autocomplete
+                            v-model="room"
                             :items="rooms"
                             item-value="id"
                             item-title="name"
-                            v-model="room"
                             label="Room"
                         ></v-autocomplete>
                     </v-col>
@@ -35,21 +35,21 @@
                 <v-row>
                     <v-col cols="10">
                         <v-autocomplete
+                            v-model="message"
                             :items="messages"
                             item-value="id"
                             item-title="name"
-                            v-model="message"
                             label="Message"
                         ></v-autocomplete>
                     </v-col>
                     <v-col cols="2" class="align-self-center">
                         <v-btn
+                            v-if="'ready' === status || 'progress' === status"
                             :disabled="!sendReady"
                             color="primary"
-                            @click="send"
                             outlined
                             large
-                            v-if="'ready' === status || 'progress' === status"
+                            @click="send"
                         >
                             <v-icon v-if="'ready' === status">fas fa-play</v-icon>
                             <v-icon v-if="'progress' === status">fas fa-circle-notch fa-spin</v-icon>
@@ -68,7 +68,7 @@
                             hide-selected
                             label="Issue to attach (optional)"
                         >
-                            <template v-slot:selection="{item, parent}">
+                            <template #selection="{item, parent}">
                                 <v-chip
                                     closable
                                     @click:close="parent.selectItem(item)"
@@ -87,6 +87,41 @@
 <script>
 export default {
     name: 'PopupChat',
+    data: () => {
+        return {
+            client: '',
+            room: null,
+            message: null,
+            attachedIssues: [],
+        }
+    },
+    computed: {
+        clients: function () {
+            return this.$store.getters['chat/listClients']
+        },
+        messages: function () {
+            return this.$store.getters['chat/listMessages'](this.client)
+        },
+        rooms: function () {
+            return this.$store.getters['chat/listRooms'](this.client)
+        },
+        validClient: function () {
+            return this.$store.getters['chat/listRooms'](this.client).length > 0
+                && this.$store.getters['chat/listMessages'](this.client).length > 0
+        },
+        sendReady: function () {
+            return '' !== this.client
+                && null !== this.room
+                && null !== this.message
+                && 'ready' === this.status
+        },
+        status: function () {
+            return this.$store.getters['chat/status']
+        },
+        issues: function () {
+            return this.$store.getters['issues/issueKeys']
+        },
+    },
     created() {
         for (let client of this.clients) {
             if (client.main) {
@@ -117,33 +152,6 @@ export default {
 
         this.message = messages[0].id
     },
-    computed: {
-        clients: function () {
-            return this.$store.getters['chat/listClients']
-        },
-        messages: function () {
-            return this.$store.getters['chat/listMessages'](this.client)
-        },
-        rooms: function () {
-            return this.$store.getters['chat/listRooms'](this.client)
-        },
-        validClient: function () {
-            return this.$store.getters['chat/listRooms'](this.client).length > 0
-                && this.$store.getters['chat/listMessages'](this.client).length > 0
-        },
-        sendReady: function () {
-            return '' !== this.client
-                && null !== this.room
-                && null !== this.message
-                && 'ready' === this.status
-        },
-        status: function () {
-            return this.$store.getters['chat/status']
-        },
-        issues: function () {
-            return this.$store.getters['issues/issueKeys']
-        },
-    },
     methods: {
         openOptions: function (tab) {
             this.$store.dispatch('changeMainTab', tab)
@@ -157,14 +165,6 @@ export default {
                 attachedIssues: this.attachedIssues,
             })
         },
-    },
-    data: () => {
-        return {
-            client: '',
-            room: null,
-            message: null,
-            attachedIssues: [],
-        }
     },
 }
 </script>

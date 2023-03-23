@@ -2,28 +2,28 @@
     <v-card flat>
         <v-card-text>
             <v-autocomplete
+                v-model="template"
                 :items="templates"
                 item-title="title"
                 return-object
-                v-model="template"
                 :label="text.templates"
                 dense
             >
             </v-autocomplete>
             <v-textarea
+                v-if="template"
                 readonly
                 :value="template.content"
                 :label="text.preview"
                 height="200"
                 no-resize
-                v-if="template"
                 class="mt-0"
             ></v-textarea>
         </v-card-text>
         <v-card-actions v-if="template">
             <v-spacer></v-spacer>
-            <v-btn @click="addComment" outlined color="primary">{{ text.comment }}</v-btn>
-            <v-btn @click="copyComment" outlined color="secondary"><v-icon>fas fa-copy</v-icon></v-btn>
+            <v-btn outlined color="primary" @click="addComment">{{ text.comment }}</v-btn>
+            <v-btn outlined color="secondary" @click="copyComment"><v-icon>fas fa-copy</v-icon></v-btn>
             <v-spacer></v-spacer>
         </v-card-actions>
 
@@ -37,6 +37,17 @@ import CopiedToClipboard from '@/components/popup/mixed/CopiedToClipboard.vue'
 export default {
     name: 'JiraTemplates',
     components: {CopiedToClipboard},
+    data() {
+        return {
+            text: {
+                templates: chrome.i18n.getMessage('Templates'),
+                preview: chrome.i18n.getMessage('Preview'),
+                comment: chrome.i18n.getMessage('Comment'),
+                copy: chrome.i18n.getMessage('Copy'),
+            },
+            template: null,
+        }
+    },
     computed: {
         templates: function () {
             return this.$store.getters['jira/templates']
@@ -59,7 +70,6 @@ export default {
 
             this.$store.dispatch('jira/commentReplacePlaceholders', comment)
                 .then(result => {
-                    console.log(result)
                     let blob = new Blob([result], {type: 'text/html'})
 
                     navigator.clipboard.write(
@@ -71,17 +81,6 @@ export default {
                     })
                 })
         },
-    },
-    data() {
-        return {
-            text: {
-                templates: chrome.i18n.getMessage('Templates'),
-                preview: chrome.i18n.getMessage('Preview'),
-                comment: chrome.i18n.getMessage('Comment'),
-                copy: chrome.i18n.getMessage('Copy'),
-            },
-            template: null,
-        }
     },
 }
 </script>

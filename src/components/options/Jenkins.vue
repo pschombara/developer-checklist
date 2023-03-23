@@ -1,7 +1,7 @@
 <template>
     <v-card fluid class="mt-5">
         <div class="d-flex flex-row">
-            <v-tabs direction="vertical" v-model="tab">
+            <v-tabs v-model="tab" direction="vertical">
                 <v-tab class="mt-5">
                     <v-row align="center">
                         <v-col class="text-start">
@@ -34,7 +34,7 @@
                 </v-tab>
             </v-tabs>
 
-            <v-window class="flex-fill" v-model="tab">
+            <v-window v-model="tab" class="flex-fill">
                 <v-window-item>
                     <general></general>
                 </v-window-item>
