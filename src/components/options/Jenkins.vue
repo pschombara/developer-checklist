@@ -51,9 +51,9 @@
 
 <script>
 
-import Builds from './Jenkins/Builds'
-import Categories from './Jenkins/Categories'
-import General from './Jenkins/General'
+import Builds from './Jenkins/Builds.vue'
+import Categories from './Jenkins/Categories.vue'
+import General from './Jenkins/General.vue'
 
 export default {
     name: 'OptionJenkins',

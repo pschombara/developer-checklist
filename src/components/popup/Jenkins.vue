@@ -148,9 +148,9 @@ export default {
         },
         issueHeader: function () {
             return [
-                { title: 'Job', value: 'job'},
-                { title: 'Build', value: 'build'},
-                { title: '', value: 'action', sortable: false, align:'right'},
+                { title: 'Job', key: 'job'},
+                { title: 'Build', key: 'build'},
+                { title: '', key: 'action', sortable: false, align: 'end'},
             ]
         },
     },

@@ -52,9 +52,9 @@
 
 <script>
 
-import General from './Chat/General'
-import Messages from './Chat/Messages'
-import Rooms from './Chat/Rooms'
+import General from './Chat/General.vue'
+import Messages from './Chat/Messages.vue'
+import Rooms from './Chat/Rooms.vue'
 
 export default {
     name: 'OptionChat',

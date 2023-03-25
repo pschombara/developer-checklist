@@ -30,27 +30,16 @@
                                 <v-card>
                                     <v-card-title>{{text.export}}</v-card-title>
                                     <v-card-text>
-                                        <v-list flat>
-                                            <v-list-subheader>Select settings to export</v-list-subheader>
-
-                                            <v-list-group
+                                        <p>Select settings to export</p>
+                                        <template v-for="setting in settings" :key="setting.id">
+                                            <v-switch
                                                 v-model="exportModules"
-                                                multiple
-                                            >
-                                                <template v-for="setting in settings" :key="setting.id">
-                                                    <v-list-item
-                                                        :value="setting.id"
-                                                    >
-                                                        <template #default="{ active }">
-                                                            <v-list-item-action start>
-                                                                <v-checkbox :input-value="active" color="primary"></v-checkbox>
-                                                            </v-list-item-action>
-                                                            <v-list-item-title>{{setting.name}}</v-list-item-title>
-                                                        </template>
-                                                    </v-list-item>
-                                                </template>
-                                            </v-list-group>
-                                        </v-list>
+                                                color="primary"
+                                                :label="setting.name"
+                                                :value="setting.id"
+                                                hide-details
+                                            ></v-switch>
+                                        </template>
                                     </v-card-text>
                                     <v-card-actions>
                                         <v-spacer></v-spacer>
@@ -77,28 +66,17 @@
                                 <v-card>
                                     <v-card-title>{{text.import}}</v-card-title>
                                     <v-card-text>
-                                        <v-list flat>
-                                            <v-list-subheader>Select settings to import</v-list-subheader>
-
-                                            <v-list-group
-                                                v-model="importModules"
-                                                multiple
-                                            >
-                                                <template v-for="setting in settings" :key="setting.id">
-                                                    <v-list-item
-                                                        :value="setting.id"
-                                                        :disabled="!importAvailableModules.includes(setting.id)"
-                                                    >
-                                                        <template #default="{ active }">
-                                                            <v-list-item-action start>
-                                                                <v-checkbox :modal-value="active" color="primary" hide-details></v-checkbox>
-                                                            </v-list-item-action>
-                                                            <v-list-item-title>{{setting.name}}</v-list-item-title>
-                                                        </template>
-                                                    </v-list-item>
-                                                </template>
-                                            </v-list-group>
-                                        </v-list>
+                                        <p>Select settings to import</p>
+                                        <template v-for="setting in settings" :key="setting.id">
+                                            <v-switch
+                                                v-model="exportModules"
+                                                color="primary"
+                                                :label="setting.name"
+                                                :value="setting.id"
+                                                :disabled="!importAvailableModules.includes(setting.id)"
+                                                hide-details
+                                            ></v-switch>
+                                        </template>
                                     </v-card-text>
                                     <v-card-actions>
                                         <v-spacer></v-spacer>
@@ -188,17 +166,17 @@
 </template>
 <script>
 
-import Jira from '@/components/options/Jira.vue'
-import Jenkins from '@/components/options/Jenkins.vue'
-import GitLab from '@/components/options/GitLab.vue'
-import Chat from '@/components/options/Chat.vue'
-import CheatSheet from '@/components/options/CheatSheet.vue'
-import About from '@/components/options/About.vue'
-import Theme from '@/mixins/theme'
-/* import Chrome from '@/components/options/Chrome.vue' */
+import Jira from '../components/options/Jira.vue'
+import Jenkins from '../components/options/Jenkins.vue'
+import GitLab from '../components/options/GitLab.vue'
+import Chat from '../components/options/Chat.vue'
+import CheatSheet from '../components/options/CheatSheet.vue'
+import About from '../components/options/About.vue'
+import Theme from '../mixins/theme'
+/* import Chrome from '../components/options/Chrome.vue' */
 import semver from 'semver'
-import General from '@/components/options/General.vue'
-import Migration from '@/mixins/migration'
+import General from '../components/options/General.vue'
+import Migration from '../mixins/migration'
 
 export default {
     name: 'App',
