@@ -348,13 +348,14 @@ export default {
 
             fileReader.addEventListener('load', e => {
                 try {
-                    const data = JSON.parse(e.target.result.toString())
+                    let data = JSON.parse(e.target.result.toString())
                     const migration = new Migration()
 
                     if (this.validateImportFile(data)) {
+                        data = migration.migrate(data.options, data.exported, false)
                         this.importAvailableModules = data.exported
                         this.importModules = data.exported
-                        this.importOptions = migration.migrate(data.options, false)
+                        this.importOptions = data.options
                         this.dialog.import = true
                     }
                 } catch (e) {

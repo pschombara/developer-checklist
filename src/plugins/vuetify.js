@@ -3,7 +3,7 @@ import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as de from 'vuetify/lib/locale/de.mjs'
 import * as en from 'vuetify/lib/locale/en.mjs'
-import themes from '@/plugins/themes'
+import themes from './themes'
 import 'vuetify/styles'
 import { md3 } from 'vuetify/blueprints'
 import { VDataTable } from 'vuetify/lib/labs/VDataTable/VDataTable.mjs'
@@ -27,8 +27,7 @@ const vuetify = createVuetify({
     },
     blueprint: md3,
     theme: {
-        defaultTheme: preferDark ? 'dark' :'light',
-        themes: themes.themes,
+        themes: themes.themes.blue,
         dark: preferDark,
     },
     lang: {

@@ -1,7 +1,7 @@
 import App from './App.vue'
-import store from '@/store'
+import store from '../store'
 import {createApp} from 'vue'
-import vuetify from '@/plugins/vuetify'
+import vuetify from '../plugins/vuetify'
 
 const app = createApp(App)
 

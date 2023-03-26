@@ -1,5 +1,5 @@
-import {Uuid} from '@/mixins/uuid'
-import Helper from '@/mixins/helper'
+import {Uuid} from '../../mixins/uuid'
+import Helper from '../../mixins/helper'
 
 const state = {
     categories: [],

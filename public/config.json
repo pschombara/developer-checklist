@@ -1,11 +1,13 @@
 {
-    "version": "0.6.0",
-    "modules": {
-        "jenkins":  false,
-        "cheatSheet": false,
-        "chat":  false,
-        "gitLab": false,
-        "chrome": true
+    "version": "0.7.0",
+    "general": {
+        "modules": {
+            "jenkins":  false,
+            "cheatSheet": false,
+            "chat":  false,
+            "gitLab": false,
+            "chrome": true
+        }
     },
     "cheatSheet": [],
     "gitLab": {

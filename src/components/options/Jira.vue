@@ -67,10 +67,10 @@
 </template>
 
 <script>
-import General from '@/components/options/Jira/General.vue'
-import Checklists from '@/components/options/Jira/Checklists.vue'
-import Templates from '@/components/options/Jira/Templates.vue'
-import Issues from '@/components/options/Jira/Issues.vue'
+import General from './Jira/General.vue'
+import Checklists from './Jira/Checklists.vue'
+import Templates from './Jira/Templates.vue'
+import Issues from './Jira/Issues.vue'
 
 export default {
     name: 'OptionJira',

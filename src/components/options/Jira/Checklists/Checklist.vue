@@ -241,7 +241,7 @@ v-if="sortChecklist && sortChecklist.uid === item.uid" icon small
 
 <script>
 
-import InnerList from '@/components/options/Jira/Checklists/InnerList.vue'
+import InnerList from './InnerList.vue'
 
 export default {
     name: 'ChecklistsChecklist',

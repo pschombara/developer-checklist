@@ -1,5 +1,4 @@
 import semver from 'semver'
-
 export class V0_7_0 {
     constructor() {
     }
@@ -8,22 +7,16 @@ export class V0_7_0 {
         return semver.lt(version, '0.7.0')
     }
 
-    migrate = options => {
-        const colors = ['grey', 'blue', 'red', 'yellow', 'green', 'pink', 'purple', 'cyan']
-
-        options.chrome = {
-            tabGroups: {},
+    migrate = (options, exported) => {
+        options.general = {
+            modules: options.modules,
         }
 
-        options.modules.chrome = true
-
-        for (let color of colors) {
-            options.chrome.tabGroups[color] = {
-                title: '',
-                active: false,
-                urls: [],
-            }
+        if (exported.includes('modules')) {
+            exported.push('general')
         }
+
+        delete options.modules
 
         options.version = '0.7.0'
     }

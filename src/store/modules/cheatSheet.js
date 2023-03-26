@@ -1,4 +1,4 @@
-import Helper from '@/mixins/helper'
+import Helper from '../../mixins/helper'
 
 const state = {
     items: [],

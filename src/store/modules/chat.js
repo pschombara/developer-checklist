@@ -1,9 +1,9 @@
-import {Uuid} from '@/mixins/uuid'
-import Helper from '@/mixins/helper'
-import {Google} from '@/mixins/chat/google'
-import {Discord} from '@/mixins/chat/discord'
+import {Uuid} from '../../mixins/uuid'
+import Helper from '../../mixins/helper'
+import {Google} from '../../mixins/chat/google'
+import {Discord} from '../../mixins/chat/discord'
 
-const chatWorker = new Worker('/worker/chat.js')
+const chatWorker = new Worker('../..//worker/chat.js')
 
 const STATUS_READY = 'ready'
 const STATUS_SUCCESS = 'success'

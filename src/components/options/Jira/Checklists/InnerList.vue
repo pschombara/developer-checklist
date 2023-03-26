@@ -105,9 +105,9 @@ v-if="sortItem && sortItem.id !== item.id" icon
 </template>
 
 <script>
-import Helper from '@/mixins/helper'
+import Helper from '../../../../mixins/helper'
 import _ from 'lodash'
-import {Uuid} from '@/mixins/uuid'
+import {Uuid} from '../../../../mixins/uuid'
 
 export default  {
     name: 'ChecklistsInnerList',

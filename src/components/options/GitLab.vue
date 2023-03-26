@@ -186,7 +186,7 @@
 </template>
 
 <script>
-import Helper from '@/mixins/helper'
+import Helper from '../../mixins/helper'
 
 export default {
     name: 'OptionGitLab',

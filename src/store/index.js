@@ -1,12 +1,12 @@
-import chat from '@/store/modules/chat'
-import cheatSheet from '@/store/modules/cheatSheet'
-import gitLab from '@/store/modules/gitLab'
-import jenkins from '@/store/modules/jenkins'
-import jira from '@/store/modules/jira'
-import Migration from '@/mixins/migration'
-/* import chromeBrowser from '@/store/modules/chromeBrowser' */
-import icons from '@/store/modules/icons'
-import issues from '@/store/modules/issues'
+import chat from './modules/chat'
+import cheatSheet from './modules/cheatSheet'
+import gitLab from './modules/gitLab'
+import jenkins from './modules/jenkins'
+import jira from './modules/jira'
+import Migration from '../mixins/migration'
+/* import chromeBrowser from './modules/chromeBrowser' */
+import icons from './modules/icons'
+import issues from './modules/issues'
 import Helper from '../mixins/helper'
 import {createStore} from 'vuex'
 
@@ -118,7 +118,7 @@ const store = createStore({
                             }
                         })
                     }).then(storageData => {
-                        const options = migration.migrate(storageData)
+                        const options = migration.migrate(storageData, []).options
 
                         commit('SET_MODULES', options.modules)
                         const promises = []
@@ -167,8 +167,8 @@ const store = createStore({
                 const promises = []
 
                 for (let setting of importSettings) {
-                    if ('modules' === setting) {
-                        commit('SET_MODULES', options.modules)
+                    if ('general' === setting) {
+                        commit('SET_MODULES', options.general.modules)
                     } else {
                         promises.push(dispatch(setting + '/init', options[setting]))
                     }

@@ -81,7 +81,7 @@
 
 <script>
 
-import Theme from '@/mixins/theme'
+import Theme from '../mixins/theme'
 import QuickList from '../components/popup/QuickList.vue'
 import Jira from '../components/popup/Jira.vue'
 import Jenkins from '../components/popup/Jenkins.vue'

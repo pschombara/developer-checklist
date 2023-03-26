@@ -1,4 +1,4 @@
-import {V0_6_0} from '@/mixins/issues/v0.6.0'
+import {V0_6_0} from './issues/v0.6.0'
 import semver from 'semver'
 
 export default class IssueMigration {

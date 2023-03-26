@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import Checklist from '@/components/options/Jira/Checklists/Checklist.vue'
+import Checklist from './Checklists/Checklist.vue'
 
 export default {
     name: 'JiraChecklists',

@@ -1,4 +1,4 @@
-const themeLight = {
+const themeBlueLight = {
     dark: false,
     colors: {
         primary: '#00639a',
@@ -9,7 +9,7 @@ const themeLight = {
     },
 }
 
-const themeDark = {
+const themeBlueDark = {
     dark: true,
     colors: {
         primary: '#96ccff',
@@ -20,9 +20,13 @@ const themeDark = {
     },
 }
 
-export default {
-    themes: {
-        light: themeLight,
-        dark: themeDark,
+const themes = {
+    blue: {
+        light: themeBlueLight,
+        dark: themeBlueDark,
     },
+}
+
+export default {
+    themes,
 }

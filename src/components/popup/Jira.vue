@@ -96,8 +96,8 @@
 </template>
 
 <script>
-import Checklist from '@/components/popup/Jira/Checklist.vue'
-import Templates from '@/components/popup/Jira/Templates.vue'
+import Checklist from './Jira/Checklist.vue'
+import Templates from './Jira/Templates.vue'
 
 export default {
     name: 'PopupJira',

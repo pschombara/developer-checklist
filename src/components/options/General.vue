@@ -3,6 +3,7 @@
         <v-card-text>
             <v-row>
                 <v-col cols="4">
+                    <h3>Module</h3>
                     <v-switch color="primary" :model-value="modules.jenkins" @change="switchChanged('jenkins', $event)">
                         <template #label><v-icon icon="fab fa-jenkins" class="mx-2" /> Jenkins</template>
                     </v-switch>
@@ -18,6 +19,21 @@
 <!--                    <v-switch color="primary" :model-value="modules.chrome" @change="switchChanged('chrome', $event)">
                         <template v-slot:label><v-icon icon="fab fa-chrome" class="mx-2" /> Chrome</template>
                     </v-switch>-->
+                </v-col>
+                <v-col cols="4">
+                    <h3>Theme</h3>
+                    <v-select
+                        label="Brightness"
+                        :items="['system', 'light', 'dark']"
+                        variant="underlined"
+                        class="mt-3"
+                    ></v-select>
+                    <v-select
+                        label="Color"
+                        :items="['blue']"
+                        variant="underlined"
+                        class="mt-2"
+                    ></v-select>
                 </v-col>
             </v-row>
         </v-card-text>

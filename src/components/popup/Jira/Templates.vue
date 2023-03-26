@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import CopiedToClipboard from '@/components/popup/mixed/CopiedToClipboard.vue'
+import CopiedToClipboard from '../mixed/CopiedToClipboard.vue'
 
 export default {
     name: 'JiraTemplates',

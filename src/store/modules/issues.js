@@ -1,4 +1,4 @@
-import IssueMigration from '@/mixins/issueMigration'
+import IssueMigration from '../../mixins/issueMigration'
 import _ from 'lodash'
 
 const state = {
