@@ -169,6 +169,7 @@ export default {
 <style>
 html {
   min-width: 600px;
+  max-width: 600px;
 }
 
 .v-application > .v-application--wrap {

@@ -9,14 +9,14 @@
                             <v-btn
                                 v-if="issue.work"
                                 v-bind="props"
-                                color="red lighten-3"
+                                color="primary lighten-2"
                                 variant="text"
                                 @click="stopWork(issueName)"
                             ><v-icon small left>fas fa-stop</v-icon>&nbsp;Stop Work</v-btn>
                             <v-btn
                                 v-else
                                 v-bind="props"
-                                color="green lighten-3"
+                                color="grey darken-2"
                                 variant="text"
                                 @click="startWork(issueName)"
                             ><v-icon small left>fas fa-play</v-icon>&nbsp; Start Work</v-btn>
@@ -30,7 +30,7 @@
                             <v-btn
                                 v-bind="props"
                                 variant="text"
-                                :color="issue.pinned ? 'success' : 'grey'"
+                                :color="issue.pinned ? 'primary' : 'secondary'"
                                 @click="issue.pinned ? unpin(issueName) : pin(issueName)"
                             >
                                 <v-icon :class="issue.pinned ? '' : 'rotate--45-inverted'" small>fas fa-thumbtack</v-icon>
@@ -56,13 +56,13 @@
         <v-card-text>
             <div class="d-flex flex-row">
                 <v-tabs
+                    v-model="tab"
                     direction="vertical"
                     show-arrows
                 >
                     <v-tab
                         v-for="checklist in checklists"
                         :key="checklist.uuid"
-                        v-model="tab"
                         :value="checklist.uuid"
                     >
                         <v-tooltip location="right">
@@ -82,7 +82,7 @@
                     </v-tab>
                 </v-tabs>
 
-                <v-window>
+                <v-window v-model="tab" class="flex-grow-1">
                     <v-window-item v-for="checklist in checklists" :key="checklist.uuid" :value="checklist.uuid">
                         <checklist :uuid="checklist.uuid" :issue="issueName"></checklist>
                     </v-window-item>

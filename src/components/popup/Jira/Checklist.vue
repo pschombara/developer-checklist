@@ -13,6 +13,7 @@
                         >
                             <template #prepend>
                                 <v-icon v-if="checkGroupCompleted(item.uid)" small color="success">fas fa-check</v-icon>
+                                <v-icon v-else small color="grey">fas fa-check</v-icon>
                             </template>
                             <template #title>
                                 <span :class="(checkGroupCompleted(item.uid) ? 'text-decoration-line-through' : '')">
@@ -47,7 +48,7 @@
             <v-btn
                 v-if="checklist.buttons.success.enabled"
                 color="primary"
-                outlined
+                variant="outlined"
                 @click="addComment(checklist.buttons.success)"
             >
                 <v-icon left>fas fa-check</v-icon>
@@ -56,7 +57,7 @@
             <v-btn
                 v-if="checklist.buttons.failed.enabled"
                 color="error"
-                outlined
+                variant="outlined"
                 @click="addComment(checklist.buttons.failed)"
             >
                 <v-icon left>fas fa-times</v-icon>
@@ -110,8 +111,8 @@ export default {
                 return false
             }
 
-            const checklist = this.checklist.checklist.find(elem => elem.uid === uuid)
-            const entries = checklist.items.map(elem => elem.id)
+            const checklist = Object.values(this.checklist.checklist).find(elem => elem.uid === uuid)
+            const entries = Object.values(checklist.items).map(elem => elem.id)
 
             return entries.every(val => this.checked[this.uuid].includes(val))
         },

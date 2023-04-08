@@ -1,5 +1,5 @@
 <template>
-    <v-card flat>
+    <v-card class="mx-auto" flat>
         <v-card-text>
             <v-autocomplete
                 v-model="template"
@@ -10,20 +10,18 @@
                 dense
             >
             </v-autocomplete>
-            <v-textarea
+
+            <h5 v-if="template">{{text.preview}}</h5>
+            <pre
                 v-if="template"
-                readonly
-                :value="template.content"
-                :label="text.preview"
-                height="200"
-                no-resize
-                class="mt-0"
-            ></v-textarea>
+                style="max-height: 200px; max-width: 100%;"
+                class="elevation-1 overflow-y-auto overflow-x-hidden py-4"
+            >{{template.content}}</pre>
         </v-card-text>
         <v-card-actions v-if="template">
             <v-spacer></v-spacer>
-            <v-btn outlined color="primary" @click="addComment">{{ text.comment }}</v-btn>
-            <v-btn outlined color="secondary" @click="copyComment"><v-icon>fas fa-copy</v-icon></v-btn>
+            <v-btn variant="outlined" color="primary" @click="addComment">{{ text.comment }}</v-btn>
+            <v-btn variant="outlined" color="secondary" @click="copyComment"><v-icon>fas fa-copy</v-icon></v-btn>
             <v-spacer></v-spacer>
         </v-card-actions>
 
