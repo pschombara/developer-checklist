@@ -14,8 +14,8 @@
             <h5 v-if="template">{{text.preview}}</h5>
             <pre
                 v-if="template"
-                style="max-height: 200px; max-width: 100%;"
-                class="elevation-1 overflow-y-auto overflow-x-hidden py-4"
+                style="max-height: 200px;"
+                class="elevation-1 overflow-y-auto overflow-x-hidden py-4 px-2 text-pre-wrap"
             >{{template.content}}</pre>
         </v-card-text>
         <v-card-actions v-if="template">

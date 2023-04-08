@@ -1,7 +1,7 @@
 <template>
     <v-card class="mx-auto" flat>
         <v-card-text>
-            <v-list>
+            <v-list density="compact">
                 <v-list-group
                     v-for="item in checklist.checklist"
                     :key="item.uid"

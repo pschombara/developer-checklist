@@ -17,6 +17,7 @@
                         item-title="client"
                         item-value="client"
                         label="Client"
+                        density="compact"
                     ></v-autocomplete>
                 </v-col>
             </v-row>
@@ -29,10 +30,11 @@
                             item-value="id"
                             item-title="name"
                             label="Room"
+                            density="compact"
                         ></v-autocomplete>
                     </v-col>
                 </v-row>
-                <v-row>
+                <v-row class="align-content-center">
                     <v-col cols="10">
                         <v-autocomplete
                             v-model="message"
@@ -40,9 +42,10 @@
                             item-value="id"
                             item-title="name"
                             label="Message"
+                            density="compact"
                         ></v-autocomplete>
                     </v-col>
-                    <v-col cols="2" class="align-self-center">
+                    <v-col cols="2">
                         <v-btn
                             v-if="'ready' === status || 'progress' === status"
                             :disabled="!sendReady"
