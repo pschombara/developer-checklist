@@ -17,7 +17,7 @@
                         item-value="job"
                         item-title="name"
                         label="Job"
-                        dense
+                        variant="underlined"
                     ></v-autocomplete>
                 </v-col>
                 <v-col cols="4">
@@ -26,7 +26,7 @@
                         type="number"
                         min="1"
                         label="Build Number"
-                        dense
+                        variant="underlined"
                     ></v-text-field>
                 </v-col>
             </v-row>
@@ -38,7 +38,8 @@
                         readonly
                         :value="buildUrl"
                         :disabled="!readyToCopy"
-                        dense
+                        variant="solo"
+                        density="compact"
                         @click="copy"
                     ></v-text-field>
                 </v-col>
@@ -69,6 +70,7 @@
                                     item-value="name"
                                     label="Attach to Issue"
                                     class="mt-7"
+                                    variant="underlined"
                                 ></v-autocomplete>
                                 <v-spacer></v-spacer>
                                 <v-btn
@@ -79,17 +81,14 @@
                             </v-toolbar>
                         </template>
                         <template #item.job="{item}">
-                            {{buildName(item.job)}}
+                            {{buildName(item.value.job)}}
                         </template>
                         <template #item.action="{item}">
-                            <v-btn icon small @click="copyBuild(item.job, item.build)">
-                                <v-icon small>fas fa-copy</v-icon>
+                            <v-btn variant="plain" icon="fas fa-copy" size="small" @click="copyBuild(item.job, item.build)">
                             </v-btn>
-                            <v-btn icon small @click="openBuild(item.job, item.build)">
-                                <v-icon small>fas fa-external-link-alt</v-icon>
+                            <v-btn variant="plain" icon="fas fa-external-link-alt" size="small" @click="openBuild(item.job, item.build)">
                             </v-btn>
-                            <v-btn icon small @click="removeFromIssue(item.job, item.build)">
-                                <v-icon color="red darken-2" small>fas fa-trash</v-icon>
+                            <v-btn variant="plain" icon="fas fa-trash" size="small" color="tertiary" @click="removeFromIssue(item.job, item.build)">
                             </v-btn>
                         </template>
                     </v-data-table>
@@ -215,6 +214,7 @@ export default {
             })
         },
         buildName: function (job) {
+            console.log(job)
             const ciJob = this.builds.find(build => build.job === job)
 
             if (undefined === ciJob) {

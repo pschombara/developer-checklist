@@ -17,7 +17,7 @@
                         item-title="client"
                         item-value="client"
                         label="Client"
-                        density="compact"
+                        variant="underlined"
                     ></v-autocomplete>
                 </v-col>
             </v-row>
@@ -30,7 +30,7 @@
                             item-value="id"
                             item-title="name"
                             label="Room"
-                            density="compact"
+                            variant="underlined"
                         ></v-autocomplete>
                     </v-col>
                 </v-row>
@@ -42,7 +42,7 @@
                             item-value="id"
                             item-title="name"
                             label="Message"
-                            density="compact"
+                            variant="underlined"
                         ></v-autocomplete>
                     </v-col>
                     <v-col cols="2">
@@ -70,6 +70,7 @@
                             small-chips
                             hide-selected
                             label="Issue to attach (optional)"
+                            variant="underlined"
                         >
                             <template #selection="{item, parent}">
                                 <v-chip

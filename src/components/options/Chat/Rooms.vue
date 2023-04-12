@@ -57,14 +57,11 @@
                     </v-dialog>
                 </template>
                 <template #item.actions="{item}">
-                    <v-btn v-if="!sortRoom" icon small @click="openRoom(item)">
-                        <v-icon icon="fas fa-edit" small/>
+                    <v-btn v-if="!sortRoom" variant="plain" icon="fas fa-edit" size="small" @click="openRoom(item)">
                     </v-btn>
-                    <v-btn v-if="!sortRoom" icon small :disabled="rooms.length < 2" @click="startSort(item)">
-                        <v-icon icon="fas fa-sort" small/>
+                    <v-btn v-if="!sortRoom" variant="plain" icon="fas fa-sort" size="small" :disabled="rooms.length < 2" @click="startSort(item)">
                     </v-btn>
-                    <v-btn v-if="!sortRoom" icon small @click="openDeleteRoom(item)">
-                        <v-icon small color="red darken-2">fas fa-trash</v-icon>
+                    <v-btn v-if="!sortRoom" variant="plain" icon="fas fa-trash" size="small" color="tertiary" @click="openDeleteRoom(item)">
                     </v-btn>
                     <v-btn
 v-if="sortRoom && sortRoom.id !== item.id" icon
@@ -148,9 +145,9 @@ export default {
         },
         roomsHeader() {
             return [
-                {title: 'Name', value: 'name', sortable: false, width: '15%'},
-                {title: 'URL', value: 'url', sortable: false, width: '75%'},
-                {title: '', value: 'actions', align: 'end', sortable: false, width: '10%'},
+                {title: 'Name', key: 'name', sortable: false, width: '15%'},
+                {title: 'URL', key: 'url', sortable: false, width: '75%'},
+                {title: '', key: 'actions', align: 'end', sortable: false, width: '10%'},
             ]
         },
     },

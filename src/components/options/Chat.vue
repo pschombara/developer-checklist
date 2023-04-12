@@ -13,7 +13,6 @@
                 </v-tab>
             </v-tabs>
 
-
             <v-window v-model="selectedClient">
                     <v-window-item v-for="client in clients" :key="client.id">
                         <v-card>

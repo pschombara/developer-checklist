@@ -6,13 +6,14 @@
             </v-row>
             <v-row class="d-flex align-center mt-0">
                 <v-col cols="5">
-                    <v-combobox v-model="board" :items="boards"></v-combobox>
+                    <v-combobox v-model="board" :items="boards" variant="underlined"></v-combobox>
                 </v-col>
                 <v-col cols="5">
                     <v-text-field
                         v-model="issueNumber"
                         type="number"
                         min="1"
+                        variant="underlined"
                         autofocus
                         @keypress.enter="open"
                     ></v-text-field>

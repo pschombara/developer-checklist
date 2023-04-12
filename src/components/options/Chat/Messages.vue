@@ -57,14 +57,11 @@
                     </v-dialog>
                 </template>
                 <template #item.actions="{item}">
-                    <v-btn v-if="!sortMessage" icon small @click="openMessage(item)">
-                        <v-icon icon="fas fa-edit" small />
+                    <v-btn v-if="!sortMessage" variant="plain" icon="fas fa-edit" size="small" @click="openMessage(item)">
                     </v-btn>
-                    <v-btn v-if="!sortMessage" icon small :disabled="messages.length < 2" @click="startSort(item)">
-                        <v-icon icon="fas fa-sort" small />
+                    <v-btn v-if="!sortMessage" variant="plain" icon="fas fa-sort" size="small" :disabled="messages.length < 2" @click="startSort(item)">
                     </v-btn>
-                    <v-btn v-if="!sortMessage" icon small @click="openDeleteMessage(item)">
-                        <v-icon small color="red darken-2">fas fa-trash</v-icon>
+                    <v-btn v-if="!sortMessage" variant="plain" icon="fas fa-trash" size="small" color="tertiary" @click="openDeleteMessage(item)">
                     </v-btn>
                     <v-btn
 v-if="sortMessage && sortMessage.id !== item.id" icon
@@ -141,9 +138,9 @@ export default {
         },
         messagesHeader() {
             return [
-                {title: 'Name', value: 'name', sortable: false, width: '15%'},
-                {title: 'Content', value: 'content', sortable: false, width: '75%'},
-                {title: '', value: 'actions', align: 'end', sortable: false, width: '10%'},
+                {title: 'Name', key: 'name', sortable: false, width: '15%'},
+                {title: 'Content', key: 'content', sortable: false, width: '75%'},
+                {title: '', key: 'actions', align: 'end', sortable: false, width: '10%'},
             ]
         },
     },

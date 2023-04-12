@@ -16,6 +16,7 @@
                         :items="cheats"
                         item-title="label"
                         item-value="command"
+                        variant="underlined"
                     ></v-autocomplete>
                 </v-col>
             </v-row>

@@ -17,7 +17,7 @@
                         item-value="uuid"
                         item-title="project"
                         :label="text.project"
-                        dense
+                        variant="underlined"
                     ></v-autocomplete>
                 </v-col>
                 <v-col cols="4">
@@ -26,7 +26,7 @@
                         type="number"
                         min="1"
                         label="Merge Number"
-                        dense
+                        variant="underlined"
                     ></v-text-field>
                 </v-col>
             </v-row>
@@ -38,7 +38,8 @@
                         readonly
                         :value="mergeUrl"
                         :disabled="!readyToCopy"
-                        dense
+                        variant="solo"
+                        density="compact"
                         @click="copy"
                     ></v-text-field>
                 </v-col>
@@ -69,6 +70,7 @@
                                     item-value="name"
                                     label="Attach to Issue"
                                     class="mt-7"
+                                    variant="underlined"
                                 ></v-autocomplete>
                                 <v-spacer></v-spacer>
                                 <v-btn
@@ -86,7 +88,7 @@
                             </v-btn>
                             <v-btn variant="plain" icon="fas fa-external-link-alt" size="small" @click="openMergeRequest(item.id, item.number)">
                             </v-btn>
-                            <v-btn variant="plain" icon="fas fa-trash" color="red darken-2" size="small" @click="removeFromIssue(item.id, item.number)">
+                            <v-btn variant="plain" icon="fas fa-trash" color="tertiary" size="small" @click="removeFromIssue(item.id, item.number)">
                             </v-btn>
                         </template>
                     </v-data-table>
