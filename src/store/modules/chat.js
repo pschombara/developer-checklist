@@ -10,7 +10,10 @@ const STATUS_SUCCESS = 'success'
 const STATUS_ERROR = 'error'
 const STATUS_PROGRESS = 'progress'
 
-let state
+let state = {
+    clients: {},
+    status: STATUS_READY,
+}
 
 export default {
     strict: import.meta.env.NODE_ENV !== 'production',
@@ -160,23 +163,22 @@ export default {
             state.status = STATUS_PROGRESS
         },
         CLEAR: state => {
-            state = {
-                clients: {
-                    google: {
-                        enabled: false,
-                        messages: [],
-                        rooms: [],
-                        main: true,
-                    },
-                    discord: {
-                        enabled: false,
-                        messages: [],
-                        rooms: [],
-                        main: false,
-                    },
+            state.clients = {
+                google: {
+                    enabled: false,
+                    messages: [],
+                    rooms: [],
+                    main: true,
                 },
-                status: STATUS_READY,
+                discord: {
+                    enabled: false,
+                    messages: [],
+                    rooms: [],
+                    main: false,
+                },
             }
+
+            state.status = STATUS_READY
         },
     },
     actions: {

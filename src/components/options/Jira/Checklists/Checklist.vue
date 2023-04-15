@@ -6,6 +6,7 @@
                     <v-switch
                         v-model="enabled"
                         :label="text.enabled"
+                        color="primary"
                     ></v-switch>
                 </v-col>
                 <v-col cols="12" sm="4" md="3">
@@ -41,7 +42,7 @@
                 <v-col cols="12" sm="4" md="3">
                     <h5>{{ text.success }}</h5>
                     <v-btn
-                        :color="checklist.buttons.success.enabled ? 'success' : 'grey'"
+                        :color="checklist.buttons.success.enabled ? 'primary' : 'secondary'"
                         outlined
                         @click="openButtonSuccessDialog"
                     >
@@ -84,10 +85,12 @@
                                     <v-switch
                                         v-model="dialogBtnSuccess.item.autoComment"
                                         :label="text.sendCommentImmediately"
+                                        color="primary"
                                     ></v-switch>
                                     <v-switch
                                         v-model="dialogBtnSuccess.item.successRequiredAll"
                                         :label="text.listCompletelyChecked"
+                                        color="primary"
                                     ></v-switch>
                                 </v-form>
                             </v-card-text>
@@ -121,6 +124,7 @@ color="primary" plain :disabled="!dialogBtnSuccess.valid"
                                     <v-switch
                                         v-model="dialogBtnFailed.item.enabled"
                                         :label="text.buttonEnabled"
+                                        color="primary"
                                     ></v-switch>
                                     <v-text-field
                                         v-model="dialogBtnFailed.item.text"
@@ -138,6 +142,7 @@ color="primary" plain :disabled="!dialogBtnSuccess.valid"
                                     <v-switch
                                         v-model="dialogBtnFailed.item.autoComment"
                                         :label="text.sendCommentImmediately"
+                                        color="primary"
                                     ></v-switch>
                                 </v-form>
                             </v-card-text>
@@ -194,8 +199,8 @@ color="primary" plain :disabled="!dialogBtnFailed.valid"
                                         </v-card-title>
                                         <v-card-actions>
                                             <v-spacer></v-spacer>
-                                            <v-btn color="grey" plain @click="closeDialogDeleteCategory">{{ text.cancel }}</v-btn>
-                                            <v-btn color="error" plain @click="removeCategory">{{ text.delete }}</v-btn>
+                                            <v-btn color="secondary" plain @click="closeDialogDeleteCategory">{{ text.cancel }}</v-btn>
+                                            <v-btn color="tertiary" plain @click="removeCategory">{{ text.delete }}</v-btn>
                                             <v-spacer></v-spacer>
                                         </v-card-actions>
                                     </v-card>
@@ -203,34 +208,44 @@ color="primary" plain :disabled="!dialogBtnFailed.valid"
                             </v-toolbar>
                         </template>
                         <template #item.actions="{item}">
-                            <v-btn v-if="!sortChecklist" icon small @click="openCategory(item.uid)">
-                                <v-icon small>fas fa-edit</v-icon>
-                            </v-btn>
-                            <v-btn v-if="!sortChecklist" icon small @click="categoryStartSort(item)">
-                                <v-icon small>fas fa-sort</v-icon>
-                            </v-btn>
-                            <v-btn v-if="!sortChecklist" icon small @click="openDialogDeleteCategory(item)">
-                                <v-icon small color="red darken-2">fas fa-trash</v-icon>
-                            </v-btn>
                             <v-btn
-v-if="sortChecklist && sortChecklist.uid !== item.uid" icon
-                                   small
-                                   :disabled="item.sort - 1 === sortChecklist.sort"
-                                   @click="categoryInsertBefore(item)">
-                                <v-icon small>fas fa-sort-up</v-icon>
-                            </v-btn>
+                                v-if="!sortChecklist"
+                                variant="plain"
+                                icon="fas fa-edit"
+                                small
+                                @click="openCategory(item.uid)"></v-btn>
                             <v-btn
-v-if="sortChecklist && sortChecklist.uid !== item.uid" icon
-                                   small
-                                   :disabled="item.sort + 1 === sortChecklist.sort"
-                                   @click="categoryInsertAfter(item)">
-                                <v-icon small>fas fa-sort-down</v-icon>
-                            </v-btn>
+                                v-if="!sortChecklist"
+                                variant="plain"
+                                icon="fas fa-sort"
+                                size="small"
+                                @click="categoryStartSort(item)"></v-btn>
                             <v-btn
-v-if="sortChecklist && sortChecklist.uid === item.uid" icon small
-                                   @click="categoryCancelSort">
-                                <v-icon small>fas fa-times</v-icon>
-                            </v-btn>
+                                v-if="!sortChecklist"
+                                variant="plain"
+                                icon="fas fa-trash"
+                                size="small"
+                                @click="openDialogDeleteCategory(item)"></v-btn>
+                            <v-btn
+                                v-if="sortChecklist && sortChecklist.uid !== item.uid"
+                                variant="plain"
+                                icon="fas fa-sort-up"
+                                size="small"
+                                :disabled="item.sort - 1 === sortChecklist.sort"
+                                @click="categoryInsertBefore(item)"></v-btn>
+                            <v-btn
+                                v-if="sortChecklist && sortChecklist.uid !== item.uid"
+                                variant="plain"
+                                icon="fas fa-sort-down"
+                                size="small"
+                                :disabled="item.sort + 1 === sortChecklist.sort"
+                                @click="categoryInsertAfter(item)"></v-btn>
+                            <v-btn
+                                v-if="sortChecklist && sortChecklist.uid === item.uid"
+                                variant="plain"
+                                icon="fas fa-times"
+                                size="small"
+                                @click="categoryCancelSort"> </v-btn>
                         </template>
                     </v-data-table>
                 </v-col>
@@ -336,8 +351,8 @@ export default {
         },
         categoriesHeader() {
             return [
-                {title: this.text.name, value: 'title', sortable: false},
-                {title: '', value: 'actions', align: 'end', sortable: false},
+                {title: this.text.name, key: 'title', sortable: false},
+                {title: '', key: 'actions', align: 'end', sortable: false},
             ]
         },
         enabled: {

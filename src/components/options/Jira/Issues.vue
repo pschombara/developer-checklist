@@ -12,7 +12,10 @@
                 <template #top>
                     <v-toolbar flat>
                         <v-spacer></v-spacer>
-                        <v-btn plain @click="reload"><v-icon left>fas fa-sync</v-icon> {{text.reload}}</v-btn>
+                        <v-btn plain @click="reload">
+                            <v-icon left>fas fa-sync</v-icon>
+                            {{ text.reload }}
+                        </v-btn>
 
                         <v-dialog v-model="deleteIssue.open" max-width="450">
                             <v-card>
@@ -21,8 +24,8 @@
                                 </v-card-title>
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
-                                    <v-btn color="grey" plain @click="closeDelete">{{ text.cancel }}</v-btn>
-                                    <v-btn color="error" plain @click="remove">{{ text.delete }}</v-btn>
+                                    <v-btn color="secondary" plain @click="closeDelete">{{ text.cancel }}</v-btn>
+                                    <v-btn color="tertiary" plain @click="remove">{{ text.delete }}</v-btn>
                                     <v-spacer></v-spacer>
                                 </v-card-actions>
                             </v-card>
@@ -30,14 +33,32 @@
                     </v-toolbar>
                 </template>
                 <template #item.date="{item}">
-                    {{dateFormat(item.updateDate)}}
+                    {{ dateFormat(item.updateDate) }}
                 </template>
                 <template #item.pinned="{item}">
-                    <v-btn v-if="item.pinned" color="success" icon small @click="unpin(item)"><v-icon small>fas fa-thumbtack</v-icon></v-btn>
-                    <v-btn v-else color="grey" icon small @click="pin(item)"><v-icon small>fas fa-thumbtack rotate--45-inverted</v-icon></v-btn>
+                    <v-btn
+                        v-if="item.raw.pinned"
+                        variant="plain"
+                        color="primary"
+                        icon="fas fa-thumbtack"
+                        size="small"
+                        @click="unpin(item)"></v-btn>
+                    <v-btn
+                        v-else
+                        variant="plain"
+                        color="secondary"
+                        icon="fas fa-thumbtack"
+                        size="small"
+                        class="rotate--45-inverted"
+                        @click="pin(item)"></v-btn>
                 </template>
                 <template #item.action="{item}">
-                    <v-btn icon color="red darken-2" small @click="openDelete(item)"><v-icon small>fas fa-trash</v-icon></v-btn>
+                    <v-btn
+                        variant="plain"
+                        icon="fas fa-trash"
+                        color="tertiary"
+                        small
+                        @click="openDelete(item)"> </v-btn>
                 </template>
             </v-data-table>
         </v-card-text>
@@ -68,11 +89,11 @@ export default {
     computed: {
         issueHeader() {
             return [
-                {title: 'Identifier', value: 'name', sortable: false},
-                {title: 'Title', value: 'title', sortable: false},
-                {title: 'Last Update', value: 'date', align: 'end', sortable: false},
-                {title: '', value: 'pinned', sortable: false},
-                {title: '', value: 'action', align: 'end', sortable: false},
+                {title: 'Identifier', key: 'name', sortable: false},
+                {title: 'Title', key: 'title', sortable: false},
+                {title: 'Last Update', key: 'date', align: 'end', sortable: false},
+                {title: '', key: 'pinned', sortable: false},
+                {title: '', key: 'action', align: 'end', sortable: false},
             ]
         },
         issues() {
@@ -87,15 +108,15 @@ export default {
             })
         },
         pin: function (issue) {
-            this.$store.dispatch('issues/pin', issue.name)
+            this.$store.dispatch('issues/pin', issue.raw.name)
         },
         unpin: function (issue) {
-            this.$store.dispatch('issues/unpin', issue.name)
+            this.$store.dispatch('issues/unpin', issue.raw.name)
         },
         openDelete: function (item) {
             this.deleteIssue = {
                 open: true,
-                issue: item.name,
+                issue: item.raw.name,
             }
         },
         closeDelete: function () {

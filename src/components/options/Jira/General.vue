@@ -78,12 +78,13 @@
                                                             v-model="dialogBoard.item.default"
                                                             :label="text.default"
                                                             :disabled="null !== dialogBoard.current && dialogBoard.current.default"
+                                                            color="primary"
                                                         ></v-switch>
                                                     </v-form>
                                                 </v-card-text>
                                                 <v-card-actions>
                                                     <v-spacer></v-spacer>
-                                                    <v-btn color="grey" plain @click="closeBoard">{{ text.cancel }}</v-btn>
+                                                    <v-btn color="secondary" plain @click="closeBoard">{{ text.cancel }}</v-btn>
                                                     <v-btn v-if="null === dialogBoard.current" color="primary" plain :disabled="!dialogBoard.valid" @click="addBoard">{{ text.add }}</v-btn>
                                                     <v-btn v-else color="primary" plain :disabled="!dialogBoard.valid" @click="saveBoard">{{ text.save }}</v-btn>
                                                     <v-spacer></v-spacer>
@@ -95,10 +96,10 @@
                                                 <v-card-title class="headline">{{ i18n.getMessage('TitleDelete', deleteBoard.key) }}</v-card-title>
                                                 <v-card-actions>
                                                     <v-spacer></v-spacer>
-                                                    <v-btn color="grey" plain @click="closeDialogDeleteBoard">
+                                                    <v-btn color="secondary" plain @click="closeDialogDeleteBoard">
                                                         {{ text.cancel }}
                                                     </v-btn>
-                                                    <v-btn color="error" plain @click="removeBoard">
+                                                    <v-btn color="tertiary" plain @click="removeBoard">
                                                         {{ text.delete }}
                                                     </v-btn>
                                                     <v-spacer></v-spacer>
@@ -115,12 +116,17 @@
                                     >fas fa-check</v-icon>
                                 </template>
                                 <template #item.actions="{item}">
-                                    <v-btn icon small @click="openBoard(item)">
-                                        <v-icon small>fas fa-edit</v-icon>
-                                    </v-btn>
-                                    <v-btn icon small @click="openDialogDeleteBoard(item)">
-                                        <v-icon small color="red darken-2">fas fa-trash</v-icon>
-                                    </v-btn>
+                                    <v-btn
+                                        variant="plain"
+                                        icon="fas fa-edit"
+                                        size="small"
+                                        @click="openBoard(item)"> </v-btn>
+                                    <v-btn
+                                        variant="plain"
+                                        icon="fas fa-trash"
+                                        size="small"
+                                        color="tertiary"
+                                        @click="openDialogDeleteBoard(item)"> </v-btn>
                                 </template>
                             </v-data-table>
                         </v-card-text>
@@ -222,9 +228,9 @@ export default {
         },
         boardHeaders() {
             return [
-                { title: this.text.boardKey, value: 'key'},
-                { title: this.text.default, value: 'default', sortable: false},
-                { title: '', value: 'actions', sortable: false, align: 'end'},
+                { title: this.text.boardKey, key: 'key'},
+                { title: this.text.default, key: 'default', sortable: false},
+                { title: '', key: 'actions', sortable: false, align: 'end'},
             ]
         },
     },
