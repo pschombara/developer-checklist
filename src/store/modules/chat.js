@@ -10,23 +10,7 @@ const STATUS_SUCCESS = 'success'
 const STATUS_ERROR = 'error'
 const STATUS_PROGRESS = 'progress'
 
-const state = {
-    clients: {
-        google: {
-            enabled: false,
-            messages: [],
-            rooms: [],
-            main: true,
-        },
-        discord: {
-            enabled: false,
-            messages: [],
-            rooms: [],
-            main: false,
-        },
-    },
-    status: STATUS_READY,
-}
+let state
 
 export default {
     strict: import.meta.env.NODE_ENV !== 'production',
@@ -175,10 +159,31 @@ export default {
         STATUS_PROGRESS: state => {
             state.status = STATUS_PROGRESS
         },
+        CLEAR: state => {
+            state = {
+                clients: {
+                    google: {
+                        enabled: false,
+                        messages: [],
+                        rooms: [],
+                        main: true,
+                    },
+                    discord: {
+                        enabled: false,
+                        messages: [],
+                        rooms: [],
+                        main: false,
+                    },
+                },
+                status: STATUS_READY,
+            }
+        },
     },
     actions: {
         // options
         init: ({commit}, options) => {
+            commit('CLEAR')
+
             for (const [client, data] of Object.entries(options)) {
                 commit('CHANGE_ENABLED', {client, enabled: data.enabled})
 
