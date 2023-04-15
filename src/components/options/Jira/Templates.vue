@@ -48,7 +48,7 @@
                                         </v-card-text>
                                         <v-card-actions>
                                             <v-spacer></v-spacer>
-                                            <v-btn color="grey" plain @click="closeTemplate">{{ text.cancel }}</v-btn>
+                                            <v-btn color="secondary" plain @click="closeTemplate">{{ text.cancel }}</v-btn>
                                             <v-btn v-if="null !== editTemplate.id" color="success" plain :disabled="!editTemplate.valid" @click="updateTemplate">{{text.save}}</v-btn>
                                             <v-btn v-else color="success" plain :disabled="!editTemplate.valid" @click="addTemplate">{{text.add}}</v-btn>
                                             <v-spacer></v-spacer>
@@ -62,9 +62,9 @@
                                         </v-card-title>
                                         <v-card-actions>
                                             <v-spacer></v-spacer>
-                                            <v-btn color="grey" plain @click="closeRemoveTemplate">
+                                            <v-btn color="secondary" plain @click="closeRemoveTemplate">
                                                 {{ text.cancel }}</v-btn>
-                                            <v-btn color="error" plain @click="removeTemplate">
+                                            <v-btn color="tertiary" plain @click="removeTemplate">
                                                 {{ text.delete }}</v-btn>
                                             <v-spacer></v-spacer>
                                         </v-card-actions>
@@ -77,32 +77,45 @@
                             <small class="text--secondary font-weight-light">{{ item.subTitle }}</small>
                         </template>
                         <template #item.actions="{ item }">
-                            <v-btn v-if="!sortTemplate" icon small @click="openTemplate(item)">
-                                <v-icon small>fas fa-edit</v-icon>
-                            </v-btn>
-                            <v-btn v-if="!sortTemplate" icon small @click="startSort(item)">
-                                <v-icon small>fas fa-sort</v-icon>
-                            </v-btn>
-                            <v-btn v-if="!sortTemplate" icon small @click="openRemoveTemplate(item)">
-                                <v-icon small color="red darken-2">fas fa-trash</v-icon>
-                            </v-btn>
                             <v-btn
-v-if="sortTemplate && sortTemplate.id !== item.id" icon
-                                   small
-                                   :disabled="item.sort - 1 === sortTemplate.sort"
-                                   @click="insertBefore(item)">
-                                <v-icon small>fas fa-sort-up</v-icon>
-                            </v-btn>
+                                v-if="!sortTemplate"
+                                variant="plain"
+                                icon="fas fa-edit"
+                                size="small"
+                                @click="openTemplate(item)"></v-btn>
                             <v-btn
-v-if="sortTemplate && sortTemplate.id !== item.id" icon
-                                   small
-                                   :disabled="item.sort + 1 === sortTemplate.sort"
-                                   @click="insertAfter(item)">
-                                <v-icon small>fas fa-sort-down</v-icon>
-                            </v-btn>
-                            <v-btn v-if="sortTemplate && sortTemplate.id === item.id" icon small @click="cancelSort">
-                                <v-icon small>fas fa-times</v-icon>
-                            </v-btn>
+                                v-if="!sortTemplate"
+                                variant="plain"
+                                icon="fas fa-sort"
+                                size="small"
+                                @click="startSort(item)"></v-btn>
+                            <v-btn
+                                v-if="!sortTemplate"
+                                variant="plain"
+                                icon="fas fa-trash"
+                                size="small"
+                                color="tertiary"
+                                @click="openRemoveTemplate(item)"></v-btn>
+                            <v-btn
+                                v-if="sortTemplate && sortTemplate.raw.id !== item.raw.id"
+                                variant="plain"
+                                icon="fas fa-sort-up"
+                                size="small"
+                                :disabled="item.raw.sort - 1 === sortTemplate.raw.sort"
+                                @click="insertBefore(item)"></v-btn>
+                            <v-btn
+                                v-if="sortTemplate && sortTemplate.raw.id !== item.raw.id"
+                                variant="plain"
+                                icon="fas fa-sort-down"
+                                size="small"
+                                :disabled="item.raw.sort + 1 === sortTemplate.raw.sort"
+                                @click="insertAfter(item)"> </v-btn>
+                            <v-btn
+                                v-if="sortTemplate && sortTemplate.raw.id === item.raw.id"
+                                variant="plain"
+                                icon="fas fa-times"
+                                size="small"
+                                @click="cancelSort"></v-btn>
                         </template>
                     </v-data-table>
                 </v-col>
@@ -180,8 +193,8 @@ export default {
         },
         templateHeaders: function () {
             return [
-                { title: this.text.template, value: 'template', sortable: false},
-                { title: '', value: 'actions', align: 'end', sortable: false},
+                { title: this.text.template, key: 'template', sortable: false},
+                { title: '', key: 'actions', align: 'end', sortable: false},
             ]
         },
     },
@@ -284,14 +297,14 @@ export default {
         },
         insertBefore: function (template) {
             this.$store.dispatch('jira/templateSortBefore', {
-                current: this.sortTemplate.id,
-                ref: template.id,
+                current: this.sortTemplate.raw.id,
+                ref: template.raw.id,
             })
         },
         insertAfter: function (template) {
             this.$store.dispatch('jira/templateSortAfter', {
-                current: this.sortTemplate.id,
-                ref: template.id,
+                current: this.sortTemplate.raw.id,
+                ref: template.raw.id,
             })
         },
         cancelSort: function () {
