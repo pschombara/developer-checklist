@@ -63,15 +63,18 @@
                     >
                         <template #top>
                             <v-toolbar flat>
-                                <v-autocomplete
-                                    v-model="issue"
-                                    :items="issues"
-                                    item-title="name"
-                                    item-value="name"
-                                    label="Attach to Issue"
-                                    class="mt-7"
-                                    variant="underlined"
-                                ></v-autocomplete>
+                                <v-toolbar-title>
+                                    <v-autocomplete
+                                        v-model="issue"
+                                        :items="issues"
+                                        item-title="name"
+                                        item-value="name"
+                                        label="Attach to Issue"
+                                        class="mt-5 align-center"
+                                        density="comfortable"
+                                        variant="underlined"
+                                    ></v-autocomplete>
+                                </v-toolbar-title>
                                 <v-spacer></v-spacer>
                                 <v-btn
                                     color="primary"

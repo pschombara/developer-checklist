@@ -4,16 +4,12 @@
             <v-overlay v-if="loading" opacity=".75">
                 <v-progress-circular size="256" width="10" color="orange" indeterminate></v-progress-circular>
             </v-overlay>
-            <v-toolbar flat>
-                <v-row>
-                    <v-col cols="1" class="align-center">
-                        <v-img src="icons/48.png" max-height="24" max-width="24" class="mr-2"></v-img>
-                    </v-col>
-                    <v-col cols="11">
-                        <v-toolbar-title>{{ title }}</v-toolbar-title>
-                    </v-col>
-                </v-row>
-            </v-toolbar>
+            <v-row>
+                <v-col>
+                    <v-img src="icons/48.png" width="20" aspect-ratio="1/1" class="d-inline-block me-1"></v-img>
+                    <h2 class="d-inline-block">{{ title }}</h2>
+                </v-col>
+            </v-row>
             <v-row v-if="modules && optionsValid">
                 <v-col>
                     <v-card>

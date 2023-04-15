@@ -173,7 +173,7 @@
                                         <v-icon icon="fas fa-edit" small />
                                     </v-btn>
                                     <v-btn icon small @click="openDialogDeleteCategory(item)">
-                                        <v-icon icon="fas fa-trash" small color="red darken-2" />
+                                        <v-icon icon="fas fa-trash" small color="tertiary" />
                                     </v-btn>
                                 </template>
                             </v-data-table>

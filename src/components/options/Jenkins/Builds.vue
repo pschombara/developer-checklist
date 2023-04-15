@@ -9,7 +9,7 @@
                 :sort-by="['name']"
                 multi-sort
                 show-group-by
-                :group-by="['type']"
+                :group-by="[{key: 'type'}]"
             >
                 <template #top>
                     <v-toolbar flat>
@@ -66,7 +66,7 @@
                                 </v-card-text>
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
-                                    <v-btn color="grey" plain @click="closeDialogBuild">{{ text.cancel }}</v-btn>
+                                    <v-btn color="secondary" plain @click="closeDialogBuild">{{ text.cancel }}</v-btn>
                                     <v-btn
 v-if="null === dialogBuild.item.uuid" color="primary" plain
                                            :disabled="!dialogBuild.valid" @click="addBuild">{{ text.add }}
@@ -87,10 +87,10 @@ v-else color="primary" plain :disabled="!dialogBuild.valid"
                                 </v-card-title>
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
-                                    <v-btn color="grey" plain @click="closeDialogDeleteBuild()">
+                                    <v-btn color="secondary" plain @click="closeDialogDeleteBuild()">
                                         {{ text.cancel }}
                                     </v-btn>
-                                    <v-btn color="error" plain @click="removeBuild(deleteBuild)">
+                                    <v-btn color="tertiary" plain @click="removeBuild(deleteBuild)">
                                         {{ text.delete }}
                                     </v-btn>
                                     <v-spacer></v-spacer>
@@ -100,25 +100,19 @@ v-else color="primary" plain :disabled="!dialogBuild.valid"
                     </v-toolbar>
                 </template>
                 <template #item.actions="{item}">
-                    <v-btn icon small @click="openBuild(item)">
+                    <v-btn
+                        variant="plain"
+                        icon="fas fa-edit"
+                        size="small"
+                        @click="openBuild(item)">
                         <v-icon icon="fas fa-edit" small />
                     </v-btn>
-                    <v-btn icon small @click="openDialogDeleteBuild(item)">
-                        <v-icon icon="fas fa-trash" small color="red darken-2" />
-                    </v-btn>
-                </template>
-                <template #group.header="{headers, isOpen, toggle, remove, group}">
-                    <th :colspan="headers.length - 1">
-                        <v-btn icon class="mr-2" small @click="toggle">
-                            <v-icon :icon="isOpen ? 'fas fa-caret-up' : 'fas fa-caret-down'"/>
-                        </v-btn>
-                        {{ group }}
-                    </th>
-                    <th class="text-right">
-                        <v-btn icon x-small @click="remove">
-                            <v-icon icon="fas fa-times" />
-                        </v-btn>
-                    </th>
+                    <v-btn
+                        variant="plain"
+                        icon="fas fa-trash"
+                        size="small"
+                        color="tertiary"
+                        @click="openDialogDeleteBuild(item)"></v-btn>
                 </template>
             </v-data-table>
         </v-card-text>
@@ -187,11 +181,10 @@ export default {
         },
         buildHeaders() {
             return [
-                {title: this.text.category, value: 'type'},
-                {title: this.text.name, value: 'name', groupable: false},
-                {title: this.text.label, value: 'label', groupable: false},
-                {title: this.text.job, value: 'job', groupable: false},
-                {title: '', value: 'actions', sortable: false, align: 'end', groupable: false},
+                {title: this.text.name, key: 'name', groupable: false},
+                {title: this.text.label, key: 'label', groupable: false},
+                {title: this.text.job, key: 'job', groupable: false},
+                {title: '', key: 'actions', sortable: false, align: 'end', groupable: false},
             ]
         },
         categories() {

@@ -35,7 +35,7 @@
                                 </v-card-text>
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
-                                    <v-btn color="grey" plain @click="closeDialogCategory">{{ text.cancel }}</v-btn>
+                                    <v-btn color="secondary" plain @click="closeDialogCategory">{{ text.cancel }}</v-btn>
                                     <v-btn v-if="null === dialogCategory.current" color="primary" plain :disabled="!dialogCategory.valid" @click="addCategory">{{ text.add }}</v-btn>
                                     <v-btn v-else color="primary" plain :disabled="!dialogCategory.valid" @click="saveCategory">{{ text.save }}</v-btn>
                                     <v-spacer></v-spacer>
@@ -48,9 +48,9 @@
                                 <v-card-text>{{ text.subTitleDeleteCategory }}</v-card-text>
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
-                                    <v-btn color="grey" plain @click="closeDialogDeleteCategory()">
+                                    <v-btn color="secondary" plain @click="closeDialogDeleteCategory()">
                                         {{ text.cancel }}</v-btn>
-                                    <v-btn color="error" plain @click="removeCategory(deleteCategory)">
+                                    <v-btn color="tertiary" plain @click="removeCategory(deleteCategory)">
                                         {{ text.delete }}</v-btn>
                                     <v-spacer></v-spacer>
                                 </v-card-actions>
@@ -59,11 +59,18 @@
                     </v-toolbar>
                 </template>
                 <template #item.actions="{item}">
-                    <v-btn icon small @click="openCategory(item)">
-                        <v-icon icon="fas fa-edit" small />
+                    <v-btn
+                        variant="plain"
+                        icon="fas fa-edit"
+                        size="small"
+                        @click="openCategory(item)">
                     </v-btn>
-                    <v-btn icon small @click="openDialogDeleteCategory(item)">
-                        <v-icon icon="fas fa-trash" small color="red darken-2" />
+                    <v-btn
+                        variant="plain"
+                        icon="fas fa-trash"
+                        size="small"
+                        color="tertiary"
+                        @click="openDialogDeleteCategory(item)">
                     </v-btn>
                 </template>
             </v-data-table>
@@ -129,8 +136,8 @@ export default {
         },
         categoriesHeader() {
             return [
-                { title: this.text.category, value: 'name' },
-                { title: '', value: 'actions', sortable: false, align:'end' },
+                { title: this.text.category, key: 'name' },
+                { title: '', key: 'actions', sortable: false, align:'end' },
             ]
         },
     },

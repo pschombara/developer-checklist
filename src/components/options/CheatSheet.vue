@@ -44,7 +44,7 @@
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn color="grey" plain @click="closeCommand">{{ text.cancel }}</v-btn>
+                                <v-btn color="secondary" plain @click="closeCommand">{{ text.cancel }}</v-btn>
                                 <v-btn v-if="null === dialogCommand.current" color="primary" plain :disabled="!dialogCommand.valid" @click="addCommand">{{ text.add }}</v-btn>
                                 <v-btn v-else color="primary" plain :disabled="!dialogCommand.valid" @click="saveCommand">{{ text.save }}</v-btn>
                                 <v-spacer></v-spacer>
@@ -56,9 +56,9 @@
                             <v-card-title>{{ i18n.getMessage('TitleDelete', deleteCommand.label) }}</v-card-title>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn color="grey" plain @click="closeDialogDeleteCommand()">
+                                <v-btn color="secondary" plain @click="closeDialogDeleteCommand()">
                                     {{ text.cancel }}</v-btn>
-                                <v-btn color="error" plain @click="removeCommand(deleteCommand)">
+                                <v-btn color="tertiary" plain @click="removeCommand(deleteCommand)">
                                     {{ text.delete }}</v-btn>
                                 <v-spacer></v-spacer>
                             </v-card-actions>
@@ -67,12 +67,17 @@
                 </v-toolbar>
             </template>
             <template #item.actions="{item}">
-                <v-btn icon small @click="openCommand(item)">
-                    <v-icon icon="fas fa-edit" small />
-                </v-btn>
-                <v-btn icon small @click="openDialogDeleteCommand(item)">
-                    <v-icon icon="fas fa-trash" small color="red darken-2" />
-                </v-btn>
+                <v-btn
+                    variant="plain"
+                    icon="fas fa-edit"
+                    size="small"
+                    @click="openCommand(item)"></v-btn>
+                <v-btn
+                    variant="plain"
+                    icon="fas fa-trash"
+                    size="small"
+                    color="tertiary"
+                    @click="openDialogDeleteCommand(item)"></v-btn>
             </template>
         </v-data-table>
     </v-card>
@@ -134,9 +139,9 @@ export default {
         },
         headers() {
             return [
-                {title: this.text.label, value: 'label'},
-                {title: this.text.commandOrContent, value: 'command'},
-                {title: '', value: 'actions', align: 'right'},
+                {title: this.text.label, key: 'label'},
+                {title: this.text.commandOrContent, key: 'command'},
+                {title: '', key: 'actions', align: 'end'},
             ]
         },
     },

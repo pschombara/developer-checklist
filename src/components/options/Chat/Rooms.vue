@@ -35,7 +35,7 @@
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn color="grey" plain @click="closeRoom">{{ text.cancel }}</v-btn>
+                                <v-btn color="secondary" plain @click="closeRoom">{{ text.cancel }}</v-btn>
                                 <v-btn v-if="!!editRoom.id" color="primary" plain :disabled="!formValid" @click="saveRoom">{{ text.save }}</v-btn>
                                 <v-btn v-else color="primary" plain :disabled="!formValid" @click="addRoom">{{ text.add }}</v-btn>
                                 <v-spacer></v-spacer>
@@ -49,39 +49,37 @@
                             </v-card-title>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn color="grey" plain @click="closeDeleteRoom">{{ text.cancel }}</v-btn>
-                                <v-btn color="error" plain @click="removeRoom">{{ text.delete }}</v-btn>
+                                <v-btn color="secondary" plain @click="closeDeleteRoom">{{ text.cancel }}</v-btn>
+                                <v-btn color="tertiary" plain @click="removeRoom">{{ text.delete }}</v-btn>
                                 <v-spacer></v-spacer>
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
                 </template>
                 <template #item.actions="{item}">
-                    <v-btn v-if="!sortRoom" variant="plain" icon="fas fa-edit" size="small" @click="openRoom(item)">
-                    </v-btn>
-                    <v-btn v-if="!sortRoom" variant="plain" icon="fas fa-sort" size="small" :disabled="rooms.length < 2" @click="startSort(item)">
-                    </v-btn>
-                    <v-btn v-if="!sortRoom" variant="plain" icon="fas fa-trash" size="small" color="tertiary" @click="openDeleteRoom(item)">
-                    </v-btn>
+                    <v-btn v-if="!sortRoom" variant="plain" icon="fas fa-edit" size="small" @click="openRoom(item)"></v-btn>
+                    <v-btn v-if="!sortRoom" variant="plain" icon="fas fa-sort" size="small" :disabled="rooms.length < 2" @click="startSort(item)"></v-btn>
+                    <v-btn v-if="!sortRoom" variant="plain" icon="fas fa-trash" size="small" color="tertiary" @click="openDeleteRoom(item)"></v-btn>
                     <v-btn
-v-if="sortRoom && sortRoom.id !== item.id" icon
-                           small
-                           :disabled="item.sort - 1 === sortRoom.sort"
-                           @click="sortBefore(item)">
-                        <v-icon icon="fas fa-sort-up" small/>
-                    </v-btn>
+                        v-if="sortRoom && sortRoom.value !== item.value"
+                        variant="plain"
+                        icon="fas fa-sort-up"
+                        size="small"
+                        :disabled="item.raw.sort - 1 === sortRoom.raw.sort"
+                        @click="sortBefore(item)"></v-btn>
                     <v-btn
-v-if="sortRoom && sortRoom.id !== item.id" icon
-                           small
-                           :disabled="item.sort + 1 === sortRoom.sort"
-                           @click="sortAfter(item)">
-                        <v-icon icon="fas fa-sort-down" small/>
-                    </v-btn>
+                        v-if="sortRoom && sortRoom.value !== item.value"
+                        variant="plain"
+                        icon="fas fa-sort-down"
+                        size="small"
+                        :disabled="item.raw.sort + 1 === sortRoom.raw.sort"
+                        @click="sortAfter(item)"></v-btn>
                     <v-btn
-v-if="sortRoom && sortRoom.id === item.id" icon small
-                           @click="closeSort">
-                        <v-icon icon="fas fa-times" small/>
-                    </v-btn>
+                        v-if="sortRoom && sortRoom.value === item.value"
+                        variant="plain"
+                        icon="fas fa-times"
+                        size="small"
+                        @click="closeSort"></v-btn>
                 </template>
             </v-data-table>
         </v-card-text>
@@ -90,6 +88,7 @@ v-if="sortRoom && sortRoom.id === item.id" icon small
 
 <script>
 import Helper from '../../../mixins/helper'
+import {fa} from "vuetify/iconsets/fa";
 
 export default {
     name: 'ChatRooms',
