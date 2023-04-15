@@ -18,7 +18,7 @@
                                 :sort-by="['domain', 'project']"
                                 multi-sort
                                 show-group-by
-                                :group-by="['domain']"
+                                :group-by="[{key: 'domain'}]"
                             >
                                 <template #top>
                                     <v-toolbar flat>
@@ -62,7 +62,7 @@
                                                 </v-card-text>
                                                 <v-card-actions>
                                                     <v-spacer></v-spacer>
-                                                    <v-btn color="grey" plain @click="closeProject">{{ text.cancel }}</v-btn>
+                                                    <v-btn color="secondary" plain @click="closeProject">{{ text.cancel }}</v-btn>
                                                     <v-btn v-if="null === dialogProject.item.uuid" color="primary" plain :disabled="!dialogProject.valid" @click="addProject">{{ text.add }}</v-btn>
                                                     <v-btn v-else color="primary" plain :disabled="!dialogProject.valid" @click="saveProject">{{ text.save }}</v-btn>
                                                     <v-spacer></v-spacer>
@@ -74,9 +74,9 @@
                                                 <v-card-title class="headline">{{ i18n.getMessage('TitleDelete', deleteProject.project) }}</v-card-title>
                                                 <v-card-actions>
                                                     <v-spacer></v-spacer>
-                                                    <v-btn color="grey" plain @click="closeDialogDeleteProject()">
+                                                    <v-btn color="secondary" plain @click="closeDialogDeleteProject()">
                                                         {{ text.cancel }}</v-btn>
-                                                    <v-btn color="error" plain @click="removeProject(deleteProject)">
+                                                    <v-btn color="tertiary" plain @click="removeProject(deleteProject)">
                                                         {{ text.delete }}</v-btn>
                                                     <v-spacer></v-spacer>
                                                 </v-card-actions>
@@ -85,24 +85,17 @@
                                     </v-toolbar>
                                 </template>
                                 <template #item.actions="{item}">
-                                    <v-btn icon small @click="openProject(item)">
-                                        <v-icon small>fas fa-edit</v-icon>
-                                    </v-btn>
-                                    <v-btn icon small @click="openDialogDeleteProject(item)">
-                                        <v-icon icon="fas fa-trash" color="red darken-2" small />
-                                    </v-btn>
-                                </template>
-                                <template #group.header="{headers, isOpen, toggle, remove, group}">
-                                    <th :colspan="headers.length - 1">
-                                        <v-btn icon class="mr-2" small @click="toggle">
-                                            <v-icon :icon="isOpen ? 'fas fa-caret-up' : 'fas fa-caret-down'"/>
-                                        </v-btn>{{group}}
-                                    </th>
-                                    <th class="text-right">
-                                        <v-btn icon x-small @click="remove">
-                                            <v-icon icon="fas fa-times"/>
-                                        </v-btn>
-                                    </th>
+                                    <v-btn
+                                        variant="plain"
+                                        icon="fas fa-edit"
+                                        size="small"
+                                        @click="openProject(item)"> </v-btn>
+                                    <v-btn
+                                        variant="plain"
+                                        icon="fas fa-trash"
+                                        size="small"
+                                        color="tertiary"
+                                        @click="openDialogDeleteProject(item)"></v-btn>
                                 </template>
                             </v-data-table>
                         </v-card-text>
@@ -158,9 +151,9 @@
                                                 <v-card-text>{{ text.subTitleDeleteCategory }}</v-card-text>
                                                 <v-card-actions>
                                                     <v-spacer></v-spacer>
-                                                    <v-btn color="grey" plain @click="closeDialogDeleteCategory()">
+                                                    <v-btn color="secondary" plain @click="closeDialogDeleteCategory()">
                                                         {{ text.cancel }}</v-btn>
-                                                    <v-btn color="error" plain @click="removeCategory(deleteCategory)">
+                                                    <v-btn color="tertiary" plain @click="removeCategory(deleteCategory)">
                                                         {{ text.delete }}</v-btn>
                                                     <v-spacer></v-spacer>
                                                 </v-card-actions>
@@ -169,12 +162,17 @@
                                     </v-toolbar>
                                 </template>
                                 <template #item.actions="{item}">
-                                    <v-btn icon small @click="openCategory(item)">
-                                        <v-icon icon="fas fa-edit" small />
-                                    </v-btn>
-                                    <v-btn icon small @click="openDialogDeleteCategory(item)">
-                                        <v-icon icon="fas fa-trash" small color="tertiary" />
-                                    </v-btn>
+                                    <v-btn
+                                        variant="plain"
+                                        icon="fas fa-edit"
+                                        size="small"
+                                        @click="openCategory(item)"></v-btn>
+                                    <v-btn
+                                        variant="plain"
+                                        icon="fas fa-trash"
+                                        size="small"
+                                        color="tertiary"
+                                        @click="openDialogDeleteCategory(item)"> </v-btn>
                                 </template>
                             </v-data-table>
                         </v-card-text>
@@ -278,15 +276,14 @@ export default {
         },
         categoriesHeader() {
             return [
-                { title: this.text.category, value: 'name' },
-                { title: '', value: 'actions', sortable: false, align:'right' },
+                { title: this.text.category, key: 'name' },
+                { title: '', key: 'actions', sortable: false, align: 'end' },
             ]
         },
         projectsHeader() {
             return [
-                { title: this.text.category, value: 'domain' },
-                { title: this.text.project, value: 'project', groupable: false },
-                { title: '', value: 'actions', sortable: false, align:'right', groupable: false },
+                { title: this.text.project, key: 'project', groupable: false },
+                { title: '', key: 'actions', sortable: false, align: 'end', groupable: false },
             ]
         },
     },
