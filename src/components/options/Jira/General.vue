@@ -23,6 +23,7 @@
                                 thumb-size="24"
                                 min="0"
                                 max="24"
+                                step="1"
                                 persistent-hint
                             ></v-slider>
                         </v-col>
@@ -37,6 +38,7 @@
                                 thumb-size="24"
                                 min="1"
                                 max="30"
+                                step="1"
                                 persistent-hint
                             ></v-slider>
                         </v-col>

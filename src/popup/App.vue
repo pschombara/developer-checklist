@@ -140,7 +140,7 @@ export default {
             })
         },
         checkSwitchTab: function () {
-            this.tab = this.$store.getters['switchTab']
+            this.tab = this.$store.getters['switchTab'] ?? 'bookmark'
         },
         showTab: function (tab) {
             if ('jira' === tab.id) {

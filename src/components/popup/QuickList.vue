@@ -34,40 +34,6 @@
                     </v-col>
                 </template>
             </v-row>
-
-
-<!--            <v-data-iterator
-                :items="issues"
-                :items-per-page="maximumIssues"
-                :sort-by="['pinned', 'updateDate']"
-                :sort-desc="[true, true]"
-                multi-sort
-                hide-default-footer
-            >
-                <template v-slot:default="props">
-                    <v-row class="mt-3">
-                        <v-col
-                            cols="4"
-                            v-for="issue in props.items"
-                            :key="issue.name"
-                        >
-                            <v-tooltip top>
-                                <template v-slot:activator="{props}">
-                                    <v-btn
-                                        :color="buttonColor(issue)"
-                                        v-bind="props"
-                                        @click="openIssue(issue.name)"
-                                        block
-                                    >{{ issue.name }}
-                                    </v-btn>
-                                </template>
-                                <span class="success&#45;&#45;text" v-if="issue.pinned">{{ text.pinned }}: </span>
-                                <span>{{ issue.title }}</span>
-                            </v-tooltip>
-                        </v-col>
-                    </v-row>
-                </template>
-            </v-data-iterator>-->
         </v-card-text>
     </v-card>
 </template>
@@ -91,7 +57,18 @@ export default {
     },
     computed: {
         issues() {
-            return  this.$store.getters['issues/list']
+            let issues = [...this.$store.getters['issues/list']] // create copy to not adjust original
+            const maximum = this.$store.getters['jira/getMaximumIssues']
+
+            issues = issues.sort((a, b) => {
+                if (a.pinned !== b.pinned) {
+                    return a.pinned ? -1 : 1
+                }
+
+                return a.updateDate > b.updateDate ? -1 : 1
+            })
+
+            return issues.slice(0, maximum)
         },
         maximumIssues() {
             return this.$store.getters['jira/getMaximumIssues']
