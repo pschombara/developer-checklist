@@ -8,4 +8,7 @@ const app = createApp(App)
 app.config.productionTip = false
 app.use(vuetify)
 app.use(store)
+
+app.config.globalProperties.theme = vuetify.theme
+
 app.mount('#app')

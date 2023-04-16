@@ -136,7 +136,7 @@
                         <v-card-text>
                             <v-window v-model="tab">
                                 <v-window-item value="general">
-                                    <general></general>
+                                    <general @theme-color-changed="themeSchemaChanged" @theme-schema-changed="themeColorChanged"></general>
                                 </v-window-item>
                                 <v-window-item value="jira">
                                     <jira></jira>
@@ -215,6 +215,7 @@ export default {
                 },
                 saved: false,
             },
+            theme: null,
         }
     },
     computed: {
@@ -239,8 +240,8 @@ export default {
     created() {
         this.load()
 
-        const theme = new Theme()
-        theme.registerThemeChanged(this)
+        this.theme = new Theme()
+        this.theme.registerThemeChanged(this, this.$store.getters['themeSchema'], this.$store.getters['themeColor'])
     },
     methods: {
         load: function () {
@@ -263,6 +264,12 @@ export default {
             } else {
                 return true
             }
+        },
+        themeSchemaChanged: function (schema) {
+            this.theme.changeSchema(schema)
+        },
+        themeColorChanged: function (color) {
+            this.theme.changeColor(color)
         },
         openRestore: function () {
             this.dialog.restore = true

@@ -9,7 +9,9 @@ import icons from './modules/icons'
 import issues from './modules/issues'
 import Helper from '../mixins/helper'
 import {createStore} from 'vuex'
-import {toRaw} from 'vue'
+import vue from 'vue'
+import {th} from "vuetify/locale";
+import {c} from "../../dist/assets/vendor-e831543a.js";
 
 const migration = new Migration()
 
@@ -30,6 +32,8 @@ const state = {
     currentUrl: '',
     switchTab: null,
     openTab: null,
+    themeSchema: 'system',
+    themeColor: 'blue',
     optionTabs: [
         { id: 'general', name: chrome.i18n.getMessage('general'), icon: 'fas fa-cogs', settings: true },
         { id: 'jira', name: 'Jira', icon: 'fab fa-jira', settings: true },
@@ -74,11 +78,20 @@ const store = createStore({
         CHANGE_OPEN_TAB: (state, tab) => {
             state.openTab = tab
         },
+        CHANGE_THEME_SCHEMA: (state, schema) => {
+            state.themeSchema = schema
+        },
+        CHANGE_THEME_COLOR: (state, color) => {
+            state.themeColor = color
+        },
     },
     actions: {
         load: ({ commit, dispatch, rootGetters }) => {
             chrome.storage.onChanged.addListener((changes, area) => {
-                if ('local' === area && changes.optionsTab?.newValue) {
+                if ('local' !== area ) {
+                    return
+                }
+                if (changes.optionsTab?.newValue) {
                     commit('SET_TAB_CONFIG_MAIN', changes.optionsTab.newValue)
 
                     if ('' === changes.optionsTab.newValue) {
@@ -86,6 +99,8 @@ const store = createStore({
                     }
 
                     return dispatch('autoChangeOpenTab')
+                } else if (changes.theme?.newValue) {
+                    window.dispatchEvent(new CustomEvent('themeChanged', {detail: changes.theme.newValue}))
                 }
             })
 
@@ -108,6 +123,13 @@ const store = createStore({
                                 if ('' !== storageData['optionsTab']) {
                                     dispatch('autoChangeOpenTab')
                                 }
+                            }
+
+                            if (Object.prototype.hasOwnProperty.call(storageData, 'theme')) {
+                                commit('CHANGE_THEME_SCHEMA', storageData['theme']['schema'])
+                                commit('CHANGE_THEME_COLOR', storageData['theme']['color'])
+
+                                window.dispatchEvent(new CustomEvent('themeChanged', {detail: storageData['theme']}))
                             }
 
                             if (Object.prototype.hasOwnProperty.call(storageData, 'options')) {
@@ -247,6 +269,17 @@ const store = createStore({
             commit('SET_TAB_CONFIG_MAIN', tab)
             chrome.storage.local.set({'optionsTab': tab})
         },
+        changeThemeSchema: async ({commit, dispatch}, schema) => {
+            commit('CHANGE_THEME_SCHEMA', schema)
+            return dispatch('storeTheme')
+        },
+        changeThemeColor: async ({commit, dispatch}, color) => {
+            commit('CHANGE_THEME_COLOR', color)
+            return dispatch('storeTheme')
+        },
+        storeTheme: ({state}) => {
+            chrome.storage.local.set({theme: {schema: state.themeSchema, color: state.themeColor}})
+        },
         openTab: ({commit}, tab) => {
             commit('CHANGE_OPEN_TAB', tab)
         },
@@ -320,6 +353,8 @@ const store = createStore({
         openTab: state => state.openTab,
         currentUrl: state => state.currentUrl,
         optionTabs: state => state.optionTabs,
+        themeSchema: state => state.themeSchema,
+        themeColor: state => state.themeColor,
     },
     modules: {
         chat,

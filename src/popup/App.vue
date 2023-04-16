@@ -84,6 +84,7 @@ import Jenkins from '../components/popup/Jenkins.vue'
 import GitLab from '../components/popup/GitLab.vue'
 import Chat from '../components/popup/Chat.vue'
 import CheatSheet from '../components/popup/CheatSheet.vue'
+import {th} from "vuetify/locale";
 
 export default {
     name: 'App',
@@ -115,7 +116,7 @@ export default {
         this.load()
 
         const theme = new Theme()
-        theme.registerThemeChanged(this)
+        theme.registerThemeChanged(this, this.$store.getters['themeSchema'], this.$store.getters['themeColor'])
     },
     methods: {
         load() {

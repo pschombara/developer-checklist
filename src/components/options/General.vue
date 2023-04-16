@@ -23,14 +23,16 @@
                 <v-col cols="4">
                     <h3>Theme</h3>
                     <v-select
+                        v-model="themeSchema"
                         label="Brightness"
                         :items="['system', 'light', 'dark']"
                         variant="underlined"
                         class="mt-3"
                     ></v-select>
                     <v-select
+                        v-model="themeColor"
                         label="Color"
-                        :items="['blue']"
+                        :items="['blue', 'orange', 'green', 'yellow']"
                         variant="underlined"
                         class="mt-2"
                     ></v-select>
@@ -42,14 +44,29 @@
 
 <script>
 export default {
-    name: 'OptionModules',
-    data() {
-        return {
-        }
-    },
+    name: 'OptionGeneral',
+    emits: ['themeSchemaChanged', 'themeColorChanged'],
     computed: {
         modules() {
             return this.$store.getters['modules']
+        },
+        themeSchema: {
+            get() {
+                return this.$store.getters['themeSchema']
+            },
+            set(value) {
+                this.$store.dispatch('changeThemeSchema', value)
+                this.$emit('themeSchemaChanged', value)
+            },
+        },
+        themeColor: {
+            get() {
+                return this.$store.getters['themeColor']
+            },
+            set(value) {
+                this.$store.dispatch('changeThemeColor', value)
+                this.$emit('themeColorChanged', value)
+            },
         },
     },
     methods: {
