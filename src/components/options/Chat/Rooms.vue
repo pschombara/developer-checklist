@@ -4,7 +4,7 @@
             <v-data-table
                 :headers="roomsHeader"
                 :items="rooms"
-                :sort-by="['sort']"
+                :sort-by="[{key: 'sort', order: 'asc'}]"
                 :items-per-page="-1"
                 :item-class="itemRowSortActiveClass"
                 :hide-default-footer="true"
@@ -88,7 +88,6 @@
 
 <script>
 import Helper from '../../../mixins/helper'
-import {fa} from "vuetify/iconsets/fa";
 
 export default {
     name: 'ChatRooms',
@@ -160,15 +159,15 @@ export default {
         sortBefore: function (item) {
             this.$store.dispatch('chat/roomSortBefore', {
                 client: this.client,
-                ref: item.id,
-                current: this.sortRoom.id,
+                ref: item.value,
+                current: this.sortRoom.value,
             })
         },
         sortAfter: function (item) {
             this.$store.dispatch('chat/roomSortAfter', {
                 client: this.client,
-                ref: item.id,
-                current: this.sortRoom.id,
+                ref: item.value,
+                current: this.sortRoom.value,
             })
         },
         itemRowSortActiveClass: function (item) {
@@ -176,7 +175,7 @@ export default {
                 return ''
             }
 
-            return item.id === this.sortRoom.id ? 'primary' : ''
+            return item.value === this.sortRoom.value ? 'primary' : ''
         },
         openRoom: function (item) {
             this.editRoom = {

@@ -4,7 +4,7 @@
             <v-data-table
                 :headers="messagesHeader"
                 :items="messages"
-                :sort-by="['sort']"
+                :sort-by="[{key: 'sort', order: 'asc'}]"
                 :items-per-page="-1"
                 :item-class="itemRowSortActiveClass"
                 :hide-default-footer="true"

@@ -217,7 +217,6 @@ export default {
             })
         },
         buildName: function (job) {
-            console.log(job)
             const ciJob = this.builds.find(build => build.job === job)
 
             if (undefined === ciJob) {

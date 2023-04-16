@@ -2,6 +2,8 @@ import {Uuid} from '../../mixins/uuid'
 import Helper from '../../mixins/helper'
 import {Google} from '../../mixins/chat/google'
 import {Discord} from '../../mixins/chat/discord'
+import {toRaw} from 'vue'
+import {da} from "vuetify/locale";
 
 const chatWorker = new Worker('../..//worker/chat.js')
 
@@ -27,8 +29,6 @@ export default {
             }
 
             state.clients[data.client].rooms.push(data.room)
-
-            Helper.resort(state.clients[data.client].rooms)
         },
         REMOVE_ROOM: (state, data) => {
             if (undefined === state.clients[data.client]) {
@@ -61,8 +61,6 @@ export default {
             }
 
             state.clients[data.client].messages.push(data.message)
-
-            Helper.resort(state.clients[data.client].messages)
         },
         REMOVE_MESSAGE: (state, data) => {
             if (undefined === state.clients[data.client]) {
@@ -108,7 +106,6 @@ export default {
                     data.main = false
                 }
             }
-
         },
         SORT_ROOM_AFTER: (state, data) => {
             if (undefined === state.clients[data.client]) {
@@ -192,9 +189,6 @@ export default {
                 if (data.main) {
                     commit('CHANGE_MAIN', client)
                 }
-
-                data.messages = Helper.convertToArray(data.messages)
-                data.rooms = Helper.convertToArray(data.rooms)
 
                 for (let message of data.messages) {
                     commit('ADD_MESSAGE', {
@@ -317,26 +311,24 @@ export default {
                 resolve({
                     key: 'chat',
                     options: {
-                        google: state.clients.google,
-                        discord: state.clients.discord,
+                        google: toRaw(state.clients.google),
+                        discord: toRaw(state.clients.discord),
                     },
                 })
             })
         },
         // popup
         sendMessage: async ({commit, rootGetters, getters}, data) => {
-            let room = getters['room'](data.client, data.room)
-            let message = getters['message'](data.client, data.message)
             let jiraUrl = rootGetters['jira/getUrl']
             let msg = ''
 
             switch (data.client) {
                 case 'google' :
-                    msg = Google.format(message.content, data.attachedIssues, jiraUrl)
+                    msg = Google.format(data.message.content, data.attachedIssues, jiraUrl)
 
                     break
                 case 'discord':
-                    msg = Discord.format(message.content, data.attachedIssues, jiraUrl)
+                    msg = Discord.format(data.message.content, data.attachedIssues, jiraUrl)
 
                     break
                 default:
@@ -357,7 +349,7 @@ export default {
                 }, 1500)
             })
 
-            chatWorker.postMessage({room, message: msg})
+            chatWorker.postMessage({room: toRaw(data.room), message: msg})
         },
     },
     getters: {

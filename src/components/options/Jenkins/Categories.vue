@@ -6,7 +6,7 @@
                 :headers="categoriesHeader"
                 :items="categories"
                 :search="searchCategory"
-                :sort-by="['name']"
+                :sort-by="[{key: 'name', order: 'asc'}]"
             >
                 <template #top>
                     <v-toolbar flat>

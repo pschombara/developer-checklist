@@ -89,6 +89,9 @@
 </template>
 
 <script>
+
+import {th} from "vuetify/locale";
+
 export default {
     name: 'PopupChat',
     data: () => {
@@ -146,7 +149,13 @@ export default {
         if (0 === rooms.length) {
             return
         }
-        this.room = rooms[0].id
+
+        for (let room of rooms) {
+            if (null === this.room
+                || this.room.sort > room.sort) {
+                this.room = room
+            }
+        }
 
         let messages = this.$store.getters['chat/listMessages'](this.client)
 
@@ -154,7 +163,12 @@ export default {
             return
         }
 
-        this.message = messages[0].id
+        for (let message of messages) {
+            if (null === this.message
+                || this.message.sort > message.sort) {
+                this.message = message
+            }
+        }
     },
     methods: {
         openOptions: function (tab) {

@@ -32,6 +32,8 @@ export default class Helper {
                 listItem.sort = refSort
             }
         }
+
+        this.resort(list)
     }
 
     static sortAfter(list, item, ref, key) {
@@ -68,13 +70,5 @@ export default class Helper {
             chrome.i18n.getUILanguage(),
             {day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit'},
         )
-    }
-
-    static convertToArray(arrayOrObject) {
-        if (false === Array.isArray(arrayOrObject)) {
-            return Object.values(arrayOrObject)
-        }
-
-        return arrayOrObject
     }
 }

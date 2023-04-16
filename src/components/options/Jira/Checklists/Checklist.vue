@@ -23,14 +23,15 @@
                         :items="icons"
                         label="Icon"
                     >
-                        <template #selection="{item}">
-                            <v-icon left>fas fa-{{ item.value }}</v-icon>
-                            {{ item.value }}
+                        <template #selection="{ item }">
+                            <v-icon :icon="'fas fa-' + item.value"></v-icon>
+                            <span class="ms-2">{{item.value}}</span>
                         </template>
-                        <template #item="{item}">
-                            <v-icon left>fas fa-{{ item.value }}</v-icon>
-                            {{ item.value }}
-                            <v-spacer></v-spacer>
+                        <template #item="{props, item}">
+                            <v-list-item
+                                v-bind="props"
+                                :prepend-icon="'fas fa-' + item.value"
+                                :title="item.value"></v-list-item>
                         </template>
                     </v-combobox>
                 </v-col>
@@ -169,7 +170,7 @@ color="primary" plain :disabled="!dialogBtnFailed.valid"
                     <v-data-table
                         :items="categories"
                         :headers="categoriesHeader"
-                        :sort-by="['sort']"
+                        :sort-by="[{key: 'sort', order: 'asc'}]"
                         :items-per-page=-1
                         :item-class="itemRowSortActiveClass"
                         :hide-default-footer=true
@@ -225,20 +226,21 @@ color="primary" plain :disabled="!dialogBtnFailed.valid"
                                 variant="plain"
                                 icon="fas fa-trash"
                                 size="small"
+                                color="tertiary"
                                 @click="openDialogDeleteCategory(item)"></v-btn>
                             <v-btn
-                                v-if="sortChecklist && sortChecklist.uid !== item.uid"
+                                v-if="sortChecklist && sortChecklist.raw.uid !== item.raw.uid"
                                 variant="plain"
                                 icon="fas fa-sort-up"
                                 size="small"
-                                :disabled="item.sort - 1 === sortChecklist.sort"
+                                :disabled="item.raw.sort - 1 === sortChecklist.raw.sort"
                                 @click="categoryInsertBefore(item)"></v-btn>
                             <v-btn
-                                v-if="sortChecklist && sortChecklist.uid !== item.uid"
+                                v-if="sortChecklist && sortChecklist.raw.uid !== item.raw.uid"
                                 variant="plain"
                                 icon="fas fa-sort-down"
                                 size="small"
-                                :disabled="item.sort + 1 === sortChecklist.sort"
+                                :disabled="item.raw.sort + 1 === sortChecklist.raw.sort"
                                 @click="categoryInsertAfter(item)"></v-btn>
                             <v-btn
                                 v-if="sortChecklist && sortChecklist.uid === item.uid"
@@ -346,7 +348,7 @@ export default {
         },
         categories: {
             get() {
-                return this.checklist.checklist
+                return Object.values(this.checklist.checklist)
             },
         },
         categoriesHeader() {

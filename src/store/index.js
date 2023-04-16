@@ -9,6 +9,7 @@ import icons from './modules/icons'
 import issues from './modules/issues'
 import Helper from '../mixins/helper'
 import {createStore} from 'vuex'
+import {toRaw} from 'vue'
 
 const migration = new Migration()
 
@@ -120,7 +121,7 @@ const store = createStore({
                     }).then(storageData => {
                         const options = migration.migrate(storageData, []).options
 
-                        commit('SET_MODULES', options.modules)
+                        commit('SET_MODULES', options.general.modules)
                         const promises = []
 
                         promises.push(dispatch('jira/init', options.jira))
@@ -260,7 +261,9 @@ const store = createStore({
         saveOptions: ({state, dispatch}) => {
             let options = {
                 options: {
-                    modules: state.modules,
+                    general: {
+                        modules: state.modules,
+                    },
                     version: state.version,
                 },
             }

@@ -9,7 +9,7 @@
                         :items-per-page="-1"
                         :item-class="activeSortClass"
                         :hide-default-footer="true"
-                        :sort-by="['sort']"
+                        :sort-by="[{key: 'sort', order: 'asc'}]"
                     >
                         <template #top>
                             <v-toolbar flat>

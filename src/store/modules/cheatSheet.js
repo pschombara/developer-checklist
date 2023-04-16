@@ -1,4 +1,5 @@
 import Helper from '../../mixins/helper'
+import {toRaw} from 'vue'
 
 const state = {
     items: [],
@@ -35,8 +36,6 @@ export default {
             return new Promise(resolve => {
                 commit('CLEAR')
 
-                options = Helper.convertToArray(options)
-
                 for (let item of options) {
                     commit('ADD_ITEM', {
                         label: item.label,
@@ -59,7 +58,7 @@ export default {
             return new Promise(resolve => {
                 resolve({
                     key: 'cheatSheet',
-                    options: state.items,
+                    options: toRaw(state.items),
                 })
             })
         },

@@ -1,5 +1,6 @@
 import {Uuid} from '../../mixins/uuid'
 import Helper from '../../mixins/helper'
+import {toRaw} from 'vue'
 
 const state = {
     categories: [],
@@ -79,9 +80,6 @@ export default {
 
                 commit('SET_HOST', options.host)
 
-                options.categories = Helper.convertToArray(options.categories)
-                options.projects = Helper.convertToArray(options.projects)
-
                 for (let category of options.categories) {
                     commit('ADD_CATEGORY', category)
                 }
@@ -137,9 +135,9 @@ export default {
                 resolve({
                     key: 'gitLab',
                     options: {
-                        host: state.host,
-                        projects: state.projects,
-                        categories: state.categories,
+                        host: toRaw(state.host),
+                        projects: toRaw(state.projects),
+                        categories: toRaw(state.categories),
                     },
                 })
             })

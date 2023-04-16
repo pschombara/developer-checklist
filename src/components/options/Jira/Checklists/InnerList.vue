@@ -10,7 +10,7 @@
             <v-data-table
                 :items="checklist.items"
                 :headers="header"
-                :sort-by="['sort']"
+                :sort-by="[{key: 'sort', order: 'asc'}]"
                 :items-per-page=-1
                 :item-class="activeSortClass"
                 :hide-default-footer=true
@@ -63,22 +63,25 @@
                         <v-icon small color="red darken-2">fas fa-trash</v-icon>
                     </v-btn>
                     <v-btn
-v-if="sortItem && sortItem.id !== item.id" icon
-                           small
-                           :disabled="item.sort - 1 === sortItem.sort"
-                           @click="insertBefore(item)">
-                        <v-icon small>fas fa-sort-up</v-icon>
-                    </v-btn>
+                        v-if="sortItem && sortItem.value !== item.value"
+                        variant="plain"
+                        icon="fas fa-sort-up"
+                        size="small"
+                        :disabled="item.raw.sort - 1 === sortItem.raw.sort"
+                       @click="insertBefore(item)"></v-btn>
                     <v-btn
-v-if="sortItem && sortItem.id !== item.id" icon
-                           small
-                           :disabled="item.sort + 1 === sortItem.sort"
-                           @click="insertAfter(item)">
-                        <v-icon small>fas fa-sort-down</v-icon>
-                    </v-btn>
-                    <v-btn v-if="sortItem && sortItem.id === item.id" icon small @click="cancelSort">
-                        <v-icon small>fas fa-times</v-icon>
-                    </v-btn>
+                        v-if="sortItem && sortItem.value !== item.value"
+                        variant="plain"
+                        icon="fas fa-sort-down"
+                        size="small"
+                       :disabled="item.raw.sort + 1 === sortItem.raw.sort"
+                        @click="insertAfter(item)"></v-btn>
+                    <v-btn
+                        v-if="sortItem && sortItem.value === item.value"
+                        variant="plain"
+                        icon="fas fa-times"
+                        size="small"
+                        @click="cancelSort"></v-btn>
                 </template>
             </v-data-table>
         </v-card-text>
@@ -108,6 +111,7 @@ v-if="sortItem && sortItem.id !== item.id" icon
 import Helper from '../../../../mixins/helper'
 import _ from 'lodash'
 import {Uuid} from '../../../../mixins/uuid'
+import {th} from 'vuetify/locale'
 
 export default  {
     name: 'ChecklistsInnerList',
@@ -165,8 +169,8 @@ export default  {
     computed: {
         header() {
             return [
-                { title: this.text.name, value: 'text', sortable: false },
-                { title: '', value: 'actions', align: 'end', sortable: false},
+                { title: this.text.name, key: 'text', sortable: false },
+                { title: '', key: 'actions', align: 'end', sortable: false},
             ]
         },
     },

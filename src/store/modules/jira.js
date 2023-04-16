@@ -1,5 +1,6 @@
 import Helper from '../../mixins/helper'
 import {Uuid} from '../..//mixins/uuid'
+import {toRaw} from 'vue'
 
 const state = {
     url: '',
@@ -228,10 +229,6 @@ export default {
                 commit('SET_CLEANUP', options.cleanup)
                 commit('SET_MAXIMUM_ISSUES', options.maximumIssues)
 
-                options.boards = Helper.convertToArray(options.boards)
-                options.checklists = Helper.convertToArray(options.checklists)
-                options.templates = Helper.convertToArray(options.templates)
-
                 for (let board of options.boards) {
                     commit('ADD_BOARD', {
                         key: board.key,
@@ -367,12 +364,12 @@ export default {
                 resolve({
                     key: 'jira',
                     options: {
-                        url: state.url,
-                        cleanup: state.cleanup,
-                        maximumIssues: state.maximumIssues,
-                        boards: state.boards,
-                        checklists: state.checklists,
-                        templates: state.templates,
+                        url: toRaw(state.url),
+                        cleanup: toRaw(state.cleanup),
+                        maximumIssues: toRaw(state.maximumIssues),
+                        boards: toRaw(state.boards),
+                        checklists: toRaw(state.checklists),
+                        templates: toRaw(state.templates),
                     },
                 })
             })

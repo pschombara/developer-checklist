@@ -4,8 +4,7 @@
             <v-data-table
                 :items="issues"
                 :headers="issueHeader"
-                :sort-by="['pinned', 'updateDate']"
-                :sort-desc="[true, true]"
+                :sort-by="[{key: 'pinned', order: 'desc'}, {key: 'updateDate', order: 'desc'}]"
                 multi-sort
                 :loading="load"
             >
@@ -33,7 +32,7 @@
                     </v-toolbar>
                 </template>
                 <template #item.date="{item}">
-                    {{ dateFormat(item.updateDate) }}
+                    {{ dateFormat(item.raw.updateDate) }}
                 </template>
                 <template #item.pinned="{item}">
                     <v-btn
@@ -57,7 +56,7 @@
                         variant="plain"
                         icon="fas fa-trash"
                         color="tertiary"
-                        small
+                        size="small"
                         @click="openDelete(item)"> </v-btn>
                 </template>
             </v-data-table>

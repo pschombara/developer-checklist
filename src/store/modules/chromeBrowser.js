@@ -1,3 +1,5 @@
+import {toRaw} from 'vue'
+
 const state = {
     tabGroups: {
         grey: {
@@ -54,7 +56,7 @@ export default {
                     {
                         key: 'chrome',
                         options: {
-                            tabGroups: state.tabGroups,
+                            tabGroups: toRaw(state.tabGroups),
                         },
                     },
                 )
