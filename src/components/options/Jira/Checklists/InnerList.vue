@@ -18,10 +18,12 @@
                 <template #top>
                     <v-toolbar flat>
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" @click="openEntry(defaultEntry)">
-                            <v-icon left x-small>fas fa-plus</v-icon>
-                            {{ text.add }}
-                        </v-btn>
+                        <v-btn
+                            variant="plain"
+                            color="primary"
+                            prepend-icon="fas fa-plus"
+                            @click="openEntry(defaultEntry)">
+                            {{ text.add }}</v-btn>
                         <v-dialog v-model="deleteElement.open" max-width="450">
                             <v-card>
                                 <v-card-title class="headline">{{text.delete}}</v-card-title>
@@ -30,8 +32,8 @@
                                 </v-card-text>
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
-                                    <v-btn color="grey" plain @click="closeRemoveEntry">{{ text.cancel }}</v-btn>
-                                    <v-btn color="error" plain @click="removeEntry">{{ text.delete }}</v-btn>
+                                    <v-btn color="secondary" plain @click="closeRemoveEntry">{{ text.cancel }}</v-btn>
+                                    <v-btn color="tertiary" plain @click="removeEntry">{{ text.delete }}</v-btn>
                                     <v-spacer></v-spacer>
                                 </v-card-actions>
                             </v-card>
@@ -53,15 +55,25 @@
                     </v-toolbar>
                 </template>
                 <template #item.actions="{item}">
-                    <v-btn v-if="!sortItem" icon small @click="openEntry(item)">
-                        <v-icon small>fas fa-edit</v-icon>
-                    </v-btn>
-                    <v-btn v-if="!sortItem" icon small @click="startSort(item)">
-                        <v-icon small>fas fa-sort</v-icon>
-                    </v-btn>
-                    <v-btn v-if="!sortItem" icon small @click="openRemoveEntry(item)">
-                        <v-icon small color="red darken-2">fas fa-trash</v-icon>
-                    </v-btn>
+                    <v-btn
+                        v-if="!sortItem"
+                        variant="plain"
+                        icon="fas fa-edit"
+                        size="small"
+                        @click="openEntry(item)"></v-btn>
+                    <v-btn
+                        v-if="!sortItem"
+                        variant="plain"
+                        icon="fas fa-sort"
+                        size="small"
+                        @click="startSort(item)"></v-btn>
+                    <v-btn
+                        v-if="!sortItem"
+                        variant="plain"
+                        icon="fas fa-trash"
+                        size="small"
+                        color="tertiary"
+                        @click="openRemoveEntry(item)"></v-btn>
                     <v-btn
                         v-if="sortItem && sortItem.value !== item.value"
                         variant="plain"
@@ -87,18 +99,21 @@
         </v-card-text>
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="grey" plain @click="$emit('close')">{{ text.cancel }}</v-btn>
+            <v-btn
+                variant="plain"
+                color="secondary"
+                @click="$emit('close')">{{ text.cancel }}</v-btn>
             <v-btn
                 v-if="!!checklist.uid"
+                variant="plain"
                 color="primary"
-                plain
                 :disabled="checklist.title.length <= 0 && 0 === checklist.items.length"
                 @click="saveCategory"
             >{{ text.save }}</v-btn>
             <v-btn
                 v-else
+                variant="plain"
                 color="primary"
-                plain
                 :disabled="checklist.title.length <= 0 && 0 === checklist.items.length"
                 @click="addCategory"
             >{{ text.add }}</v-btn>

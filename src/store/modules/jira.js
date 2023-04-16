@@ -211,13 +211,13 @@ export default {
             const current = state.templates.find(template => template.id === data.current)
             const reference = state.templates.find(template => template.id === data.ref)
 
-            Helper.sortBefore(state.templates, current, reference, 'sort')
+            Helper.sortBefore(state.templates, current, reference, 'id')
         },
         SORT_TEMPLATE_AFTER: (state, data) => {
             const current = state.templates.find(template => template.id === data.current)
             const reference = state.templates.find(template => template.id === data.ref)
 
-            Helper.sortAfter(state.templates, current, reference, 'sort')
+            Helper.sortAfter(state.templates, current, reference, 'id')
         },
     },
     actions: {

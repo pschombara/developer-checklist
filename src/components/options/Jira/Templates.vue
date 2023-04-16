@@ -14,8 +14,10 @@
                         <template #top>
                             <v-toolbar flat>
                                 <v-spacer></v-spacer>
-                                <v-btn color="primary" @click="openTemplate(newTemplate)">
-                                    <v-icon left x-small>fas fa-plus</v-icon>
+                                <v-btn
+                                    variant="plain"
+                                    prepend-icon="fas fa-plus"
+                                    color="primary" @click="openTemplate(newTemplate)">
                                     {{ text.newTemplate }}
                                 </v-btn>
                                 <v-dialog v-model="dialogEditTemplate" max-width="800">
@@ -31,12 +33,12 @@
                                                     v-model="editTemplate.subTitle"
                                                     counter="50"
                                                     :rules="subTitleRules"></v-text-field>
-                                                <v-btn @click="addToContent('[ciBuilds]')">
-                                                    <v-icon>fab fa-jenkins</v-icon>
-                                                </v-btn>
-                                                <v-btn @click="addToContent('[mergeRequests]')">
-                                                    <v-icon>fab fa-gitlab</v-icon>
-                                                </v-btn>
+                                                <v-btn
+                                                    icon="fab fa-jenkins"
+                                                    @click="addToContent('[ciBuilds]')"></v-btn>
+                                                <v-btn
+                                                    icon="fab fa-gitlab"
+                                                    @click="addToContent('[mergeRequests]')"></v-btn>
                                                 <v-textarea
                                                     v-model="editTemplate.content"
                                                     counter="500"
@@ -48,9 +50,22 @@
                                         </v-card-text>
                                         <v-card-actions>
                                             <v-spacer></v-spacer>
-                                            <v-btn color="secondary" plain @click="closeTemplate">{{ text.cancel }}</v-btn>
-                                            <v-btn v-if="null !== editTemplate.id" color="success" plain :disabled="!editTemplate.valid" @click="updateTemplate">{{text.save}}</v-btn>
-                                            <v-btn v-else color="success" plain :disabled="!editTemplate.valid" @click="addTemplate">{{text.add}}</v-btn>
+                                            <v-btn
+                                                variant="plain"
+                                                color="secondary"
+                                                @click="closeTemplate">{{ text.cancel }}</v-btn>
+                                            <v-btn
+                                                v-if="null !== editTemplate.id"
+                                                variant="plain"
+                                                color="success"
+                                                :disabled="!editTemplate.valid"
+                                                @click="updateTemplate">{{text.save}}</v-btn>
+                                            <v-btn
+                                                v-else
+                                                variant="plain"
+                                                color="success"
+                                                :disabled="!editTemplate.valid"
+                                                @click="addTemplate">{{text.add}}</v-btn>
                                             <v-spacer></v-spacer>
                                         </v-card-actions>
                                     </v-card>
@@ -62,9 +77,15 @@
                                         </v-card-title>
                                         <v-card-actions>
                                             <v-spacer></v-spacer>
-                                            <v-btn color="secondary" plain @click="closeRemoveTemplate">
+                                            <v-btn
+                                                variant="plain"
+                                                color="secondary"
+                                                @click="closeRemoveTemplate">
                                                 {{ text.cancel }}</v-btn>
-                                            <v-btn color="tertiary" plain @click="removeTemplate">
+                                            <v-btn
+                                                variant="plain"
+                                                color="tertiary"
+                                                @click="removeTemplate">
                                                 {{ text.delete }}</v-btn>
                                             <v-spacer></v-spacer>
                                         </v-card-actions>
@@ -125,6 +146,8 @@
 </template>
 
 <script>
+import {th} from 'vuetify/locale'
+
 export default {
     name: 'JiraTemplates',
     data() {
@@ -297,14 +320,14 @@ export default {
         },
         insertBefore: function (template) {
             this.$store.dispatch('jira/templateSortBefore', {
-                current: this.sortTemplate.raw.id,
-                ref: template.raw.id,
+                current: this.sortTemplate.value,
+                ref: template.value,
             })
         },
         insertAfter: function (template) {
             this.$store.dispatch('jira/templateSortAfter', {
-                current: this.sortTemplate.raw.id,
-                ref: template.raw.id,
+                current: this.sortTemplate.value,
+                ref: template.value,
             })
         },
         cancelSort: function () {
@@ -315,7 +338,7 @@ export default {
                 return ''
             }
 
-            return template.id === this.sortTemplate.id ? 'primary' : ''
+            return template.value === this.sortTemplate.value ? 'primary' : ''
         },
     },
 }

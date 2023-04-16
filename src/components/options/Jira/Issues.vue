@@ -11,8 +11,7 @@
                 <template #top>
                     <v-toolbar flat>
                         <v-spacer></v-spacer>
-                        <v-btn plain @click="reload">
-                            <v-icon left>fas fa-sync</v-icon>
+                        <v-btn variant="plain" prepend-icon="fas fa-sync" @click="reload">
                             {{ text.reload }}
                         </v-btn>
 
@@ -23,8 +22,8 @@
                                 </v-card-title>
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
-                                    <v-btn color="secondary" plain @click="closeDelete">{{ text.cancel }}</v-btn>
-                                    <v-btn color="tertiary" plain @click="remove">{{ text.delete }}</v-btn>
+                                    <v-btn color="secondary" variant="plain" @click="closeDelete">{{ text.cancel }}</v-btn>
+                                    <v-btn color="tertiary" variant="plain" @click="remove">{{ text.delete }}</v-btn>
                                     <v-spacer></v-spacer>
                                 </v-card-actions>
                             </v-card>

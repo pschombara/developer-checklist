@@ -9,9 +9,6 @@ import icons from './modules/icons'
 import issues from './modules/issues'
 import Helper from '../mixins/helper'
 import {createStore} from 'vuex'
-import vue from 'vue'
-import {th} from "vuetify/locale";
-import {c} from "../../dist/assets/vendor-e831543a.js";
 
 const migration = new Migration()
 

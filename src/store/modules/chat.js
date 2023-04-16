@@ -3,7 +3,7 @@ import Helper from '../../mixins/helper'
 import {Google} from '../../mixins/chat/google'
 import {Discord} from '../../mixins/chat/discord'
 import {toRaw} from 'vue'
-import {da} from "vuetify/locale";
+import {da} from 'vuetify/locale'
 
 const chatWorker = new Worker('../..//worker/chat.js')
 

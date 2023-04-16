@@ -44,10 +44,9 @@
                     <h5>{{ text.success }}</h5>
                     <v-btn
                         :color="checklist.buttons.success.enabled ? 'primary' : 'secondary'"
-                        outlined
-                        @click="openButtonSuccessDialog"
-                    >
-                        <v-icon left>fas fa-check</v-icon>
+                        variant="outlined"
+                        prepend-icon="fas fa-check"
+                        @click="openButtonSuccessDialog">
                         {{ '' !== checklist.buttons.success.text ? checklist.buttons.success.text : '__Text__' }}
                     </v-btn>
                     <v-dialog v-model="dialogBtnSuccess.open" max-width="600">
@@ -97,11 +96,16 @@
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn color="grey" plain @click="closeButtonSuccessDialog">{{ text.cancel }}</v-btn>
                                 <v-btn
-color="primary" plain :disabled="!dialogBtnSuccess.valid"
-                                       @click="saveButtonSuccess">{{ text.save }}
-                                </v-btn>
+                                    variant="plain"
+                                    color="secondary"
+                                    plain
+                                    @click="closeButtonSuccessDialog">{{ text.cancel }}</v-btn>
+                                <v-btn
+                                    variant="plain"
+                                    color="primary"
+                                    :disabled="!dialogBtnSuccess.valid"
+                                    @click="saveButtonSuccess">{{ text.save }}</v-btn>
                                 <v-spacer></v-spacer>
                             </v-card-actions>
                         </v-card>
@@ -110,11 +114,11 @@ color="primary" plain :disabled="!dialogBtnSuccess.valid"
                 <v-col cols="12" sm="4" md="3">
                     <h5>{{ text.failed }}</h5>
                     <v-btn
-                        :color="checklist.buttons.failed.enabled ? 'error' : 'grey'"
-                        outlined
+                        :color="checklist.buttons.failed.enabled ? 'tertiary' : 'grey'"
+                        variant="outlined"
+                        prepend-icon="fas fa-times"
                         @click="openButtonFailedDialog"
                     >
-                        <v-icon left>fas fa-times</v-icon>
                         {{ '' !== checklist.buttons.failed.text ? checklist.buttons.failed.text : '__Text__' }}
                     </v-btn>
                     <v-dialog v-model="dialogBtnFailed.open" max-width="600">
@@ -149,11 +153,12 @@ color="primary" plain :disabled="!dialogBtnSuccess.valid"
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn color="grey" plain @click="closeButtonFailedDialog">{{ text.cancel }}</v-btn>
+                                <v-btn variant="plain" color="grey" @click="closeButtonFailedDialog">{{ text.cancel }}</v-btn>
                                 <v-btn
-color="primary" plain :disabled="!dialogBtnFailed.valid"
-                                       @click="saveButtonFailed">{{ text.save }}
-                                </v-btn>
+                                    variant="plain"
+                                    color="primary"
+                                    :disabled="!dialogBtnFailed.valid"
+                                    @click="saveButtonFailed">{{ text.save }}</v-btn>
                                 <v-spacer></v-spacer>
                             </v-card-actions>
                         </v-card>
@@ -178,8 +183,10 @@ color="primary" plain :disabled="!dialogBtnFailed.valid"
                         <template #top>
                             <v-toolbar flat>
                                 <v-spacer></v-spacer>
-                                <v-btn color="primary" @click="openCategory(null)">
-                                    <v-icon left x-small>fas fa-plus</v-icon>
+                                <v-btn
+                                    prepend-icon="fas fa-plus"
+                                    color="primary"
+                                    @click="openCategory(null)">
                                     {{ text.add }}
                                 </v-btn>
                                 <v-dialog
@@ -200,8 +207,8 @@ color="primary" plain :disabled="!dialogBtnFailed.valid"
                                         </v-card-title>
                                         <v-card-actions>
                                             <v-spacer></v-spacer>
-                                            <v-btn color="secondary" plain @click="closeDialogDeleteCategory">{{ text.cancel }}</v-btn>
-                                            <v-btn color="tertiary" plain @click="removeCategory">{{ text.delete }}</v-btn>
+                                            <v-btn variant="plain" color="secondary" @click="closeDialogDeleteCategory">{{ text.cancel }}</v-btn>
+                                            <v-btn variant="plain" color="tertiary" @click="removeCategory">{{ text.delete }}</v-btn>
                                             <v-spacer></v-spacer>
                                         </v-card-actions>
                                     </v-card>
@@ -214,7 +221,7 @@ color="primary" plain :disabled="!dialogBtnFailed.valid"
                                 variant="plain"
                                 icon="fas fa-edit"
                                 small
-                                @click="openCategory(item.uid)"></v-btn>
+                                @click="openCategory(item.raw.uid)"></v-btn>
                             <v-btn
                                 v-if="!sortChecklist"
                                 variant="plain"
@@ -243,7 +250,7 @@ color="primary" plain :disabled="!dialogBtnFailed.valid"
                                 :disabled="item.raw.sort + 1 === sortChecklist.raw.sort"
                                 @click="categoryInsertAfter(item)"></v-btn>
                             <v-btn
-                                v-if="sortChecklist && sortChecklist.uid === item.uid"
+                                v-if="sortChecklist && sortChecklist.raw.uid === item.raw.uid"
                                 variant="plain"
                                 icon="fas fa-times"
                                 size="small"
@@ -259,6 +266,7 @@ color="primary" plain :disabled="!dialogBtnFailed.valid"
 <script>
 
 import InnerList from './InnerList.vue'
+import {ca} from "vuetify/locale";
 
 export default {
     name: 'ChecklistsChecklist',
@@ -348,7 +356,7 @@ export default {
         },
         categories: {
             get() {
-                return Object.values(this.checklist.checklist)
+                return this.checklist.checklist
             },
         },
         categoriesHeader() {
@@ -418,7 +426,7 @@ export default {
         },
         openDialogDeleteCategory: function (category) {
             this.deleteCategory = {
-                uid: category.uid,
+                uid: category.raw.uid,
                 title: category.title,
                 open: true,
             }
@@ -447,15 +455,15 @@ export default {
         categoryInsertBefore: function (item) {
             this.$store.dispatch('jira/categoryMoveBefore', {
                 uuid: this.uuid,
-                current: this.sortChecklist.uid,
-                ref: item.uid,
+                current: this.sortChecklist.raw.uid,
+                ref: item.raw.uid,
             })
         },
         categoryInsertAfter: function (item) {
             this.$store.dispatch('jira/categoryMoveAfter', {
                 uuid: this.uuid,
-                current: this.sortChecklist.uid,
-                ref: item.uid,
+                current: this.sortChecklist.raw.uid,
+                ref: item.raw.uid,
             })
         },
         itemRowSortActiveClass: function (item) {
