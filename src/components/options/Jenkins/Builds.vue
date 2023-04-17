@@ -24,10 +24,11 @@
                         >
                         </v-text-field>
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" @click="openNewBuild">
-                            <v-icon left x-small>fas fa-plus</v-icon>
-                            {{ text.add }}
-                        </v-btn>
+                        <v-btn
+                            variant="plain"
+                            prepend-icon="fas fa-plus"
+                            color="primary"
+                            @click="openNewBuild">{{text.add}}</v-btn>
                         <v-dialog v-model="dialogBuild.open" max-width="450">
                             <v-card>
                                 <v-card-title>{{ dialogBuild.title }}</v-card-title>

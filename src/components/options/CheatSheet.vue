@@ -17,7 +17,11 @@
                         clearable
                     ></v-text-field>
                     <v-spacer></v-spacer>
-                    <v-btn color="primary" @click="openNewCommand"><v-icon icon="fas fa-plus" left x-small />{{text.add}}</v-btn>
+                    <v-btn
+                        variant="plain"
+                        prepend-icon="fas fa-plus"
+                        color="primary"
+                        @click="openNewCommand">{{text.add}}</v-btn>
                     <v-dialog v-model="dialogCommand.open" max-width="600">
                         <v-card>
                             <v-card-title>{{dialogCommand.title}}</v-card-title>

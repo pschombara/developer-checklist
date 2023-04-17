@@ -32,7 +32,11 @@
                                             clearable
                                         ></v-text-field>
                                         <v-spacer></v-spacer>
-                                        <v-btn color="primary" @click="openNewProject"><v-icon left x-small>fas fa-plus</v-icon> {{ text.add }}</v-btn>
+                                        <v-btn
+                                            variant="plain"
+                                            prepend-icon="fas fa-plus"
+                                            color="primary"
+                                            @click="openNewProject">{{text.add}}</v-btn>
                                         <v-dialog v-model="dialogProject.open" max-width="450">
                                             <v-card>
                                                 <v-card-title>{{dialogProject.title}}</v-card-title>
@@ -123,7 +127,11 @@
                                             clearable
                                         ></v-text-field>
                                         <v-spacer></v-spacer>
-                                        <v-btn color="primary" @click="openNewCategory"><v-icon left x-small>fas fa-plus</v-icon> {{ text.add }}</v-btn>
+                                        <v-btn
+                                            variant="plain"
+                                            prepend-icon="fas fa-plus"
+                                            color="primary"
+                                            @click="openNewCategory">{{text.add}}</v-btn>
                                         <v-dialog v-model="dialogCategory.open" max-width="450">
                                             <v-card>
                                                 <v-card-title>{{ dialogCategory.title }}</v-card-title>

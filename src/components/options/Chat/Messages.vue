@@ -12,7 +12,11 @@
                 <template #top>
                     <v-toolbar flat>
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" @click="openAddMessage"><v-icon left>fas fa-plus</v-icon>{{text.add}}</v-btn>
+                        <v-btn
+                            variant="plain"
+                            prepend-icon="fas fa-plus"
+                            color="primary"
+                            @click="openAddMessage">{{text.add}}</v-btn>
                     </v-toolbar>
                     <v-dialog v-model="editMessage.open" max-width="600">
                         <v-card>

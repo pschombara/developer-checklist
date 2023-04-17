@@ -64,7 +64,11 @@
                                             hide-details
                                             clearable></v-text-field>
                                         <v-spacer></v-spacer>
-                                        <v-btn color="primary" @click="openNewBoard"><v-icon left x-small>fas fa-plus</v-icon> {{ text.add }}</v-btn>
+                                        <v-btn
+                                            variant="plain"
+                                            prepend-icon="fas fa-plus"
+                                            color="primary"
+                                            @click="openNewBoard">{{text.add}}</v-btn>
                                         <v-dialog v-model="dialogBoard.open" max-width="450">
                                             <v-card>
                                                 <v-card-title>{{dialogBoard.title}}</v-card-title>

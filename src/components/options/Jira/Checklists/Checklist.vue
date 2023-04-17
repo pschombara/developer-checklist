@@ -184,6 +184,7 @@
                             <v-toolbar flat>
                                 <v-spacer></v-spacer>
                                 <v-btn
+                                    variant="plain"
                                     prepend-icon="fas fa-plus"
                                     color="primary"
                                     @click="openCategory(null)">
