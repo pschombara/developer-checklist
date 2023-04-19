@@ -194,7 +194,7 @@ export default {
         },
         copy: function () {
             if (this.readyToCopy) {
-                let blob = new Blob([this.$refs.copyBuild.$refs.input.value], {type: 'text/html'})
+                let blob = new Blob([this.$refs.copyBuild.value], {type: 'text/html'})
 
                 navigator.clipboard.write([new ClipboardItem({[blob.type]: blob})])
                     .then(() => {

@@ -7,15 +7,17 @@
         >
             <template #top>
                 <v-toolbar flat>
-                    <v-text-field
-                        v-model="searchCommand"
-                        prepend-icon="fas fa-search"
-                        clear-icon="fas fa-times"
-                        :label="text.search"
-                        single-line
-                        hide-details
-                        clearable
-                    ></v-text-field>
+                    <v-toolbar-title>
+                        <v-text-field
+                            v-model="searchCommand"
+                            prepend-icon="fas fa-search"
+                            clear-icon="fas fa-times"
+                            :label="text.search"
+                            single-line
+                            hide-details
+                            clearable
+                        ></v-text-field>
+                    </v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-btn
                         variant="plain"

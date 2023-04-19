@@ -115,6 +115,7 @@
 <script>
 import _ from 'lodash'
 import CopiedToClipboard from './mixed/CopiedToClipboard.vue'
+import {th} from "vuetify/locale";
 
 export default {
     name: 'PopupGitLab',
@@ -200,7 +201,7 @@ export default {
         },
         copy: function () {
             if (this.readyToCopy) {
-                let blob = new Blob([this.$refs.copyMergeUrl.$refs.input.value], {type: 'text/html'})
+                let blob = new Blob([this.$refs.copyMergeUrl.value], {type: 'text/html'})
 
                 navigator.clipboard.write([new ClipboardItem({[blob.type]: blob})])
                     .then(() => {
