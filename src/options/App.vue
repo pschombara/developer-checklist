@@ -248,7 +248,7 @@ export default {
             this.$store.dispatch('load').then(() => {
                 this.loading = false
 
-                this.exportModules.push('modules')
+                this.exportModules.push('general')
                 this.exportModules.push('jira')
 
                 for (let [module, active] of Object.entries(this.modules)) {

@@ -203,8 +203,8 @@ export default  {
         },
         openRemoveEntry: function (item) {
             this.deleteElement = {
-                id: item.id,
-                text: item.text,
+                id: item.raw.id,
+                text: item.raw.text,
                 open: true,
             }
         },
@@ -265,6 +265,10 @@ export default  {
             this.checklist = _.cloneDeep(this.$store.getters['jira/getCategory'](this.uuid, this.uid))
         },
         openEntry: function (entry) {
+            if (Object.prototype.hasOwnProperty.call(entry, 'raw')) {
+                entry = entry.raw
+            }
+
             this.entry = {
                 id: entry.id,
                 text: entry.text,

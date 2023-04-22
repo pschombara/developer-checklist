@@ -30,55 +30,57 @@
                             color="primary"
                             @click="openNewBuild">{{text.add}}</v-btn>
                         <v-dialog v-model="dialogBuild.open" max-width="450">
-                            <v-card>
-                                <v-card-title>{{ dialogBuild.title }}</v-card-title>
-                                <v-card-text>
-                                    <v-form
-                                        ref="buildForm"
-                                        v-model="dialogBuild.valid"
-                                    >
-                                        <v-autocomplete
-                                            v-model="dialogBuild.item.type"
-                                            :items="categories"
-                                            :rules="buildTypeRules"
-                                            :label="text.category"
-                                            item-title="name"
-                                            item-value="name"
-                                            required
-                                            @change="$refs.buildForm.validate()"
-                                        ></v-autocomplete>
-                                        <v-text-field
-                                            v-model="dialogBuild.item.name"
-                                            :rules="buildNameRules"
-                                            :label="text.name"
-                                            required
-                                        ></v-text-field>
-                                        <v-text-field
-                                            v-model="dialogBuild.item.label"
-                                            :label="text.label"
-                                        ></v-text-field>
-                                        <v-text-field
-                                            v-model="dialogBuild.item.job"
-                                            :rules="buildJobRules"
-                                            :label="text.job"
-                                            required
-                                        ></v-text-field>
-                                    </v-form>
-                                </v-card-text>
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn color="secondary" plain @click="closeDialogBuild">{{ text.cancel }}</v-btn>
-                                    <v-btn
-v-if="null === dialogBuild.item.uuid" color="primary" plain
-                                           :disabled="!dialogBuild.valid" @click="addBuild">{{ text.add }}
-                                    </v-btn>
-                                    <v-btn
-v-else color="primary" plain :disabled="!dialogBuild.valid"
-                                           @click="saveBuild">{{ text.save }}
-                                    </v-btn>
-                                    <v-spacer></v-spacer>
-                                </v-card-actions>
-                            </v-card>
+                            <v-form
+                                validate-on="submit"
+                                @submit.prevent="null === dialogBuild.item.uuid ? addBuild : saveBuild"
+                            >
+                                <v-card>
+                                    <v-card-title>{{ dialogBuild.title }}</v-card-title>
+                                    <v-card-text>
+                                            <v-autocomplete
+                                                v-model="dialogBuild.item.type"
+                                                :items="categories"
+                                                :rules="buildTypeRules"
+                                                :label="text.category"
+                                                item-title="name"
+                                                item-value="name"
+                                                required
+                                            ></v-autocomplete>
+                                            <v-text-field
+                                                v-model="dialogBuild.item.name"
+                                                :rules="buildNameRules"
+                                                :label="text.name"
+                                                required
+                                            ></v-text-field>
+                                            <v-text-field
+                                                v-model="dialogBuild.item.label"
+                                                :label="text.label"
+                                            ></v-text-field>
+                                            <v-text-field
+                                                v-model="dialogBuild.item.job"
+                                                :rules="buildJobRules"
+                                                :label="text.job"
+                                            ></v-text-field>
+
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn color="secondary" variant="plain" @click="closeDialogBuild">{{ text.cancel }}</v-btn>
+                                        <v-btn
+                                            v-if="null === dialogBuild.item.uuid"
+                                            color="primary"
+                                            variant="plain">{{ text.add }}
+                                        </v-btn>
+                                        <v-btn
+                                            v-else
+                                            type="submit"
+                                            color="primary"
+                                            variant="plain">{{ text.save }}
+                                        </v-btn>
+                                        <v-spacer></v-spacer>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-form>
                         </v-dialog>
                         <v-dialog v-model="dialogDeleteBuild" max-width="450">
                             <v-card>
@@ -120,6 +122,8 @@ v-else color="primary" plain :disabled="!dialogBuild.valid"
     </v-card>
 </template>
 <script>
+
+import {th} from "vuetify/locale";
 
 export default {
     name: 'JenkinsBuilds',
@@ -196,10 +200,10 @@ export default {
         openBuild: function (build) {
             this.dialogBuild = {
                 open: true,
-                title: this.i18n.getMessage('TitleUpdate', build.name),
+                title: this.i18n.getMessage('TitleUpdate', build.raw.name),
                 valid: true,
-                current: build,
-                item: Object.assign({}, build),
+                current: build.raw,
+                item: Object.assign({}, build.raw),
             }
         },
         openNewBuild: function () {
@@ -213,14 +217,16 @@ export default {
         },
         openDialogDeleteBuild: function (build) {
             this.dialogDeleteBuild = true
-            this.deleteBuild = Object.assign({}, build)
+            this.deleteBuild = Object.assign({}, build.raw)
         },
         closeDialogBuild: function () {
             this.dialogBuild.open = false
             this.dialogBuild.current = null
         },
-        saveBuild: function () {
-            if (this.$refs.buildForm.validate()) {
+        async saveBuild (event) {
+            const result = await event
+
+            if (result.valid) {
                 this.$store.dispatch(
                     'jenkins/updateBuild',
                     {
@@ -228,16 +234,17 @@ export default {
                         build: this.dialogBuild.item,
                     },
                 )
-            }
 
-            this.closeDialogBuild()
+                this.closeDialogBuild()
+            }
         },
-        addBuild: function () {
-            if (this.$refs.buildForm.validate()) {
-                this.$store.dispatch('jenkins/addBuild', this.dialogBuild.item)
-            }
+        async addBuild (event) {
+            const result = await event
 
-            this.closeDialogBuild()
+            if (result.valid) {
+                this.$store.dispatch('jenkins/addBuild', this.dialogBuild.item)
+                this.closeDialogBuild()
+            }
         },
         removeBuild: function (build) {
             this.$store.dispatch('jenkins/removeBuild', build)

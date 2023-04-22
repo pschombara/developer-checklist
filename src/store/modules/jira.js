@@ -1,6 +1,7 @@
 import Helper from '../../mixins/helper'
 import {Uuid} from '../..//mixins/uuid'
 import {toRaw} from 'vue'
+import checklists from "../../components/options/Jira/Checklists.vue";
 
 const state = {
     url: '',
@@ -361,6 +362,12 @@ export default {
         },
         save: ({state}) => {
             return new Promise(resolve => {
+                const checklists = state.checklists
+
+                for (let list of checklists) {
+                    list.checklist = toRaw(list.checklist)
+                }
+
                 resolve({
                     key: 'jira',
                     options: {
@@ -368,7 +375,7 @@ export default {
                         cleanup: toRaw(state.cleanup),
                         maximumIssues: toRaw(state.maximumIssues),
                         boards: toRaw(state.boards),
-                        checklists: toRaw(state.checklists),
+                        checklists: toRaw(checklists),
                         templates: toRaw(state.templates),
                     },
                 })

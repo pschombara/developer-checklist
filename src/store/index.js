@@ -22,7 +22,7 @@ const state = {
     },
     version: migration.version,
     configTabs: {
-        main: 'modules',
+        main: 'general',
     },
     optionsValid: false,
     currentIssue: null,
