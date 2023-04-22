@@ -123,7 +123,7 @@
 </template>
 <script>
 
-import {th} from "vuetify/locale";
+import {fa} from "vuetify/iconsets/fa";
 
 export default {
     name: 'JenkinsBuilds',
@@ -160,7 +160,6 @@ export default {
             dialogBuild: {
                 open: false,
                 title: '',
-                valid: false,
                 current: null,
                 item: {
                     uuid: null,
@@ -272,7 +271,7 @@ export default {
                 return true
             }
 
-            return this.dialogBuild.current.uuid !== item.uuid
+            return searchResult.uuid !== item.uuid || this.dialogBuild.current.uuid !== item.uuid
         },
     },
 }
