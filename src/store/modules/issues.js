@@ -14,7 +14,11 @@ export default {
     state,
     mutations: {
         ADD_ISSUE: (state, issue) => {
-            state.issues.push(issue)
+            const index = state.issues.findIndex(cmp => cmp.name === issue.name)
+
+            if (-1 === index) {
+                state.issues.push(issue)
+            }
         },
         REMOVE_ISSUE: (state, key) => {
             const index = state.issues.findIndex(issue => issue.name === key)

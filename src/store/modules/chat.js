@@ -29,6 +29,8 @@ export default {
             }
 
             state.clients[data.client].rooms.push(data.room)
+
+            Helper.resort(state.clients[data.client].rooms)
         },
         REMOVE_ROOM: (state, data) => {
             if (undefined === state.clients[data.client]) {
@@ -61,6 +63,8 @@ export default {
             }
 
             state.clients[data.client].messages.push(data.message)
+
+            Helper.resort(state.clients[data.client].messages)
         },
         REMOVE_MESSAGE: (state, data) => {
             if (undefined === state.clients[data.client]) {
@@ -115,7 +119,7 @@ export default {
             const current = state.clients[data.client].rooms.find(room => room.id === data.current)
             const reference = state.clients[data.client].rooms.find(room => room.id === data.ref)
 
-            Helper.sortAfter(state.clients[data.client].rooms, current, reference, 'sort')
+            Helper.sortAfter(state.clients[data.client].rooms, current, reference, 'id')
         },
         SORT_ROOM_BEFORE: (state, data) => {
             if (undefined === state.clients[data.client]) {
@@ -125,7 +129,7 @@ export default {
             const current = state.clients[data.client].rooms.find(room => room.id === data.current)
             const reference = state.clients[data.client].rooms.find(room => room.id === data.ref)
 
-            Helper.sortBefore(state.clients[data.client].rooms, current, reference, 'sort')
+            Helper.sortBefore(state.clients[data.client].rooms, current, reference, 'id')
         },
         SORT_MESSAGE_AFTER: (state, data) => {
             if (undefined === state.clients[data.client]) {
@@ -135,7 +139,7 @@ export default {
             const current = state.clients[data.client].messages.find(message => message.id === data.current)
             const reference = state.clients[data.client].messages.find(message => message.id === data.ref)
 
-            Helper.sortAfter(state.clients[data.client].messages, current, reference, 'sort')
+            Helper.sortAfter(state.clients[data.client].messages, current, reference, 'id')
         },
         SORT_MESSAGE_BEFORE: (state, data) => {
             if (undefined === state.clients[data.client]) {
@@ -145,7 +149,7 @@ export default {
             const current = state.clients[data.client].messages.find(message => message.id === data.current)
             const reference = state.clients[data.client].messages.find(message => message.id === data.ref)
 
-            Helper.sortBefore(state.clients[data.client].messages, current, reference, 'sort')
+            Helper.sortBefore(state.clients[data.client].messages, current, reference, 'id')
         },
         STATUS_READY: state => {
             state.status = STATUS_READY
@@ -222,7 +226,7 @@ export default {
                     id: Uuid.generate(),
                     name: data.room.name,
                     url: data.room.url,
-                    sort: getters['nextRoomSort'],
+                    sort: Number.MAX_SAFE_INTEGER,
                 },
             })
         },
@@ -249,7 +253,7 @@ export default {
                     id: Uuid.generate(),
                     name: data.message.name,
                     content: data.message.content,
-                    sort: getters['nextMessageSort'],
+                    sort: Number.MAX_SAFE_INTEGER,
                 },
             })
         },
@@ -354,20 +358,6 @@ export default {
     },
     getters: {
         listChatClients: state => Object.keys(state.clients),
-        nextRoomSort: state => client => {
-            if (undefined === state.clients[client]) {
-                return 0
-            }
-
-            return Math.max(...state.clients[client].rooms.map(room => room.sort)) + 1
-        },
-        nextMessageSort: state => client => {
-            if (undefined === state.clients[client]) {
-                return 0
-            }
-
-            return Math.max(...state.clients[client].messages.map(message => message.sort)) + 1
-        },
         listMessages: state => client => {
             if (undefined === state.clients[client]) {
                 return []

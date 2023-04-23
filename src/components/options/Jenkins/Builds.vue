@@ -13,16 +13,17 @@
             >
                 <template #top>
                     <v-toolbar flat>
-                        <v-text-field
-                            v-model="searchBuild"
-                            prepend-icon="fas fa-search"
-                            clear-icon="fas fa-times"
-                            :label="text.search"
-                            single-line
-                            hide-details
-                            clearable
-                        >
-                        </v-text-field>
+                        <v-toolbar-title>
+                            <v-text-field
+                                v-model="searchBuild"
+                                prepend-icon="fas fa-search"
+                                clear-icon="fas fa-times"
+                                :label="text.search"
+                                single-line
+                                hide-details
+                                clearable>
+                            </v-text-field>
+                        </v-toolbar-title>
                         <v-spacer></v-spacer>
                         <v-btn
                             variant="plain"
@@ -32,7 +33,7 @@
                         <v-dialog v-model="dialogBuild.open" max-width="450">
                             <v-form
                                 validate-on="submit"
-                                @submit.prevent="null === dialogBuild.item.uuid ? addBuild : saveBuild"
+                                @submit.prevent="saveBuild"
                             >
                                 <v-card>
                                     <v-card-title>{{ dialogBuild.title }}</v-card-title>
@@ -44,13 +45,11 @@
                                                 :label="text.category"
                                                 item-title="name"
                                                 item-value="name"
-                                                required
                                             ></v-autocomplete>
                                             <v-text-field
                                                 v-model="dialogBuild.item.name"
                                                 :rules="buildNameRules"
                                                 :label="text.name"
-                                                required
                                             ></v-text-field>
                                             <v-text-field
                                                 v-model="dialogBuild.item.label"
@@ -61,21 +60,14 @@
                                                 :rules="buildJobRules"
                                                 :label="text.job"
                                             ></v-text-field>
-
                                     </v-card-text>
                                     <v-card-actions>
                                         <v-spacer></v-spacer>
                                         <v-btn color="secondary" variant="plain" @click="closeDialogBuild">{{ text.cancel }}</v-btn>
                                         <v-btn
-                                            v-if="null === dialogBuild.item.uuid"
-                                            color="primary"
-                                            variant="plain">{{ text.add }}
-                                        </v-btn>
-                                        <v-btn
-                                            v-else
                                             type="submit"
                                             color="primary"
-                                            variant="plain">{{ text.save }}
+                                            variant="plain">{{ dialogBuild.saveButton }}
                                         </v-btn>
                                         <v-spacer></v-spacer>
                                     </v-card-actions>
@@ -123,8 +115,6 @@
 </template>
 <script>
 
-import {fa} from "vuetify/iconsets/fa";
-
 export default {
     name: 'JenkinsBuilds',
     data() {
@@ -168,6 +158,7 @@ export default {
                     label: '',
                     name: '',
                 },
+                saveButton: '',
             },
             defaultBuild: {
                 uuid: null,
@@ -203,6 +194,7 @@ export default {
                 valid: true,
                 current: build.raw,
                 item: Object.assign({}, build.raw),
+                saveButton: this.text.save,
             }
         },
         openNewBuild: function () {
@@ -212,6 +204,7 @@ export default {
                 valid: false,
                 current: null,
                 item: Object.assign({}, this.defaultBuild),
+                saveButton: this.text.add,
             }
         },
         openDialogDeleteBuild: function (build) {
@@ -225,7 +218,13 @@ export default {
         async saveBuild (event) {
             const result = await event
 
-            if (result.valid) {
+            if (false === result.valid) {
+                return
+            }
+
+            if (null === this.dialogBuild.item.uuid) {
+                this.$store.dispatch('jenkins/addBuild', this.dialogBuild.item)
+            } else {
                 this.$store.dispatch(
                     'jenkins/updateBuild',
                     {
@@ -233,17 +232,9 @@ export default {
                         build: this.dialogBuild.item,
                     },
                 )
-
-                this.closeDialogBuild()
             }
-        },
-        async addBuild (event) {
-            const result = await event
 
-            if (result.valid) {
-                this.$store.dispatch('jenkins/addBuild', this.dialogBuild.item)
-                this.closeDialogBuild()
-            }
+            this.closeDialogBuild()
         },
         removeBuild: function (build) {
             this.$store.dispatch('jenkins/removeBuild', build)

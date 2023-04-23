@@ -6,7 +6,6 @@
                 :items="messages"
                 :sort-by="[{key: 'sort', order: 'asc'}]"
                 :items-per-page="-1"
-                :item-class="itemRowSortActiveClass"
                 :hide-default-footer="true"
             >
                 <template #top>
@@ -19,32 +18,37 @@
                             @click="openAddMessage">{{text.add}}</v-btn>
                     </v-toolbar>
                     <v-dialog v-model="editMessage.open" max-width="600">
-                        <v-card>
-                            <v-card-title>{{editMessage.title}}</v-card-title>
-                            <v-card-text>
-                                <v-form ref="messageForm" v-model="formValid">
-                                    <v-text-field
-                                        v-model="editMessage.name"
-                                        :label="text.name"
-                                        counter="20"
-                                        :rules="nameRules"
-                                    ></v-text-field>
-                                    <v-textarea
-                                        v-model="editMessage.content"
-                                        :label="text.content"
-                                        counter="200"
-                                        :rules="contentRules"
-                                    ></v-textarea>
-                                </v-form>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="grey" plain @click="closeMessage">{{ text.cancel }}</v-btn>
-                                <v-btn v-if="!!editMessage.id" color="primary" plain :disabled="!formValid" @click="saveMessage">{{ text.save }}</v-btn>
-                                <v-btn v-else color="primary" plain :disabled="!formValid" @click="addMessage">{{ text.add }}</v-btn>
-                                <v-spacer></v-spacer>
-                            </v-card-actions>
-                        </v-card>
+                        <v-form validate-on="input" @submit.prevent="saveMessage">
+                            <v-card>
+                                <v-card-title>{{editMessage.title}}</v-card-title>
+                                <v-card-text>
+                                        <v-text-field
+                                            v-model="editMessage.name"
+                                            :label="text.name"
+                                            counter="20"
+                                            :rules="nameRules"
+                                        ></v-text-field>
+                                        <v-textarea
+                                            v-model="editMessage.content"
+                                            :label="text.content"
+                                            counter="200"
+                                            :rules="contentRules"
+                                        ></v-textarea>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                        color="secondary"
+                                        variant="plain"
+                                        @click="closeMessage">{{ text.cancel }}</v-btn>
+                                    <v-btn
+                                        type="submit"
+                                        color="primary"
+                                        variant="plain">{{ editMessage.saveButton }}</v-btn>
+                                    <v-spacer></v-spacer>
+                                </v-card-actions>
+                            </v-card>
+                        </v-form>
                     </v-dialog>
                     <v-dialog v-model="deleteMessage.open" max-width="450">
                         <v-card>
@@ -61,31 +65,49 @@
                     </v-dialog>
                 </template>
                 <template #item.actions="{item}">
-                    <v-btn v-if="!sortMessage" variant="plain" icon="fas fa-edit" size="small" @click="openMessage(item)">
-                    </v-btn>
-                    <v-btn v-if="!sortMessage" variant="plain" icon="fas fa-sort" size="small" :disabled="messages.length < 2" @click="startSort(item)">
-                    </v-btn>
-                    <v-btn v-if="!sortMessage" variant="plain" icon="fas fa-trash" size="small" color="tertiary" @click="openDeleteMessage(item)">
+                    <v-btn
+                        v-if="!sortMessage"
+                        variant="plain"
+                        icon="fas fa-edit"
+                        size="small"
+                        @click="openMessage(item)">
                     </v-btn>
                     <v-btn
-v-if="sortMessage && sortMessage.id !== item.id" icon
-                           small
-                           :disabled="item.sort - 1 === sortMessage.sort"
-                           @click="sortBefore(item)">
-                        <v-icon icon="fas fa-sort-up" small />
+                        v-if="!sortMessage"
+                        variant="plain"
+                        icon="fas fa-sort"
+                        size="small"
+                        :disabled="messages.length < 2"
+                        @click="startSort(item)">
                     </v-btn>
                     <v-btn
-v-if="sortMessage && sortMessage.id !== item.id" icon
-                           small
-                           :disabled="item.sort + 1 === sortMessage.sort"
-                           @click="sortAfter(item)">
-                        <v-icon icon="fas fa-sort-down" small />
+                        v-if="!sortMessage"
+                        variant="plain"
+                        icon="fas fa-trash"
+                        size="small"
+                        color="tertiary"
+                        @click="openDeleteMessage(item)">
                     </v-btn>
                     <v-btn
-v-if="sortMessage && sortMessage.id === item.id" icon small
-                           @click="closeSort">
-                        <v-icon icon="fas fa-times" small />
-                    </v-btn>
+                        v-if="sortMessage && sortMessage.raw.id !== item.raw.id"
+                        variant="plain"
+                        icon="fas fa-sort-up"
+                        size="small"
+                        :disabled="item.raw.sort - 1 === sortMessage.raw.sort"
+                        @click="sortBefore(item)"></v-btn>
+                    <v-btn
+                        v-if="sortMessage && sortMessage.raw.id !== item.raw.id"
+                        variant="plain"
+                        icon="fas fa-sort-down"
+                        size="small"
+                        :disabled="item.raw.sort + 1 === sortMessage.raw.sort"
+                        @click="sortAfter(item)"></v-btn>
+                    <v-btn
+                        v-if="sortMessage && sortMessage.raw.id === item.raw.id"
+                        variant="plain"
+                        icon="fas fa-times"
+                        size="small"
+                        @click="closeSort"></v-btn>
                 </template>
             </v-data-table>
         </v-card-text>
@@ -93,6 +115,8 @@ v-if="sortMessage && sortMessage.id === item.id" icon small
 </template>
 
 <script>
+import {th} from "vuetify/locale";
+
 export default {
     name: 'ChatMessages',
     props: {
@@ -158,31 +182,25 @@ export default {
         sortBefore: function (item) {
             this.$store.dispatch('chat/messageSortBefore', {
                 client: this.client,
-                ref: item.id,
-                current: this.sortMessage.id,
+                ref: item.raw.id,
+                current: this.sortMessage.raw.id,
             })
         },
         sortAfter: function (item) {
             this.$store.dispatch('chat/messageSortAfter', {
                 client: this.client,
-                ref: item.id,
-                current: this.sortMessage.id,
+                ref: item.raw.id,
+                current: this.sortMessage.raw.id,
             })
-        },
-        itemRowSortActiveClass: function (item) {
-            if (null === this.sortMessage) {
-                return ''
-            }
-
-            return item.id === this.sortMessage.id ? 'primary' : ''
         },
         openMessage: function (item) {
             this.editMessage = {
                 open: true,
-                id: item.id,
-                name: item.name,
-                content: item.content,
-                title: this.i18n.getMessage('TitleUpdate', item.name),
+                id: item.raw.id,
+                name: item.raw.name,
+                content: item.raw.content,
+                title: this.i18n.getMessage('TitleUpdate', item.raw.name),
+                saveButton: this.text.save,
             }
         },
         openAddMessage: function () {
@@ -196,10 +214,25 @@ export default {
                 name: '',
                 content: '',
                 title: '',
+                saveButton: this.text.add,
             }
         },
-        saveMessage: function () {
-            if (this.$refs.messageForm.validate()) {
+        async saveMessage (event) {
+            const result = await event
+
+            if (false === result) {
+                return
+            }
+
+            if (null === this.editMessage.id) {
+                this.$store.dispatch('chat/addMessage', {
+                    client: this.client,
+                    message: {
+                        name: this.editMessage.name,
+                        content: this.editMessage.content,
+                    },
+                })
+            } else {
                 this.$store.dispatch('chat/updateMessage', {
                     client: this.client,
                     message: {
@@ -212,24 +245,11 @@ export default {
 
             this.closeMessage()
         },
-        addMessage: function () {
-            if (this.$refs.messageForm.validate()) {
-                this.$store.dispatch('chat/addMessage', {
-                    client: this.client,
-                    message: {
-                        name: this.editMessage.name,
-                        content: this.editMessage.content,
-                    },
-                })
-            }
-
-            this.closeMessage()
-        },
         openDeleteMessage: function (item) {
             this.deleteMessage = {
                 open: true,
-                id: item.id,
-                name: item.name,
+                id: item.raw.id,
+                name: item.raw.name,
             }
         },
         closeDeleteMessage: function () {
@@ -244,6 +264,8 @@ export default {
                 client: this.client,
                 id: this.deleteMessage.id,
             })
+
+            this.closeDeleteMessage()
         },
         checkDuplicated: function (value) {
             const message = this.$store.getters['chat/listMessages'](this.client).find(item => item.name === value)

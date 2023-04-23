@@ -14,7 +14,6 @@
                         <v-btn variant="plain" prepend-icon="fas fa-sync" @click="reload">
                             {{ text.reload }}
                         </v-btn>
-
                         <v-dialog v-model="deleteIssue.open" max-width="450">
                             <v-card>
                                 <v-card-title class="headline">

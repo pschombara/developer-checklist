@@ -10,15 +10,18 @@
             >
                 <template #top>
                     <v-toolbar flat>
-                        <v-text-field
-                            v-model="searchCategory"
-                            prepend-icon="fas fa-search"
-                            clear-icon="fas fa-times"
-                            :label="text.search"
-                            single-line
-                            hide-details
-                            clearable
-                        ></v-text-field>
+                        <v-toolbar-title>
+                            <v-text-field
+                                v-model="searchCategory"
+                                prepend-icon="fas fa-search"
+                                clear-icon="fas fa-times"
+                                :label="text.search"
+                                single-line
+                                hide-details
+                                clearable
+                            ></v-text-field>
+                        </v-toolbar-title>
+
                         <v-spacer></v-spacer>
                         <v-btn
                             variant="plain"
@@ -26,25 +29,29 @@
                             color="primary"
                             @click="openNewCategory">{{text.add}}</v-btn>
                         <v-dialog v-model="dialogCategory.open" max-width="450">
-                            <v-card>
-                                <v-card-title>{{ dialogCategory.title }}</v-card-title>
-                                <v-card-text>
-                                    <v-form ref="categoryForm" v-model="dialogCategory.valid">
-                                        <v-text-field
-                                            v-model="dialogCategory.item.name"
-                                            :rules="categoryRules"
-                                            :label="text.name"
-                                        ></v-text-field>
-                                    </v-form>
-                                </v-card-text>
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn color="secondary" plain @click="closeDialogCategory">{{ text.cancel }}</v-btn>
-                                    <v-btn v-if="null === dialogCategory.current" color="primary" plain :disabled="!dialogCategory.valid" @click="addCategory">{{ text.add }}</v-btn>
-                                    <v-btn v-else color="primary" plain :disabled="!dialogCategory.valid" @click="saveCategory">{{ text.save }}</v-btn>
-                                    <v-spacer></v-spacer>
-                                </v-card-actions>
-                            </v-card>
+                            <v-form
+                                validate-on="input"
+                                @submit.prevent="saveCategory">
+                                <v-card>
+                                    <v-card-title>{{ dialogCategory.title }}</v-card-title>
+                                    <v-card-text>
+                                            <v-text-field
+                                                v-model="dialogCategory.item.name"
+                                                :rules="categoryRules"
+                                                :label="text.name"
+                                            ></v-text-field>
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn color="secondary" plain @click="closeDialogCategory">{{ text.cancel }}</v-btn>
+                                        <v-btn
+                                            type="submit"
+                                            color="primary"
+                                            variant="plain">{{ dialogCategory.saveButton }}</v-btn>
+                                        <v-spacer></v-spacer>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-form>
                         </v-dialog>
                         <v-dialog v-model="dialogDeleteCategory" max-width="450">
                             <v-card>
@@ -112,11 +119,11 @@ export default {
             dialogCategory: {
                 open: false,
                 title: '',
-                valid: false,
                 current: null,
                 item: {
                     name: '',
                 },
+                saveButton: '',
             },
             defaultCategory: {
                 name: '',
@@ -149,27 +156,35 @@ export default {
         openCategory: function (category) {
             this.dialogCategory = {
                 open: true,
-                title: this.i18n.getMessage('TitleUpdate', category.name),
-                valid: true,
-                current: category,
-                item: Object.assign({}, category),
+                title: this.i18n.getMessage('TitleUpdate', category.raw.name),
+                current: category.raw,
+                item: Object.assign({}, category.raw),
+                saveButton: this.text.save,
             }
         },
         openNewCategory: function () {
             this.dialogCategory = {
                 open: true,
                 title: this.text.newCategory,
-                valid: false,
                 current: null,
                 item: Object.assign({}, this.defaultCategory),
+                saveButton: this.text.add,
             }
         },
         closeDialogCategory: function () {
             this.dialogCategory.open = false
             this.dialogCategory.current = null
         },
-        saveCategory: function () {
-            if (this.$refs.categoryForm.validate()) {
+        async saveCategory (event) {
+            const result = await event
+
+            if (false === result.valid) {
+                return
+            }
+
+            if (null === this.dialogCategory.current) {
+                this.$store.dispatch('jenkins/addCategory', this.dialogCategory.item.name)
+            } else {
                 this.$store.dispatch(
                     'jenkins/updateCategory',
                     {
@@ -177,13 +192,6 @@ export default {
                         newName: this.dialogCategory.item.name,
                     },
                 )
-            }
-
-            this.closeDialogCategory()
-        },
-        addCategory: function () {
-            if (this.$refs.categoryForm.validate()) {
-                this.$store.dispatch('jenkins/addCategory', this.dialogCategory.item.name)
             }
 
             this.closeDialogCategory()

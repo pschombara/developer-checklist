@@ -6,7 +6,6 @@
                 :items="rooms"
                 :sort-by="[{key: 'sort', order: 'asc'}]"
                 :items-per-page="-1"
-                :item-class="itemRowSortActiveClass"
                 :hide-default-footer="true"
             >
                 <template #top>
@@ -20,10 +19,10 @@
                     </v-toolbar>
 
                     <v-dialog v-model="editRoom.open" max-width="600">
+                        <v-form validate-on="input" @submit.prevent="saveRoom">
                         <v-card>
                             <v-card-title>{{editRoom.title}}</v-card-title>
                             <v-card-text>
-                                <v-form ref="roomForm" v-model="formValid">
                                     <v-text-field
                                         v-model="editRoom.name"
                                         :label="text.name"
@@ -35,16 +34,21 @@
                                         label="URL"
                                         counter="500"
                                         :rules="urlRules"></v-text-field>
-                                </v-form>
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn color="secondary" plain @click="closeRoom">{{ text.cancel }}</v-btn>
-                                <v-btn v-if="!!editRoom.id" color="primary" plain :disabled="!formValid" @click="saveRoom">{{ text.save }}</v-btn>
-                                <v-btn v-else color="primary" plain :disabled="!formValid" @click="addRoom">{{ text.add }}</v-btn>
+                                <v-btn
+                                    color="secondary"
+                                    variant="plain"
+                                    @click="closeRoom">{{ text.cancel }}</v-btn>
+                                <v-btn
+                                    type="submit"
+                                    color="primary"
+                                    variant="plain">{{ editRoom.saveButton }}</v-btn>
                                 <v-spacer></v-spacer>
                             </v-card-actions>
                         </v-card>
+                        </v-form>
                     </v-dialog>
                     <v-dialog v-model="deleteRoom.open" max-width="450">
                         <v-card>
@@ -61,9 +65,26 @@
                     </v-dialog>
                 </template>
                 <template #item.actions="{item}">
-                    <v-btn v-if="!sortRoom" variant="plain" icon="fas fa-edit" size="small" @click="openRoom(item)"></v-btn>
-                    <v-btn v-if="!sortRoom" variant="plain" icon="fas fa-sort" size="small" :disabled="rooms.length < 2" @click="startSort(item)"></v-btn>
-                    <v-btn v-if="!sortRoom" variant="plain" icon="fas fa-trash" size="small" color="tertiary" @click="openDeleteRoom(item)"></v-btn>
+                    <v-btn
+                        v-if="!sortRoom"
+                        variant="plain"
+                        icon="fas fa-edit"
+                        size="small"
+                        @click="openRoom(item)"></v-btn>
+                    <v-btn
+                        v-if="!sortRoom"
+                        variant="plain"
+                        icon="fas fa-sort"
+                        size="small"
+                        :disabled="rooms.length < 2"
+                        @click="startSort(item)"></v-btn>
+                    <v-btn
+                        v-if="!sortRoom"
+                        variant="plain"
+                        icon="fas fa-trash"
+                        size="small"
+                        color="tertiary"
+                        @click="openDeleteRoom(item)"></v-btn>
                     <v-btn
                         v-if="sortRoom && sortRoom.value !== item.value"
                         variant="plain"
@@ -184,10 +205,11 @@ export default {
         openRoom: function (item) {
             this.editRoom = {
                 open: true,
-                id: item.id,
-                name: item.name,
-                url: item.url,
-                title: this.i18n.getMessage('TitleUpdate', item.name),
+                id: item.raw.id,
+                name: item.raw.name,
+                url: item.raw.url,
+                title: this.i18n.getMessage('TitleUpdate', item.raw.name),
+                saveButton: this.text.save,
             }
         },
         openAddRoom: function () {
@@ -201,10 +223,25 @@ export default {
                 name: '',
                 url: '',
                 title: '',
+                saveButton: this.text.add,
             }
         },
-        saveRoom: function () {
-            if (this.$refs.roomForm.validate()) {
+        async saveRoom (event) {
+            const result = await event
+
+            if (false === result.valid) {
+                return
+            }
+
+            if (null === this.editRoom.id) {
+                this.$store.dispatch('chat/addRoom', {
+                    client: this.client,
+                    room: {
+                        name: this.editRoom.name,
+                        url: this.editRoom.url,
+                    },
+                })
+            } else {
                 this.$store.dispatch('chat/updateRoom', {
                     client: this.client,
                     room: {
@@ -217,24 +254,11 @@ export default {
 
             this.closeRoom()
         },
-        addRoom: function () {
-            if (this.$refs.roomForm.validate()) {
-                this.$store.dispatch('chat/addRoom', {
-                    client: this.client,
-                    room: {
-                        name: this.editRoom.name,
-                        url: this.editRoom.url,
-                    },
-                })
-            }
-
-            this.closeRoom()
-        },
         openDeleteRoom: function (item) {
             this.deleteRoom = {
                 open: true,
-                id: item.id,
-                name: item.name,
+                id: item.raw.id,
+                name: item.raw.name,
             }
         },
         closeDeleteRoom: function () {

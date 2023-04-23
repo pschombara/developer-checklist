@@ -55,14 +55,16 @@
                             >
                                 <template #top>
                                     <v-toolbar flat>
-                                        <v-text-field
-                                            v-model="searchBoards"
-                                            prepend-icon="fas fa-search"
-                                            clear-icon="fas fa-times"
-                                            :label="text.search"
-                                            single-line
-                                            hide-details
-                                            clearable></v-text-field>
+                                        <v-toolbar-title>
+                                            <v-text-field
+                                                v-model="searchBoards"
+                                                prepend-icon="fas fa-search"
+                                                clear-icon="fas fa-times"
+                                                :label="text.search"
+                                                single-line
+                                                hide-details
+                                                clearable></v-text-field>
+                                        </v-toolbar-title>
                                         <v-spacer></v-spacer>
                                         <v-btn
                                             variant="plain"
@@ -70,32 +72,37 @@
                                             color="primary"
                                             @click="openNewBoard">{{text.add}}</v-btn>
                                         <v-dialog v-model="dialogBoard.open" max-width="450">
-                                            <v-card>
-                                                <v-card-title>{{dialogBoard.title}}</v-card-title>
-                                                <v-card-text>
-                                                    <v-form ref="formBoard" v-model="dialogBoard.valid">
-                                                        <v-text-field
-                                                            v-model="dialogBoard.item.key"
-                                                            :label="text.boardKey"
-                                                            :rules="boardKeyRules"
-                                                            counter="10"
-                                                        ></v-text-field>
-                                                        <v-switch
-                                                            v-model="dialogBoard.item.default"
-                                                            :label="text.default"
-                                                            :disabled="null !== dialogBoard.current && dialogBoard.current.default"
+                                            <v-form validate-on="input" @submit.prevent="saveBoard">
+                                                <v-card>
+                                                    <v-card-title>{{dialogBoard.title}}</v-card-title>
+                                                    <v-card-text>
+                                                            <v-text-field
+                                                                v-model="dialogBoard.item.key"
+                                                                :label="text.boardKey"
+                                                                :rules="boardKeyRules"
+                                                                counter="10"
+                                                            ></v-text-field>
+                                                            <v-switch
+                                                                v-model="dialogBoard.item.default"
+                                                                :label="text.default"
+                                                                :disabled="null !== dialogBoard.current && dialogBoard.current.default"
+                                                                color="primary"
+                                                            ></v-switch>
+                                                    </v-card-text>
+                                                    <v-card-actions>
+                                                        <v-spacer></v-spacer>
+                                                        <v-btn
+                                                            color="secondary"
+                                                            variant="plain"
+                                                            @click="closeBoard">{{ text.cancel }}</v-btn>
+                                                        <v-btn
+                                                            type="submit"
                                                             color="primary"
-                                                        ></v-switch>
-                                                    </v-form>
-                                                </v-card-text>
-                                                <v-card-actions>
-                                                    <v-spacer></v-spacer>
-                                                    <v-btn color="secondary" plain @click="closeBoard">{{ text.cancel }}</v-btn>
-                                                    <v-btn v-if="null === dialogBoard.current" color="primary" plain :disabled="!dialogBoard.valid" @click="addBoard">{{ text.add }}</v-btn>
-                                                    <v-btn v-else color="primary" plain :disabled="!dialogBoard.valid" @click="saveBoard">{{ text.save }}</v-btn>
-                                                    <v-spacer></v-spacer>
-                                                </v-card-actions>
-                                            </v-card>
+                                                            variant="plain">{{ dialogBoard.saveButton }}</v-btn>
+                                                        <v-spacer></v-spacer>
+                                                    </v-card-actions>
+                                                </v-card>
+                                            </v-form>
                                         </v-dialog>
                                         <v-dialog v-model="dialogDeleteBoard" max-width="450">
                                             <v-card>
@@ -116,10 +123,11 @@
                                 </template>
                                 <template #item.default="{item}">
                                     <v-icon
-                                        v-if="item.default"
-                                        small
+                                        v-if="item.raw.default"
+                                        icon="fas fa-check"
+                                        size="small"
                                         color="success"
-                                    >fas fa-check</v-icon>
+                                    ></v-icon>
                                 </template>
                                 <template #item.actions="{item}">
                                     <v-btn
@@ -194,6 +202,7 @@ export default {
                 },
                 current: null,
                 valid: false,
+                saveButton: '',
             },
             defaultBoard: {
                 identifier: 0,
@@ -247,16 +256,16 @@ export default {
                 title: this.text.newBoard,
                 item: Object.assign({}, this.defaultBoard),
                 current: null,
-                valid: false,
+                saveButton: this.text.add,
             }
         },
         openBoard: function (board) {
             this.dialogBoard = {
                 open: true,
-                title: this.i18n.getMessage('TitleUpdate', board.key),
-                item: Object.assign({}, board),
-                current: board,
-                valid: true,
+                title: this.i18n.getMessage('TitleUpdate', board.raw.key),
+                item: Object.assign({}, board.raw),
+                current: board.raw,
+                saveButton: this.text.save,
             }
         },
         closeBoard: function () {
@@ -265,18 +274,19 @@ export default {
                 title: '',
                 item: Object.assign({}, this.defaultBoard),
                 current: null,
-                valid: false,
+                saveButton: this.text.add,
             }
         },
-        addBoard: function () {
-            if (this.$refs.formBoard.validate()) {
-                this.$store.dispatch('jira/addBoard', this.dialogBoard.item)
+        async saveBoard (event) {
+            const result = await event
+
+            if (false === result.valid) {
+                return
             }
 
-            this.closeBoard()
-        },
-        saveBoard: function () {
-            if (this.$refs.formBoard.validate()) {
+            if (null === this.dialogBoard.current) {
+                this.$store.dispatch('jira/addBoard', this.dialogBoard.item)
+            } else {
                 this.$store.dispatch(
                     'jira/updateBoard',
                     {
@@ -293,7 +303,7 @@ export default {
             this.closeDialogDeleteBoard()
         },
         openDialogDeleteBoard: function (board) {
-            this.deleteBoard = board
+            this.deleteBoard = board.raw
             this.dialogDeleteBoard = true
         },
         closeDialogDeleteBoard: function () {

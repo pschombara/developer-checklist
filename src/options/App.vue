@@ -80,7 +80,7 @@
                                     </v-card-text>
                                     <v-card-actions>
                                         <v-spacer></v-spacer>
-                                        <v-btn color="grey" plain @click="cancelImport">{{text.cancel}}</v-btn>
+                                        <v-btn color="secondary" plain @click="cancelImport">{{text.cancel}}</v-btn>
                                         <v-btn color="success" plain :disabled="0 === importModules.length" @click="storeImportedOptions">{{text.import}}</v-btn>
                                         <v-spacer></v-spacer>
                                     </v-card-actions>

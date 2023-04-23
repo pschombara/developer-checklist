@@ -15,22 +15,24 @@
                                 :headers="projectsHeader"
                                 :items="projects"
                                 :search="searchProject"
-                                :sort-by="['domain', 'project']"
+                                :sort-by="[{key: 'domain', order: 'asc'}, {key: 'project', order: 'asc'}]"
                                 multi-sort
                                 show-group-by
                                 :group-by="[{key: 'domain'}]"
                             >
                                 <template #top>
                                     <v-toolbar flat>
-                                        <v-text-field
-                                            v-model="searchProject"
-                                            prepend-icon="fas fa-search"
-                                            clear-icon="fas fa-times"
-                                            :label="text.search"
-                                            single-line
-                                            hide-details
-                                            clearable
-                                        ></v-text-field>
+                                        <v-toolbar-title>
+                                            <v-text-field
+                                                v-model="searchProject"
+                                                prepend-icon="fas fa-search"
+                                                clear-icon="fas fa-times"
+                                                :label="text.search"
+                                                single-line
+                                                hide-details
+                                                clearable
+                                            ></v-text-field>
+                                        </v-toolbar-title>
                                         <v-spacer></v-spacer>
                                         <v-btn
                                             variant="plain"
@@ -38,40 +40,41 @@
                                             color="primary"
                                             @click="openNewProject">{{text.add}}</v-btn>
                                         <v-dialog v-model="dialogProject.open" max-width="450">
-                                            <v-card>
-                                                <v-card-title>{{dialogProject.title}}</v-card-title>
-                                                <v-card-text>
-                                                    <v-form
-                                                        ref="projectForm"
-                                                        v-model="dialogProject.valid"
-
-                                                    >
-                                                        <v-autocomplete
-                                                            v-model="dialogProject.item.domain"
-                                                            :items="categories"
-                                                            :label="text.category"
-                                                            item-title="name"
-                                                            item-value="name"
-                                                            :rules="domainRules"
-                                                            required
-                                                            @change="$refs.projectForm.validate()"
-                                                        ></v-autocomplete>
-                                                        <v-text-field
-                                                            v-model="dialogProject.item.project"
-                                                            :rules="projectRules"
-                                                            :label="text.project"
-                                                            required
-                                                        ></v-text-field>
-                                                    </v-form>
-                                                </v-card-text>
-                                                <v-card-actions>
-                                                    <v-spacer></v-spacer>
-                                                    <v-btn color="secondary" plain @click="closeProject">{{ text.cancel }}</v-btn>
-                                                    <v-btn v-if="null === dialogProject.item.uuid" color="primary" plain :disabled="!dialogProject.valid" @click="addProject">{{ text.add }}</v-btn>
-                                                    <v-btn v-else color="primary" plain :disabled="!dialogProject.valid" @click="saveProject">{{ text.save }}</v-btn>
-                                                    <v-spacer></v-spacer>
-                                                </v-card-actions>
-                                            </v-card>
+                                            <v-form
+                                                validate-on="input"
+                                                @submit.prevent="saveProject">
+                                                <v-card>
+                                                    <v-card-title>{{dialogProject.title}}</v-card-title>
+                                                    <v-card-text>
+                                                            <v-autocomplete
+                                                                v-model="dialogProject.item.domain"
+                                                                :items="categories"
+                                                                :label="text.category"
+                                                                item-title="name"
+                                                                item-value="name"
+                                                                :rules="domainRules"
+                                                                @change="$refs.projectForm.validate()"
+                                                            ></v-autocomplete>
+                                                            <v-text-field
+                                                                v-model="dialogProject.item.project"
+                                                                :rules="projectRules"
+                                                                :label="text.project"
+                                                            ></v-text-field>
+                                                    </v-card-text>
+                                                    <v-card-actions>
+                                                        <v-spacer></v-spacer>
+                                                        <v-btn
+                                                            color="secondary"
+                                                            variant="plain"
+                                                            @click="closeProject">{{ text.cancel }}</v-btn>
+                                                        <v-btn
+                                                            type="submit"
+                                                            color="primary"
+                                                            variant="plain">{{ dialogProject.saveButton }}</v-btn>
+                                                        <v-spacer></v-spacer>
+                                                    </v-card-actions>
+                                                </v-card>
+                                            </v-form>
                                         </v-dialog>
                                         <v-dialog v-model="dialogDeleteProject" max-width="450">
                                             <v-card>
@@ -117,15 +120,17 @@
                             >
                                 <template #top>
                                     <v-toolbar flat>
-                                        <v-text-field
-                                            v-model="searchCategory"
-                                            prepend-icon="fas fa-search"
-                                            clear-icon="fas fa-times"
-                                            :label="text.search"
-                                            single-line
-                                            hide-details
-                                            clearable
-                                        ></v-text-field>
+                                        <v-toolbar-title>
+                                            <v-text-field
+                                                v-model="searchCategory"
+                                                prepend-icon="fas fa-search"
+                                                clear-icon="fas fa-times"
+                                                :label="text.search"
+                                                single-line
+                                                hide-details
+                                                clearable
+                                            ></v-text-field>
+                                        </v-toolbar-title>
                                         <v-spacer></v-spacer>
                                         <v-btn
                                             variant="plain"
@@ -133,25 +138,32 @@
                                             color="primary"
                                             @click="openNewCategory">{{text.add}}</v-btn>
                                         <v-dialog v-model="dialogCategory.open" max-width="450">
-                                            <v-card>
-                                                <v-card-title>{{ dialogCategory.title }}</v-card-title>
-                                                <v-card-text>
-                                                    <v-form ref="categoryForm" v-model="dialogCategory.valid">
-                                                        <v-text-field
-                                                            v-model="dialogCategory.item.name"
-                                                            :rules="categoryRules"
-                                                            :label="text.name"
-                                                        ></v-text-field>
-                                                    </v-form>
-                                                </v-card-text>
-                                                <v-card-actions>
-                                                    <v-spacer></v-spacer>
-                                                    <v-btn color="grey" plain @click="closeDialogCategory">{{ text.cancel }}</v-btn>
-                                                    <v-btn v-if="null === dialogCategory.current" color="primary" plain :disabled="!dialogCategory.valid" @click="addCategory">{{ text.add }}</v-btn>
-                                                    <v-btn v-else color="primary" plain :disabled="!dialogCategory.valid" @click="saveCategory">{{ text.save }}</v-btn>
-                                                    <v-spacer></v-spacer>
-                                                </v-card-actions>
-                                            </v-card>
+                                            <v-form
+                                                validate-on="input"
+                                                @submit.prevent="saveCategory">
+                                                <v-card>
+                                                    <v-card-title>{{ dialogCategory.title }}</v-card-title>
+                                                    <v-card-text>
+                                                            <v-text-field
+                                                                v-model="dialogCategory.item.name"
+                                                                :rules="categoryRules"
+                                                                :label="text.name"
+                                                            ></v-text-field>
+                                                    </v-card-text>
+                                                    <v-card-actions>
+                                                        <v-spacer></v-spacer>
+                                                        <v-btn
+                                                            color="secondary"
+                                                            variant="plain"
+                                                            @click="closeDialogCategory">{{ text.cancel }}</v-btn>
+                                                        <v-btn
+                                                            type="submit"
+                                                            color="primary"
+                                                            variant="plain">{{ dialogCategory.saveButton }}</v-btn>
+                                                        <v-spacer></v-spacer>
+                                                    </v-card-actions>
+                                                </v-card>
+                                            </v-form>
                                         </v-dialog>
                                         <v-dialog v-model="dialogDeleteCategory" max-width="450">
                                             <v-card>
@@ -205,7 +217,7 @@ export default {
                     name: null,
                 },
                 current: null,
-                valid: false,
+                saveButton: '',
             },
             dialogDeleteCategory: false,
             searchCategory: '',
@@ -218,7 +230,7 @@ export default {
                     uuid: null,
                 },
                 current: null,
-                valid: false,
+                saveButton: '',
             },
             dialogDeleteProject: false,
             searchProject: '',
@@ -330,7 +342,7 @@ export default {
                 title: this.text.newCategory,
                 item: Object.assign({}, this.defaultCategory),
                 current: null,
-                valid: false,
+                saveButton: this.text.add,
             }
         },
         openNewProject: function() {
@@ -339,40 +351,41 @@ export default {
                 title: this.text.newProject,
                 item: Object.assign({}, this.defaultProject),
                 current: null,
-                valid: false,
+                saveButton: this.text.add,
             }
         },
         openCategory: function (category) {
             this.dialogCategory = {
                 open: true,
-                title: this.i18n.getMessage('TitleUpdate', category.name),
-                item: Object.assign({}, category),
-                current: category,
-                valid: true,
+                title: this.i18n.getMessage('TitleUpdate', category.raw.name),
+                item: Object.assign({}, category.raw),
+                current: category.raw,
+                saveButton: this.text.save,
             }
         },
         openProject: function (project) {
             this.dialogProject = {
                 open: true,
-                title: this.i18n.getMessage('TitleUpdate', project.project),
-                item: Object.assign({}, project),
-                current: project,
-                valid: true,
+                title: this.i18n.getMessage('TitleUpdate', project.raw.project),
+                item: Object.assign({}, project.raw),
+                current: project.raw,
+                saveButton: this.text.save,
             }
         },
         closeProject: function () {
             this.dialogProject.open = false
             this.dialogProject.current = null
         },
-        addCategory: function () {
-            if(this.$refs.categoryForm.validate()) {
-                this.$store.dispatch('gitLab/addCategory', this.dialogCategory.item.name)
+        async saveCategory (event) {
+            const result = await event
+
+            if (false === result.valid) {
+                return
             }
 
-            this.closeDialogCategory()
-        },
-        saveCategory: function () {
-            if (this.$refs.categoryForm.validate()) {
+            if (null === this.dialogCategory.current) {
+                this.$store.dispatch('gitLab/addCategory', this.dialogCategory.item.name)
+            } else {
                 this.$store.dispatch(
                     'gitLab/updateCategory',
                     {
@@ -413,17 +426,18 @@ export default {
                 return true
             }
 
-            return this.dialogProject.current.uuid !== item.uuid
+            return searchResult.uuid !== item.uuid || this.dialogProject.current.uuid !== item.uuid
         },
-        addProject: function () {
-            if (this.$refs.projectForm.validate()) {
-                this.$store.dispatch('gitLab/addProject', this.dialogProject.item)
+        async saveProject (event) {
+            const result = await event
+
+            if (false === result.valid) {
+                return
             }
 
-            this.closeProject()
-        },
-        saveProject: function () {
-            if (this.$refs.projectForm.validate()) {
+            if (null === this.dialogProject.current) {
+                this.$store.dispatch('gitLab/addProject', this.dialogProject.item)
+            } else {
                 this.$store.dispatch(
                     'gitLab/updateProject',
                     {

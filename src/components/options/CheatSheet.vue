@@ -25,37 +25,39 @@
                         color="primary"
                         @click="openNewCommand">{{text.add}}</v-btn>
                     <v-dialog v-model="dialogCommand.open" max-width="600">
-                        <v-card>
-                            <v-card-title>{{dialogCommand.title}}</v-card-title>
-                            <v-card-text>
-                                <v-form
-                                    ref="commandForm"
-                                    v-model="dialogCommand.valid"
-                                >
-                                    <v-text-field
-                                        v-model="dialogCommand.item.label"
-                                        :label="text.label"
-                                        :rules="labelRules"
-                                        :hint="text.hint.label"
-                                        counter="30"
-                                    ></v-text-field>
-                                    <v-text-field
-                                        v-model="dialogCommand.item.command"
-                                        :label="text.commandOrContent"
-                                        :rules="commandRules"
-                                        :hint="text.hint.command"
-                                        counter="128"
-                                    ></v-text-field>
-                                </v-form>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="secondary" plain @click="closeCommand">{{ text.cancel }}</v-btn>
-                                <v-btn v-if="null === dialogCommand.current" color="primary" plain :disabled="!dialogCommand.valid" @click="addCommand">{{ text.add }}</v-btn>
-                                <v-btn v-else color="primary" plain :disabled="!dialogCommand.valid" @click="saveCommand">{{ text.save }}</v-btn>
-                                <v-spacer></v-spacer>
-                            </v-card-actions>
-                        </v-card>
+                        <v-form validate-on="input" @submit.prevent="saveCommand">
+                            <v-card>
+                                <v-card-title>{{dialogCommand.title}}</v-card-title>
+                                <v-card-text>
+                                        <v-text-field
+                                            v-model="dialogCommand.item.label"
+                                            :label="text.label"
+                                            :rules="labelRules"
+                                            :hint="text.hint.label"
+                                            counter="30"
+                                        ></v-text-field>
+                                        <v-text-field
+                                            v-model="dialogCommand.item.command"
+                                            :label="text.commandOrContent"
+                                            :rules="commandRules"
+                                            :hint="text.hint.command"
+                                            counter="128"
+                                        ></v-text-field>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                        color="secondary"
+                                        variant="plain"
+                                        @click="closeCommand">{{ text.cancel }}</v-btn>
+                                    <v-btn
+                                        type="submit"
+                                        color="primary"
+                                        variant="plain">{{ dialogCommand.saveButton }}</v-btn>
+                                    <v-spacer></v-spacer>
+                                </v-card-actions>
+                            </v-card>
+                        </v-form>
                     </v-dialog>
                     <v-dialog v-model="dialogDeleteCommand" max-width="450">
                         <v-card>
@@ -90,6 +92,7 @@
 </template>
 
 <script>
+
 export default {
     name: 'OptionCheatSheet',
     data() {
@@ -156,9 +159,10 @@ export default {
             this.dialogCommand = {
                 open: true,
                 valid: true,
-                title: this.i18n.getMessage('TitleUpdate', command.label),
-                item: Object.assign({}, command),
-                current: command,
+                title: this.i18n.getMessage('TitleUpdate', command.raw.label),
+                item: Object.assign({}, command.raw),
+                current: command.raw,
+                saveButton: this.text.save,
             }
         },
         openNewCommand: function () {
@@ -168,6 +172,7 @@ export default {
                 title: this.i18n.getMessage('TitleCreate'),
                 item: Object.assign({}, this.defaultCommand),
                 current: null,
+                saveButton: this.text.add,
             }
         },
         closeCommand: function () {
@@ -177,10 +182,11 @@ export default {
                 title: '',
                 item: Object.assign({}, this.defaultCommand),
                 current: null,
+                saveButton: this.text.add,
             }
         },
         openDialogDeleteCommand: function (command) {
-            this.deleteCommand = Object.assign({}, command)
+            this.deleteCommand = Object.assign({}, command.raw)
 
             this.dialogDeleteCommand = true
         },
@@ -194,8 +200,16 @@ export default {
 
             this.closeDialogDeleteCommand()
         },
-        saveCommand: function () {
-            if (this.$refs.commandForm.validate()) {
+        async saveCommand (event) {
+            const result = await event
+
+            if (false === result.valid) {
+                return
+            }
+
+            if (null === this.dialogCommand.current) {
+                this.$store.dispatch('cheatSheet/addCommand', this.dialogCommand.item)
+            } else {
                 this.$store.dispatch(
                     'cheatSheet/updateCommand',
                     {
@@ -203,13 +217,6 @@ export default {
                         item: this.dialogCommand.item,
                     },
                 )
-            }
-
-            this.closeCommand()
-        },
-        addCommand: function () {
-            if (this.$refs.commandForm.validate()) {
-                this.$store.dispatch('cheatSheet/addCommand', this.dialogCommand.item)
             }
 
             this.closeCommand()
