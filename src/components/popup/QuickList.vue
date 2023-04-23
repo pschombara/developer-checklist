@@ -28,7 +28,7 @@
             <v-row  class="mt-3">
                 <template v-for="issue in issues" :key="issue.id">
                     <v-col cols="4">
-                        <v-btn :color="buttonColor(issue)" block>
+                        <v-btn :color="buttonColor(issue)" block @click="openIssue(issue.name)">
                             {{issue.name}}
                         </v-btn>
                     </v-col>
