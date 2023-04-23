@@ -1,18 +1,23 @@
 <template>
     <v-card>
         <v-card-title>
-            <v-spacer></v-spacer>
-            <v-btn icon @click="openOptions('chat')"><v-icon>fas fa-cog</v-icon></v-btn>
+            <v-row>
+                <v-col cols="10">Chat Notifications</v-col>
+                <v-col cols="2">
+                    <v-btn variant="text" @click="openOptions('chat')"><v-icon>fas fa-cog</v-icon></v-btn>
+                </v-col>
+            </v-row>
         </v-card-title>
         <v-card-text>
             <v-row>
                 <v-col cols="12">
                     <v-autocomplete
-                        :items="clients"
-                        item-text="client"
-                        item-value="client"
                         v-model="client"
+                        :items="clients"
+                        item-title="client"
+                        item-value="client"
                         label="Client"
+                        variant="underlined"
                     ></v-autocomplete>
                 </v-col>
             </v-row>
@@ -20,32 +25,34 @@
                 <v-row>
                     <v-col cols="12">
                         <v-autocomplete
+                            v-model="room"
                             :items="rooms"
                             item-value="id"
-                            item-text="name"
-                            v-model="room"
+                            item-title="name"
                             label="Room"
+                            variant="underlined"
                         ></v-autocomplete>
                     </v-col>
                 </v-row>
-                <v-row>
+                <v-row class="align-content-center">
                     <v-col cols="10">
                         <v-autocomplete
+                            v-model="message"
                             :items="messages"
                             item-value="id"
-                            item-text="name"
-                            v-model="message"
+                            item-title="name"
                             label="Message"
+                            variant="underlined"
                         ></v-autocomplete>
                     </v-col>
-                    <v-col cols="2" class="align-self-center">
+                    <v-col cols="2">
                         <v-btn
+                            v-if="'ready' === status || 'progress' === status"
                             :disabled="!sendReady"
-                            color="success"
-                            @click="send"
+                            color="primary"
                             outlined
                             large
-                            v-if="'ready' === status || 'progress' === status"
+                            @click="send"
                         >
                             <v-icon v-if="'ready' === status">fas fa-play</v-icon>
                             <v-icon v-if="'progress' === status">fas fa-circle-notch fa-spin</v-icon>
@@ -63,9 +70,15 @@
                             small-chips
                             hide-selected
                             label="Issue to attach (optional)"
+                            variant="underlined"
                         >
-                            <template v-slot:selection="{item, parent}">
-                                <v-chip>{{item}} <v-btn class="ml-2" icon x-small @click="parent.selectItem(item)"><v-icon>fas fa-times</v-icon></v-btn></v-chip>
+                            <template #selection="{item, parent}">
+                                <v-chip
+                                    closable
+                                    @click:close="parent.selectItem(item)"
+                                >
+                                    {{item.title}}
+                                </v-chip>
                             </template>
                         </v-combobox>
                     </v-col>
@@ -76,37 +89,18 @@
 </template>
 
 <script>
+
+import {th} from 'vuetify/locale'
+
 export default {
-    name: 'Chat',
-    created() {
-        for (let client of this.clients) {
-            if (client.main) {
-                this.client = client.client
-
-                break
-            }
+    name: 'PopupChat',
+    data: () => {
+        return {
+            client: '',
+            room: null,
+            message: null,
+            attachedIssues: [],
         }
-
-        let currentIssue = this.$store.getters['currentIssue']
-
-        if (null !== currentIssue) {
-            this.attachedIssues.push(currentIssue)
-        }
-
-        let rooms = this.$store.getters['chat/listRooms'](this.client)
-
-        if (0 === rooms.length) {
-            return
-        }
-        this.room = rooms[0].id
-
-        let messages = this.$store.getters['chat/listMessages'](this.client)
-
-        if (0 === messages.length) {
-            return
-        }
-
-        this.message = messages[0].id
     },
     computed: {
         clients: function () {
@@ -135,6 +129,47 @@ export default {
             return this.$store.getters['issues/issueKeys']
         },
     },
+    created() {
+        for (let client of this.clients) {
+            if (client.main) {
+                this.client = client.client
+
+                break
+            }
+        }
+
+        let currentIssue = this.$store.getters['currentIssue']
+
+        if (null !== currentIssue) {
+            this.attachedIssues.push(currentIssue)
+        }
+
+        let rooms = this.$store.getters['chat/listRooms'](this.client)
+
+        if (0 === rooms.length) {
+            return
+        }
+
+        for (let room of rooms) {
+            if (null === this.room
+                || this.room.sort > room.sort) {
+                this.room = room
+            }
+        }
+
+        let messages = this.$store.getters['chat/listMessages'](this.client)
+
+        if (0 === messages.length) {
+            return
+        }
+
+        for (let message of messages) {
+            if (null === this.message
+                || this.message.sort > message.sort) {
+                this.message = message
+            }
+        }
+    },
     methods: {
         openOptions: function (tab) {
             this.$store.dispatch('changeMainTab', tab)
@@ -148,14 +183,6 @@ export default {
                 attachedIssues: this.attachedIssues,
             })
         },
-    },
-    data: () => {
-        return {
-            client: '',
-            room: null,
-            message: null,
-            attachedIssues: [],
-        }
     },
 }
 </script>

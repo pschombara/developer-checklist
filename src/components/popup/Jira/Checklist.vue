@@ -1,49 +1,63 @@
 <template>
-    <v-card flat>
+    <v-card class="mx-auto" flat>
         <v-card-text>
-            <v-list dense>
+            <v-list density="compact">
                 <v-list-group
                     v-for="item in checklist.checklist"
                     :key="item.uid"
-                    no-action
+                    :value="item.title"
                 >
-                    <template v-slot:activator>
-                        <v-list-item-icon class="mr-2">
-                            <v-icon small color="success" v-if="checkGroupCompleted(item.uid)">fas fa-check</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-content>
-                            <v-list-item-title :class="(checkGroupCompleted(item.uid) ? 'text-decoration-line-through' : '')" v-text="item.title"></v-list-item-title>
-                        </v-list-item-content>
+                    <template #activator="{ props }">
+                        <v-list-item
+                            v-bind="props"
+                        >
+                            <template #prepend>
+                                <v-icon v-if="checkGroupCompleted(item.uid)" small color="success">fas fa-check</v-icon>
+                                <v-icon v-else small color="grey">fas fa-check</v-icon>
+                            </template>
+                            <template #title>
+                                <span :class="(checkGroupCompleted(item.uid) ? 'text-decoration-line-through' : '')">
+                                    {{ item.title }}
+                                </span>
+                            </template>
+                        </v-list-item>
                     </template>
+
                     <v-list-item
                         v-for="entry in item.items"
                         :key="entry.id"
-                        class="pl-10"
+                        :title="entry.text"
+                        :value="entry.id"
+                        @click="toggleCheck(entry.id)"
                     >
-                        <v-list-item-icon class="mr-2">
-                            <v-icon small color="success" v-if="isChecked(entry.id)">fas fa-check</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-content>
-                            <v-list-item-title :class="'cursor-pointer text-wrap' + (isChecked(entry.id) ? ' text-decoration-line-through' : '')" v-text="entry.text" @click="toggleCheck(entry.id)" ></v-list-item-title>
-                        </v-list-item-content>
+                        <template #prepend>
+                            <v-icon v-if="isChecked(entry.id)" small color="success">fas fa-check</v-icon>
+                            <v-icon v-else small color="grey">fas fa-check</v-icon>
+                        </template>
+                        <template #title>
+                            <span :class="'cursor-pointer text-wrap' + (isChecked(entry.id) ? ' text-decoration-line-through' : '')">
+                                {{ entry.text }}
+                            </span>
+                        </template>
                     </v-list-item>
+
                 </v-list-group>
             </v-list>
         </v-card-text>
         <v-card-actions>
             <v-btn
-                color="success"
-                outlined
                 v-if="checklist.buttons.success.enabled"
+                color="primary"
+                variant="outlined"
                 @click="addComment(checklist.buttons.success)"
             >
                 <v-icon left>fas fa-check</v-icon>
                 {{checklist.buttons.success.text}}
             </v-btn>
             <v-btn
-                color="error"
-                outlined
                 v-if="checklist.buttons.failed.enabled"
+                color="error"
+                variant="outlined"
                 @click="addComment(checklist.buttons.failed)"
             >
                 <v-icon left>fas fa-times</v-icon>
@@ -58,8 +72,9 @@
 </template>
 
 <script>
+
 export default {
-    name: 'Checklist',
+    name: 'JiraChecklist',
     props: {
         uuid: {
             type: String,
@@ -69,6 +84,11 @@ export default {
             type: String,
             required: true,
         },
+    },
+    data: () => {
+        return {
+            activeItem: null,
+        }
     },
     computed: {
         checklist: function () {
@@ -91,8 +111,8 @@ export default {
                 return false
             }
 
-            const checklist = this.checklist.checklist.find(elem => elem.uid === uuid)
-            const entries = checklist.items.map(elem => elem.id)
+            const checklist = Object.values(this.checklist.checklist).find(elem => elem.uid === uuid)
+            const entries = Object.values(checklist.items).map(elem => elem.id)
 
             return entries.every(val => this.checked[this.uuid].includes(val))
         },
@@ -109,11 +129,6 @@ export default {
                 autoComment: button.autoComment,
             })
         },
-    },
-    data: () => {
-        return {
-            activeItem: null,
-        }
     },
 }
 </script>

@@ -1,35 +1,24 @@
-import {Uuid} from '@/mixins/uuid'
-import Helper from '@/mixins/helper'
-import {Google} from '@/mixins/chat/google'
-import {Discord} from '@/mixins/chat/discord'
+import {Uuid} from '../../mixins/uuid'
+import Helper from '../../mixins/helper'
+import {Google} from '../../mixins/chat/google'
+import {Discord} from '../../mixins/chat/discord'
+import {toRaw} from 'vue'
+import {da} from 'vuetify/locale'
 
-const chatWorker = new Worker('/worker/chat.js')
+const chatWorker = new Worker('../..//worker/chat.js')
 
 const STATUS_READY = 'ready'
 const STATUS_SUCCESS = 'success'
 const STATUS_ERROR = 'error'
 const STATUS_PROGRESS = 'progress'
 
-const state = {
-    clients: {
-        google: {
-            enabled: false,
-            messages: [],
-            rooms: [],
-            main: true,
-        },
-        discord: {
-            enabled: false,
-            messages: [],
-            rooms: [],
-            main: false,
-        },
-    },
+let state = {
+    clients: {},
     status: STATUS_READY,
 }
 
 export default {
-    strict: process.env.NODE_ENV !== 'production',
+    strict: import.meta.env.NODE_ENV !== 'production',
     namespaced: true,
     modules: {},
     state,
@@ -121,7 +110,6 @@ export default {
                     data.main = false
                 }
             }
-
         },
         SORT_ROOM_AFTER: (state, data) => {
             if (undefined === state.clients[data.client]) {
@@ -131,7 +119,7 @@ export default {
             const current = state.clients[data.client].rooms.find(room => room.id === data.current)
             const reference = state.clients[data.client].rooms.find(room => room.id === data.ref)
 
-            Helper.sortAfter(state.clients[data.client].rooms, current, reference, 'sort')
+            Helper.sortAfter(state.clients[data.client].rooms, current, reference, 'id')
         },
         SORT_ROOM_BEFORE: (state, data) => {
             if (undefined === state.clients[data.client]) {
@@ -141,7 +129,7 @@ export default {
             const current = state.clients[data.client].rooms.find(room => room.id === data.current)
             const reference = state.clients[data.client].rooms.find(room => room.id === data.ref)
 
-            Helper.sortBefore(state.clients[data.client].rooms, current, reference, 'sort')
+            Helper.sortBefore(state.clients[data.client].rooms, current, reference, 'id')
         },
         SORT_MESSAGE_AFTER: (state, data) => {
             if (undefined === state.clients[data.client]) {
@@ -151,7 +139,7 @@ export default {
             const current = state.clients[data.client].messages.find(message => message.id === data.current)
             const reference = state.clients[data.client].messages.find(message => message.id === data.ref)
 
-            Helper.sortAfter(state.clients[data.client].messages, current, reference, 'sort')
+            Helper.sortAfter(state.clients[data.client].messages, current, reference, 'id')
         },
         SORT_MESSAGE_BEFORE: (state, data) => {
             if (undefined === state.clients[data.client]) {
@@ -161,7 +149,7 @@ export default {
             const current = state.clients[data.client].messages.find(message => message.id === data.current)
             const reference = state.clients[data.client].messages.find(message => message.id === data.ref)
 
-            Helper.sortBefore(state.clients[data.client].messages, current, reference, 'sort')
+            Helper.sortBefore(state.clients[data.client].messages, current, reference, 'id')
         },
         STATUS_READY: state => {
             state.status = STATUS_READY
@@ -175,10 +163,30 @@ export default {
         STATUS_PROGRESS: state => {
             state.status = STATUS_PROGRESS
         },
+        CLEAR: state => {
+            state.clients = {
+                google: {
+                    enabled: false,
+                    messages: [],
+                    rooms: [],
+                    main: true,
+                },
+                discord: {
+                    enabled: false,
+                    messages: [],
+                    rooms: [],
+                    main: false,
+                },
+            }
+
+            state.status = STATUS_READY
+        },
     },
     actions: {
         // options
         init: ({commit}, options) => {
+            commit('CLEAR')
+
             for (const [client, data] of Object.entries(options)) {
                 commit('CHANGE_ENABLED', {client, enabled: data.enabled})
 
@@ -218,7 +226,7 @@ export default {
                     id: Uuid.generate(),
                     name: data.room.name,
                     url: data.room.url,
-                    sort: getters['nextRoomSort'],
+                    sort: Number.MAX_SAFE_INTEGER,
                 },
             })
         },
@@ -245,7 +253,7 @@ export default {
                     id: Uuid.generate(),
                     name: data.message.name,
                     content: data.message.content,
-                    sort: getters['nextMessageSort'],
+                    sort: Number.MAX_SAFE_INTEGER,
                 },
             })
         },
@@ -307,26 +315,24 @@ export default {
                 resolve({
                     key: 'chat',
                     options: {
-                        google: state.clients.google,
-                        discord: state.clients.discord,
+                        google: toRaw(state.clients.google),
+                        discord: toRaw(state.clients.discord),
                     },
                 })
             })
         },
         // popup
         sendMessage: async ({commit, rootGetters, getters}, data) => {
-            let room = getters['room'](data.client, data.room)
-            let message = getters['message'](data.client, data.message)
             let jiraUrl = rootGetters['jira/getUrl']
             let msg = ''
 
             switch (data.client) {
                 case 'google' :
-                    msg = Google.format(message.content, data.attachedIssues, jiraUrl)
+                    msg = Google.format(data.message.content, data.attachedIssues, jiraUrl)
 
                     break
                 case 'discord':
-                    msg = Discord.format(message.content, data.attachedIssues, jiraUrl)
+                    msg = Discord.format(data.message.content, data.attachedIssues, jiraUrl)
 
                     break
                 default:
@@ -347,25 +353,11 @@ export default {
                 }, 1500)
             })
 
-            chatWorker.postMessage({room, message: msg})
+            chatWorker.postMessage({room: toRaw(data.room), message: msg})
         },
     },
     getters: {
         listChatClients: state => Object.keys(state.clients),
-        nextRoomSort: state => client => {
-            if (undefined === state.clients[client]) {
-                return 0
-            }
-
-            return Math.max(...state.clients[client].rooms.map(room => room.sort)) + 1
-        },
-        nextMessageSort: state => client => {
-            if (undefined === state.clients[client]) {
-                return 0
-            }
-
-            return Math.max(...state.clients[client].messages.map(message => message.sort)) + 1
-        },
         listMessages: state => client => {
             if (undefined === state.clients[client]) {
                 return []

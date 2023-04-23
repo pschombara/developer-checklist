@@ -1,18 +1,14 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-
-import chat from '@/store/modules/chat'
-import cheatSheet from '@/store/modules/cheatSheet'
-import gitLab from '@/store/modules/gitLab'
-import jenkins from '@/store/modules/jenkins'
-import jira from '@/store/modules/jira'
-import Migration from '@/mixins/migration'
-/* import chromeBrowser from '@/store/modules/chromeBrowser' */
-import icons from '@/store/modules/icons'
-import issues from '@/store/modules/issues'
+import chat from './modules/chat'
+import cheatSheet from './modules/cheatSheet'
+import gitLab from './modules/gitLab'
+import jenkins from './modules/jenkins'
+import jira from './modules/jira'
+import Migration from '../mixins/migration'
+/* import chromeBrowser from './modules/chromeBrowser' */
+import icons from './modules/icons'
+import issues from './modules/issues'
 import Helper from '../mixins/helper'
-
-Vue.use(Vuex)
+import {createStore} from 'vuex'
 
 const migration = new Migration()
 
@@ -26,15 +22,17 @@ const state = {
     },
     version: migration.version,
     configTabs: {
-        main: 'modules',
+        main: 'general',
     },
     optionsValid: false,
     currentIssue: null,
     currentUrl: '',
     switchTab: null,
     openTab: null,
+    themeSchema: 'system',
+    themeColor: 'blue',
     optionTabs: [
-        { id: 'modules', name: 'Modules', icon: 'fas fa-cogs', settings: true },
+        { id: 'general', name: chrome.i18n.getMessage('general'), icon: 'fas fa-cogs', settings: true },
         { id: 'jira', name: 'Jira', icon: 'fab fa-jira', settings: true },
         { id: 'jenkins', name: 'Jenkins', icon: 'fab fa-jenkins', settings: true },
         { id: 'gitLab', name: 'GitLab', icon: 'fab fa-gitlab', settings: true },
@@ -45,8 +43,8 @@ const state = {
     ],
 }
 
-export default new Vuex.Store({
-    strict: process.env.NODE_ENV !== 'production',
+const store = createStore({
+    strict: import.meta.env.NODE_ENV !== 'production',
     state,
     mutations: {
         SET_MODULES: (state, modules) => {
@@ -77,11 +75,20 @@ export default new Vuex.Store({
         CHANGE_OPEN_TAB: (state, tab) => {
             state.openTab = tab
         },
+        CHANGE_THEME_SCHEMA: (state, schema) => {
+            state.themeSchema = schema
+        },
+        CHANGE_THEME_COLOR: (state, color) => {
+            state.themeColor = color
+        },
     },
     actions: {
         load: ({ commit, dispatch, rootGetters }) => {
             chrome.storage.onChanged.addListener((changes, area) => {
-                if ('local' === area && changes.optionsTab?.newValue) {
+                if ('local' !== area ) {
+                    return
+                }
+                if (changes.optionsTab?.newValue) {
                     commit('SET_TAB_CONFIG_MAIN', changes.optionsTab.newValue)
 
                     if ('' === changes.optionsTab.newValue) {
@@ -89,6 +96,8 @@ export default new Vuex.Store({
                     }
 
                     return dispatch('autoChangeOpenTab')
+                } else if (changes.theme?.newValue) {
+                    window.dispatchEvent(new CustomEvent('themeChanged', {detail: changes.theme.newValue}))
                 }
             })
 
@@ -113,6 +122,13 @@ export default new Vuex.Store({
                                 }
                             }
 
+                            if (Object.prototype.hasOwnProperty.call(storageData, 'theme')) {
+                                commit('CHANGE_THEME_SCHEMA', storageData['theme']['schema'])
+                                commit('CHANGE_THEME_COLOR', storageData['theme']['color'])
+
+                                window.dispatchEvent(new CustomEvent('themeChanged', {detail: storageData['theme']}))
+                            }
+
                             if (Object.prototype.hasOwnProperty.call(storageData, 'options')) {
                                 loaded(storageData.options)
                             } else {
@@ -122,9 +138,9 @@ export default new Vuex.Store({
                             }
                         })
                     }).then(storageData => {
-                        const options = migration.migrate(storageData)
+                        const options = migration.migrate(storageData, []).options
 
-                        commit('SET_MODULES', options.modules)
+                        commit('SET_MODULES', options.general.modules)
                         const promises = []
 
                         promises.push(dispatch('jira/init', options.jira))
@@ -171,8 +187,8 @@ export default new Vuex.Store({
                 const promises = []
 
                 for (let setting of importSettings) {
-                    if ('modules' === setting) {
-                        commit('SET_MODULES', options.modules)
+                    if ('general' === setting) {
+                        commit('SET_MODULES', options.general.modules)
                     } else {
                         promises.push(dispatch(setting + '/init', options[setting]))
                     }
@@ -250,6 +266,17 @@ export default new Vuex.Store({
             commit('SET_TAB_CONFIG_MAIN', tab)
             chrome.storage.local.set({'optionsTab': tab})
         },
+        changeThemeSchema: async ({commit, dispatch}, schema) => {
+            commit('CHANGE_THEME_SCHEMA', schema)
+            return dispatch('storeTheme')
+        },
+        changeThemeColor: async ({commit, dispatch}, color) => {
+            commit('CHANGE_THEME_COLOR', color)
+            return dispatch('storeTheme')
+        },
+        storeTheme: ({state}) => {
+            chrome.storage.local.set({theme: {schema: state.themeSchema, color: state.themeColor}})
+        },
         openTab: ({commit}, tab) => {
             commit('CHANGE_OPEN_TAB', tab)
         },
@@ -264,7 +291,9 @@ export default new Vuex.Store({
         saveOptions: ({state, dispatch}) => {
             let options = {
                 options: {
-                    modules: state.modules,
+                    general: {
+                        modules: state.modules,
+                    },
                     version: state.version,
                 },
             }
@@ -321,6 +350,8 @@ export default new Vuex.Store({
         openTab: state => state.openTab,
         currentUrl: state => state.currentUrl,
         optionTabs: state => state.optionTabs,
+        themeSchema: state => state.themeSchema,
+        themeColor: state => state.themeColor,
     },
     modules: {
         chat,
@@ -333,3 +364,6 @@ export default new Vuex.Store({
         issues,
     },
 })
+
+
+export default store

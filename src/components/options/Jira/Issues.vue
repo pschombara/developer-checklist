@@ -4,16 +4,16 @@
             <v-data-table
                 :items="issues"
                 :headers="issueHeader"
-                :sort-by="['pinned', 'updateDate']"
-                :sort-desc="[true, true]"
+                :sort-by="[{key: 'pinned', order: 'desc'}, {key: 'updateDate', order: 'desc'}]"
                 multi-sort
                 :loading="load"
             >
-                <template v-slot:top>
+                <template #top>
                     <v-toolbar flat>
                         <v-spacer></v-spacer>
-                        <v-btn plain @click="reload"><v-icon left>fas fa-sync</v-icon> {{text.reload}}</v-btn>
-
+                        <v-btn variant="plain" prepend-icon="fas fa-sync" @click="reload">
+                            {{ text.reload }}
+                        </v-btn>
                         <v-dialog v-model="deleteIssue.open" max-width="450">
                             <v-card>
                                 <v-card-title class="headline">
@@ -21,23 +21,41 @@
                                 </v-card-title>
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
-                                    <v-btn color="grey" plain @click="closeDelete">{{ text.cancel }}</v-btn>
-                                    <v-btn color="error" plain @click="remove">{{ text.delete }}</v-btn>
+                                    <v-btn color="secondary" variant="plain" @click="closeDelete">{{ text.cancel }}</v-btn>
+                                    <v-btn color="tertiary" variant="plain" @click="remove">{{ text.delete }}</v-btn>
                                     <v-spacer></v-spacer>
                                 </v-card-actions>
                             </v-card>
                         </v-dialog>
                     </v-toolbar>
                 </template>
-                <template v-slot:item.date="{item}">
-                    {{dateFormat(item.updateDate)}}
+                <template #item.date="{item}">
+                    {{ dateFormat(item.raw.updateDate) }}
                 </template>
-                <template v-slot:item.pinned="{item}">
-                    <v-btn color="success" v-if="item.pinned" icon @click="unpin(item)" small><v-icon small>fas fa-thumbtack</v-icon></v-btn>
-                    <v-btn color="grey" v-else icon @click="pin(item)" small><v-icon small>fas fa-thumbtack rotate--45-inverted</v-icon></v-btn>
+                <template #item.pinned="{item}">
+                    <v-btn
+                        v-if="item.raw.pinned"
+                        variant="plain"
+                        color="primary"
+                        icon="fas fa-thumbtack"
+                        size="small"
+                        @click="unpin(item)"></v-btn>
+                    <v-btn
+                        v-else
+                        variant="plain"
+                        color="secondary"
+                        icon="fas fa-thumbtack"
+                        size="small"
+                        class="rotate--45-inverted"
+                        @click="pin(item)"></v-btn>
                 </template>
-                <template v-slot:item.action="{item}">
-                    <v-btn icon color="red darken-2" small @click="openDelete(item)"><v-icon small>fas fa-trash</v-icon></v-btn>
+                <template #item.action="{item}">
+                    <v-btn
+                        variant="plain"
+                        icon="fas fa-trash"
+                        color="tertiary"
+                        size="small"
+                        @click="openDelete(item)"> </v-btn>
                 </template>
             </v-data-table>
         </v-card-text>
@@ -49,7 +67,36 @@
 import Helper from '../../../mixins/helper'
 
 export default {
-    name: 'Issues',
+    name: 'JiraIssues',
+    data: () => {
+        return {
+            text: {
+                reload: chrome.i18n.getMessage('Reload'),
+                cancel: chrome.i18n.getMessage('Cancel'),
+                delete: chrome.i18n.getMessage('Delete'),
+            },
+            load: false,
+            deleteIssue: {
+                open: false,
+                issue: null,
+            },
+            i18n: chrome.i18n,
+        }
+    },
+    computed: {
+        issueHeader() {
+            return [
+                {title: 'Identifier', key: 'name', sortable: false},
+                {title: 'Title', key: 'title', sortable: false},
+                {title: 'Last Update', key: 'date', align: 'end', sortable: false},
+                {title: '', key: 'pinned', sortable: false},
+                {title: '', key: 'action', align: 'end', sortable: false},
+            ]
+        },
+        issues() {
+            return this.$store.getters['issues/list']
+        },
+    },
     methods: {
         reload: function () {
             this.load = true
@@ -58,15 +105,15 @@ export default {
             })
         },
         pin: function (issue) {
-            this.$store.dispatch('issues/pin', issue.name)
+            this.$store.dispatch('issues/pin', issue.raw.name)
         },
         unpin: function (issue) {
-            this.$store.dispatch('issues/unpin', issue.name)
+            this.$store.dispatch('issues/unpin', issue.raw.name)
         },
         openDelete: function (item) {
             this.deleteIssue = {
                 open: true,
-                issue: item.name,
+                issue: item.raw.name,
             }
         },
         closeDelete: function () {
@@ -82,35 +129,6 @@ export default {
         dateFormat: function (date) {
             return Helper.localeDate(date)
         },
-    },
-    computed: {
-        issueHeader() {
-            return [
-                {text: 'Identifier', value: 'name', sortable: false},
-                {text: 'Title', value: 'title', sortable: false},
-                {text: 'Last Update', value: 'date', align: 'end', sortable: false},
-                {text: '', value: 'pinned', sortable: false},
-                {text: '', value: 'action', align: 'end', sortable: false},
-            ]
-        },
-        issues() {
-            return this.$store.getters['issues/list']
-        },
-    },
-    data: () => {
-        return {
-            text: {
-                reload: chrome.i18n.getMessage('Reload'),
-                cancel: chrome.i18n.getMessage('Cancel'),
-                delete: chrome.i18n.getMessage('Delete'),
-            },
-            load: false,
-            deleteIssue: {
-                open: false,
-                issue: null,
-            },
-            i18n: chrome.i18n,
-        }
     },
 }
 </script>

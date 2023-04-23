@@ -23,6 +23,7 @@
                                 thumb-size="24"
                                 min="0"
                                 max="24"
+                                step="1"
                                 persistent-hint
                             ></v-slider>
                         </v-col>
@@ -37,6 +38,7 @@
                                 thumb-size="24"
                                 min="1"
                                 max="30"
+                                step="1"
                                 persistent-hint
                             ></v-slider>
                         </v-col>
@@ -51,54 +53,66 @@
                                 :headers="boardHeaders"
                                 :search="searchBoards"
                             >
-                                <template v-slot:top>
+                                <template #top>
                                     <v-toolbar flat>
-                                        <v-text-field
-                                            v-model="searchBoards"
-                                            prepend-icon="fas fa-search"
-                                            clear-icon="fas fa-times"
-                                            :label="text.search"
-                                            single-line
-                                            hide-details
-                                            clearable></v-text-field>
+                                        <v-toolbar-title>
+                                            <v-text-field
+                                                v-model="searchBoards"
+                                                prepend-icon="fas fa-search"
+                                                clear-icon="fas fa-times"
+                                                :label="text.search"
+                                                single-line
+                                                hide-details
+                                                clearable></v-text-field>
+                                        </v-toolbar-title>
                                         <v-spacer></v-spacer>
-                                        <v-btn color="primary" @click="openNewBoard"><v-icon left x-small>fas fa-plus</v-icon> {{ text.add }}</v-btn>
+                                        <v-btn
+                                            variant="plain"
+                                            prepend-icon="fas fa-plus"
+                                            color="primary"
+                                            @click="openNewBoard">{{text.add}}</v-btn>
                                         <v-dialog v-model="dialogBoard.open" max-width="450">
-                                            <v-card>
-                                                <v-card-title>{{dialogBoard.title}}</v-card-title>
-                                                <v-card-text>
-                                                    <v-form ref="formBoard" v-model="dialogBoard.valid">
-                                                        <v-text-field
-                                                            v-model="dialogBoard.item.key"
-                                                            :label="text.boardKey"
-                                                            :rules="boardKeyRules"
-                                                            counter="10"
-                                                        ></v-text-field>
-                                                        <v-switch
-                                                            v-model="dialogBoard.item.default"
-                                                            :label="text.default"
-                                                            :disabled="null !== dialogBoard.current && dialogBoard.current.default"
-                                                        ></v-switch>
-                                                    </v-form>
-                                                </v-card-text>
-                                                <v-card-actions>
-                                                    <v-spacer></v-spacer>
-                                                    <v-btn color="grey" plain @click="closeBoard">{{ text.cancel }}</v-btn>
-                                                    <v-btn color="primary" plain v-if="null === dialogBoard.current" :disabled="!dialogBoard.valid" @click="addBoard">{{ text.add }}</v-btn>
-                                                    <v-btn color="primary" plain v-else :disabled="!dialogBoard.valid" @click="saveBoard">{{ text.save }}</v-btn>
-                                                    <v-spacer></v-spacer>
-                                                </v-card-actions>
-                                            </v-card>
+                                            <v-form validate-on="input" @submit.prevent="saveBoard">
+                                                <v-card>
+                                                    <v-card-title>{{dialogBoard.title}}</v-card-title>
+                                                    <v-card-text>
+                                                            <v-text-field
+                                                                v-model="dialogBoard.item.key"
+                                                                :label="text.boardKey"
+                                                                :rules="boardKeyRules"
+                                                                counter="10"
+                                                            ></v-text-field>
+                                                            <v-switch
+                                                                v-model="dialogBoard.item.default"
+                                                                :label="text.default"
+                                                                :disabled="null !== dialogBoard.current && dialogBoard.current.default"
+                                                                color="primary"
+                                                            ></v-switch>
+                                                    </v-card-text>
+                                                    <v-card-actions>
+                                                        <v-spacer></v-spacer>
+                                                        <v-btn
+                                                            color="secondary"
+                                                            variant="plain"
+                                                            @click="closeBoard">{{ text.cancel }}</v-btn>
+                                                        <v-btn
+                                                            type="submit"
+                                                            color="primary"
+                                                            variant="plain">{{ dialogBoard.saveButton }}</v-btn>
+                                                        <v-spacer></v-spacer>
+                                                    </v-card-actions>
+                                                </v-card>
+                                            </v-form>
                                         </v-dialog>
                                         <v-dialog v-model="dialogDeleteBoard" max-width="450">
                                             <v-card>
                                                 <v-card-title class="headline">{{ i18n.getMessage('TitleDelete', deleteBoard.key) }}</v-card-title>
                                                 <v-card-actions>
                                                     <v-spacer></v-spacer>
-                                                    <v-btn color="grey" plain @click="closeDialogDeleteBoard">
+                                                    <v-btn color="secondary" plain @click="closeDialogDeleteBoard">
                                                         {{ text.cancel }}
                                                     </v-btn>
-                                                    <v-btn color="error" plain @click="removeBoard">
+                                                    <v-btn color="tertiary" plain @click="removeBoard">
                                                         {{ text.delete }}
                                                     </v-btn>
                                                     <v-spacer></v-spacer>
@@ -107,20 +121,26 @@
                                         </v-dialog>
                                     </v-toolbar>
                                 </template>
-                                <template v-slot:item.default="{item}">
+                                <template #item.default="{item}">
                                     <v-icon
-                                        v-if="item.default"
-                                        small
+                                        v-if="item.raw.default"
+                                        icon="fas fa-check"
+                                        size="small"
                                         color="success"
-                                    >fas fa-check</v-icon>
+                                    ></v-icon>
                                 </template>
-                                <template v-slot:item.actions="{item}">
-                                    <v-btn icon @click="openBoard(item)" small>
-                                        <v-icon small>fas fa-edit</v-icon>
-                                    </v-btn>
-                                    <v-btn icon @click="openDialogDeleteBoard(item)" small>
-                                        <v-icon small color="red darken-2">fas fa-trash</v-icon>
-                                    </v-btn>
+                                <template #item.actions="{item}">
+                                    <v-btn
+                                        variant="plain"
+                                        icon="fas fa-edit"
+                                        size="small"
+                                        @click="openBoard(item)"> </v-btn>
+                                    <v-btn
+                                        variant="plain"
+                                        icon="fas fa-trash"
+                                        size="small"
+                                        color="tertiary"
+                                        @click="openDialogDeleteBoard(item)"> </v-btn>
                                 </template>
                             </v-data-table>
                         </v-card-text>
@@ -132,126 +152,10 @@
 </template>
 
 <script>
-import Helper from '@/mixins/helper'
+import Helper from '../../../mixins/helper'
 
 export default {
-    name: 'General',
-    computed: {
-        host: {
-            get() {
-                return this.$store.getters['jira/getUrl']
-            },
-            set(value) {
-                if (null === value || Helper.isURL(value)) {
-                    this.$store.dispatch('jira/updateUrl', value)
-                }
-            },
-        },
-        cleanup: {
-            get() {
-                return this.$store.getters['jira/getCleanup']
-            },
-            set(value) {
-                this.$store.dispatch('jira/updateCleanup', value)
-            },
-        },
-        issues: {
-            get() {
-                return this.$store.getters['jira/getMaximumIssues']
-            },
-            set(value) {
-                this.$store.dispatch('jira/updateMaximumIssues', value)
-            },
-        },
-        boards() {
-            return this.$store.getters['jira/getBoards']
-        },
-        boardHeaders() {
-            return [
-                { text: this.text.boardKey, value: 'key'},
-                { text: this.text.default, value: 'default', sortable: false},
-                { text: '', value: 'actions', sortable: false, align: 'end'},
-            ]
-        },
-    },
-    methods: {
-        openNewBoard: function() {
-            this.dialogBoard = {
-                open: true,
-                title: this.text.newBoard,
-                item: Object.assign({}, this.defaultBoard),
-                current: null,
-                valid: false,
-            }
-        },
-        openBoard: function (board) {
-            this.dialogBoard = {
-                open: true,
-                title: this.i18n.getMessage('TitleUpdate', board.key),
-                item: Object.assign({}, board),
-                current: board,
-                valid: true,
-            }
-        },
-        closeBoard: function () {
-            this.dialogBoard = {
-                open: false,
-                title: '',
-                item: Object.assign({}, this.defaultBoard),
-                current: null,
-                valid: false,
-            }
-        },
-        addBoard: function () {
-            if (this.$refs.formBoard.validate()) {
-                this.$store.dispatch('jira/addBoard', this.dialogBoard.item)
-            }
-
-            this.closeBoard()
-        },
-        saveBoard: function () {
-            if (this.$refs.formBoard.validate()) {
-                this.$store.dispatch(
-                    'jira/updateBoard',
-                    {
-                        previous: this.dialogBoard.current,
-                        board: this.dialogBoard.item,
-                    },
-                )
-            }
-
-            this.closeBoard()
-        },
-        removeBoard: function () {
-            this.$store.dispatch('jira/removeBoard', this.deleteBoard)
-            this.closeDialogDeleteBoard()
-        },
-        openDialogDeleteBoard: function (board) {
-            this.deleteBoard = board
-            this.dialogDeleteBoard = true
-        },
-        closeDialogDeleteBoard: function () {
-            this.deleteBoard = {}
-            this.dialogDeleteBoard = false
-        },
-        checkBoardKeyDuplicated: function (value) {
-            if (null === value) {
-                return false
-            }
-
-            let searchResult = this.$store.getters['jira/getBoards'].find(board => board.key.toLowerCase() === value.toLowerCase())
-
-            if (undefined === searchResult) {
-                return false
-            }
-
-            if (null === this.dialogBoard.current) {
-                return true
-            }
-
-            return value !== this.dialogBoard.current.key
-        },
-    },
+    name: 'JiraGeneral',
     data() {
         return {
             text: {
@@ -298,6 +202,7 @@ export default {
                 },
                 current: null,
                 valid: false,
+                saveButton: '',
             },
             defaultBoard: {
                 identifier: 0,
@@ -305,6 +210,123 @@ export default {
                 default: false,
             },
         }
+    },
+    computed: {
+        host: {
+            get() {
+                return this.$store.getters['jira/getUrl']
+            },
+            set(value) {
+                if (null === value || Helper.isURL(value)) {
+                    this.$store.dispatch('jira/updateUrl', value)
+                }
+            },
+        },
+        cleanup: {
+            get() {
+                return this.$store.getters['jira/getCleanup']
+            },
+            set(value) {
+                this.$store.dispatch('jira/updateCleanup', value)
+            },
+        },
+        issues: {
+            get() {
+                return this.$store.getters['jira/getMaximumIssues']
+            },
+            set(value) {
+                this.$store.dispatch('jira/updateMaximumIssues', value)
+            },
+        },
+        boards() {
+            return this.$store.getters['jira/getBoards']
+        },
+        boardHeaders() {
+            return [
+                { title: this.text.boardKey, key: 'key'},
+                { title: this.text.default, key: 'default', sortable: false},
+                { title: '', key: 'actions', sortable: false, align: 'end'},
+            ]
+        },
+    },
+    methods: {
+        openNewBoard: function() {
+            this.dialogBoard = {
+                open: true,
+                title: this.text.newBoard,
+                item: Object.assign({}, this.defaultBoard),
+                current: null,
+                saveButton: this.text.add,
+            }
+        },
+        openBoard: function (board) {
+            this.dialogBoard = {
+                open: true,
+                title: this.i18n.getMessage('TitleUpdate', board.raw.key),
+                item: Object.assign({}, board.raw),
+                current: board.raw,
+                saveButton: this.text.save,
+            }
+        },
+        closeBoard: function () {
+            this.dialogBoard = {
+                open: false,
+                title: '',
+                item: Object.assign({}, this.defaultBoard),
+                current: null,
+                saveButton: this.text.add,
+            }
+        },
+        async saveBoard (event) {
+            const result = await event
+
+            if (false === result.valid) {
+                return
+            }
+
+            if (null === this.dialogBoard.current) {
+                this.$store.dispatch('jira/addBoard', this.dialogBoard.item)
+            } else {
+                this.$store.dispatch(
+                    'jira/updateBoard',
+                    {
+                        previous: this.dialogBoard.current,
+                        board: this.dialogBoard.item,
+                    },
+                )
+            }
+
+            this.closeBoard()
+        },
+        removeBoard: function () {
+            this.$store.dispatch('jira/removeBoard', this.deleteBoard)
+            this.closeDialogDeleteBoard()
+        },
+        openDialogDeleteBoard: function (board) {
+            this.deleteBoard = board.raw
+            this.dialogDeleteBoard = true
+        },
+        closeDialogDeleteBoard: function () {
+            this.deleteBoard = {}
+            this.dialogDeleteBoard = false
+        },
+        checkBoardKeyDuplicated: function (value) {
+            if (null === value) {
+                return false
+            }
+
+            let searchResult = this.$store.getters['jira/getBoards'].find(board => board.key.toLowerCase() === value.toLowerCase())
+
+            if (undefined === searchResult) {
+                return false
+            }
+
+            if (null === this.dialogBoard.current) {
+                return true
+            }
+
+            return value !== this.dialogBoard.current.key
+        },
     },
 }
 </script>

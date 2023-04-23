@@ -1,4 +1,4 @@
-import IssueMigration from '@/mixins/issueMigration'
+import IssueMigration from '../../mixins/issueMigration'
 import _ from 'lodash'
 
 const state = {
@@ -9,12 +9,16 @@ const migration = new IssueMigration()
 const date = Math.floor(Date.now() / 1000)
 
 export default {
-    strict: process.env.NODE_ENV !== 'production',
+    strict: import.meta.env.NODE_ENV !== 'production',
     namespaced: true,
     state,
     mutations: {
         ADD_ISSUE: (state, issue) => {
-            state.issues.push(issue)
+            const index = state.issues.findIndex(cmp => cmp.name === issue.name)
+
+            if (-1 === index) {
+                state.issues.push(issue)
+            }
         },
         REMOVE_ISSUE: (state, key) => {
             const index = state.issues.findIndex(issue => issue.name === key)

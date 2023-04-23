@@ -4,43 +4,51 @@
             <v-data-table
                 :headers="roomsHeader"
                 :items="rooms"
-                sort-by="sort"
+                :sort-by="[{key: 'sort', order: 'asc'}]"
                 :items-per-page="-1"
-                :item-class="itemRowSortActiveClass"
                 :hide-default-footer="true"
             >
-                <template v-slot:top>
+                <template #top>
                     <v-toolbar flat>
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" @click="openAddRoom"><v-icon left>fas fa-plus</v-icon>{{text.add}}</v-btn>
+                        <v-btn
+                            variant="plain"
+                            prepend-icon="fas fa-plus"
+                            color="primary"
+                            @click="openAddRoom">{{text.add}}</v-btn>
                     </v-toolbar>
 
                     <v-dialog v-model="editRoom.open" max-width="600">
+                        <v-form validate-on="input" @submit.prevent="saveRoom">
                         <v-card>
                             <v-card-title>{{editRoom.title}}</v-card-title>
                             <v-card-text>
-                                <v-form v-model="formValid" ref="roomForm">
                                     <v-text-field
                                         v-model="editRoom.name"
                                         :label="text.name"
                                         counter="20"
                                         :rules="nameRules"></v-text-field>
                                     <v-text-field
-                                        type="url"
                                         v-model="editRoom.url"
+                                        type="url"
                                         label="URL"
                                         counter="500"
                                         :rules="urlRules"></v-text-field>
-                                </v-form>
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn color="grey" plain @click="closeRoom">{{ text.cancel }}</v-btn>
-                                <v-btn color="primary" plain @click="saveRoom" v-if="!!editRoom.id" :disabled="!formValid">{{ text.save }}</v-btn>
-                                <v-btn color="primary" plain @click="addRoom" v-else :disabled="!formValid">{{ text.add }}</v-btn>
+                                <v-btn
+                                    color="secondary"
+                                    variant="plain"
+                                    @click="closeRoom">{{ text.cancel }}</v-btn>
+                                <v-btn
+                                    type="submit"
+                                    color="primary"
+                                    variant="plain">{{ editRoom.saveButton }}</v-btn>
                                 <v-spacer></v-spacer>
                             </v-card-actions>
                         </v-card>
+                        </v-form>
                     </v-dialog>
                     <v-dialog v-model="deleteRoom.open" max-width="450">
                         <v-card>
@@ -49,39 +57,54 @@
                             </v-card-title>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn color="grey" plain @click="closeDeleteRoom">{{ text.cancel }}</v-btn>
-                                <v-btn color="error" plain @click="removeRoom">{{ text.delete }}</v-btn>
+                                <v-btn color="secondary" plain @click="closeDeleteRoom">{{ text.cancel }}</v-btn>
+                                <v-btn color="tertiary" plain @click="removeRoom">{{ text.delete }}</v-btn>
                                 <v-spacer></v-spacer>
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
                 </template>
-                <template v-slot:item.actions="{item}">
-                    <v-btn icon small @click="openRoom(item)" v-if="!sortRoom">
-                        <v-icon small>fas fa-edit</v-icon>
-                    </v-btn>
-                    <v-btn icon small @click="startSort(item)" v-if="!sortRoom" :disabled="rooms.length < 2">
-                        <v-icon small>fas fa-sort</v-icon>
-                    </v-btn>
-                    <v-btn icon small @click="openDeleteRoom(item)" v-if="!sortRoom">
-                        <v-icon small color="red darken-2">fas fa-trash</v-icon>
-                    </v-btn>
-                    <v-btn icon small
-                           @click="sortBefore(item)"
-                           v-if="sortRoom && sortRoom.id !== item.id"
-                           :disabled="item.sort - 1 === sortRoom.sort">
-                        <v-icon small>fas fa-sort-up</v-icon>
-                    </v-btn>
-                    <v-btn icon small
-                           @click="sortAfter(item)"
-                           v-if="sortRoom && sortRoom.id !== item.id"
-                           :disabled="item.sort + 1 === sortRoom.sort">
-                        <v-icon small>fas fa-sort-down</v-icon>
-                    </v-btn>
-                    <v-btn icon small @click="closeSort"
-                           v-if="sortRoom && sortRoom.id === item.id">
-                        <v-icon small>fas fa-times</v-icon>
-                    </v-btn>
+                <template #item.actions="{item}">
+                    <v-btn
+                        v-if="!sortRoom"
+                        variant="plain"
+                        icon="fas fa-edit"
+                        size="small"
+                        @click="openRoom(item)"></v-btn>
+                    <v-btn
+                        v-if="!sortRoom"
+                        variant="plain"
+                        icon="fas fa-sort"
+                        size="small"
+                        :disabled="rooms.length < 2"
+                        @click="startSort(item)"></v-btn>
+                    <v-btn
+                        v-if="!sortRoom"
+                        variant="plain"
+                        icon="fas fa-trash"
+                        size="small"
+                        color="tertiary"
+                        @click="openDeleteRoom(item)"></v-btn>
+                    <v-btn
+                        v-if="sortRoom && sortRoom.value !== item.value"
+                        variant="plain"
+                        icon="fas fa-sort-up"
+                        size="small"
+                        :disabled="item.raw.sort - 1 === sortRoom.raw.sort"
+                        @click="sortBefore(item)"></v-btn>
+                    <v-btn
+                        v-if="sortRoom && sortRoom.value !== item.value"
+                        variant="plain"
+                        icon="fas fa-sort-down"
+                        size="small"
+                        :disabled="item.raw.sort + 1 === sortRoom.raw.sort"
+                        @click="sortAfter(item)"></v-btn>
+                    <v-btn
+                        v-if="sortRoom && sortRoom.value === item.value"
+                        variant="plain"
+                        icon="fas fa-times"
+                        size="small"
+                        @click="closeSort"></v-btn>
                 </template>
             </v-data-table>
         </v-card-text>
@@ -89,10 +112,10 @@
 </template>
 
 <script>
-import Helper from '@/mixins/helper'
+import Helper from '../../../mixins/helper'
 
 export default {
-    name: 'Rooms',
+    name: 'ChatRooms',
     props: {
         client: {
             type: String,
@@ -101,131 +124,6 @@ export default {
         urlStart: {
             type: String,
             required: true,
-        },
-    },
-    computed: {
-        rooms() {
-            return this.$store.getters['chat/listRooms'](this.client)
-        },
-        roomsHeader() {
-            return [
-                {text: 'Name', value: 'name', sortable: false, width: '15%'},
-                {text: 'URL', value: 'url', sortable: false, width: '75%'},
-                {text: '', value: 'actions', align: 'end', sortable: false, width: '10%'},
-            ]
-        },
-    },
-    methods: {
-        startSort: function (item) {
-            this.sortRoom = item
-        },
-        closeSort: function () {
-            this.sortRoom = null
-        },
-        sortBefore: function (item) {
-            this.$store.dispatch('chat/roomSortBefore', {
-                client: this.client,
-                ref: item.id,
-                current: this.sortRoom.id,
-            })
-        },
-        sortAfter: function (item) {
-            this.$store.dispatch('chat/roomSortAfter', {
-                client: this.client,
-                ref: item.id,
-                current: this.sortRoom.id,
-            })
-        },
-        itemRowSortActiveClass: function (item) {
-            if (null === this.sortRoom) {
-                return ''
-            }
-
-            return item.id === this.sortRoom.id ? 'primary' : ''
-        },
-        openRoom: function (item) {
-            this.editRoom = {
-                open: true,
-                id: item.id,
-                name: item.name,
-                url: item.url,
-                title: this.i18n.getMessage('TitleUpdate', item.name),
-            }
-        },
-        openAddRoom: function () {
-            this.closeRoom()
-            this.editRoom.open = true
-        },
-        closeRoom: function () {
-            this.editRoom = {
-                open: false,
-                id: null,
-                name: '',
-                url: '',
-                title: '',
-            }
-        },
-        saveRoom: function () {
-            if (this.$refs.roomForm.validate()) {
-                this.$store.dispatch('chat/updateRoom', {
-                    client: this.client,
-                    room: {
-                        id: this.editRoom.id,
-                        name: this.editRoom.name,
-                        url: this.editRoom.url,
-                    },
-                })
-            }
-
-            this.closeRoom()
-        },
-        addRoom: function () {
-            if (this.$refs.roomForm.validate()) {
-                this.$store.dispatch('chat/addRoom', {
-                    client: this.client,
-                    room: {
-                        name: this.editRoom.name,
-                        url: this.editRoom.url,
-                    },
-                })
-            }
-
-            this.closeRoom()
-        },
-        openDeleteRoom: function (item) {
-            this.deleteRoom = {
-                open: true,
-                id: item.id,
-                name: item.name,
-            }
-        },
-        closeDeleteRoom: function () {
-            this.deleteRoom = {
-                open: false,
-                id: null,
-                name: '',
-            }
-        },
-        removeRoom: function () {
-            this.$store.dispatch('chat/removeRoom', {
-                client: this.client,
-                id: this.deleteRoom.id,
-            })
-
-            this.closeDeleteRoom()
-        },
-        checkDuplicated: function (value) {
-            const room = this.$store.getters['chat/listRooms'](this.client).find(item => item.name === value)
-
-            if (undefined === room) {
-                return false
-            }
-
-            if (null === this.editRoom.id) {
-                return true
-            }
-
-            return this.editRoom.name !== value
         },
     },
     data() {
@@ -263,6 +161,134 @@ export default {
             ],
             formValid: false,
         }
+    },
+    computed: {
+        rooms() {
+            return this.$store.getters['chat/listRooms'](this.client)
+        },
+        roomsHeader() {
+            return [
+                {title: 'Name', key: 'name', sortable: false, width: '15%'},
+                {title: 'URL', key: 'url', sortable: false, width: '75%'},
+                {title: '', key: 'actions', align: 'end', sortable: false, width: '10%'},
+            ]
+        },
+    },
+    methods: {
+        startSort: function (item) {
+            this.sortRoom = item
+        },
+        closeSort: function () {
+            this.sortRoom = null
+        },
+        sortBefore: function (item) {
+            this.$store.dispatch('chat/roomSortBefore', {
+                client: this.client,
+                ref: item.value,
+                current: this.sortRoom.value,
+            })
+        },
+        sortAfter: function (item) {
+            this.$store.dispatch('chat/roomSortAfter', {
+                client: this.client,
+                ref: item.value,
+                current: this.sortRoom.value,
+            })
+        },
+        itemRowSortActiveClass: function (item) {
+            if (null === this.sortRoom) {
+                return ''
+            }
+
+            return item.value === this.sortRoom.value ? 'primary' : ''
+        },
+        openRoom: function (item) {
+            this.editRoom = {
+                open: true,
+                id: item.raw.id,
+                name: item.raw.name,
+                url: item.raw.url,
+                title: this.i18n.getMessage('TitleUpdate', item.raw.name),
+                saveButton: this.text.save,
+            }
+        },
+        openAddRoom: function () {
+            this.closeRoom()
+            this.editRoom.open = true
+        },
+        closeRoom: function () {
+            this.editRoom = {
+                open: false,
+                id: null,
+                name: '',
+                url: '',
+                title: '',
+                saveButton: this.text.add,
+            }
+        },
+        async saveRoom (event) {
+            const result = await event
+
+            if (false === result.valid) {
+                return
+            }
+
+            if (null === this.editRoom.id) {
+                this.$store.dispatch('chat/addRoom', {
+                    client: this.client,
+                    room: {
+                        name: this.editRoom.name,
+                        url: this.editRoom.url,
+                    },
+                })
+            } else {
+                this.$store.dispatch('chat/updateRoom', {
+                    client: this.client,
+                    room: {
+                        id: this.editRoom.id,
+                        name: this.editRoom.name,
+                        url: this.editRoom.url,
+                    },
+                })
+            }
+
+            this.closeRoom()
+        },
+        openDeleteRoom: function (item) {
+            this.deleteRoom = {
+                open: true,
+                id: item.raw.id,
+                name: item.raw.name,
+            }
+        },
+        closeDeleteRoom: function () {
+            this.deleteRoom = {
+                open: false,
+                id: null,
+                name: '',
+            }
+        },
+        removeRoom: function () {
+            this.$store.dispatch('chat/removeRoom', {
+                client: this.client,
+                id: this.deleteRoom.id,
+            })
+
+            this.closeDeleteRoom()
+        },
+        checkDuplicated: function (value) {
+            const room = this.$store.getters['chat/listRooms'](this.client).find(item => item.name === value)
+
+            if (undefined === room) {
+                return false
+            }
+
+            if (null === this.editRoom.id) {
+                return true
+            }
+
+            return this.editRoom.name !== value
+        },
     },
 }
 </script>

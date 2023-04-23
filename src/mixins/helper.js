@@ -32,6 +32,8 @@ export default class Helper {
                 listItem.sort = refSort
             }
         }
+
+        this.resort(list)
     }
 
     static sortAfter(list, item, ref, key) {

@@ -1,5 +1,5 @@
 <template>
-    <v-card flat v-if="hasPermissions" class="mt-5">
+    <v-card v-if="hasPermissions" flat class="mt-5">
         <v-card-title>Tab Groups</v-card-title>
         <v-card-text>
             <v-chip-group
@@ -16,7 +16,7 @@
                     label
                 >{{ i18n.getMessage(color) }}</v-chip>
             </v-chip-group>
-            <v-card v-for="color in colors" :key="color" v-show="color === activeColor">
+            <v-card v-for="color in colors" v-show="color === activeColor" :key="color">
                 <v-card-text>
 
                 </v-card-text>
@@ -26,7 +26,7 @@
     <v-card v-else>
         <v-card-text>
             <v-row>
-                <v-col><v-icon>fas fa-lock</v-icon></v-col>
+                <v-col><v-icon icon="fas fa-lock"/></v-col>
                 <v-col></v-col>
             </v-row>
         </v-card-text>
@@ -39,7 +39,22 @@
 <script>
 
 export default {
-    name: 'Chrome',
+    name: 'OptionChrome',
+    data() {
+        return {
+            hasPermissions: false,
+            activeColor: null,
+            i18n: chrome.i18n,
+        }
+    },
+    computed: {
+        tabGroups() {
+            return this.$store.getters['chromeBrowser/getTabGroups']
+        },
+        colors() {
+            return Object.keys(this.$store.getters['chromeBrowser/getTabGroups'])
+        },
+    },
     created() {
         chrome.permissions.contains({
             permissions: ['tabGroups'],
@@ -74,21 +89,6 @@ export default {
                 })
             }
         },
-    },
-    computed: {
-        tabGroups() {
-            return this.$store.getters['chromeBrowser/getTabGroups']
-        },
-        colors() {
-            return Object.keys(this.$store.getters['chromeBrowser/getTabGroups'])
-        },
-    },
-    data() {
-        return {
-            hasPermissions: false,
-            activeColor: null,
-            i18n: chrome.i18n,
-        }
     },
 }
 </script>

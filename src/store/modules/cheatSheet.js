@@ -1,9 +1,12 @@
+import Helper from '../../mixins/helper'
+import {toRaw} from 'vue'
+
 const state = {
     items: [],
 }
 
 export default {
-    strict: process.env.NODE_ENV !== 'production',
+    strict: import.meta.env.NODE_ENV !== 'production',
     namespaced: true,
     state,
     mutations: {
@@ -55,7 +58,7 @@ export default {
             return new Promise(resolve => {
                 resolve({
                     key: 'cheatSheet',
-                    options: state.items,
+                    options: toRaw(state.items),
                 })
             })
         },

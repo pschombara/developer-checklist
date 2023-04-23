@@ -1,4 +1,6 @@
-import {Uuid} from '@/mixins/uuid'
+import {Uuid} from '../../mixins/uuid'
+import Helper from '../../mixins/helper'
+import {toRaw} from 'vue'
 
 const state = {
     host: '',
@@ -9,7 +11,7 @@ const state = {
 }
 
 export default {
-    strict: process.env.NODE_ENV !== 'production',
+    strict: import.meta.env.NODE_ENV !== 'production',
     namespaced: true,
     state,
     mutations: {
@@ -129,9 +131,9 @@ export default {
                 resolve({
                     key: 'jenkins',
                     options: {
-                        host: state.host,
-                        categories: state.categories,
-                        builds: state.builds,
+                        host: toRaw(state.host),
+                        categories: toRaw(state.categories),
+                        builds: toRaw(state.builds),
                     },
                 })
             })

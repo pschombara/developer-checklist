@@ -1,59 +1,59 @@
 <template>
     <v-app>
         <v-container fluid>
-            <v-overlay opacity=".75" v-if="loading">
+            <v-overlay v-if="loading" opacity=".75">
                 <v-progress-circular size="256" width="10" color="orange" indeterminate></v-progress-circular>
             </v-overlay>
-            <v-toolbar flat>
-                <v-img src="icons/48.png" max-height="24" max-width="24" class="mr-2"></v-img>
-                <v-toolbar-title>{{ title }}</v-toolbar-title>
-            </v-toolbar>
+            <v-row>
+                <v-col>
+                    <v-img src="icons/48.png" width="20" aspect-ratio="1/1" class="d-inline-block me-1"></v-img>
+                    <h2 class="d-inline-block">{{ title }}</h2>
+                </v-col>
+            </v-row>
             <v-row v-if="modules && optionsValid">
                 <v-col>
                     <v-card>
                         <v-tabs
-                            show-arrows
                             v-model="tab"
+                            show-arrows
                         >
                             <v-tooltip
                                 v-for="item in tabs"
                                 :key="item.id"
                                 bottom>
-                                <template v-slot:activator="{on, attr}">
+                                <template #activator="{props}">
                                     <v-tab
                                         v-show="showTab(item)"
-                                        v-on="on"
-                                        v-bind="attr"
+                                        v-bind="props"
+                                        :value="item.id"
                                     >
-
                                         <v-icon>{{ item.icon }}</v-icon>
-
                                     </v-tab>
                                 </template>
                                 {{ item.name }}
                             </v-tooltip>
                         </v-tabs>
 
-                        <v-tabs-items v-model="tab">
-                            <v-tab-item>
+                        <v-window v-model="tab">
+                            <v-window-item value="bookmark">
                                 <quick-list></quick-list>
-                            </v-tab-item>
-                            <v-tab-item>
+                            </v-window-item>
+                            <v-window-item value="jira">
                                 <Jira></Jira>
-                            </v-tab-item>
-                            <v-tab-item>
+                            </v-window-item>
+                            <v-window-item value="jenkins">
                                 <Jenkins></Jenkins>
-                            </v-tab-item>
-                            <v-tab-item>
+                            </v-window-item>
+                            <v-window-item value="gitLab">
                                 <GitLab></GitLab>
-                            </v-tab-item>
-                            <v-tab-item>
+                            </v-window-item>
+                            <v-window-item value="chat">
                                 <Chat></Chat>
-                            </v-tab-item>
-                            <v-tab-item>
+                            </v-window-item>
+                            <v-window-item value="cheatSheet">
                                 <CheatSheet></CheatSheet>
-                            </v-tab-item>
-                        </v-tabs-items>
+                            </v-window-item>
+                        </v-window>
                     </v-card>
                 </v-col>
             </v-row>
@@ -77,21 +77,46 @@
 
 <script>
 
-import Theme from '@/mixins/theme'
-import QuickList from '../components/popup/QuickList'
-import Jira from '../components/popup/Jira'
-import Jenkins from '../components/popup/Jenkins'
-import GitLab from '../components/popup/GitLab'
-import Chat from '../components/popup/Chat'
-import CheatSheet from '../components/popup/CheatSheet'
+import Theme from '../mixins/theme'
+import QuickList from '../components/popup/QuickList.vue'
+import Jira from '../components/popup/Jira.vue'
+import Jenkins from '../components/popup/Jenkins.vue'
+import GitLab from '../components/popup/GitLab.vue'
+import Chat from '../components/popup/Chat.vue'
+import CheatSheet from '../components/popup/CheatSheet.vue'
+import {th} from 'vuetify/locale'
 
 export default {
     name: 'App',
     components: {CheatSheet, Chat, GitLab, Jenkins, Jira, QuickList },
+    data() {
+        return {
+            loading: true,
+            title: chrome.i18n.getMessage('extName'),
+            tabs: [
+                { id: 'bookmark', name: 'Quick Select', icon: 'fas fa-bookmark' },
+                { id: 'jira', name: 'Jira', icon: 'fab fa-jira' },
+                { id: 'jenkins', name: 'Jenkins', icon: 'fab fa-jenkins' },
+                { id: 'gitLab', name: 'GitLab', icon: 'fab fa-gitlab' },
+                { id: 'chat', name: 'Chat', icon: 'fas fa-comment' },
+                { id: 'cheatSheet', name: 'Cheat Sheet', icon: 'fas fa-terminal' },
+            ],
+            tab: null,
+            optionsValid: false,
+            optionsUrl: '',
+            i18n: chrome.i18n,
+        }
+    },
     computed: {
         modules()  {
             return this.$store.getters['modules']
         },
+    },
+    created() {
+        this.load()
+
+        const theme = new Theme()
+        theme.registerThemeChanged(this, this.$store.getters['themeSchema'], this.$store.getters['themeColor'])
     },
     methods: {
         load() {
@@ -116,15 +141,7 @@ export default {
             })
         },
         checkSwitchTab: function () {
-            const switchTab = this.$store.getters['switchTab']
-
-            if ('jira' === switchTab) {
-                this.tab = 1
-            } else if ('jenkins' === switchTab) {
-                this.tab = 2
-            } else if ('gitLab' === switchTab) {
-                this.tab = 3
-            }
+            this.tab = this.$store.getters['switchTab'] ?? 'bookmark'
         },
         showTab: function (tab) {
             if ('jira' === tab.id) {
@@ -143,36 +160,13 @@ export default {
             })
         },
     },
-    created() {
-        this.load()
-
-        const theme = new Theme()
-        theme.registerThemeChanged(this)
-    },
-    data() {
-        return {
-            loading: true,
-            title: chrome.i18n.getMessage('extName'),
-            tabs: [
-                { id: 'bookmark', name: 'Quick Select', icon: 'fas fa-bookmark' },
-                { id: 'jira', name: 'Jira', icon: 'fab fa-jira' },
-                { id: 'jenkins', name: 'Jenkins', icon: 'fab fa-jenkins' },
-                { id: 'gitLab', name: 'GitLab', icon: 'fab fa-gitlab' },
-                { id: 'chat', name: 'Chat', icon: 'fas fa-comment' },
-                { id: 'cheatSheet', name: 'Cheat Sheet', icon: 'fas fa-terminal' },
-            ],
-            tab: null,
-            optionsValid: false,
-            optionsUrl: '',
-            i18n: chrome.i18n,
-        }
-    },
 }
 </script>
 
 <style>
 html {
   min-width: 600px;
+  max-width: 600px;
 }
 
 .v-application > .v-application--wrap {

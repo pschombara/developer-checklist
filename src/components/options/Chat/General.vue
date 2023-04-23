@@ -5,6 +5,7 @@
                 <v-col cols="12" md="2">
                     <v-switch
                         v-model="main"
+                        color="primary"
                         :disabled="main"
                         :label="text.main"
                     ></v-switch>
@@ -12,6 +13,7 @@
                 <v-col cols="12" md="2">
                     <v-switch
                         v-model="enabled"
+                        color="primary"
                         :label="text.enabled"
                     ></v-switch>
                 </v-col>
@@ -22,12 +24,20 @@
 
 <script>
 export default {
-    name: 'General',
+    name: 'ChatGeneral',
     props: {
         client: {
             type: String,
             required: true,
         },
+    },
+    data() {
+        return {
+            text: {
+                main: chrome.i18n.getMessage('MainClient'),
+                enabled: chrome.i18n.getMessage('ClientEnabled'),
+            },
+        }
     },
     computed: {
         main: {
@@ -50,14 +60,5 @@ export default {
             },
         },
     },
-    data() {
-        return {
-            text: {
-                main: chrome.i18n.getMessage('MainClient'),
-                enabled: chrome.i18n.getMessage('ClientEnabled'),
-            },
-        }
-    },
 }
 </script>
-

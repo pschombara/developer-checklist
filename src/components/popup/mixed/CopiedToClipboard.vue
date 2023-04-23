@@ -6,7 +6,7 @@
         <v-icon left color="success">fas fa-check</v-icon>
         {{text.copiedToClipboard}}
 
-        <template v-slot:action="{ attrs }">
+        <template #action="{ attrs }">
             <v-btn
                 color="blue"
                 text

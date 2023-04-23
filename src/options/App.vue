@@ -4,7 +4,7 @@
             <v-container fluid>
                 <div v-if="loading">
                     <v-overlay opacity=".75">
-                        <v-progress-circular size="256" width="10" color="orange" indeterminate></v-progress-circular>
+                        <v-progress-circular size="256" width="10" color="orange" indeterminate=""></v-progress-circular>
                     </v-overlay>
                 </div>
                 <v-alert v-model="alert.saved" type="success" dismissible>
@@ -14,46 +14,32 @@
                     {{text.importWrongType}}
                 </v-alert>
                 <v-toolbar flat>
-                    <v-img src="icons/48.png" max-height="24" max-width="24" class="mr-2"></v-img>
+                    <v-img src="icons/48.png" max-height="24" max-width="24" class="ml-4"></v-img>
                     <v-toolbar-title>{{ text.title }}</v-toolbar-title>
                     <v-spacer></v-spacer>
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn class="mr-2" color="success" fab icon v-bind="attrs" v-on="on" @click="save"><v-icon>fas fa-save</v-icon></v-btn>
+                    <v-tooltip location="bottom">
+                        <template #activator="{ props }">
+                            <v-btn class="mr-2" color="success" fab icon="fas fa-save" v-bind="props" @click="save"></v-btn>
                         </template>
                         <span>{{text.save}}</span>
                     </v-tooltip>
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn class="mr-2" fab icon v-bind="attrs" v-on="on" @click="saveExportStart"><v-icon>fas fa-download</v-icon></v-btn>
+                    <v-tooltip location="bottom">
+                        <template #activator="{ props }">
+                            <v-btn class="mr-2" fab icon="fas fa-download" v-bind="props" @click="saveExportStart"></v-btn>
                             <v-dialog v-model="dialog.export" max-width="800">
                                 <v-card>
                                     <v-card-title>{{text.export}}</v-card-title>
                                     <v-card-text>
-                                        <v-list flat>
-                                            <v-subheader>Select settings to export</v-subheader>
-
-                                            <v-list-item-group
+                                        <p>Select settings to export</p>
+                                        <template v-for="setting in settings" :key="setting.id">
+                                            <v-switch
                                                 v-model="exportModules"
-                                                multiple
-                                            >
-                                                <template v-for="setting in settings">
-                                                    <v-list-item
-                                                        :key="setting.id"
-                                                        :value="setting.id"
-                                                    >
-                                                        <template v-slot:default="{ active }">
-                                                            <v-list-item-action>
-                                                                <v-checkbox :input-value="active" color="primary"></v-checkbox>
-                                                            </v-list-item-action>
-                                                            <v-list-item-content>
-                                                                <v-list-item-title>{{setting.name}}</v-list-item-title>
-                                                            </v-list-item-content>
-                                                        </template>
-                                                    </v-list-item>
-                                                </template>
-                                            </v-list-item-group>
-                                        </v-list>
+                                                color="primary"
+                                                :label="setting.name"
+                                                :value="setting.id"
+                                                hide-details
+                                            ></v-switch>
+                                        </template>
                                     </v-card-text>
                                     <v-card-actions>
                                         <v-spacer></v-spacer>
@@ -66,52 +52,36 @@
                         </template>
                         <span>{{text.export}}</span>
                     </v-tooltip>
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
+                    <v-tooltip location="bottom">
+                        <template #activator="{ props }">
                             <v-btn
                                 class="mr-2"
                                 fab
-                                icon
-                                v-bind="attrs"
-                                v-on="on"
+                                icon="fas fa-upload"
+                                v-bind="props"
                                 @click="openFileInput"
                             >
-                                <v-icon>fas fa-upload</v-icon>
                             </v-btn>
                             <v-dialog v-model="dialog.import" max-width="800">
                                 <v-card>
                                     <v-card-title>{{text.import}}</v-card-title>
                                     <v-card-text>
-                                        <v-list flat>
-                                            <v-subheader>Select settings to import</v-subheader>
-
-                                            <v-list-item-group
-                                                v-model="importModules"
-                                                multiple
-                                            >
-                                                <template v-for="setting in settings">
-                                                    <v-list-item
-                                                        :key="setting.id"
-                                                        :value="setting.id"
-                                                        :disabled="!importAvailableModules.includes(setting.id)"
-                                                    >
-                                                        <template v-slot:default="{ active }">
-                                                            <v-list-item-action>
-                                                                <v-checkbox :input-value="active" color="primary"></v-checkbox>
-                                                            </v-list-item-action>
-                                                            <v-list-item-content>
-                                                                <v-list-item-title>{{setting.name}}</v-list-item-title>
-                                                            </v-list-item-content>
-                                                        </template>
-                                                    </v-list-item>
-                                                </template>
-                                            </v-list-item-group>
-                                        </v-list>
+                                        <p>Select settings to import</p>
+                                        <template v-for="setting in settings" :key="setting.id">
+                                            <v-switch
+                                                v-model="exportModules"
+                                                color="primary"
+                                                :label="setting.name"
+                                                :value="setting.id"
+                                                :disabled="!importAvailableModules.includes(setting.id)"
+                                                hide-details
+                                            ></v-switch>
+                                        </template>
                                     </v-card-text>
                                     <v-card-actions>
                                         <v-spacer></v-spacer>
-                                        <v-btn color="grey" plain @click="cancelImport">{{text.cancel}}</v-btn>
-                                        <v-btn color="success" plain @click="storeImportedOptions" :disabled="0 === importModules.length">{{text.import}}</v-btn>
+                                        <v-btn color="secondary" plain @click="cancelImport">{{text.cancel}}</v-btn>
+                                        <v-btn color="success" plain :disabled="0 === importModules.length" @click="storeImportedOptions">{{text.import}}</v-btn>
                                         <v-spacer></v-spacer>
                                     </v-card-actions>
                                 </v-card>
@@ -121,14 +91,14 @@
                                 hide-input
                                 class="d-none"
                                 accept="application/json"
-                                @change="fileSelected"
+                                @update:model-value="fileSelected"
                             ></v-file-input>
                         </template>
                         <span>{{text.import}}</span>
                     </v-tooltip>
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn class="mr-2" fab icon v-bind="attrs" v-on="on" @click="openRestore"><v-icon>fas fa-eraser</v-icon></v-btn>
+                    <v-tooltip location="bottom">
+                        <template #activator="{ props }">
+                            <v-btn class="mr-2" fab icon="fas fa-eraser" v-bind="props" @click="openRestore"></v-btn>
                             <v-dialog v-model="dialog.restore" max-width="600">
                                 <v-card>
                                     <v-card-title>{{text.reset}}?</v-card-title>
@@ -153,43 +123,41 @@
                     <v-col>
                         <v-card>
                             <v-tabs
-                                show-arrows
-                                icons-and-text
                                 v-model="tab"
+                                show-arrows
+                                stacked
                             >
-                                <v-tab v-for="item in tabs" :key="item.id" v-show="showTab(item)">
+                                <v-tab v-for="item in tabs" v-show="showTab(item)" :key="item.id" :value="item.id">
+                                    <v-icon class="mb-2">{{ item.icon }}</v-icon>
                                     {{ item.name }}
-                                    <v-icon>{{ item.icon }}</v-icon>
                                 </v-tab>
                             </v-tabs>
-
-                            <v-tabs-items v-model="tab">
-                                <v-tab-item>
-                                    <modules></modules>
-                                </v-tab-item>
-                                <v-tab-item>
-                                    <jira></jira>
-                                </v-tab-item>
-                                <v-tab-item>
-                                    <jenkins></jenkins>
-                                </v-tab-item>
-                                <v-tab-item>
-                                    <git-lab></git-lab>
-                                </v-tab-item>
-                                <v-tab-item>
-                                    <chat></chat>
-                                </v-tab-item>
-                                <v-tab-item>
-                                    <cheat-sheet></cheat-sheet>
-                                </v-tab-item>
-<!--                                <v-tab-item>
-                                    <chrome></chrome>
-                                </v-tab-item>-->
-                                <v-tab-item>
-                                    <about></about>
-                                </v-tab-item>
-                            </v-tabs-items>
                         </v-card>
+                        <v-card-text>
+                            <v-window v-model="tab">
+                                <v-window-item value="general">
+                                    <general @theme-color-changed="themeSchemaChanged" @theme-schema-changed="themeColorChanged"></general>
+                                </v-window-item>
+                                <v-window-item value="jira">
+                                    <jira></jira>
+                                </v-window-item>
+                                <v-window-item value="jenkins">
+                                    <jenkins></jenkins>
+                                </v-window-item>
+                                <v-window-item value="gitLab">
+                                    <git-lab></git-lab>
+                                </v-window-item>
+                                <v-window-item value="chat">
+                                    <chat></chat>
+                                </v-window-item>
+                                <v-window-item value="cheatSheet">
+                                    <cheat-sheet></cheat-sheet>
+                                </v-window-item>
+                                <v-window-item value="about">
+                                    <about></about>
+                                </v-window-item>
+                            </v-window>
+                        </v-card-text>
                     </v-col>
                 </v-row>
             </v-container>
@@ -198,21 +166,58 @@
 </template>
 <script>
 
-import Modules from '@/components/options/Modules'
-import Jira from '@/components/options/Jira'
-import Jenkins from '@/components/options/Jenkins'
-import GitLab from '@/components/options/GitLab'
-import Chat from '@/components/options/Chat'
-import CheatSheet from '@/components/options/CheatSheet'
-import About from '@/components/options/About'
-import Theme from '@/mixins/theme'
-/* import Chrome from '@/components/options/Chrome' */
+import Jira from '../components/options/Jira.vue'
+import Jenkins from '../components/options/Jenkins.vue'
+import GitLab from '../components/options/GitLab.vue'
+import Chat from '../components/options/Chat.vue'
+import CheatSheet from '../components/options/CheatSheet.vue'
+import About from '../components/options/About.vue'
+import Theme from '../mixins/theme'
+/* import Chrome from '../components/options/Chrome.vue' */
 import semver from 'semver'
-import Migration from '@/mixins/migration'
+import General from '../components/options/General.vue'
+import Migration from '../mixins/migration'
 
 export default {
     name: 'App',
-    components: {Modules, Jira, Jenkins, GitLab, Chat, CheatSheet, /*Chrome,*/ About },
+    components: {General, Jira, Jenkins, GitLab, Chat, CheatSheet, /*Chrome,*/ About },
+    data() {
+        return {
+            loading: true,
+            text: {
+                title: chrome.i18n.getMessage('extOptionsTitle'),
+                save: chrome.i18n.getMessage('Save'),
+                export: chrome.i18n.getMessage('Export'),
+                import: chrome.i18n.getMessage('Import'),
+                restore: chrome.i18n.getMessage('Restore'),
+                reset: chrome.i18n.getMessage('Reset'),
+                cancel: chrome.i18n.getMessage('Cancel'),
+                close: chrome.i18n.getMessage('Close'),
+                importWrongType: chrome.i18n.getMessage('importWrongType'),
+                settingsSaved: chrome.i18n.getMessage('settingsSaved'),
+            },
+            exportModules: [],
+            importModules: [],
+            importAvailableModules: [],
+            importOptions: {},
+            dialog: {
+                restore: false,
+                export: false,
+                import: false,
+                error: {
+                    empty: false,
+                    type: false,
+                },
+            },
+            alert: {
+                import: {
+                    type: false,
+                },
+                saved: false,
+            },
+            theme: null,
+        }
+    },
     computed: {
         modules()  {
             return this.$store.getters['modules']
@@ -232,12 +237,18 @@ export default {
             return this.$store.getters['optionTabs'].filter(tab => tab.settings)
         },
     },
+    created() {
+        this.load()
+
+        this.theme = new Theme()
+        this.theme.registerThemeChanged(this, this.$store.getters['themeSchema'], this.$store.getters['themeColor'])
+    },
     methods: {
         load: function () {
             this.$store.dispatch('load').then(() => {
                 this.loading = false
 
-                this.exportModules.push('modules')
+                this.exportModules.push('general')
                 this.exportModules.push('jira')
 
                 for (let [module, active] of Object.entries(this.modules)) {
@@ -253,6 +264,12 @@ export default {
             } else {
                 return true
             }
+        },
+        themeSchemaChanged: function (schema) {
+            this.theme.changeSchema(schema)
+        },
+        themeColorChanged: function (color) {
+            this.theme.changeColor(color)
         },
         openRestore: function () {
             this.dialog.restore = true
@@ -286,7 +303,7 @@ export default {
         },
         cancelImport: function () {
             this.dialog.import = false
-            this.$refs.importConfig.$refs.input.value = ''
+            this.$refs.importConfig.reset()
             this.importOptions = {}
         },
         saveExport: function () {
@@ -313,17 +330,23 @@ export default {
         },
         openFileInput: function () {
             this.closeAlerts()
-            this.$refs.importConfig.$refs.input.click()
+            this.$refs.importConfig.click()
         },
-        fileSelected: function (e) {
-            if (e.size <= 0) {
-                this.dialog.import.error.empty = true
+        fileSelected: function (files) {
+            if (null === files) {
+                return
+            }
+
+            const file = files[0]
+
+            if (file.size <= 0) {
+                this.dialog.error.empty = true
 
                 return
             }
 
-            if ('application/json' !== e.type) {
-                this.dialog.import.error.type = true
+            if ('application/json' !== file.type) {
+                this.dialog.error.type = true
 
                 return
             }
@@ -332,21 +355,23 @@ export default {
 
             fileReader.addEventListener('load', e => {
                 try {
-                    const data = JSON.parse(e.target.result.toString())
+                    let data = JSON.parse(e.target.result.toString())
                     const migration = new Migration()
 
                     if (this.validateImportFile(data)) {
+                        data = migration.migrate(data.options, data.exported, false)
                         this.importAvailableModules = data.exported
                         this.importModules = data.exported
-                        this.importOptions = migration.migrate(data.options, false)
+                        this.importOptions = data.options
                         this.dialog.import = true
                     }
                 } catch (e) {
+                    // eslint-disable-next-line no-console
                     console.error(e)
                 }
             })
 
-            fileReader.readAsText(e, 'utf-8')
+            fileReader.readAsText(file, 'utf-8')
         },
         validateImportFile: function (data) {
             const manifest = chrome.runtime.getManifest()
@@ -371,44 +396,6 @@ export default {
                 this.loading = false
             })
         },
-    },
-    created() {
-        this.load()
-
-        const theme = new Theme()
-        theme.registerThemeChanged(this)
-    },
-    data() {
-        return {
-            loading: true,
-            text: {
-                title: chrome.i18n.getMessage('extOptionsTitle'),
-                save: chrome.i18n.getMessage('Save'),
-                export: chrome.i18n.getMessage('Export'),
-                import: chrome.i18n.getMessage('Import'),
-                restore: chrome.i18n.getMessage('Restore'),
-                reset: chrome.i18n.getMessage('Reset'),
-                cancel: chrome.i18n.getMessage('Cancel'),
-                close: chrome.i18n.getMessage('Close'),
-                importWrongType: chrome.i18n.getMessage('importWrongType'),
-                settingsSaved: chrome.i18n.getMessage('settingsSaved'),
-            },
-            exportModules: [],
-            importModules: [],
-            importAvailableModules: [],
-            importOptions: {},
-            dialog: {
-                restore: false,
-                export: false,
-                import: false,
-            },
-            alert: {
-                import: {
-                    type: false,
-                },
-                saved: false,
-            },
-        }
     },
 }
 </script>

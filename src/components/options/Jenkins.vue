@@ -1,58 +1,62 @@
 <template>
     <v-card fluid class="mt-5">
-        <v-tabs vertical>
-            <v-tab class="mt-5">
-                <v-row align="center">
-                    <v-col class="text-start">
-                        <v-icon>fas fa-sliders-h</v-icon>
-                    </v-col>
-                    <v-col class="text-center">
-                        {{ text.general }}
-                    </v-col>
-                </v-row>
-            </v-tab>
-            <v-tab class="mt-5">
-                <v-row align="center">
-                    <v-col class="text-start">
-                        <v-icon>fas fa-cubes</v-icon>
-                    </v-col>
-                    <v-col class="text-center">
-                        {{ text.builds }}
-                    </v-col>
-                </v-row>
-            </v-tab>
-            <v-tab class="mt-5">
-                <v-row align="center">
-                    <v-col class="text-start">
-                        <v-icon>fas fa-sitemap</v-icon>
-                    </v-col>
-                    <v-col class="text-center">
-                        {{ text.categories }}
-                    </v-col>
-                </v-row>
-            </v-tab>
+        <div class="d-flex flex-row">
+            <v-tabs v-model="tab" direction="vertical">
+                <v-tab class="mt-5">
+                    <v-row align="center">
+                        <v-col class="text-start">
+                            <v-icon icon="fas fa-sliders-h"/>
+                        </v-col>
+                        <v-col class="text-center">
+                            {{ text.general }}
+                        </v-col>
+                    </v-row>
+                </v-tab>
+                <v-tab class="mt-5">
+                    <v-row align="center">
+                        <v-col class="text-start">
+                            <v-icon icon="fas fa-cubes"/>
+                        </v-col>
+                        <v-col class="text-center">
+                            {{ text.builds }}
+                        </v-col>
+                    </v-row>
+                </v-tab>
+                <v-tab class="mt-5">
+                    <v-row align="center">
+                        <v-col class="text-start">
+                            <v-icon icon="fas fa-sitemap"/>
+                        </v-col>
+                        <v-col class="text-center">
+                            {{ text.categories }}
+                        </v-col>
+                    </v-row>
+                </v-tab>
+            </v-tabs>
 
-            <v-tab-item>
-                <general></general>
-            </v-tab-item>
-            <v-tab-item>
-                <builds></builds>
-            </v-tab-item>
-            <v-tab-item>
-                <categories></categories>
-            </v-tab-item>
-        </v-tabs>
+            <v-window v-model="tab" class="flex-fill">
+                <v-window-item>
+                    <general></general>
+                </v-window-item>
+                <v-window-item>
+                    <builds></builds>
+                </v-window-item>
+                <v-window-item>
+                    <categories></categories>
+                </v-window-item>
+            </v-window>
+        </div>
     </v-card>
 </template>
 
 <script>
 
-import Builds from './Jenkins/Builds'
-import Categories from './Jenkins/Categories'
-import General from './Jenkins/General'
+import Builds from './Jenkins/Builds.vue'
+import Categories from './Jenkins/Categories.vue'
+import General from './Jenkins/General.vue'
 
 export default {
-    name: 'Jenkins',
+    name: 'OptionJenkins',
     components: {Builds, Categories, General},
     data() {
         return {
@@ -62,6 +66,7 @@ export default {
                 categories: chrome.i18n.getMessage('Categories'),
                 builds: chrome.i18n.getMessage('Builds'),
             },
+            tab: null,
         }
     },
 }

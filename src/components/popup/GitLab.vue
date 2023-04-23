@@ -1,50 +1,54 @@
 <template>
     <v-card v-if="optionsValid">
         <v-card-title>
-            Merge Requests
-            <v-spacer></v-spacer>
-            <v-btn icon @click="openOptions('gitLab')"><v-icon>fas fa-cog</v-icon></v-btn>
+            <v-row>
+                <v-col cols="10">Merge Requests</v-col>
+                <v-col cols="2">
+                    <v-btn variant="text" @click="openOptions('gitLab')"><v-icon>fas fa-cog</v-icon></v-btn>
+                </v-col>
+            </v-row>
         </v-card-title>
         <v-card-text>
             <v-row>
                 <v-col cols="8">
                     <v-autocomplete
+                        v-model="project"
                         :items="projects"
                         item-value="uuid"
-                        item-text="project"
-                        v-model="project"
+                        item-title="project"
                         :label="text.project"
-                        dense
+                        variant="underlined"
                     ></v-autocomplete>
                 </v-col>
                 <v-col cols="4">
                     <v-text-field
+                        v-model="number"
                         type="number"
                         min="1"
-                        v-model="number"
                         label="Merge Number"
-                        dense
+                        variant="underlined"
                     ></v-text-field>
                 </v-col>
             </v-row>
             <v-row class="mt-0">
                 <v-col cols="10">
                     <v-text-field
+                        ref="copyMergeUrl"
                         outlined
                         readonly
-                        ref="copyMergeUrl"
                         :value="mergeUrl"
-                        @click="copy"
                         :disabled="!readyToCopy"
-                        dense
+                        variant="solo"
+                        density="compact"
+                        @click="copy"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="2">
                     <v-btn
                         block
-                        color="success"
-                        @click="copy"
+                        color="primary"
                         :disabled="!readyToCopy"
+                        @click="copy"
                     ><v-icon small>fas fa-copy</v-icon></v-btn>
                 </v-col>
             </v-row>
@@ -57,36 +61,37 @@
                         :items-per-page="3"
                         :footer-props="{disableItemsPerPage: true, itemsPerPageOptions:[3]}"
                     >
-                        <template v-slot:top>
+                        <template #top>
                             <v-toolbar flat>
-                                <v-autocomplete
-                                    :items="issues"
-                                    item-text="name"
-                                    item-value="name"
-                                    v-model="issue"
-                                    label="Attach to Issue"
-                                    class="mt-7"
-                                ></v-autocomplete>
+                                <v-toolbar-title>
+                                    <v-autocomplete
+                                        v-model="issue"
+                                        :items="issues"
+                                        item-title="name"
+                                        item-value="name"
+                                        label="Attach to Issue"
+                                        class="mt-5 align-center"
+                                        density="comfortable"
+                                        variant="underlined"
+                                    ></v-autocomplete>
+                                </v-toolbar-title>
                                 <v-spacer></v-spacer>
                                 <v-btn
-                                    color="success"
-                                    @click="attachToIssue"
+                                    color="primary"
                                     :disabled="!readyToCopy || null === issue"
+                                    @click="attachToIssue"
                                 ><v-icon small>fas fa-plus</v-icon></v-btn>
                             </v-toolbar>
                         </template>
-                        <template v-slot:item.id="{item}">
-                            {{ projectName(item.id) }}
+                        <template #item.id="{item}">
+                            {{ projectName(item.value) }}
                         </template>
-                        <template v-slot:item.action="{item}">
-                            <v-btn icon small @click="copyMergeRequest(item.id, item.number, item.source)">
-                                <v-icon small>fas fa-copy</v-icon>
+                        <template #item.action="{item}">
+                            <v-btn variant="plain" icon="fas fa-copy" size="small" @click="copyMergeRequest(item.id, item.number, item.source)">
                             </v-btn>
-                            <v-btn icon small @click="openMergeRequest(item.id, item.number)">
-                                <v-icon small>fas fa-external-link-alt</v-icon>
+                            <v-btn variant="plain" icon="fas fa-external-link-alt" size="small" @click="openMergeRequest(item.id, item.number)">
                             </v-btn>
-                            <v-btn icon @click="removeFromIssue(item.id, item.number)" small>
-                                <v-icon color="red darken-2" small>fas fa-trash</v-icon>
+                            <v-btn variant="plain" icon="fas fa-trash" color="tertiary" size="small" @click="removeFromIssue(item.id, item.number)">
                             </v-btn>
                         </template>
                     </v-data-table>
@@ -109,11 +114,55 @@
 
 <script>
 import _ from 'lodash'
-import CopiedToClipboard from '@/components/popup/mixed/CopiedToClipboard.vue'
+import CopiedToClipboard from './mixed/CopiedToClipboard.vue'
+import {th} from "vuetify/locale";
 
 export default {
-    name: 'GitLab',
+    name: 'PopupGitLab',
     components: {CopiedToClipboard},
+    data: () => {
+        return {
+            optionsValid: true,
+            i18n: chrome.i18n,
+            text: {
+                openOptions: chrome.i18n.getMessage('openOptions'),
+                project: chrome.i18n.getMessage('Project'),
+            },
+            project: '',
+            number: null,
+            issue: null,
+            issues: [],
+        }
+    },
+    computed: {
+        projects: function () {
+            return this.$store.getters['gitLab/getProjects']
+        },
+        readyToCopy: function () {
+            const host = this.$store.getters['gitLab/getHost']
+
+            return '' !== host && '' !== this.project && null !== this.number && '' !== this.number
+        },
+        mergeUrl: function () {
+            if (false === this.readyToCopy) {
+                return ''
+            }
+
+            const source = this.$store.getters['gitLab/currentSource']
+
+            return this.$store.getters['gitLab/url'](this.project, this.number, source, true)
+        },
+        issueData: function () {
+            return this.$store.getters['issues/issue'](this.issue)
+        },
+        issueHeader: function () {
+            return [
+                { title: 'Project', key: 'id'},
+                { title: 'Number', key: 'number'},
+                { title: '', key: 'action', sortable: false, align:'end'},
+            ]
+        },
+    },
     created() {
         this.optionsValid = '' !== this.$store.getters['gitLab/getHost']
             && 0 < this.$store.getters['gitLab/getProjects'].length
@@ -145,35 +194,6 @@ export default {
             this.issue = this.issues[0].name
         }
     },
-    computed: {
-        projects: function () {
-            return this.$store.getters['gitLab/getProjects']
-        },
-        readyToCopy: function () {
-            const host = this.$store.getters['gitLab/getHost']
-
-            return '' !== host && '' !== this.project && null !== this.number && '' !== this.number
-        },
-        mergeUrl: function () {
-            if (false === this.readyToCopy) {
-                return ''
-            }
-
-            const source = this.$store.getters['gitLab/currentSource']
-
-            return this.$store.getters['gitLab/url'](this.project, this.number, source, true)
-        },
-        issueData: function () {
-            return this.$store.getters['issues/issue'](this.issue)
-        },
-        issueHeader: function () {
-            return [
-                { text: 'Project', value: 'id'},
-                { text: 'Number', value: 'number'},
-                { text: '', value: 'action', sortable: false, align:'right'},
-            ]
-        },
-    },
     methods: {
         openOptions: function (tab) {
             this.$store.dispatch('changeMainTab', tab)
@@ -181,7 +201,7 @@ export default {
         },
         copy: function () {
             if (this.readyToCopy) {
-                let blob = new Blob([this.$refs.copyMergeUrl.$refs.input.value], {type: 'text/html'})
+                let blob = new Blob([this.$refs.copyMergeUrl.value], {type: 'text/html'})
 
                 navigator.clipboard.write([new ClipboardItem({[blob.type]: blob})])
                     .then(() => {
@@ -230,20 +250,6 @@ export default {
                     this.$refs.message.show()
                 })
         },
-    },
-    data: () => {
-        return {
-            optionsValid: true,
-            i18n: chrome.i18n,
-            text: {
-                openOptions: chrome.i18n.getMessage('openOptions'),
-                project: chrome.i18n.getMessage('Project'),
-            },
-            project: '',
-            number: null,
-            issue: null,
-            issues: [],
-        }
     },
 }
 </script>

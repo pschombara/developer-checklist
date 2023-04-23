@@ -1,5 +1,7 @@
-import Helper from '@/mixins/helper'
-import {Uuid} from '@/mixins/uuid'
+import Helper from '../../mixins/helper'
+import {Uuid} from '../..//mixins/uuid'
+import {toRaw} from 'vue'
+import checklists from "../../components/options/Jira/Checklists.vue";
 
 const state = {
     url: '',
@@ -11,7 +13,7 @@ const state = {
 }
 
 export default {
-    strict: process.env.NODE_ENV !== 'production',
+    strict: import.meta.env.NODE_ENV !== 'production',
     namespaced: true,
     modules: {},
     state,
@@ -210,13 +212,13 @@ export default {
             const current = state.templates.find(template => template.id === data.current)
             const reference = state.templates.find(template => template.id === data.ref)
 
-            Helper.sortBefore(state.templates, current, reference, 'sort')
+            Helper.sortBefore(state.templates, current, reference, 'id')
         },
         SORT_TEMPLATE_AFTER: (state, data) => {
             const current = state.templates.find(template => template.id === data.current)
             const reference = state.templates.find(template => template.id === data.ref)
 
-            Helper.sortAfter(state.templates, current, reference, 'sort')
+            Helper.sortAfter(state.templates, current, reference, 'id')
         },
     },
     actions: {
@@ -360,15 +362,21 @@ export default {
         },
         save: ({state}) => {
             return new Promise(resolve => {
+                const checklists = state.checklists
+
+                for (let list of checklists) {
+                    list.checklist = toRaw(list.checklist)
+                }
+
                 resolve({
                     key: 'jira',
                     options: {
-                        url: state.url,
-                        cleanup: state.cleanup,
-                        maximumIssues: state.maximumIssues,
-                        boards: state.boards,
-                        checklists: state.checklists,
-                        templates: state.templates,
+                        url: toRaw(state.url),
+                        cleanup: toRaw(state.cleanup),
+                        maximumIssues: toRaw(state.maximumIssues),
+                        boards: toRaw(state.boards),
+                        checklists: toRaw(checklists),
+                        templates: toRaw(state.templates),
                     },
                 })
             })
@@ -437,7 +445,6 @@ export default {
                     (injectionResults) => {
                         let result = injectionResults[0]
 
-                        console.log(result)
                         if (false === result.result) {
                             throw new Error('Could add comment')
                         }

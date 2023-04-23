@@ -4,43 +4,51 @@
             <v-data-table
                 :headers="messagesHeader"
                 :items="messages"
-                sort-by="sort"
+                :sort-by="[{key: 'sort', order: 'asc'}]"
                 :items-per-page="-1"
-                :item-class="itemRowSortActiveClass"
                 :hide-default-footer="true"
             >
-                <template v-slot:top>
+                <template #top>
                     <v-toolbar flat>
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" @click="openAddMessage"><v-icon left>fas fa-plus</v-icon>{{text.add}}</v-btn>
+                        <v-btn
+                            variant="plain"
+                            prepend-icon="fas fa-plus"
+                            color="primary"
+                            @click="openAddMessage">{{text.add}}</v-btn>
                     </v-toolbar>
                     <v-dialog v-model="editMessage.open" max-width="600">
-                        <v-card>
-                            <v-card-title>{{editMessage.title}}</v-card-title>
-                            <v-card-text>
-                                <v-form v-model="formValid" ref="messageForm">
-                                    <v-text-field
-                                        v-model="editMessage.name"
-                                        :label="text.name"
-                                        counter="20"
-                                        :rules="nameRules"
-                                    ></v-text-field>
-                                    <v-textarea
-                                        v-model="editMessage.content"
-                                        :label="text.content"
-                                        counter="200"
-                                        :rules="contentRules"
-                                    ></v-textarea>
-                                </v-form>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="grey" plain @click="closeMessage">{{ text.cancel }}</v-btn>
-                                <v-btn color="primary" plain @click="saveMessage" v-if="!!editMessage.id" :disabled="!formValid">{{ text.save }}</v-btn>
-                                <v-btn color="primary" plain @click="addMessage" v-else :disabled="!formValid">{{ text.add }}</v-btn>
-                                <v-spacer></v-spacer>
-                            </v-card-actions>
-                        </v-card>
+                        <v-form validate-on="input" @submit.prevent="saveMessage">
+                            <v-card>
+                                <v-card-title>{{editMessage.title}}</v-card-title>
+                                <v-card-text>
+                                        <v-text-field
+                                            v-model="editMessage.name"
+                                            :label="text.name"
+                                            counter="20"
+                                            :rules="nameRules"
+                                        ></v-text-field>
+                                        <v-textarea
+                                            v-model="editMessage.content"
+                                            :label="text.content"
+                                            counter="200"
+                                            :rules="contentRules"
+                                        ></v-textarea>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                        color="secondary"
+                                        variant="plain"
+                                        @click="closeMessage">{{ text.cancel }}</v-btn>
+                                    <v-btn
+                                        type="submit"
+                                        color="primary"
+                                        variant="plain">{{ editMessage.saveButton }}</v-btn>
+                                    <v-spacer></v-spacer>
+                                </v-card-actions>
+                            </v-card>
+                        </v-form>
                     </v-dialog>
                     <v-dialog v-model="deleteMessage.open" max-width="450">
                         <v-card>
@@ -56,32 +64,50 @@
                         </v-card>
                     </v-dialog>
                 </template>
-                <template v-slot:item.actions="{item}">
-                    <v-btn icon small @click="openMessage(item)" v-if="!sortMessage">
-                        <v-icon small>fas fa-edit</v-icon>
+                <template #item.actions="{item}">
+                    <v-btn
+                        v-if="!sortMessage"
+                        variant="plain"
+                        icon="fas fa-edit"
+                        size="small"
+                        @click="openMessage(item)">
                     </v-btn>
-                    <v-btn icon small @click="startSort(item)" v-if="!sortMessage" :disabled="messages.length < 2">
-                        <v-icon small>fas fa-sort</v-icon>
+                    <v-btn
+                        v-if="!sortMessage"
+                        variant="plain"
+                        icon="fas fa-sort"
+                        size="small"
+                        :disabled="messages.length < 2"
+                        @click="startSort(item)">
                     </v-btn>
-                    <v-btn icon small @click="openDeleteMessage(item)" v-if="!sortMessage">
-                        <v-icon small color="red darken-2">fas fa-trash</v-icon>
+                    <v-btn
+                        v-if="!sortMessage"
+                        variant="plain"
+                        icon="fas fa-trash"
+                        size="small"
+                        color="tertiary"
+                        @click="openDeleteMessage(item)">
                     </v-btn>
-                    <v-btn icon small
-                           @click="sortBefore(item)"
-                           v-if="sortMessage && sortMessage.id !== item.id"
-                           :disabled="item.sort - 1 === sortMessage.sort">
-                        <v-icon small>fas fa-sort-up</v-icon>
-                    </v-btn>
-                    <v-btn icon small
-                           @click="sortAfter(item)"
-                           v-if="sortMessage && sortMessage.id !== item.id"
-                           :disabled="item.sort + 1 === sortMessage.sort">
-                        <v-icon small>fas fa-sort-down</v-icon>
-                    </v-btn>
-                    <v-btn icon small @click="closeSort"
-                           v-if="sortMessage && sortMessage.id === item.id">
-                        <v-icon small>fas fa-times</v-icon>
-                    </v-btn>
+                    <v-btn
+                        v-if="sortMessage && sortMessage.raw.id !== item.raw.id"
+                        variant="plain"
+                        icon="fas fa-sort-up"
+                        size="small"
+                        :disabled="item.raw.sort - 1 === sortMessage.raw.sort"
+                        @click="sortBefore(item)"></v-btn>
+                    <v-btn
+                        v-if="sortMessage && sortMessage.raw.id !== item.raw.id"
+                        variant="plain"
+                        icon="fas fa-sort-down"
+                        size="small"
+                        :disabled="item.raw.sort + 1 === sortMessage.raw.sort"
+                        @click="sortAfter(item)"></v-btn>
+                    <v-btn
+                        v-if="sortMessage && sortMessage.raw.id === item.raw.id"
+                        variant="plain"
+                        icon="fas fa-times"
+                        size="small"
+                        @click="closeSort"></v-btn>
                 </template>
             </v-data-table>
         </v-card-text>
@@ -89,135 +115,14 @@
 </template>
 
 <script>
+import {th} from "vuetify/locale";
+
 export default {
-    name: 'Messages',
+    name: 'ChatMessages',
     props: {
         client: {
             type: String,
             required: true,
-        },
-    },
-    computed: {
-        messages() {
-            return this.$store.getters['chat/listMessages'](this.client)
-        },
-        messagesHeader() {
-            return [
-                {text: 'Name', value: 'name', sortable: false, width: '15%'},
-                {text: 'Content', value: 'content', sortable: false, width: '75%'},
-                {text: '', value: 'actions', align: 'end', sortable: false, width: '10%'},
-            ]
-        },
-    },
-    methods: {
-        startSort: function (item) {
-            this.sortMessage = item
-        },
-        closeSort: function () {
-            this.sortMessage = null
-        },
-        sortBefore: function (item) {
-            this.$store.dispatch('chat/messageSortBefore', {
-                client: this.client,
-                ref: item.id,
-                current: this.sortMessage.id,
-            })
-        },
-        sortAfter: function (item) {
-            this.$store.dispatch('chat/messageSortAfter', {
-                client: this.client,
-                ref: item.id,
-                current: this.sortMessage.id,
-            })
-        },
-        itemRowSortActiveClass: function (item) {
-            if (null === this.sortMessage) {
-                return ''
-            }
-
-            return item.id === this.sortMessage.id ? 'primary' : ''
-        },
-        openMessage: function (item) {
-            this.editMessage = {
-                open: true,
-                id: item.id,
-                name: item.name,
-                content: item.content,
-                title: this.i18n.getMessage('TitleUpdate', item.name),
-            }
-        },
-        openAddMessage: function () {
-            this.closeMessage()
-            this.editMessage.open = true
-        },
-        closeMessage: function () {
-            this.editMessage = {
-                open: false,
-                id: null,
-                name: '',
-                content: '',
-                title: '',
-            }
-        },
-        saveMessage: function () {
-            if (this.$refs.messageForm.validate()) {
-                this.$store.dispatch('chat/updateMessage', {
-                    client: this.client,
-                    message: {
-                        id: this.editMessage.id,
-                        name: this.editMessage.name,
-                        content: this.editMessage.content,
-                    },
-                })
-            }
-
-            this.closeMessage()
-        },
-        addMessage: function () {
-            if (this.$refs.messageForm.validate()) {
-                this.$store.dispatch('chat/addMessage', {
-                    client: this.client,
-                    message: {
-                        name: this.editMessage.name,
-                        content: this.editMessage.content,
-                    },
-                })
-            }
-
-            this.closeMessage()
-        },
-        openDeleteMessage: function (item) {
-            this.deleteMessage = {
-                open: true,
-                id: item.id,
-                name: item.name,
-            }
-        },
-        closeDeleteMessage: function () {
-            this.deleteMessage = {
-                open: false,
-                id: null,
-                name: '',
-            }
-        },
-        removeMessage: function () {
-            this.$store.dispatch('chat/removeMessage', {
-                client: this.client,
-                id: this.deleteMessage.id,
-            })
-        },
-        checkDuplicated: function (value) {
-            const message = this.$store.getters['chat/listMessages'](this.client).find(item => item.name === value)
-
-            if (undefined === message) {
-                return false
-            }
-
-            if (null === this.editMessage.id) {
-                return true
-            }
-
-            return this.editMessage.name !== value
         },
     },
     data() {
@@ -254,6 +159,127 @@ export default {
             ],
             formValid: false,
         }
+    },
+    computed: {
+        messages() {
+            return this.$store.getters['chat/listMessages'](this.client)
+        },
+        messagesHeader() {
+            return [
+                {title: 'Name', key: 'name', sortable: false, width: '15%'},
+                {title: 'Content', key: 'content', sortable: false, width: '75%'},
+                {title: '', key: 'actions', align: 'end', sortable: false, width: '10%'},
+            ]
+        },
+    },
+    methods: {
+        startSort: function (item) {
+            this.sortMessage = item
+        },
+        closeSort: function () {
+            this.sortMessage = null
+        },
+        sortBefore: function (item) {
+            this.$store.dispatch('chat/messageSortBefore', {
+                client: this.client,
+                ref: item.raw.id,
+                current: this.sortMessage.raw.id,
+            })
+        },
+        sortAfter: function (item) {
+            this.$store.dispatch('chat/messageSortAfter', {
+                client: this.client,
+                ref: item.raw.id,
+                current: this.sortMessage.raw.id,
+            })
+        },
+        openMessage: function (item) {
+            this.editMessage = {
+                open: true,
+                id: item.raw.id,
+                name: item.raw.name,
+                content: item.raw.content,
+                title: this.i18n.getMessage('TitleUpdate', item.raw.name),
+                saveButton: this.text.save,
+            }
+        },
+        openAddMessage: function () {
+            this.closeMessage()
+            this.editMessage.open = true
+        },
+        closeMessage: function () {
+            this.editMessage = {
+                open: false,
+                id: null,
+                name: '',
+                content: '',
+                title: '',
+                saveButton: this.text.add,
+            }
+        },
+        async saveMessage (event) {
+            const result = await event
+
+            if (false === result) {
+                return
+            }
+
+            if (null === this.editMessage.id) {
+                this.$store.dispatch('chat/addMessage', {
+                    client: this.client,
+                    message: {
+                        name: this.editMessage.name,
+                        content: this.editMessage.content,
+                    },
+                })
+            } else {
+                this.$store.dispatch('chat/updateMessage', {
+                    client: this.client,
+                    message: {
+                        id: this.editMessage.id,
+                        name: this.editMessage.name,
+                        content: this.editMessage.content,
+                    },
+                })
+            }
+
+            this.closeMessage()
+        },
+        openDeleteMessage: function (item) {
+            this.deleteMessage = {
+                open: true,
+                id: item.raw.id,
+                name: item.raw.name,
+            }
+        },
+        closeDeleteMessage: function () {
+            this.deleteMessage = {
+                open: false,
+                id: null,
+                name: '',
+            }
+        },
+        removeMessage: function () {
+            this.$store.dispatch('chat/removeMessage', {
+                client: this.client,
+                id: this.deleteMessage.id,
+            })
+
+            this.closeDeleteMessage()
+        },
+        checkDuplicated: function (value) {
+            const message = this.$store.getters['chat/listMessages'](this.client).find(item => item.name === value)
+
+            if (undefined === message) {
+                return false
+            }
+
+            if (null === this.editMessage.id) {
+                return true
+            }
+
+            return this.editMessage.name !== value
+        },
     },
 }
 </script>

@@ -1,50 +1,54 @@
 <template>
     <v-card v-if="optionsValid">
         <v-card-title>
-            Embeddable Build Status
-            <v-spacer></v-spacer>
-            <v-btn icon @click="openOptions('jenkins')"><v-icon>fas fa-cog</v-icon></v-btn>
+            <v-row>
+                <v-col cols="10">Embeddable Build Status</v-col>
+                <v-col cols="2">
+                    <v-btn variant="text" @click="openOptions('jenkins')"><v-icon>fas fa-cog</v-icon></v-btn>
+                </v-col>
+            </v-row>
         </v-card-title>
         <v-card-text>
             <v-row>
                 <v-col cols="8">
                     <v-autocomplete
+                        v-model="job"
                         :items="builds"
                         item-value="job"
-                        item-text="name"
-                        v-model="job"
+                        item-title="name"
                         label="Job"
-                        dense
+                        variant="underlined"
                     ></v-autocomplete>
                 </v-col>
                 <v-col cols="4">
                     <v-text-field
+                        v-model="build"
                         type="number"
                         min="1"
-                        v-model="build"
                         label="Build Number"
-                        dense
+                        variant="underlined"
                     ></v-text-field>
                 </v-col>
             </v-row>
             <v-row class="mt-0">
                 <v-col cols="10">
                     <v-text-field
+                        ref="copyBuild"
                         outlined
                         readonly
-                        ref="copyBuild"
                         :value="buildUrl"
-                        @click="copy"
                         :disabled="!readyToCopy"
-                        dense
+                        variant="solo"
+                        density="compact"
+                        @click="copy"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="2">
                     <v-btn
                         block
-                        color="success"
-                        @click="copy"
+                        color="primary"
                         :disabled="!readyToCopy"
+                        @click="copy"
                     ><v-icon small>fas fa-copy</v-icon></v-btn>
                 </v-col>
             </v-row>
@@ -57,36 +61,37 @@
                         :items-per-page="3"
                         :footer-props="{disableItemsPerPage: true, itemsPerPageOptions:[3]}"
                     >
-                        <template v-slot:top>
+                        <template #top>
                             <v-toolbar flat>
-                                <v-autocomplete
-                                    :items="issues"
-                                    item-text="name"
-                                    item-value="name"
-                                    v-model="issue"
-                                    label="Attach to Issue"
-                                    class="mt-7"
-                                ></v-autocomplete>
+                                <v-toolbar-title>
+                                    <v-autocomplete
+                                        v-model="issue"
+                                        :items="issues"
+                                        item-title="name"
+                                        item-value="name"
+                                        label="Attach to Issue"
+                                        class="mt-5"
+                                        density="comfortable"
+                                        variant="underlined"
+                                    ></v-autocomplete>
+                                </v-toolbar-title>
                                 <v-spacer></v-spacer>
                                 <v-btn
                                     color="success"
-                                    @click="attachToIssue"
                                     :disabled="!readyToCopy || null === issue"
+                                    @click="attachToIssue"
                                 ><v-icon small>fas fa-plus</v-icon></v-btn>
                             </v-toolbar>
                         </template>
-                        <template v-slot:item.job="{item}">
-                            {{buildName(item.job)}}
+                        <template #item.job="{item}">
+                            {{buildName(item.value.job)}}
                         </template>
-                        <template v-slot:item.action="{item}">
-                            <v-btn icon small @click="copyBuild(item.job, item.build)">
-                                <v-icon small>fas fa-copy</v-icon>
+                        <template #item.action="{item}">
+                            <v-btn variant="plain" icon="fas fa-copy" size="small" @click="copyBuild(item.job, item.build)">
                             </v-btn>
-                            <v-btn icon small @click="openBuild(item.job, item.build)">
-                                <v-icon small>fas fa-external-link-alt</v-icon>
+                            <v-btn variant="plain" icon="fas fa-external-link-alt" size="small" @click="openBuild(item.job, item.build)">
                             </v-btn>
-                            <v-btn icon @click="removeFromIssue(item.job, item.build)" small>
-                                <v-icon color="red darken-2" small>fas fa-trash</v-icon>
+                            <v-btn variant="plain" icon="fas fa-trash" size="small" color="tertiary" @click="removeFromIssue(item.job, item.build)">
                             </v-btn>
                         </template>
                     </v-data-table>
@@ -109,11 +114,48 @@
 
 <script>
 import _ from 'lodash'
-import CopiedToClipboard from '@/components/popup/mixed/CopiedToClipboard.vue'
+import CopiedToClipboard from './mixed/CopiedToClipboard.vue'
 
 export default {
-    name: 'Jenkins',
+    name: 'PopupJenkins',
     components: {CopiedToClipboard},
+    data: () => {
+        return {
+            job: '',
+            build: null,
+            i18n: chrome.i18n,
+            optionsValid: false,
+            issue: null,
+            issues: [],
+        }
+    },
+    computed: {
+        builds: function () {
+            return this.$store.getters['jenkins/getBuilds']
+        },
+        readyToCopy: function () {
+            const host = this.$store.getters['jenkins/getHost']
+
+            return '' !== host && '' !== this.job && null !== this.build && '' !== this.build
+        },
+        buildUrl: function () {
+            if (false === this.readyToCopy) {
+                return ''
+            }
+
+            return this.$store.getters['jenkins/url'](this.job, this.build, true)
+        },
+        issueData: function () {
+            return this.$store.getters['issues/issue'](this.issue)
+        },
+        issueHeader: function () {
+            return [
+                { title: 'Job', key: 'job'},
+                { title: 'Build', key: 'build'},
+                { title: '', key: 'action', sortable: false, align: 'end'},
+            ]
+        },
+    },
     created() {
         this.optionsValid = '' !== this.$store.getters['jenkins/getHost']
             && 0 < this.$store.getters['jenkins/getBuilds'].length
@@ -145,33 +187,6 @@ export default {
             this.issue = this.issues[0].name
         }
     },
-    computed: {
-        builds: function () {
-            return this.$store.getters['jenkins/getBuilds']
-        },
-        readyToCopy: function () {
-            const host = this.$store.getters['jenkins/getHost']
-
-            return '' !== host && '' !== this.job && null !== this.build && '' !== this.build
-        },
-        buildUrl: function () {
-            if (false === this.readyToCopy) {
-                return ''
-            }
-
-            return this.$store.getters['jenkins/url'](this.job, this.build, true)
-        },
-        issueData: function () {
-            return this.$store.getters['issues/issue'](this.issue)
-        },
-        issueHeader: function () {
-            return [
-                { text: 'Job', value: 'job'},
-                { text: 'Build', value: 'build'},
-                { text: '', value: 'action', sortable: false, align:'right'},
-            ]
-        },
-    },
     methods: {
         openOptions: function (tab) {
             this.$store.dispatch('changeMainTab', tab)
@@ -179,7 +194,7 @@ export default {
         },
         copy: function () {
             if (this.readyToCopy) {
-                let blob = new Blob([this.$refs.copyBuild.$refs.input.value], {type: 'text/html'})
+                let blob = new Blob([this.$refs.copyBuild.value], {type: 'text/html'})
 
                 navigator.clipboard.write([new ClipboardItem({[blob.type]: blob})])
                     .then(() => {
@@ -233,16 +248,6 @@ export default {
                     this.$refs.message.show()
                 })
         },
-    },
-    data: () => {
-        return {
-            job: '',
-            build: null,
-            i18n: chrome.i18n,
-            optionsValid: false,
-            issue: null,
-            issues: [],
-        }
     },
 }
 </script>
