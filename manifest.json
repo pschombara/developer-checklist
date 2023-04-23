@@ -10,9 +10,6 @@
         "activeTab",
         "scripting"
     ],
-    "host_permissions": [
-        "*://*/*"
-    ],
     "optional_permissions": [
         "tabGroups"
     ],
