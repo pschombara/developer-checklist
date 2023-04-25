@@ -24,10 +24,11 @@
                 <v-col cols="10">
                     <v-text-field
                         ref="copyCommand"
-                        outlined
                         readonly
                         :disabled="'' === command"
                         :value="command"
+                        variant="solo"
+                        density="compact"
                         @click="copy"
                     ></v-text-field>
                 </v-col>
@@ -35,7 +36,7 @@
                     <v-btn
                         block
                         x-large
-                        outlined
+                        variant="outlined"
                         color="primary"
                         :disabled="'' === command"
                         @click="copy"
@@ -45,30 +46,16 @@
                 </v-col>
             </v-row>
         </v-card-text>
-        <v-snackbar
-            v-model="hint"
-            :timeout="2200"
-        >
-            <v-icon left color="success">fas fa-check</v-icon>
-            {{ text.copiedToClipboard }}
-
-            <template #action="{ attrs }">
-                <v-btn
-                    color="blue"
-                    text
-                    v-bind="attrs"
-                    @click="hint = false"
-                >
-                    {{text.close}}
-                </v-btn>
-            </template>
-        </v-snackbar>
+        <copied-to-clipboard ref="message"></copied-to-clipboard>
     </v-card>
 </template>
 
 <script>
+import CopiedToClipboard from './mixed/CopiedToClipboard.vue'
+
 export default {
     name: 'PopupCheatSheet',
+    components: {CopiedToClipboard},
     data: () => {
         return {
             command: '',
@@ -91,7 +78,7 @@ export default {
         },
         copy: function () {
             navigator.clipboard.writeText(this.$refs.copyCommand.value)
-            this.hint = true
+            this.$refs.message.show()
         },
     },
 }
