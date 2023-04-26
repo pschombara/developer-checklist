@@ -126,7 +126,6 @@
 import Helper from '../../../../mixins/helper'
 import _ from 'lodash'
 import {Uuid} from '../../../../mixins/uuid'
-import {th} from 'vuetify/locale'
 
 export default  {
     name: 'ChecklistsInnerList',
