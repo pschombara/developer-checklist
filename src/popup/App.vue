@@ -84,7 +84,6 @@ import Jenkins from '../components/popup/Jenkins.vue'
 import GitLab from '../components/popup/GitLab.vue'
 import Chat from '../components/popup/Chat.vue'
 import CheatSheet from '../components/popup/CheatSheet.vue'
-import {th} from 'vuetify/locale'
 
 export default {
     name: 'App',
@@ -169,7 +168,7 @@ html {
   max-width: 600px;
 }
 
-.v-application > .v-application--wrap {
-    min-height: unset;
+.v-application > .v-application__wrap {
+    min-height: fit-content;
 }
 </style>

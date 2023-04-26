@@ -90,8 +90,6 @@
 
 <script>
 
-import {th} from 'vuetify/locale'
-
 export default {
     name: 'PopupChat',
     data: () => {

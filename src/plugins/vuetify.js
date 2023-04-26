@@ -9,8 +9,6 @@ import { VDataTable } from 'vuetify/lib/labs/VDataTable/VDataTable.mjs'
 import { aliases, fa } from 'vuetify/iconsets/fa'
 import { components } from 'vuetify/dist/vuetify'
 
-const preferDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-
 const vuetify = createVuetify({
     components: {
         ...components,

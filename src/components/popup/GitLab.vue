@@ -34,7 +34,6 @@
                 <v-col cols="10">
                     <v-text-field
                         ref="copyMergeUrl"
-                        outlined
                         readonly
                         :value="mergeUrl"
                         :disabled="!readyToCopy"
@@ -87,11 +86,11 @@
                             {{ projectName(item.value) }}
                         </template>
                         <template #item.action="{item}">
-                            <v-btn variant="plain" icon="fas fa-copy" size="small" @click="copyMergeRequest(item.id, item.number, item.source)">
+                            <v-btn variant="plain" icon="fas fa-copy" size="small" @click="copyMergeRequest(item.raw.id, item.raw.number, item.raw.source)">
                             </v-btn>
-                            <v-btn variant="plain" icon="fas fa-external-link-alt" size="small" @click="openMergeRequest(item.id, item.number)">
+                            <v-btn variant="plain" icon="fas fa-external-link-alt" size="small" @click="openMergeRequest(item.raw.id, item.raw.number)">
                             </v-btn>
-                            <v-btn variant="plain" icon="fas fa-trash" color="tertiary" size="small" @click="removeFromIssue(item.id, item.number)">
+                            <v-btn variant="plain" icon="fas fa-trash" color="tertiary" size="small" @click="removeFromIssue(item.raw.id, item.raw.number)">
                             </v-btn>
                         </template>
                     </v-data-table>
@@ -115,7 +114,6 @@
 <script>
 import _ from 'lodash'
 import CopiedToClipboard from './mixed/CopiedToClipboard.vue'
-import {th} from "vuetify/locale";
 
 export default {
     name: 'PopupGitLab',

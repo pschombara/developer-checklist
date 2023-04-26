@@ -267,7 +267,6 @@
 <script>
 
 import InnerList from './InnerList.vue'
-import {ca} from "vuetify/locale";
 
 export default {
     name: 'ChecklistsChecklist',

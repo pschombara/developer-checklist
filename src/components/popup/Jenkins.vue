@@ -34,7 +34,6 @@
                 <v-col cols="10">
                     <v-text-field
                         ref="copyBuild"
-                        outlined
                         readonly
                         :value="buildUrl"
                         :disabled="!readyToCopy"
@@ -77,7 +76,7 @@
                                 </v-toolbar-title>
                                 <v-spacer></v-spacer>
                                 <v-btn
-                                    color="success"
+                                    color="primary"
                                     :disabled="!readyToCopy || null === issue"
                                     @click="attachToIssue"
                                 ><v-icon small>fas fa-plus</v-icon></v-btn>
@@ -87,11 +86,11 @@
                             {{buildName(item.value.job)}}
                         </template>
                         <template #item.action="{item}">
-                            <v-btn variant="plain" icon="fas fa-copy" size="small" @click="copyBuild(item.job, item.build)">
+                            <v-btn variant="plain" icon="fas fa-copy" size="small" @click="copyBuild(item.raw.job, item.raw.build)">
                             </v-btn>
-                            <v-btn variant="plain" icon="fas fa-external-link-alt" size="small" @click="openBuild(item.job, item.build)">
+                            <v-btn variant="plain" icon="fas fa-external-link-alt" size="small" @click="openBuild(item.raw.job, item.raw.build)">
                             </v-btn>
-                            <v-btn variant="plain" icon="fas fa-trash" size="small" color="tertiary" @click="removeFromIssue(item.job, item.build)">
+                            <v-btn variant="plain" icon="fas fa-trash" size="small" color="tertiary" @click="removeFromIssue(item.raw.job, item.raw.build)">
                             </v-btn>
                         </template>
                     </v-data-table>

@@ -56,7 +56,7 @@
             </v-btn>
             <v-btn
                 v-if="checklist.buttons.failed.enabled"
-                color="error"
+                color="secondary"
                 variant="outlined"
                 @click="addComment(checklist.buttons.failed)"
             >

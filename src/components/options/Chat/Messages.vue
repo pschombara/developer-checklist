@@ -115,7 +115,6 @@
 </template>
 
 <script>
-import {th} from "vuetify/locale";
 
 export default {
     name: 'ChatMessages',

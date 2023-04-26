@@ -1,7 +1,7 @@
 import Helper from '../../mixins/helper'
 import {Uuid} from '../..//mixins/uuid'
 import {toRaw} from 'vue'
-import checklists from "../../components/options/Jira/Checklists.vue";
+import checklists from '../../components/options/Jira/Checklists.vue'
 
 const state = {
     url: '',
