@@ -169,7 +169,7 @@ html {
   max-width: 600px;
 }
 
-.v-application > .v-application--wrap {
+.v-application > .v-application__wrap {
     min-height: unset;
 }
 </style>
