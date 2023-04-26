@@ -170,6 +170,6 @@ html {
 }
 
 .v-application > .v-application__wrap {
-    min-height: unset;
+    min-height: fit-content;
 }
 </style>
