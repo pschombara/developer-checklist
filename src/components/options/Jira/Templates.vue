@@ -21,54 +21,55 @@
                                     {{ text.newTemplate }}
                                 </v-btn>
                                 <v-dialog v-model="dialogEditTemplate" max-width="800">
-                                    <v-card>
-                                        <v-card-title>{{editTemplate.title}}</v-card-title>
-                                        <v-card-text>
-                                            <v-form ref="templateForm" v-model="editTemplate.valid">
-                                                <v-text-field
-                                                    v-model="editTemplate.title"
-                                                    counter="25"
-                                                    :rules="titleRules"></v-text-field>
-                                                <v-text-field
-                                                    v-model="editTemplate.subTitle"
-                                                    counter="50"
-                                                    :rules="subTitleRules"></v-text-field>
+                                    <v-form
+                                        validate-on="input"
+                                        @submit.prevent="saveTemplate">
+                                        <v-card>
+                                            <v-card-title>{{editTemplate.title}}</v-card-title>
+                                            <v-card-text>
+
+                                                    <v-text-field
+                                                        v-model="editTemplate.title"
+                                                        counter="25"
+                                                        :rules="titleRules"></v-text-field>
+                                                    <v-text-field
+                                                        v-model="editTemplate.subTitle"
+                                                        counter="50"
+                                                        :rules="subTitleRules"></v-text-field>
+                                                    <v-btn
+                                                        variant="flat"
+                                                        icon="fab fa-jenkins"
+                                                        size="small"
+                                                        class="me-2 mb-2"
+                                                        @click="addToContent('[ciBuilds]')"></v-btn>
+                                                    <v-btn
+                                                        variant="flat"
+                                                        icon="fab fa-gitlab"
+                                                        size="small"
+                                                        class="mb-2"
+                                                        @click="addToContent('[mergeRequests]')"></v-btn>
+                                                    <v-textarea
+                                                        v-model="editTemplate.content"
+                                                        counter="500"
+                                                        :rules="contentRules"
+                                                        @keyup="keyUpTemplateContent"
+                                                        @mouseup="keyUpTemplateContent"
+                                                        @select="keyUpTemplateContent"></v-textarea>
+                                            </v-card-text>
+                                            <v-card-actions>
+                                                <v-spacer></v-spacer>
                                                 <v-btn
-                                                    icon="fab fa-jenkins"
-                                                    @click="addToContent('[ciBuilds]')"></v-btn>
+                                                    variant="plain"
+                                                    color="secondary"
+                                                    @click="closeTemplate">{{ text.cancel }}</v-btn>
                                                 <v-btn
-                                                    icon="fab fa-gitlab"
-                                                    @click="addToContent('[mergeRequests]')"></v-btn>
-                                                <v-textarea
-                                                    v-model="editTemplate.content"
-                                                    counter="500"
-                                                    :rules="contentRules"
-                                                    @keyup="keyUpTemplateContent"
-                                                    @mouseup="keyUpTemplateContent"
-                                                    @select="keyUpTemplateContent"></v-textarea>
-                                            </v-form>
-                                        </v-card-text>
-                                        <v-card-actions>
-                                            <v-spacer></v-spacer>
-                                            <v-btn
-                                                variant="plain"
-                                                color="secondary"
-                                                @click="closeTemplate">{{ text.cancel }}</v-btn>
-                                            <v-btn
-                                                v-if="null !== editTemplate.id"
-                                                variant="plain"
-                                                color="success"
-                                                :disabled="!editTemplate.valid"
-                                                @click="updateTemplate">{{text.save}}</v-btn>
-                                            <v-btn
-                                                v-else
-                                                variant="plain"
-                                                color="success"
-                                                :disabled="!editTemplate.valid"
-                                                @click="addTemplate">{{text.add}}</v-btn>
-                                            <v-spacer></v-spacer>
-                                        </v-card-actions>
-                                    </v-card>
+                                                    type="submit"
+                                                    variant="plain"
+                                                    color="success">{{text.save}}</v-btn>
+                                                <v-spacer></v-spacer>
+                                            </v-card-actions>
+                                        </v-card>
+                                    </v-form>
                                 </v-dialog>
                                 <v-dialog v-model="deleteTemplate" max-width="450">
                                     <v-card>
@@ -95,7 +96,7 @@
                         </template>
                         <template #item.template="{ item }">
                             <div>{{ item.title }}</div>
-                            <small class="text--secondary font-weight-light">{{ item.subTitle }}</small>
+                            <small class="text--secondary font-weight-light">{{ item.raw.subTitle }}</small>
                         </template>
                         <template #item.actions="{ item }">
                             <v-btn
@@ -164,7 +165,7 @@ export default {
             i18n: chrome.i18n,
             editTemplate: {
                 currentTitle: chrome.i18n.getMessage('NewTemplate'),
-                valid: false,
+                text: '',
                 id: null,
                 title: '',
                 subTitle: '',
@@ -177,7 +178,7 @@ export default {
             },
             newTemplate: {
                 currentTitle: chrome.i18n.getMessage('NewTemplate'),
-                valid: false,
+                text: '',
                 id: null,
                 title: '',
                 subTitle: '',
@@ -223,36 +224,37 @@ export default {
     methods: {
         openTemplate: function (template) {
             this.editTemplate = {
-                currentTitle: null === template.id ? template.currentTitle : template.title,
-                valid: null !== template.id,
-                id: template.id,
-                title: template.title,
-                subTitle: template.subTitle,
-                content: template.content,
+                currentTitle: null === template.raw.id ? template.raw.currentTitle : template.raw.title,
+                text: null === template.raw.id ? this.text.add : this.text.save,
+                id: template.raw.id,
+                title: template.raw.title,
+                subTitle: template.raw.subTitle,
+                content: template.raw.content,
                 position: {
                     start: -1,
                     end: -1,
                 },
-                sort: template.sort,
+                sort: template.raw.sort,
             }
 
             this.dialogEditTemplate = true
         },
-        updateTemplate: function () {
-            if (this.$refs.templateForm.validate()) {
-                this.$store.dispatch('jira/updateTemplate', {
-                    id: this.editTemplate.id,
+        async saveTemplate (event) {
+            const result = await event
+
+            if (false === result.valid) {
+                return
+            }
+
+            if (null === this.editTemplate.id) {
+                this.$store.dispatch('jira/addTemplate', {
                     title: this.editTemplate.title,
                     subTitle: this.editTemplate.subTitle,
                     content: this.editTemplate.content,
                 })
-            }
-
-            this.closeTemplate()
-        },
-        addTemplate: function () {
-            if (this.$refs.templateForm.validate()) {
-                this.$store.dispatch('jira/addTemplate', {
+            } else {
+                this.$store.dispatch('jira/updateTemplate', {
+                    id: this.editTemplate.id,
                     title: this.editTemplate.title,
                     subTitle: this.editTemplate.subTitle,
                     content: this.editTemplate.content,

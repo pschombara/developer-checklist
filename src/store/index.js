@@ -281,12 +281,14 @@ const store = createStore({
             commit('CHANGE_OPEN_TAB', tab)
         },
         autoChangeOpenTab: ({state, commit}) => {
-            state.optionTabs.forEach((tab, key) => {
+            for (const tab of state.optionTabs) {
                 if (tab.id === state.configTabs.main) {
-                    commit('CHANGE_OPEN_TAB', key)
+                    commit('CHANGE_OPEN_TAB', tab.id)
                     chrome.storage.local.set({'optionsTab': ''})
+
+                    break
                 }
-            })
+            }
         },
         saveOptions: ({state, dispatch}) => {
             let options = {

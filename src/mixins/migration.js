@@ -3,7 +3,7 @@ import {V0_7_0} from './migrations/v0.7.0.js'
 
 export default class Migration {
     constructor () {
-        this._version = '0.7.2'
+        this._version = '0.7.3'
         this.migrations = [
             new V0_7_0(),
         ]
