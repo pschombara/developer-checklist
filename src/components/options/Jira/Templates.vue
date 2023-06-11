@@ -95,7 +95,7 @@
                             </v-toolbar>
                         </template>
                         <template #item.template="{ item }">
-                            <div>{{ item.title }}</div>
+                            <div>{{ item.raw.title }}</div>
                             <small class="text--secondary font-weight-light">{{ item.raw.subTitle }}</small>
                         </template>
                         <template #item.actions="{ item }">
@@ -178,11 +178,13 @@ export default {
             },
             newTemplate: {
                 currentTitle: chrome.i18n.getMessage('NewTemplate'),
-                text: '',
-                id: null,
-                title: '',
-                subTitle: '',
-                content: '',
+                raw: {
+                    id: null,
+                    text: '',
+                    title: '',
+                    subTitle: '',
+                    content: '',
+                },
                 position: {
                     start: -1,
                     end: -1,
