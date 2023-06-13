@@ -83,7 +83,7 @@
                             </v-toolbar>
                         </template>
                         <template #item.job="{item}">
-                            {{buildName(item.value.job)}}
+                            {{buildName(item.raw.job)}}
                         </template>
                         <template #item.action="{item}">
                             <v-btn variant="plain" icon="fas fa-copy" size="small" @click="copyBuild(item.raw.job, item.raw.build)">
