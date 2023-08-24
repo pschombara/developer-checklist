@@ -143,10 +143,6 @@ export default {
             this.tab = this.$store.getters['switchTab'] ?? 'bookmark'
         },
         showTab: function (tab) {
-            if ('jira' === tab.id) {
-                return null !== this.$store.getters['currentIssue']
-            }
-
             if (Object.prototype.hasOwnProperty.call(this.modules, tab.id)) {
                 return this.modules[tab.id]
             } else {

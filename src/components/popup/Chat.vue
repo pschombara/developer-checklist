@@ -164,7 +164,7 @@ export default {
         for (let message of messages) {
             if (null === this.message
                 || this.message.sort > message.sort) {
-                this.message = message
+                this.message = message.id
             }
         }
     },

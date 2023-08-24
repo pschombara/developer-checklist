@@ -18,6 +18,14 @@
                     ></v-switch>
                 </v-col>
             </v-row>
+            <v-row>
+                <v-col>
+                    <v-text-field
+                        v-model="name"
+                        label="Display name"
+                    ></v-text-field>
+                </v-col>
+            </v-row>
         </v-card-text>
     </v-card>
 </template>
@@ -57,6 +65,14 @@ export default {
                     client: this.client,
                     enabled: value,
                 })
+            },
+        },
+        name: {
+            get() {
+                return this.$store.getters['chat/name'](this.client)
+            },
+            set(value) {
+                this.$store.dispatch('chat/updateName', {client: this.client, name: value})
             },
         },
     },
