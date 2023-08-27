@@ -1,6 +1,4 @@
 self.addEventListener('message', message => {
-
-    console.log(message)
     if ('' !== message.data.message) {
         fetch(message.data.room.url, {
             method: 'POST',
