@@ -1,5 +1,5 @@
 <template>
-    <v-card flat>
+    <v-card v-if="issueName">
         <v-card-title>
             <v-row>
                 <v-col cols="5">{{ issueName }}</v-col>
@@ -7,19 +7,23 @@
                     <v-tooltip location="bottom">
                         <template #activator="{props}">
                             <v-btn
-                                v-if="issue.work"
+                                v-if="issue && issue.work"
                                 v-bind="props"
                                 color="primary lighten-2"
                                 variant="text"
                                 @click="stopWork(issueName)"
-                            ><v-icon small left>fas fa-stop</v-icon>&nbsp;Stop Work</v-btn>
+                            >
+                                <v-icon small left>fas fa-stop</v-icon>&nbsp;Stop Work
+                            </v-btn>
                             <v-btn
                                 v-else
                                 v-bind="props"
                                 color="grey darken-2"
                                 variant="text"
                                 @click="startWork(issueName)"
-                            ><v-icon small left>fas fa-play</v-icon>&nbsp; Start Work</v-btn>
+                            >
+                                <v-icon small left>fas fa-play</v-icon>&nbsp; Start Work
+                            </v-btn>
                         </template>
                         <span>Issue will be preselected for CI-Builds and Merge Requests</span>
                     </v-tooltip>
@@ -28,12 +32,14 @@
                     <v-tooltip location="bottom">
                         <template #activator="{props}">
                             <v-btn
+                                v-if="issueName"
                                 v-bind="props"
                                 variant="text"
                                 :color="issue.pinned ? 'primary' : 'secondary'"
                                 @click="issue.pinned ? unpin(issueName) : pin(issueName)"
                             >
-                                <v-icon :class="issue.pinned ? '' : 'rotate--45-inverted'" small>fas fa-thumbtack</v-icon>
+                                <v-icon :class="issue.pinned ? '' : 'rotate--45-inverted'" small>fas fa-thumbtack
+                                </v-icon>
                             </v-btn>
                         </template>
                         <span>When active, issue is pinned, so it is sorted to the front in the quick select and is not automatically cleaned up.</span>
@@ -64,6 +70,7 @@
                         v-for="checklist in checklists"
                         :key="checklist.uuid"
                         :value="checklist.uuid"
+                        :disabled="!issueName"
                     >
                         <v-tooltip location="right">
                             <template #activator="{props}">
@@ -72,6 +79,15 @@
                             <span>{{ checklist.name }}</span>
                         </v-tooltip>
                     </v-tab>
+                    <v-tab v-model="tab" value="issueList" :disabled="!!issueName">
+                        <v-tooltip location="right">
+                            <template #activator="{props}">
+                                <v-icon v-bind="props">fas fa-list</v-icon>
+                            </template>
+                            <span>Issues</span>
+                        </v-tooltip>
+                    </v-tab>
+
                     <v-tab v-model="tab" value="templates">
                         <v-tooltip location="right">
                             <template #activator="{props}">
@@ -83,15 +99,46 @@
                 </v-tabs>
 
                 <v-window v-model="tab" class="flex-grow-1">
-                    <v-window-item v-for="checklist in checklists" :key="checklist.uuid" :value="checklist.uuid">
-                        <checklist :uuid="checklist.uuid" :issue="issueName"></checklist>
-                    </v-window-item>
+                    <span v-if="issueName">
+                        <v-window-item v-for="checklist in checklists" :key="checklist.uuid" :value="checklist.uuid">
+                            <checklist :uuid="checklist.uuid" :issue="issueName"></checklist>
+                        </v-window-item>
+                    </span>
+                    <span v-else>
+                        <v-window-item value="issueList">
+                            <issues></issues>
+                        </v-window-item>
+                    </span>
                     <v-window-item value="templates">
                         <templates></templates>
                     </v-window-item>
                 </v-window>
             </div>
         </v-card-text>
+    </v-card>
+    <v-card v-else>
+        <v-card-title>
+            <v-row>
+                <v-col cols="10">Open on Jira to show checklist</v-col>
+                <v-col cols="2">
+                    <v-tooltip location="bottom">
+                        <template #activator="{props}">
+                            <v-btn
+                                v-bind="props"
+                                variant="text"
+                                @click="openOptions('jira')"
+                            >
+                                <v-icon small>fas fa-cog</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Settings</span>
+                    </v-tooltip>
+                </v-col>
+            </v-row>
+        </v-card-title>
+        <v-card-item>
+            <templates></templates>
+        </v-card-item>
     </v-card>
 </template>
 
@@ -104,14 +151,18 @@ export default {
     components: {Templates, Checklist},
     data: () => {
         return {
-            tab: null,
+            tab: 0,
             checklists: [],
             checked: [],
-            issueName: '',
+            issueName: null,
         }
     },
     computed: {
         issue: function () {
+            if (!this.issueName) {
+                return null
+            }
+
             return this.$store.getters['issues/issue'](this.issueName)
         },
     },
@@ -141,7 +192,7 @@ export default {
 </script>
 
 <style>
-    .rotate--45-inverted {
-        transform: rotate(-45deg);
-    }
+.rotate--45-inverted {
+    transform: rotate(-45deg);
+}
 </style>

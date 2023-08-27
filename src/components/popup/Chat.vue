@@ -66,7 +66,7 @@
                         <v-combobox
                             v-model="attachedIssues"
                             :items="issues"
-                            multiple
+                            multiple=""
                             small-chips
                             hide-selected
                             label="Issue to attach (optional)"
@@ -74,7 +74,7 @@
                         >
                             <template #selection="{item, parent}">
                                 <v-chip
-                                    closable
+                                    closable=""
                                     @click:close="parent.selectItem(item)"
                                 >
                                     {{item.title}}
@@ -96,6 +96,8 @@ export default {
         return {
             client: '',
             room: null,
+            rooms: [],
+            messages: [],
             message: null,
             attachedIssues: [],
         }
@@ -104,15 +106,9 @@ export default {
         clients: function () {
             return this.$store.getters['chat/listClients']
         },
-        messages: function () {
-            return this.$store.getters['chat/listMessages'](this.client)
-        },
-        rooms: function () {
-            return this.$store.getters['chat/listRooms'](this.client)
-        },
         validClient: function () {
-            return this.$store.getters['chat/listRooms'](this.client).length > 0
-                && this.$store.getters['chat/listMessages'](this.client).length > 0
+            return this.rooms.length > 0
+                && this.messages.length > 0
         },
         sendReady: function () {
             return '' !== this.client
@@ -125,6 +121,43 @@ export default {
         },
         issues: function () {
             return this.$store.getters['issues/issueKeys']
+        },
+    },
+    watch: {
+        client: {
+            handler(client) {
+                this.rooms = this.$store.getters['chat/listRooms'](client)
+                this.messages = this.$store.getters['chat/listMessages'](client)
+                this.room = null
+                this.message = null
+
+                if (0 === this.rooms.length) {
+                    this.room = null
+
+                    return
+                }
+
+                for (let room of this.rooms) {
+                    if (null === this.room
+                        || this.room.sort > room.sort) {
+                        this.room = room
+                    }
+                }
+
+                if (0 === this.messages.length) {
+                    this.message = null
+
+                    return
+                }
+
+                for (let message of this.messages) {
+                    if (null === this.message
+                        || this.message.sort > message.sort) {
+                        this.message = message.id
+                    }
+                }
+            },
+            immediate: false,
         },
     },
     created() {
@@ -140,32 +173,6 @@ export default {
 
         if (null !== currentIssue) {
             this.attachedIssues.push(currentIssue)
-        }
-
-        let rooms = this.$store.getters['chat/listRooms'](this.client)
-
-        if (0 === rooms.length) {
-            return
-        }
-
-        for (let room of rooms) {
-            if (null === this.room
-                || this.room.sort > room.sort) {
-                this.room = room
-            }
-        }
-
-        let messages = this.$store.getters['chat/listMessages'](this.client)
-
-        if (0 === messages.length) {
-            return
-        }
-
-        for (let message of messages) {
-            if (null === this.message
-                || this.message.sort > message.sort) {
-                this.message = message
-            }
         }
     },
     methods: {

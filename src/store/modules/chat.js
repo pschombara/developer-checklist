@@ -3,7 +3,6 @@ import Helper from '../../mixins/helper'
 import {Google} from '../../mixins/chat/google'
 import {Discord} from '../../mixins/chat/discord'
 import {toRaw} from 'vue'
-import {da} from 'vuetify/locale'
 
 const chatWorker = new Worker('../..//worker/chat.js')
 
@@ -163,6 +162,13 @@ export default {
         STATUS_PROGRESS: state => {
             state.status = STATUS_PROGRESS
         },
+        CHANGE_NAME: (state, data) => {
+            if (undefined === state.clients[data.client]) {
+                return
+            }
+
+            state.clients[data.client].name = data.name
+        },
         CLEAR: state => {
             state.clients = {
                 google: {
@@ -170,12 +176,14 @@ export default {
                     messages: [],
                     rooms: [],
                     main: true,
+                    name: '',
                 },
                 discord: {
                     enabled: false,
                     messages: [],
                     rooms: [],
                     main: false,
+                    name: '',
                 },
             }
 
@@ -189,6 +197,7 @@ export default {
 
             for (const [client, data] of Object.entries(options)) {
                 commit('CHANGE_ENABLED', {client, enabled: data.enabled})
+                commit('CHANGE_NAME', {client: client, name: data.name})
 
                 if (data.main) {
                     commit('CHANGE_MAIN', client)
@@ -310,6 +319,9 @@ export default {
                 enabled: data.enabled,
             })
         },
+        updateName: ({commit}, data) => {
+            commit('CHANGE_NAME', data)
+        },
         save: ({state}) => {
             return new Promise(resolve => {
                 resolve({
@@ -325,14 +337,16 @@ export default {
         sendMessage: async ({commit, rootGetters, getters}, data) => {
             let jiraUrl = rootGetters['jira/getUrl']
             let msg = ''
+            const msgItem = getters['message'](data.client, data.message)
+            const name = getters['name'](data.client)
 
             switch (data.client) {
                 case 'google' :
-                    msg = Google.format(data.message.content, data.attachedIssues, jiraUrl)
+                    msg = Google.format(msgItem.content, data.attachedIssues, jiraUrl, name)
 
                     break
                 case 'discord':
-                    msg = Discord.format(data.message.content, data.attachedIssues, jiraUrl)
+                    msg = Discord.format(msgItem.content, data.attachedIssues, jiraUrl, name)
 
                     break
                 default:
@@ -357,7 +371,6 @@ export default {
         },
     },
     getters: {
-        listChatClients: state => Object.keys(state.clients),
         listMessages: state => client => {
             if (undefined === state.clients[client]) {
                 return []
@@ -415,6 +428,14 @@ export default {
             }
 
             return state.clients[client].rooms.find(r => r.id === id) ?? ''
+        },
+        name: state => client => {
+            console.log(client, state.clients)
+            if (undefined === state.clients[client]) {
+                return ''
+            }
+
+            return  state.clients[client].name
         },
     },
 }

@@ -157,6 +157,35 @@ export default {
                 build: data.build,
             })
         },
+        EXCHANGE_CI_BUILD: (state, data) => {
+            const issue = state.issues.find(issue => issue.name === data.issue)
+
+            if (undefined === issue) {
+                return
+            }
+
+            if (undefined === issue.ciBuilds) {
+                issue.ciBuilds = []
+            }
+
+            let replaced = false
+            let builds = []
+
+            for (let build of issue.ciBuilds) {
+                if (build.job === data.job && replaced) {
+                    continue
+                }
+
+                if (build.job === data.job) {
+                    build.build = data.build
+                    replaced = true
+                }
+
+                builds.push(build)
+            }
+
+            issue.ciBuilds = builds
+        },
         REMOVE_CI_BUILD: (state, data) => {
             const issue = state.issues.find(issue => issue.name === data.issue)
 
@@ -363,6 +392,15 @@ export default {
         },
         attachCiBuild: ({commit, dispatch}, data) => {
             commit('ADD_CI_BUILD', {
+                issue: data.issue,
+                job: data.job,
+                build: data.build,
+            })
+
+            dispatch('updateStorage', data.issue)
+        },
+        exchangeCiBuild: ({commit, dispatch}, data) => {
+            commit('EXCHANGE_CI_BUILD', {
                 issue: data.issue,
                 job: data.job,
                 build: data.build,

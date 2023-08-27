@@ -1,5 +1,5 @@
 export class Discord {
-    static format (msg, issues, jiraUrl) {
+    static format (msg, issues, jiraUrl, name) {
         const field = {
             name: 'Issues',
             value: '',
@@ -14,6 +14,10 @@ export class Discord {
             allowed_mentions: {
                 parse: ['everyone'],
             },
+        }
+
+        if ('' !== name) {
+            data['username'] = name + ' (Checklist)'
         }
 
         if ('' !== field.value) {

@@ -76,10 +76,20 @@
                                 </v-toolbar-title>
                                 <v-spacer></v-spacer>
                                 <v-btn
+                                    variant="plain"
                                     color="primary"
                                     :disabled="!readyToCopy || null === issue"
+                                    icon="fas fa-plus"
+                                    size="small"
                                     @click="attachToIssue"
-                                ><v-icon small>fas fa-plus</v-icon></v-btn>
+                                ></v-btn>
+                                <v-btn
+                                    variant="plain"
+                                    color="secondary"
+                                    :disabled="!readyToCopy || null === issue"
+                                    icon="fas fa-arrow-right-arrow-left"
+                                    @click="exchangeInIssue"
+                                ></v-btn>
                             </v-toolbar>
                         </template>
                         <template #item.job="{item}">
@@ -203,6 +213,13 @@ export default {
         },
         attachToIssue: function () {
             this.$store.dispatch('issues/attachCiBuild', {
+                issue: this.issue,
+                job: this.job,
+                build: this.build,
+            })
+        },
+        exchangeInIssue: function () {
+            this.$store.dispatch('issues/exchangeCiBuild', {
                 issue: this.issue,
                 job: this.job,
                 build: this.build,
