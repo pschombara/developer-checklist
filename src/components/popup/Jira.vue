@@ -117,7 +117,28 @@
         </v-card-text>
     </v-card>
     <v-card v-else>
-        <templates></templates>
+        <v-card-title>
+            <v-row>
+                <v-col cols="10">Open on Jira to show checklist</v-col>
+                <v-col cols="2">
+                    <v-tooltip location="bottom">
+                        <template #activator="{props}">
+                            <v-btn
+                                v-bind="props"
+                                variant="text"
+                                @click="openOptions('jira')"
+                            >
+                                <v-icon small>fas fa-cog</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Settings</span>
+                    </v-tooltip>
+                </v-col>
+            </v-row>
+        </v-card-title>
+        <v-card-item>
+            <templates></templates>
+        </v-card-item>
     </v-card>
 </template>
 
