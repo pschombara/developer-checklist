@@ -175,10 +175,10 @@ export default {
                         {
                             target: {tabId: tab.id},
                             func: () => {
-                                const ref = document.querySelector('[data-testid="ref-name"]')
+                                const ref = document.querySelector('.js-source-branch-copy')
 
                                 if (null !== ref) {
-                                    return ref.innerText
+                                    return ref.dataset.clipboardText
                                 }
 
                                 return null

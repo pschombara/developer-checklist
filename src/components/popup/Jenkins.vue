@@ -75,21 +75,33 @@
                                     ></v-autocomplete>
                                 </v-toolbar-title>
                                 <v-spacer></v-spacer>
-                                <v-btn
-                                    variant="plain"
-                                    color="primary"
-                                    :disabled="!readyToCopy || null === issue"
-                                    icon="fas fa-plus"
-                                    size="small"
-                                    @click="attachToIssue"
-                                ></v-btn>
-                                <v-btn
-                                    variant="plain"
-                                    color="secondary"
-                                    :disabled="!readyToCopy || null === issue"
-                                    icon="fas fa-arrow-right-arrow-left"
-                                    @click="exchangeInIssue"
-                                ></v-btn>
+                                <v-tooltip location="bottom">
+                                    <template #activator="{props}">
+                                        <v-btn
+                                            variant="plain"
+                                            color="primary"
+                                            :disabled="!readyToCopy || null === issue"
+                                            icon="fas fa-plus"
+                                            size="small"
+                                            v-bind="props"
+                                            @click="attachToIssue"
+                                        ></v-btn>
+                                    </template>
+                                    <span>{{ text.helpAddIssue }}</span>
+                                </v-tooltip>
+                                <v-tooltip location="bottom">
+                                    <template #activator="{props}">
+                                        <v-btn
+                                            variant="plain"
+                                            color="secondary"
+                                            :disabled="!readyToCopy || null === issue"
+                                            icon="fas fa-arrow-right-arrow-left"
+                                            @click="exchangeInIssue"
+                                        ></v-btn>
+                                    </template>
+                                    <span>{{ text.helpReplaceIssue }}</span>
+                                </v-tooltip>
+
                             </v-toolbar>
                         </template>
                         <template #item.job="{item}">
@@ -136,6 +148,10 @@ export default {
             optionsValid: false,
             issue: null,
             issues: [],
+            test: {
+                helpAddIssue: chrome.i18n.getMessage('helpAddIssue'),
+                helpReplaceIssue: chrome.i18n.getMessage('helpReplaceIssue'),
+            },
         }
     },
     computed: {

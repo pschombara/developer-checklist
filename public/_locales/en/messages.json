@@ -256,5 +256,26 @@
     },
     "ClientEnabled": {
         "message": "Client enabled"
+    },
+    "openWithIssue": {
+        "message": "Open tab with Jira issue to use checklist."
+    },
+    "startWork": {
+        "message": "Start work"
+    },
+    "stopWork": {
+        "message": "Stop work"
+    },
+    "helpWork": {
+        "message": "Issue will be preselected for CI-Builds and Merge Requests."
+    },
+    "helpPin": {
+        "message": "When issue is pinned, it is sorted to the top in the quick selection and not automatically cleaned up."
+    },
+    "helpAddIssue": {
+        "message": "Remember Issue, can be used in Jira templates."
+    },
+    "helpReplaceIssue": {
+        "message": "Replace issue, all incidents from the same job will be replaced."
     }
 }
