@@ -250,5 +250,26 @@
     },
     "ClientEnabled": {
         "message": "Client aktiviert"
+    },
+    "openWithIssue": {
+        "message": "Öffne tab mit Jira issue für Checkliste. "
+    },
+    "startWork": {
+        "message": "Arbeit starten"
+    },
+    "stopWork": {
+        "message": "Arbeit stoppen"
+    },
+    "helpWork": {
+        "message": "Das Issue wird für CI-Builds und Merge Requests vorausgewählt."
+    },
+    "helpPin": {
+        "message": "Wenn Issue gepinnt ist, wird es in der Schnellauswahl an den Anfang sortiert und nicht automatisch bereinigt."
+    },
+    "helpAddIssue": {
+        "message": "Issue merken, kann in Jira Templates verwendet werden."
+    },
+    "helpReplaceIssue": {
+        "message": "Issue ersetzen, alle Vorkommnisse vom selben Job werden ersetzt."
     }
 }

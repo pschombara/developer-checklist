@@ -13,7 +13,7 @@
                                 variant="text"
                                 @click="stopWork(issueName)"
                             >
-                                <v-icon small left>fas fa-stop</v-icon>&nbsp;Stop Work
+                                <v-icon small left>fas fa-stop</v-icon>&nbsp;{{ text.stopWork }}
                             </v-btn>
                             <v-btn
                                 v-else
@@ -22,10 +22,10 @@
                                 variant="text"
                                 @click="startWork(issueName)"
                             >
-                                <v-icon small left>fas fa-play</v-icon>&nbsp; Start Work
+                                <v-icon small left>fas fa-play</v-icon>&nbsp; {{ text.startWork }}
                             </v-btn>
                         </template>
-                        <span>Issue will be preselected for CI-Builds and Merge Requests</span>
+                        <span>{{ text.helpWork }}</span>
                     </v-tooltip>
                 </v-col>
                 <v-col cols="3">
@@ -42,7 +42,7 @@
                                 </v-icon>
                             </v-btn>
                         </template>
-                        <span>When active, issue is pinned, so it is sorted to the front in the quick select and is not automatically cleaned up.</span>
+                        <span>{{ text.helpPin }}</span>
                     </v-tooltip>
                     <v-tooltip location="bottom">
                         <template #activator="{props}">
@@ -99,16 +99,9 @@
                 </v-tabs>
 
                 <v-window v-model="tab" class="flex-grow-1">
-                    <span v-if="issueName">
-                        <v-window-item v-for="checklist in checklists" :key="checklist.uuid" :value="checklist.uuid">
-                            <checklist :uuid="checklist.uuid" :issue="issueName"></checklist>
-                        </v-window-item>
-                    </span>
-                    <span v-else>
-                        <v-window-item value="issueList">
-                            <issues></issues>
-                        </v-window-item>
-                    </span>
+                    <v-window-item v-for="checklist in checklists" :key="checklist.uuid" :value="checklist.uuid">
+                        <checklist :uuid="checklist.uuid" :issue="issueName"></checklist>
+                    </v-window-item>
                     <v-window-item value="templates">
                         <templates></templates>
                     </v-window-item>
@@ -119,7 +112,7 @@
     <v-card v-else>
         <v-card-title>
             <v-row>
-                <v-col cols="10">Open on Jira to show checklist</v-col>
+                <v-col cols="10">{{ text.openWithIssue }}</v-col>
                 <v-col cols="2">
                     <v-tooltip location="bottom">
                         <template #activator="{props}">
@@ -155,6 +148,13 @@ export default {
             checklists: [],
             checked: [],
             issueName: null,
+            text: {
+                openWithIssue: chrome.i18n.getMessage('openWithIssue'),
+                startWork: chrome.i18n.getMessage('startWork'),
+                stopWork: chrome.i18n.getMessage('stopWork'),
+                helpWork: chrome.i18n.getMessage('helpWork'),
+                helpPin: chrome.i18n.getMessage('helpPin'),
+            },
         }
     },
     computed: {
