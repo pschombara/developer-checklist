@@ -357,18 +357,18 @@ export default {
         openCategory: function (category) {
             this.dialogCategory = {
                 open: true,
-                title: this.i18n.getMessage('TitleUpdate', category.raw.name),
-                item: Object.assign({}, category.raw),
-                current: category.raw,
+                title: this.i18n.getMessage('TitleUpdate', category.name),
+                item: Object.assign({}, category),
+                current: category,
                 saveButton: this.text.save,
             }
         },
         openProject: function (project) {
             this.dialogProject = {
                 open: true,
-                title: this.i18n.getMessage('TitleUpdate', project.raw.project),
-                item: Object.assign({}, project.raw),
-                current: project.raw,
+                title: this.i18n.getMessage('TitleUpdate', project.project),
+                item: Object.assign({}, project),
+                current: project,
                 saveButton: this.text.save,
             }
         },

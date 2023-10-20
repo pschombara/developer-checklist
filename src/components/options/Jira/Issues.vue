@@ -30,11 +30,11 @@
                     </v-toolbar>
                 </template>
                 <template #item.date="{item}">
-                    {{ dateFormat(item.raw.updateDate) }}
+                    {{ dateFormat(item.updateDate) }}
                 </template>
                 <template #item.pinned="{item}">
                     <v-btn
-                        v-if="item.raw.pinned"
+                        v-if="item.pinned"
                         variant="plain"
                         color="primary"
                         icon="fas fa-thumbtack"
@@ -105,15 +105,15 @@ export default {
             })
         },
         pin: function (issue) {
-            this.$store.dispatch('issues/pin', issue.raw.name)
+            this.$store.dispatch('issues/pin', issue.name)
         },
         unpin: function (issue) {
-            this.$store.dispatch('issues/unpin', issue.raw.name)
+            this.$store.dispatch('issues/unpin', issue.name)
         },
         openDelete: function (item) {
             this.deleteIssue = {
                 open: true,
-                issue: item.raw.name,
+                issue: item.name,
             }
         },
         closeDelete: function () {

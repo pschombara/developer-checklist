@@ -159,9 +159,9 @@ export default {
             this.dialogCommand = {
                 open: true,
                 valid: true,
-                title: this.i18n.getMessage('TitleUpdate', command.raw.label),
-                item: Object.assign({}, command.raw),
-                current: command.raw,
+                title: this.i18n.getMessage('TitleUpdate', command.label),
+                item: Object.assign({}, command),
+                current: command,
                 saveButton: this.text.save,
             }
         },
@@ -186,7 +186,7 @@ export default {
             }
         },
         openDialogDeleteCommand: function (command) {
-            this.deleteCommand = Object.assign({}, command.raw)
+            this.deleteCommand = Object.assign({}, command)
 
             this.dialogDeleteCommand = true
         },

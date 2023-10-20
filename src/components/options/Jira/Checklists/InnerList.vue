@@ -75,21 +75,21 @@
                         color="tertiary"
                         @click="openRemoveEntry(item)"></v-btn>
                     <v-btn
-                        v-if="sortItem && sortItem.value !== item.value"
+                        v-if="sortItem && sortItem.id !== item.id"
                         variant="plain"
                         icon="fas fa-sort-up"
                         size="small"
-                        :disabled="item.raw.sort - 1 === sortItem.raw.sort"
+                        :disabled="item.sort - 1 === sortItem.sort"
                        @click="insertBefore(item)"></v-btn>
                     <v-btn
-                        v-if="sortItem && sortItem.value !== item.value"
+                        v-if="sortItem && sortItem.id !== item.id"
                         variant="plain"
                         icon="fas fa-sort-down"
                         size="small"
-                       :disabled="item.raw.sort + 1 === sortItem.raw.sort"
+                       :disabled="item.sort + 1 === sortItem.sort"
                         @click="insertAfter(item)"></v-btn>
                     <v-btn
-                        v-if="sortItem && sortItem.value === item.value"
+                        v-if="sortItem && sortItem.id === item.id"
                         variant="plain"
                         icon="fas fa-times"
                         size="small"
@@ -202,8 +202,8 @@ export default  {
         },
         openRemoveEntry: function (item) {
             this.deleteElement = {
-                id: item.raw.id,
-                text: item.raw.text,
+                id: item.id,
+                text: item.text,
                 open: true,
             }
         },
@@ -265,7 +265,7 @@ export default  {
         },
         openEntry: function (entry) {
             if (Object.prototype.hasOwnProperty.call(entry, 'raw')) {
-                entry = entry.raw
+                entry = entry
             }
 
             this.entry = {

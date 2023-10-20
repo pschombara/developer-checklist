@@ -105,14 +105,14 @@
                             </v-toolbar>
                         </template>
                         <template #item.job="{item}">
-                            {{buildName(item.raw.job)}}
+                            {{buildName(item.job)}}
                         </template>
                         <template #item.action="{item}">
-                            <v-btn variant="plain" icon="fas fa-copy" size="small" @click="copyBuild(item.raw.job, item.raw.build)">
+                            <v-btn variant="plain" icon="fas fa-copy" size="small" @click="copyBuild(item.job, item.build)">
                             </v-btn>
-                            <v-btn variant="plain" icon="fas fa-external-link-alt" size="small" @click="openBuild(item.raw.job, item.raw.build)">
+                            <v-btn variant="plain" icon="fas fa-external-link-alt" size="small" @click="openBuild(item.job, item.build)">
                             </v-btn>
-                            <v-btn variant="plain" icon="fas fa-trash" size="small" color="tertiary" @click="removeFromIssue(item.raw.job, item.raw.build)">
+                            <v-btn variant="plain" icon="fas fa-trash" size="small" color="tertiary" @click="removeFromIssue(item.job, item.build)">
                             </v-btn>
                         </template>
                     </v-data-table>
@@ -148,7 +148,7 @@ export default {
             optionsValid: false,
             issue: null,
             issues: [],
-            test: {
+            text: {
                 helpAddIssue: chrome.i18n.getMessage('helpAddIssue'),
                 helpReplaceIssue: chrome.i18n.getMessage('helpReplaceIssue'),
             },

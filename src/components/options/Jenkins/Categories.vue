@@ -156,9 +156,9 @@ export default {
         openCategory: function (category) {
             this.dialogCategory = {
                 open: true,
-                title: this.i18n.getMessage('TitleUpdate', category.raw.name),
-                current: category.raw,
-                item: Object.assign({}, category.raw),
+                title: this.i18n.getMessage('TitleUpdate', category.name),
+                current: category,
+                item: Object.assign({}, category),
                 saveButton: this.text.save,
             }
         },

@@ -86,21 +86,21 @@
                         color="tertiary"
                         @click="openDeleteRoom(item)"></v-btn>
                     <v-btn
-                        v-if="sortRoom && sortRoom.value !== item.value"
+                        v-if="sortRoom && sortRoom.id !== item.id"
                         variant="plain"
                         icon="fas fa-sort-up"
                         size="small"
-                        :disabled="item.raw.sort - 1 === sortRoom.raw.sort"
+                        :disabled="item.sort - 1 === sortRoom.sort"
                         @click="sortBefore(item)"></v-btn>
                     <v-btn
-                        v-if="sortRoom && sortRoom.value !== item.value"
+                        v-if="sortRoom && sortRoom.id !== item.id"
                         variant="plain"
                         icon="fas fa-sort-down"
                         size="small"
-                        :disabled="item.raw.sort + 1 === sortRoom.raw.sort"
+                        :disabled="item.sort + 1 === sortRoom.sort"
                         @click="sortAfter(item)"></v-btn>
                     <v-btn
-                        v-if="sortRoom && sortRoom.value === item.value"
+                        v-if="sortRoom && sortRoom.id === item.id"
                         variant="plain"
                         icon="fas fa-times"
                         size="small"
@@ -184,15 +184,15 @@ export default {
         sortBefore: function (item) {
             this.$store.dispatch('chat/roomSortBefore', {
                 client: this.client,
-                ref: item.value,
-                current: this.sortRoom.value,
+                ref: item.id,
+                current: this.sortRoom.id,
             })
         },
         sortAfter: function (item) {
             this.$store.dispatch('chat/roomSortAfter', {
                 client: this.client,
-                ref: item.value,
-                current: this.sortRoom.value,
+                ref: item.id,
+                current: this.sortRoom.id,
             })
         },
         itemRowSortActiveClass: function (item) {
@@ -200,15 +200,15 @@ export default {
                 return ''
             }
 
-            return item.value === this.sortRoom.value ? 'primary' : ''
+            return item.id === this.sortRoom.id ? 'primary' : ''
         },
         openRoom: function (item) {
             this.editRoom = {
                 open: true,
-                id: item.raw.id,
-                name: item.raw.name,
-                url: item.raw.url,
-                title: this.i18n.getMessage('TitleUpdate', item.raw.name),
+                id: item.id,
+                name: item.name,
+                url: item.url,
+                title: this.i18n.getMessage('TitleUpdate', item.name),
                 saveButton: this.text.save,
             }
         },
@@ -257,8 +257,8 @@ export default {
         openDeleteRoom: function (item) {
             this.deleteRoom = {
                 open: true,
-                id: item.raw.id,
-                name: item.raw.name,
+                id: item.id,
+                name: item.name,
             }
         },
         closeDeleteRoom: function () {

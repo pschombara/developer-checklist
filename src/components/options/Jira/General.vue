@@ -123,7 +123,7 @@
                                 </template>
                                 <template #item.default="{item}">
                                     <v-icon
-                                        v-if="item.raw.default"
+                                        v-if="item.default"
                                         icon="fas fa-check"
                                         size="small"
                                         color="success"
@@ -262,9 +262,9 @@ export default {
         openBoard: function (board) {
             this.dialogBoard = {
                 open: true,
-                title: this.i18n.getMessage('TitleUpdate', board.raw.key),
-                item: Object.assign({}, board.raw),
-                current: board.raw,
+                title: this.i18n.getMessage('TitleUpdate', board.key),
+                item: Object.assign({}, board),
+                current: board,
                 saveButton: this.text.save,
             }
         },
@@ -303,7 +303,7 @@ export default {
             this.closeDialogDeleteBoard()
         },
         openDialogDeleteBoard: function (board) {
-            this.deleteBoard = board.raw
+            this.deleteBoard = board
             this.dialogDeleteBoard = true
         },
         closeDialogDeleteBoard: function () {
