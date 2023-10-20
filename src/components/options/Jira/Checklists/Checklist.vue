@@ -222,7 +222,7 @@
                                 variant="plain"
                                 icon="fas fa-edit"
                                 small
-                                @click="openCategory(item.raw.uid)"></v-btn>
+                                @click="openCategory(item.uid)"></v-btn>
                             <v-btn
                                 v-if="!sortChecklist"
                                 variant="plain"
@@ -237,21 +237,21 @@
                                 color="tertiary"
                                 @click="openDialogDeleteCategory(item)"></v-btn>
                             <v-btn
-                                v-if="sortChecklist && sortChecklist.raw.uid !== item.raw.uid"
+                                v-if="sortChecklist && sortChecklist.uid !== item.uid"
                                 variant="plain"
                                 icon="fas fa-sort-up"
                                 size="small"
-                                :disabled="item.raw.sort - 1 === sortChecklist.raw.sort"
+                                :disabled="item.sort - 1 === sortChecklist.sort"
                                 @click="categoryInsertBefore(item)"></v-btn>
                             <v-btn
-                                v-if="sortChecklist && sortChecklist.raw.uid !== item.raw.uid"
+                                v-if="sortChecklist && sortChecklist.uid !== item.uid"
                                 variant="plain"
                                 icon="fas fa-sort-down"
                                 size="small"
-                                :disabled="item.raw.sort + 1 === sortChecklist.raw.sort"
+                                :disabled="item.sort + 1 === sortChecklist.sort"
                                 @click="categoryInsertAfter(item)"></v-btn>
                             <v-btn
-                                v-if="sortChecklist && sortChecklist.raw.uid === item.raw.uid"
+                                v-if="sortChecklist && sortChecklist.uid === item.uid"
                                 variant="plain"
                                 icon="fas fa-times"
                                 size="small"
@@ -426,7 +426,7 @@ export default {
         },
         openDialogDeleteCategory: function (category) {
             this.deleteCategory = {
-                uid: category.raw.uid,
+                uid: category.uid,
                 title: category.title,
                 open: true,
             }
@@ -455,15 +455,15 @@ export default {
         categoryInsertBefore: function (item) {
             this.$store.dispatch('jira/categoryMoveBefore', {
                 uuid: this.uuid,
-                current: this.sortChecklist.raw.uid,
-                ref: item.raw.uid,
+                current: this.sortChecklist.uid,
+                ref: item.uid,
             })
         },
         categoryInsertAfter: function (item) {
             this.$store.dispatch('jira/categoryMoveAfter', {
                 uuid: this.uuid,
-                current: this.sortChecklist.raw.uid,
-                ref: item.raw.uid,
+                current: this.sortChecklist.uid,
+                ref: item.uid,
             })
         },
         itemRowSortActiveClass: function (item) {

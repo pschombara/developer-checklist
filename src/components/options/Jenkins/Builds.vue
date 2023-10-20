@@ -190,10 +190,10 @@ export default {
         openBuild: function (build) {
             this.dialogBuild = {
                 open: true,
-                title: this.i18n.getMessage('TitleUpdate', build.raw.name),
+                title: this.i18n.getMessage('TitleUpdate', build.name),
                 valid: true,
-                current: build.raw,
-                item: Object.assign({}, build.raw),
+                current: build,
+                item: Object.assign({}, build),
                 saveButton: this.text.save,
             }
         },
@@ -209,7 +209,7 @@ export default {
         },
         openDialogDeleteBuild: function (build) {
             this.dialogDeleteBuild = true
-            this.deleteBuild = Object.assign({}, build.raw)
+            this.deleteBuild = Object.assign({}, build)
         },
         closeDialogBuild: function () {
             this.dialogBuild.open = false

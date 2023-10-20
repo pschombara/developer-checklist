@@ -430,7 +430,6 @@ export default {
             return state.clients[client].rooms.find(r => r.id === id) ?? ''
         },
         name: state => client => {
-            console.log(client, state.clients)
             if (undefined === state.clients[client]) {
                 return ''
             }

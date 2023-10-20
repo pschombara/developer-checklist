@@ -89,21 +89,21 @@
                         @click="openDeleteMessage(item)">
                     </v-btn>
                     <v-btn
-                        v-if="sortMessage && sortMessage.raw.id !== item.raw.id"
+                        v-if="sortMessage && sortMessage.id !== item.id"
                         variant="plain"
                         icon="fas fa-sort-up"
                         size="small"
-                        :disabled="item.raw.sort - 1 === sortMessage.raw.sort"
+                        :disabled="item.sort - 1 === sortMessage.sort"
                         @click="sortBefore(item)"></v-btn>
                     <v-btn
-                        v-if="sortMessage && sortMessage.raw.id !== item.raw.id"
+                        v-if="sortMessage && sortMessage.id !== item.id"
                         variant="plain"
                         icon="fas fa-sort-down"
                         size="small"
-                        :disabled="item.raw.sort + 1 === sortMessage.raw.sort"
+                        :disabled="item.sort + 1 === sortMessage.sort"
                         @click="sortAfter(item)"></v-btn>
                     <v-btn
-                        v-if="sortMessage && sortMessage.raw.id === item.raw.id"
+                        v-if="sortMessage && sortMessage.id === item.id"
                         variant="plain"
                         icon="fas fa-times"
                         size="small"
@@ -181,24 +181,24 @@ export default {
         sortBefore: function (item) {
             this.$store.dispatch('chat/messageSortBefore', {
                 client: this.client,
-                ref: item.raw.id,
-                current: this.sortMessage.raw.id,
+                ref: item.id,
+                current: this.sortMessage.id,
             })
         },
         sortAfter: function (item) {
             this.$store.dispatch('chat/messageSortAfter', {
                 client: this.client,
-                ref: item.raw.id,
-                current: this.sortMessage.raw.id,
+                ref: item.id,
+                current: this.sortMessage.id,
             })
         },
         openMessage: function (item) {
             this.editMessage = {
                 open: true,
-                id: item.raw.id,
-                name: item.raw.name,
-                content: item.raw.content,
-                title: this.i18n.getMessage('TitleUpdate', item.raw.name),
+                id: item.id,
+                name: item.name,
+                content: item.content,
+                title: this.i18n.getMessage('TitleUpdate', item.name),
                 saveButton: this.text.save,
             }
         },
@@ -247,8 +247,8 @@ export default {
         openDeleteMessage: function (item) {
             this.deleteMessage = {
                 open: true,
-                id: item.raw.id,
-                name: item.raw.name,
+                id: item.id,
+                name: item.name,
             }
         },
         closeDeleteMessage: function () {

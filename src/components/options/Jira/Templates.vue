@@ -95,8 +95,8 @@
                             </v-toolbar>
                         </template>
                         <template #item.template="{ item }">
-                            <div>{{ item.raw.title }}</div>
-                            <small class="text--secondary font-weight-light">{{ item.raw.subTitle }}</small>
+                            <div>{{ item.title }}</div>
+                            <small class="text--secondary font-weight-light">{{ item.subTitle }}</small>
                         </template>
                         <template #item.actions="{ item }">
                             <v-btn
@@ -119,21 +119,21 @@
                                 color="tertiary"
                                 @click="openRemoveTemplate(item)"></v-btn>
                             <v-btn
-                                v-if="sortTemplate && sortTemplate.raw.id !== item.raw.id"
+                                v-if="sortTemplate && sortTemplate.id !== item.id"
                                 variant="plain"
                                 icon="fas fa-sort-up"
                                 size="small"
-                                :disabled="item.raw.sort - 1 === sortTemplate.raw.sort"
+                                :disabled="item.sort - 1 === sortTemplate.sort"
                                 @click="insertBefore(item)"></v-btn>
                             <v-btn
-                                v-if="sortTemplate && sortTemplate.raw.id !== item.raw.id"
+                                v-if="sortTemplate && sortTemplate.id !== item.id"
                                 variant="plain"
                                 icon="fas fa-sort-down"
                                 size="small"
-                                :disabled="item.raw.sort + 1 === sortTemplate.raw.sort"
+                                :disabled="item.sort + 1 === sortTemplate.sort"
                                 @click="insertAfter(item)"> </v-btn>
                             <v-btn
-                                v-if="sortTemplate && sortTemplate.raw.id === item.raw.id"
+                                v-if="sortTemplate && sortTemplate.id === item.id"
                                 variant="plain"
                                 icon="fas fa-times"
                                 size="small"
@@ -226,17 +226,17 @@ export default {
     methods: {
         openTemplate: function (template) {
             this.editTemplate = {
-                currentTitle: null === template.raw.id ? template.raw.currentTitle : template.raw.title,
-                text: null === template.raw.id ? this.text.add : this.text.save,
-                id: template.raw.id,
-                title: template.raw.title,
-                subTitle: template.raw.subTitle,
-                content: template.raw.content,
+                currentTitle: null === template.id ? template.currentTitle : template.title,
+                text: null === template.id ? this.text.add : this.text.save,
+                id: template.id,
+                title: template.title,
+                subTitle: template.subTitle,
+                content: template.content,
                 position: {
                     start: -1,
                     end: -1,
                 },
-                sort: template.raw.sort,
+                sort: template.sort,
             }
 
             this.dialogEditTemplate = true
