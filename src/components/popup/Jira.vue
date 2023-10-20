@@ -79,14 +79,6 @@
                             <span>{{ checklist.name }}</span>
                         </v-tooltip>
                     </v-tab>
-                    <v-tab v-model="tab" value="issueList" :disabled="!!issueName">
-                        <v-tooltip location="right">
-                            <template #activator="{props}">
-                                <v-icon v-bind="props">fas fa-list</v-icon>
-                            </template>
-                            <span>Issues</span>
-                        </v-tooltip>
-                    </v-tab>
 
                     <v-tab v-model="tab" value="templates">
                         <v-tooltip location="right">
