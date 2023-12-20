@@ -5,7 +5,7 @@ import * as de from 'vuetify/lib/locale/de.mjs'
 import * as en from 'vuetify/lib/locale/en.mjs'
 import themes from './themes'
 import { md3 } from 'vuetify/blueprints'
-import { VDataTable } from 'vuetify/lib/labs/VDataTable/VDataTable.mjs'
+import { VDataTable } from 'vuetify/lib/components/VDataTable/VDataTable.mjs'
 import { aliases, fa } from 'vuetify/iconsets/fa'
 import { components } from 'vuetify/dist/vuetify'
 
