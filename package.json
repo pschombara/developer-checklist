@@ -12,12 +12,12 @@
     "dependencies": {
         "lodash": "^4.17",
         "semver": "^7.3",
-        "vue": "^3.3",
-        "vuetify": "^3.3",
-        "vuex": "^4.1"
+        "vue": "^3.4.15",
+        "vuetify": "^3.5.1",
+        "vuex": "^4.1.0"
     },
     "devDependencies": {
-        "@crxjs/vite-plugin": "^1.0",
+        "@crxjs/vite-plugin": "^1.0.14",
         "@fortawesome/fontawesome-free": "^6.4",
         "@vitejs/plugin-vue": "^4.1",
         "@vue/compiler-sfc": "^3.2",
@@ -29,7 +29,7 @@
         "postinstall-postinstall": "^2.1",
         "prettier": "^2.8",
         "sass": "^1.62",
-        "vite": "^4.3",
+        "vite": "^4.5.2",
         "vite-plugin-vuetify": "^1.0"
     }
 }
