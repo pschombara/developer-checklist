@@ -277,5 +277,8 @@
     },
     "helpReplaceIssue": {
         "message": "Replace issue, all incidents from the same job will be replaced."
+    },
+    "ciBuild": {
+        "message": "CI-Build"
     }
 }

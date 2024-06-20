@@ -60,6 +60,13 @@
                                                                 :rules="projectRules"
                                                                 :label="text.project"
                                                             ></v-text-field>
+                                                        <v-autocomplete
+                                                            v-model="dialogProject.item.ciBuild"
+                                                            :items="ciProjects"
+                                                            :label="text.ciBuild"
+                                                            item-title="name"
+                                                            item-value="uuid"
+                                                        ></v-autocomplete>
                                                     </v-card-text>
                                                     <v-card-actions>
                                                         <v-spacer></v-spacer>
@@ -228,6 +235,7 @@ export default {
                     domain: null,
                     project: null,
                     uuid: null,
+                    ciBuild: null,
                 },
                 current: null,
                 saveButton: '',
@@ -263,6 +271,7 @@ export default {
                 subTitleDeleteCategory: chrome.i18n.getMessage('SubTitleDeleteCategory'),
                 add: chrome.i18n.getMessage('Add'),
                 name: chrome.i18n.getMessage('Name'),
+                ciBuild: chrome.i18n.getMessage('CiBuild'),
             },
             i18n: chrome.i18n,
             deleteCategory: {},
@@ -274,6 +283,7 @@ export default {
                 domain: null,
                 project: null,
                 uuid: null,
+                ciBuild: null,
             },
         }
     },
@@ -293,6 +303,9 @@ export default {
         },
         projects() {
             return this.$store.getters['gitLab/getProjects']
+        },
+        ciProjects() {
+            return this.$store.getters['jenkins/getBuilds']
         },
         categoriesHeader() {
             return [
