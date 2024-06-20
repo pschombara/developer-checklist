@@ -86,6 +86,7 @@
                             {{ projectName(item.id) }}
                         </template>
                         <template #item.action="{item}">
+                            <v-btn variant="plain" icon="fab fa-jenkins" size="small" :disabled="!item.source || !hasCiBuild(item.id)" @click="openJenkinsParamPage(item.id, item.source)"></v-btn>
                             <v-btn variant="plain" icon="fas fa-copy" size="small" @click="copyMergeRequest(item.id, item.number, item.source)">
                             </v-btn>
                             <v-btn variant="plain" icon="fas fa-external-link-alt" size="small" @click="openMergeRequest(item.id, item.number)">
@@ -114,6 +115,7 @@
 <script>
 import _ from 'lodash'
 import CopiedToClipboard from './mixed/CopiedToClipboard.vue'
+import {th} from 'vuetify/locale';
 
 export default {
     name: 'PopupGitLab',
@@ -247,6 +249,19 @@ export default {
                 .then(() => {
                     this.$refs.message.show()
                 })
+        },
+        openJenkinsParamPage: function (project, branch) {
+            const ciBuildUuid = this.$store.getters['gitLab/getCiBuild'](project)
+            const ciBuild = this.$store.getters['jenkins/getBuild'](ciBuildUuid)
+
+            const url = `${this.$store.getters['jenkins/getHost']}job/${ciBuild.job}/parambuild?delay=0sec&branch=${branch}`
+
+            chrome.tabs.create({url})
+        },
+        hasCiBuild: function (project) {
+            const ciBuildUuid = this.$store.getters['gitLab/getCiBuild'](project)
+
+            return null !== this.$store.getters['jenkins/getBuild'](ciBuildUuid)
         },
     },
 }

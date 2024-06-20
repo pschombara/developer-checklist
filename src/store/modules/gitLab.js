@@ -1,5 +1,4 @@
 import {Uuid} from '../../mixins/uuid'
-import Helper from '../../mixins/helper'
 import {toRaw} from 'vue'
 
 const state = {
@@ -41,6 +40,7 @@ export default {
                 domain: data.domain,
                 project: data.project,
                 uuid: data.uuid ?? Uuid.generate(),
+                ciBuild: data.ciBuild ?? null,
             })
         },
         REMOVE_PROJECT: (state, data) => {
@@ -211,9 +211,27 @@ export default {
         },
         getCategoryNames: state => state.categories,
         getProjects: state => state.projects,
+        getProject: state => id => {
+            for (let project of state.projects) {
+                if (id === project.uuid) {
+                    return project
+                }
+            }
+
+            return null
+        },
         currentProject: state => state.currentProject,
         currentNumber: state => state.currentNumber,
         currentSource: state => state.currentSource,
+        getCiBuild: (state, getters) => id => {
+            const project = getters['getProject'](id)
+
+            if (null === project || null === project.ciBuild) {
+                return null
+            }
+
+            return project.ciBuild
+        },
         url: state => (id, number, source, withAlias) => {
             const project = state.projects.find(e => e.uuid === id)
 

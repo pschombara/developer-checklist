@@ -1,5 +1,4 @@
 import {Uuid} from '../../mixins/uuid'
-import Helper from '../../mixins/helper'
 import {toRaw} from 'vue'
 
 const state = {
@@ -209,6 +208,15 @@ export default {
             }
 
             return categories
+        },
+        getBuild: state => uuid => {
+            for (let build of state.builds) {
+                if (build.uuid === uuid) {
+                    return build
+                }
+            }
+
+            return null
         },
         getBuilds: state => state.builds,
         getCategoryNames: state => state.categories,

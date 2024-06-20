@@ -1,5 +1,5 @@
 {
-    "version": "0.7.0",
+    "version": "0.9.0",
     "general": {
         "modules": {
             "jenkins":  false,
@@ -386,50 +386,6 @@
             "main": true,
             "rooms": [],
             "messages": []
-        }
-    },
-    "chrome": {
-        "tabGroups": {
-            "grey": {
-                "title": "",
-                "active": false,
-                "urls": []
-            },
-            "blue": {
-                "title": "",
-                "active": false,
-                "urls": []
-            },
-            "red":  {
-                "title": "",
-                "active": false,
-                "urls": []
-            },
-            "yellow": {
-                "title": "",
-                "active": false,
-                "urls": []
-            },
-            "green":  {
-                "title": "",
-                "active": false,
-                "urls": []
-            },
-            "pink": {
-                "title": "",
-                "active": false,
-                "urls": []
-            },
-            "purple":  {
-                "title": "",
-                "active": false,
-                "urls": []
-            },
-            "cyan": {
-                "title": "",
-                "active": false,
-                "urls": []
-            }
         }
     }
 }
