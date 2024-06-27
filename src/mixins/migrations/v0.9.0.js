@@ -25,6 +25,6 @@ export class V0_9_0 {
             }
         }
 
-        options.version = '0.9.0'
+        options.version = '0.9.1'
     }
 }

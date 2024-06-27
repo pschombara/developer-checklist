@@ -332,13 +332,7 @@ export default {
             this.closeAlerts()
             this.$refs.importConfig.click()
         },
-        fileSelected: function (files) {
-            if (null === files) {
-                return
-            }
-
-            const file = files[0]
-
+        fileSelected: function (file) {
             if (file.size <= 0) {
                 this.dialog.error.empty = true
 
