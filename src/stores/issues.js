@@ -1,3 +1,3 @@
 import {defineStore} from 'pinia'
 
-export const issues = defineStore('issues', {})
+export const useIssues = defineStore('issues', {})

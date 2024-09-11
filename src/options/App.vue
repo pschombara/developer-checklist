@@ -68,7 +68,7 @@ const showTab = (tab) => {
 }
 
 const themeSchemaChanged = () => {
-    theme.changeColor(mainStorage.getThemeSchema)
+    theme.changeSchema(mainStorage.getThemeSchema)
 }
 
 const themeColorChanged = () => {
@@ -242,8 +242,17 @@ loading.value = false
                 </v-row>
             </v-container>
         </v-main>
+        <v-footer class="justify-end mvh-5">
+            <div>v{{mainStorage.getVersion}}</div>
+        </v-footer>
     </v-app>
 </template>
+
+<style>
+.mvh-5 {
+    max-height: 5vh;
+}
+</style>
 <!--<script>-->
 
 <!--import Jira from '../components/options/Jira.vue'-->

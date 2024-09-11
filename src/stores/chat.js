@@ -8,7 +8,7 @@ const STATUS_SUCCESS = 'success'
 const STATUS_ERROR = 'error'
 const STATUS_PROGRESS = 'progress'
 
-export const chat = defineStore('chat', {
+export const useChat = defineStore('chat', {
     state: {
         clients: {},
         status: STATUS_READY,

@@ -13,13 +13,6 @@ import {createStore} from 'vuex'
 const migration = new Migration()
 
 const state = {
-    modules: {
-        chat: false,
-        cheatSheet: false,
-        gitLab: false,
-        jenkins: false,
-        // chrome: false,
-    },
     version: migration.version,
     configTabs: {
         main: 'general',
@@ -29,56 +22,10 @@ const state = {
     currentUrl: '',
     switchTab: null,
     openTab: null,
-    themeSchema: 'system',
-    themeColor: 'blue',
-    optionTabs: [
-        { id: 'general', name: chrome.i18n.getMessage('general'), icon: 'fas fa-cogs', settings: true },
-        { id: 'jira', name: 'Jira', icon: 'fab fa-jira', settings: true },
-        { id: 'jenkins', name: 'Jenkins', icon: 'fab fa-jenkins', settings: true },
-        { id: 'gitLab', name: 'GitLab', icon: 'fab fa-gitlab', settings: true },
-        { id: 'chat', name: 'Chat', icon: 'fas fa-comment', settings: true },
-        { id: 'cheatSheet', name: 'Cheat Sheet', icon: 'fas fa-terminal', settings: true },
-        // { id: 'chrome', name: 'Chrome', icon: 'fab fa-chrome', settings: true },
-        { id: 'about', name: 'About', icon: 'fas fa-info-circle', settings: false },
-    ],
 }
 
 const store = createStore({
-    strict: import.meta.env.NODE_ENV !== 'production',
     state,
-    mutations: {
-        SET_MODULES: (state, modules) => {
-            for (let module in modules) {
-                if (undefined !== state.modules[module]) {
-                    state.modules[module] = modules[module]
-                }
-            }
-        },
-        SWITCH_MODULE: (state, data) => {
-            state.modules[data.module] = data.value
-        },
-        CHANGE_OPTIONS_VALID: (state, valid) => {
-            state.optionsValid = valid
-        },
-        SET_CURRENT_ISSUE: (state, issue) => {
-            state.currentIssue = issue
-        },
-        SET_SWITCH_TAB: (state, tab) => {
-            state.switchTab = tab
-        },
-        SET_URL: (state, url) => {
-            state.currentUrl = url
-        },
-        CHANGE_OPEN_TAB: (state, tab) => {
-            state.openTab = tab
-        },
-        CHANGE_THEME_SCHEMA: (state, schema) => {
-            state.themeSchema = schema
-        },
-        CHANGE_THEME_COLOR: (state, color) => {
-            state.themeColor = color
-        },
-    },
     actions: {
         load: ({ commit, dispatch, rootGetters }) => {
             return new Promise(resolve => {

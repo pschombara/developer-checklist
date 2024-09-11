@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia'
 import Helper from '../mixins/helper.js'
 
-export const jira = defineStore('jira', {
+export const useJira = defineStore('jira', {
     state: {
         url: '',
         cleanup: 7,

@@ -1,3 +1,3 @@
 import {defineStore} from 'pinia'
 
-export const gitlab = defineStore('gitlab', {})
+export const useGitLab = defineStore('gitLab', {})

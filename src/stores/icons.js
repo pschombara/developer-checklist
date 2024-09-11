@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia'
 
-export const icons = defineStore('icons', {
+export const useIcons = defineStore('icons', {
     state: {
         icons: [
             'ad',

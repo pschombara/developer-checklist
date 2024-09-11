@@ -41,6 +41,7 @@ export const useMainStorage = defineStore('mainStorage', {
         getOptionTabs: (state) => state.optionTabs,
         getThemeSchema: (state) => state.themeSchema,
         getThemeColor: (state) => state.themeColor,
+        getVersion: (state) => state.version,
     },
     actions: {
         async load () {
@@ -68,6 +69,7 @@ export const useMainStorage = defineStore('mainStorage', {
                 this.modules = result.optionsMain.modules
                 this.themeSchema = result.optionsMain.theme.schema
                 this.themeColor = result.optionsMain.theme.color
+                window.dispatchEvent(new CustomEvent('themeChanged', {detail: {schema: this.themeSchema, color: this.themeColor}}))
             })
         },
         async autoChangeOpenTab () {
