@@ -57,9 +57,6 @@ const store = createStore({
         SWITCH_MODULE: (state, data) => {
             state.modules[data.module] = data.value
         },
-        SET_TAB_CONFIG_MAIN: (state, tab) => {
-            state.configTabs.main = tab
-        },
         CHANGE_OPTIONS_VALID: (state, valid) => {
             state.optionsValid = valid
         },
@@ -84,23 +81,6 @@ const store = createStore({
     },
     actions: {
         load: ({ commit, dispatch, rootGetters }) => {
-            chrome.storage.onChanged.addListener((changes, area) => {
-                if ('local' !== area ) {
-                    return
-                }
-                if (changes.optionsTab?.newValue) {
-                    commit('SET_TAB_CONFIG_MAIN', changes.optionsTab.newValue)
-
-                    if ('' === changes.optionsTab.newValue) {
-                        return
-                    }
-
-                    return dispatch('autoChangeOpenTab')
-                } else if (changes.theme?.newValue) {
-                    window.dispatchEvent(new CustomEvent('themeChanged', {detail: changes.theme.newValue}))
-                }
-            })
-
             return new Promise(resolve => {
                 chrome.storage.local.get(null, storageData => {
                     const promises = []
@@ -362,7 +342,6 @@ const store = createStore({
         gitLab,
         jenkins,
         jira,
-        icons,
         issues,
     },
 })

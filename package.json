@@ -1,6 +1,6 @@
 {
     "name": "developer-checklist",
-    "version": "0.9.1",
+    "version": "0.10.0",
     "private": true,
     "type": "module",
     "scripts": {
@@ -11,10 +11,10 @@
     },
     "dependencies": {
         "lodash": "^4.17",
+        "pinia": "^2.2.2",
         "semver": "^7.3",
         "vue": "^3.4.15",
-        "vuetify": "^3.5.1",
-        "vuex": "^4.1.0"
+        "vuetify": "^3.5.1"
     },
     "devDependencies": {
         "@crxjs/vite-plugin": "^1.0.14",

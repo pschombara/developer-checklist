@@ -1,12 +1,92 @@
+<script setup>
+import {computed, ref} from 'vue'
+import Theme from '../mixins/theme'
+import {useMainStorage} from '../stores/mainStorage'
+import OptionGeneral from '../components/options/OptionGeneral.vue'
+
+const loading = ref(true)
+
+const text = {
+    title: chrome.i18n.getMessage('extOptionsTitle'),
+    save: chrome.i18n.getMessage('Save'),
+    export: chrome.i18n.getMessage('Export'),
+    import: chrome.i18n.getMessage('Import'),
+    restore: chrome.i18n.getMessage('Restore'),
+    reset: chrome.i18n.getMessage('Reset'),
+    cancel: chrome.i18n.getMessage('Cancel'),
+    close: chrome.i18n.getMessage('Close'),
+    importWrongType: chrome.i18n.getMessage('importWrongType'),
+    settingsSaved: chrome.i18n.getMessage('settingsSaved'),
+}
+
+const exportModules = ref([])
+const importModules = ref([])
+const importAvailableModules = ref([])
+const importOptions = ref({})
+
+const dialog = ref({
+    restore: false,
+    export: false,
+    import: false,
+    error: {
+        empty: false,
+        type: false,
+    },
+})
+
+const alert = ref({
+    import: {
+        type: false,
+    },
+    saved: false,
+})
+
+const mainStorage = useMainStorage()
+
+const theme = new Theme()
+theme.registerThemeChanged(mainStorage.getThemeSchema, mainStorage.getThemeColor)
+
+const modules = computed(() => {
+    return mainStorage.getModules
+})
+
+const tab = computed( {
+    get() {
+        return mainStorage.getOpenTab
+    },
+    set(value) {
+        mainStorage.changeOpenTab(value)
+    },
+})
+
+const tabs = computed(() => {
+    return mainStorage.getOptionTabs
+})
+
+const showTab = (tab) => {
+    return modules.value[tab.id] ?? true
+}
+
+const themeSchemaChanged = () => {
+    theme.changeColor(mainStorage.getThemeSchema)
+}
+
+const themeColorChanged = () => {
+    theme.changeColor(mainStorage.getThemeColor)
+}
+
+mainStorage.load()
+loading.value = false
+
+</script>
+
 <template>
     <v-app>
         <v-main>
             <v-container fluid>
-                <div v-if="loading">
-                    <v-overlay opacity=".75">
-                        <v-progress-circular size="256" width="10" color="orange" indeterminate=""></v-progress-circular>
-                    </v-overlay>
-                </div>
+                <v-overlay v-model="loading" opacity=".75" class="align-center justify-center">
+                    <v-progress-circular size="256" width="10" color="orange" indeterminate=""></v-progress-circular>
+                </v-overlay>
                 <v-alert v-model="alert.saved" type="success" dismissible>
                     {{text.settingsSaved}}
                 </v-alert>
@@ -136,26 +216,26 @@
                         <v-card-text>
                             <v-window v-model="tab">
                                 <v-window-item value="general">
-                                    <general @theme-color-changed="themeSchemaChanged" @theme-schema-changed="themeColorChanged"></general>
+                                    <OptionGeneral @theme-color-changed="themeColorChanged" @theme-schema-changed="themeSchemaChanged"></OptionGeneral>
                                 </v-window-item>
-                                <v-window-item value="jira">
-                                    <jira></jira>
-                                </v-window-item>
-                                <v-window-item value="jenkins">
-                                    <jenkins></jenkins>
-                                </v-window-item>
-                                <v-window-item value="gitLab">
-                                    <git-lab></git-lab>
-                                </v-window-item>
-                                <v-window-item value="chat">
-                                    <chat></chat>
-                                </v-window-item>
-                                <v-window-item value="cheatSheet">
-                                    <cheat-sheet></cheat-sheet>
-                                </v-window-item>
-                                <v-window-item value="about">
-                                    <about></about>
-                                </v-window-item>
+<!--                                <v-window-item value="jira">-->
+<!--                                    <jira></jira>-->
+<!--                                </v-window-item>-->
+<!--                                <v-window-item value="jenkins">-->
+<!--                                    <jenkins></jenkins>-->
+<!--                                </v-window-item>-->
+<!--                                <v-window-item value="gitLab">-->
+<!--                                    <git-lab></git-lab>-->
+<!--                                </v-window-item>-->
+<!--                                <v-window-item value="chat">-->
+<!--                                    <chat></chat>-->
+<!--                                </v-window-item>-->
+<!--                                <v-window-item value="cheatSheet">-->
+<!--                                    <cheat-sheet></cheat-sheet>-->
+<!--                                </v-window-item>-->
+<!--                                <v-window-item value="about">-->
+<!--                                    <about></about>-->
+<!--                                </v-window-item>-->
                             </v-window>
                         </v-card-text>
                     </v-col>
@@ -164,232 +244,194 @@
         </v-main>
     </v-app>
 </template>
-<script>
+<!--<script>-->
 
-import Jira from '../components/options/Jira.vue'
-import Jenkins from '../components/options/Jenkins.vue'
-import GitLab from '../components/options/GitLab.vue'
-import Chat from '../components/options/Chat.vue'
-import CheatSheet from '../components/options/CheatSheet.vue'
-import About from '../components/options/About.vue'
-import Theme from '../mixins/theme'
-/* import Chrome from '../components/options/Chrome.vue' */
-import semver from 'semver'
-import General from '../components/options/General.vue'
-import Migration from '../mixins/migration'
+<!--import Jira from '../components/options/Jira.vue'-->
+<!--import Jenkins from '../components/options/Jenkins.vue'-->
+<!--import GitLab from '../components/options/GitLab.vue'-->
+<!--import Chat from '../components/options/Chat.vue'-->
+<!--import CheatSheet from '../components/options/CheatSheet.vue'-->
+<!--import About from '../components/options/About.vue'-->
+<!--import Theme from '../mixins/theme'-->
+<!--/* import Chrome from '../components/options/Chrome.vue' */-->
+<!--import semver from 'semver'-->
+<!--import Migration from '../mixins/migration'-->
 
-export default {
-    name: 'App',
-    components: {General, Jira, Jenkins, GitLab, Chat, CheatSheet, /*Chrome,*/ About },
-    data() {
-        return {
-            loading: true,
-            text: {
-                title: chrome.i18n.getMessage('extOptionsTitle'),
-                save: chrome.i18n.getMessage('Save'),
-                export: chrome.i18n.getMessage('Export'),
-                import: chrome.i18n.getMessage('Import'),
-                restore: chrome.i18n.getMessage('Restore'),
-                reset: chrome.i18n.getMessage('Reset'),
-                cancel: chrome.i18n.getMessage('Cancel'),
-                close: chrome.i18n.getMessage('Close'),
-                importWrongType: chrome.i18n.getMessage('importWrongType'),
-                settingsSaved: chrome.i18n.getMessage('settingsSaved'),
-            },
-            exportModules: [],
-            importModules: [],
-            importAvailableModules: [],
-            importOptions: {},
-            dialog: {
-                restore: false,
-                export: false,
-                import: false,
-                error: {
-                    empty: false,
-                    type: false,
-                },
-            },
-            alert: {
-                import: {
-                    type: false,
-                },
-                saved: false,
-            },
-            theme: null,
-        }
-    },
-    computed: {
-        modules()  {
-            return this.$store.getters['modules']
-        },
-        tab: {
-            get() {
-                return this.$store.getters['openTab']
-            },
-            set(value) {
-                this.$store.dispatch('openTab', value)
-            },
-        },
-        tabs() {
-            return this.$store.getters['optionTabs']
-        },
-        settings() {
-            return this.$store.getters['optionTabs'].filter(tab => tab.settings)
-        },
-    },
-    created() {
-        this.load()
+<!--export default {-->
+<!--    name: 'App',-->
+<!--    components: {General, Jira, Jenkins, GitLab, Chat, CheatSheet, /*Chrome,*/ About },-->
+<!--    computed: {-->
+<!--        modules()  {-->
+<!--            return this.$store.getters['modules']-->
+<!--        },-->
+<!--        tab: {-->
+<!--            get() {-->
+<!--                return this.$store.getters['openTab']-->
+<!--            },-->
+<!--            set(value) {-->
+<!--                this.$store.dispatch('openTab', value)-->
+<!--            },-->
+<!--        },-->
+<!--        tabs() {-->
+<!--            return this.$store.getters['optionTabs']-->
+<!--        },-->
+<!--        settings() {-->
+<!--            return this.$store.getters['optionTabs'].filter(tab => tab.settings)-->
+<!--        },-->
+<!--    },-->
+<!--    created() {-->
+<!--        this.load()-->
 
-        this.theme = new Theme()
-        this.theme.registerThemeChanged(this, this.$store.getters['themeSchema'], this.$store.getters['themeColor'])
-    },
-    methods: {
-        load: function () {
-            this.$store.dispatch('load').then(() => {
-                this.loading = false
+<!--        this.theme = new Theme()-->
+<!--        this.theme.registerThemeChanged(this, this.$store.getters['themeSchema'], this.$store.getters['themeColor'])-->
+<!--    },-->
+<!--    methods: {-->
+<!--        load: function () {-->
+<!--            this.$store.dispatch('load').then(() => {-->
+<!--                this.loading = false-->
 
-                this.exportModules.push('general')
-                this.exportModules.push('jira')
+<!--                this.exportModules.push('general')-->
+<!--                this.exportModules.push('jira')-->
 
-                for (let [module, active] of Object.entries(this.modules)) {
-                    if (active) {
-                        this.exportModules.push(module)
-                    }
-                }
-            })
-        },
-        showTab: function (tab) {
-            if (Object.prototype.hasOwnProperty.call(this.modules, tab.id)) {
-                return this.modules[tab.id]
-            } else {
-                return true
-            }
-        },
-        themeSchemaChanged: function (schema) {
-            this.theme.changeSchema(schema)
-        },
-        themeColorChanged: function (color) {
-            this.theme.changeColor(color)
-        },
-        openRestore: function () {
-            this.dialog.restore = true
-        },
-        closeRestore: function () {
-            this.dialog.restore = false
-        },
-        restore: function () {
-            this.loading = true
-            this.closeRestore()
+<!--                for (let [module, active] of Object.entries(this.modules)) {-->
+<!--                    if (active) {-->
+<!--                        this.exportModules.push(module)-->
+<!--                    }-->
+<!--                }-->
+<!--            })-->
+<!--        },-->
+<!--        showTab: function (tab) {-->
+<!--            if (Object.prototype.hasOwnProperty.call(this.modules, tab.id)) {-->
+<!--                return this.modules[tab.id]-->
+<!--            } else {-->
+<!--                return true-->
+<!--            }-->
+<!--        },-->
+<!--        themeSchemaChanged: function (schema) {-->
+<!--            this.theme.changeSchema(schema)-->
+<!--        },-->
+<!--        themeColorChanged: function (color) {-->
+<!--            this.theme.changeColor(color)-->
+<!--        },-->
+<!--        openRestore: function () {-->
+<!--            this.dialog.restore = true-->
+<!--        },-->
+<!--        closeRestore: function () {-->
+<!--            this.dialog.restore = false-->
+<!--        },-->
+<!--        restore: function () {-->
+<!--            this.loading = true-->
+<!--            this.closeRestore()-->
 
-            this.$store.dispatch('restore').then(() => {
-                this.load()
-            })
-        },
-        save: function () {
-            this.closeAlerts()
-            this.loading = true
+<!--            this.$store.dispatch('restore').then(() => {-->
+<!--                this.load()-->
+<!--            })-->
+<!--        },-->
+<!--        save: function () {-->
+<!--            this.closeAlerts()-->
+<!--            this.loading = true-->
 
-            this.$store.dispatch('saveOptions').then(() => {
-                this.loading = false
-                this.alert.saved = true
-            })
-        },
-        saveExportStart: function () {
-            this.closeAlerts()
-            this.dialog.export = true
-        },
-        cancelExport: function () {
-            this.dialog.export = false
-        },
-        cancelImport: function () {
-            this.dialog.import = false
-            this.$refs.importConfig.reset()
-            this.importOptions = {}
-        },
-        saveExport: function () {
-            this.loading = true
+<!--            this.$store.dispatch('saveOptions').then(() => {-->
+<!--                this.loading = false-->
+<!--                this.alert.saved = true-->
+<!--            })-->
+<!--        },-->
+<!--        saveExportStart: function () {-->
+<!--            this.closeAlerts()-->
+<!--            this.dialog.export = true-->
+<!--        },-->
+<!--        cancelExport: function () {-->
+<!--            this.dialog.export = false-->
+<!--        },-->
+<!--        cancelImport: function () {-->
+<!--            this.dialog.import = false-->
+<!--            this.$refs.importConfig.reset()-->
+<!--            this.importOptions = {}-->
+<!--        },-->
+<!--        saveExport: function () {-->
+<!--            this.loading = true-->
 
-            this.$store.dispatch('saveExportOptions', this.exportModules).then(data => {
-                const temp = document.createElement('a')
-                temp.setAttribute(
-                    'href',
-                    'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data)),
-                )
+<!--            this.$store.dispatch('saveExportOptions', this.exportModules).then(data => {-->
+<!--                const temp = document.createElement('a')-->
+<!--                temp.setAttribute(-->
+<!--                    'href',-->
+<!--                    'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data)),-->
+<!--                )-->
 
-                temp.setAttribute('download', 'developer-checklist-options')
-                temp.classList.add('d-none')
+<!--                temp.setAttribute('download', 'developer-checklist-options')-->
+<!--                temp.classList.add('d-none')-->
 
-                document.body.appendChild(temp)
-                temp.click()
-                document.body.removeChild(temp)
+<!--                document.body.appendChild(temp)-->
+<!--                temp.click()-->
+<!--                document.body.removeChild(temp)-->
 
-                this.loading = false
-                this.alert.saved = true
-                this.dialog.export = false
-            })
-        },
-        openFileInput: function () {
-            this.closeAlerts()
-            this.$refs.importConfig.click()
-        },
-        fileSelected: function (file) {
-            if (file.size <= 0) {
-                this.dialog.error.empty = true
+<!--                this.loading = false-->
+<!--                this.alert.saved = true-->
+<!--                this.dialog.export = false-->
+<!--            })-->
+<!--        },-->
+<!--        openFileInput: function () {-->
+<!--            this.closeAlerts()-->
+<!--            this.$refs.importConfig.click()-->
+<!--        },-->
+<!--        fileSelected: function (file) {-->
+<!--            if (file.size <= 0) {-->
+<!--                this.dialog.error.empty = true-->
 
-                return
-            }
+<!--                return-->
+<!--            }-->
 
-            if ('application/json' !== file.type) {
-                this.dialog.error.type = true
+<!--            if ('application/json' !== file.type) {-->
+<!--                this.dialog.error.type = true-->
 
-                return
-            }
+<!--                return-->
+<!--            }-->
 
-            const fileReader = new FileReader()
+<!--            const fileReader = new FileReader()-->
 
-            fileReader.addEventListener('load', e => {
-                try {
-                    let data = JSON.parse(e.target.result.toString())
-                    const migration = new Migration()
+<!--            fileReader.addEventListener('load', e => {-->
+<!--                try {-->
+<!--                    let data = JSON.parse(e.target.result.toString())-->
+<!--                    const migration = new Migration()-->
 
-                    if (this.validateImportFile(data)) {
-                        data = migration.migrate(data.options, data.exported, false)
-                        this.importAvailableModules = data.exported
-                        this.importModules = data.exported
-                        this.importOptions = data.options
-                        this.dialog.import = true
-                    }
-                } catch (e) {
-                    // eslint-disable-next-line no-console
-                    console.error(e)
-                }
-            })
+<!--                    if (this.validateImportFile(data)) {-->
+<!--                        data = migration.migrate(data.options, data.exported, false)-->
+<!--                        this.importAvailableModules = data.exported-->
+<!--                        this.importModules = data.exported-->
+<!--                        this.importOptions = data.options-->
+<!--                        this.dialog.import = true-->
+<!--                    }-->
+<!--                } catch (e) {-->
+<!--                    // eslint-disable-next-line no-console-->
+<!--                    console.error(e)-->
+<!--                }-->
+<!--            })-->
 
-            fileReader.readAsText(file, 'utf-8')
-        },
-        validateImportFile: function (data) {
-            const manifest = chrome.runtime.getManifest()
+<!--            fileReader.readAsText(file, 'utf-8')-->
+<!--        },-->
+<!--        validateImportFile: function (data) {-->
+<!--            const manifest = chrome.runtime.getManifest()-->
 
-            return typeof data === 'object'
-                && Object.prototype.hasOwnProperty.call(data, 'exported')
-                && Object.prototype.hasOwnProperty.call(data, 'options')
-                && semver.lte('0.6.0', manifest.version, 1)
-        },
-        closeAlerts: function () {
-            this.alert.import.type = false
-            this.alert.saved = false
-        },
-        storeImportedOptions: function () {
-            this.dialog.import = false
-            this.loading = true
+<!--            return typeof data === 'object'-->
+<!--                && Object.prototype.hasOwnProperty.call(data, 'exported')-->
+<!--                && Object.prototype.hasOwnProperty.call(data, 'options')-->
+<!--                && semver.lte('0.6.0', manifest.version, 1)-->
+<!--        },-->
+<!--        closeAlerts: function () {-->
+<!--            this.alert.import.type = false-->
+<!--            this.alert.saved = false-->
+<!--        },-->
+<!--        storeImportedOptions: function () {-->
+<!--            this.dialog.import = false-->
+<!--            this.loading = true-->
 
-            this.$store.dispatch('import', {
-                options: this.importOptions,
-                importSettings: this.importModules,
-            }).then(() => {
-                this.loading = false
-            })
-        },
-    },
-}
-</script>
+<!--            this.$store.dispatch('import', {-->
+<!--                options: this.importOptions,-->
+<!--                importSettings: this.importModules,-->
+<!--            }).then(() => {-->
+<!--                this.loading = false-->
+<!--            })-->
+<!--        },-->
+<!--    },-->
+<!--}-->
+<!--</script>-->

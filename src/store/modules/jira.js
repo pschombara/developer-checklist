@@ -3,15 +3,6 @@ import {Uuid} from '../..//mixins/uuid'
 import {toRaw} from 'vue'
 import checklists from '../../components/options/Jira/Checklists.vue'
 
-const state = {
-    url: '',
-    cleanup: 7,
-    maximumIssues: 6,
-    boards: [],
-    checklists: [],
-    templates: [],
-}
-
 export default {
     strict: import.meta.env.NODE_ENV !== 'production',
     namespaced: true,
@@ -223,30 +214,7 @@ export default {
     },
     actions: {
         init: ({commit}, options) => {
-            return new Promise(resolve => {
-                commit('CLEAR')
 
-                commit('SET_URL', options.url)
-                commit('SET_CLEANUP', options.cleanup)
-                commit('SET_MAXIMUM_ISSUES', options.maximumIssues)
-
-                for (let board of options.boards) {
-                    commit('ADD_BOARD', {
-                        key: board.key,
-                        default: board.default,
-                    })
-                }
-
-                for (let checklist of options.checklists) {
-                    commit('ADD_CHECKLIST', checklist)
-                }
-
-                for (let template of options.templates) {
-                    commit('ADD_TEMPLATE', template)
-                }
-
-                resolve()
-            })
         },
         updateUrl: ({commit}, url) => {
             commit('SET_URL', url)

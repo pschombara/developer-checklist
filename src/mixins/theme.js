@@ -1,10 +1,13 @@
+import vuetify from '../plugins/vuetify.js'
+import themes from '../plugins/themes.js'
+
 export default class Theme {
     constructor() {
         this.registered = false
         this.schema = 'system'
         this.color = 'blue'
     }
-    registerThemeChanged(vue, schema, color) {
+    registerThemeChanged(schema, color) {
         this.schema = schema
         this.color = color
 
@@ -13,7 +16,7 @@ export default class Theme {
                 return
             }
 
-            vue.$vuetify.theme.global.name = this.color + (e.matches ? 'Dark' : 'Light')
+            vuetify.theme.global.name = this.color + (e.matches ? 'Dark' : 'Light')
         })
 
         this.registered = true

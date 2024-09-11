@@ -90,13 +90,6 @@ export default {
                 message.content = data.message.content
             }
         },
-        CHANGE_ENABLED: (state, data) => {
-            if (undefined === state.clients[data.client]) {
-                return
-            }
-
-            state.clients[data.client].enabled = data.enabled
-        },
         CHANGE_MAIN: (state, client) => {
             if (undefined === state.clients[client]) {
                 return
@@ -192,53 +185,6 @@ export default {
     },
     actions: {
         // options
-        init: ({commit}, options) => {
-            commit('CLEAR')
-
-            for (const [client, data] of Object.entries(options)) {
-                commit('CHANGE_ENABLED', {client, enabled: data.enabled})
-                commit('CHANGE_NAME', {client: client, name: data.name})
-
-                if (data.main) {
-                    commit('CHANGE_MAIN', client)
-                }
-
-                for (let message of data.messages) {
-                    commit('ADD_MESSAGE', {
-                        client,
-                        message: {
-                            id: message.id,
-                            name: message.name,
-                            content: message.content,
-                            sort: message.sort,
-                        },
-                    })
-                }
-
-                for (let room of data.rooms) {
-                    commit('ADD_ROOM', {
-                        client,
-                        room: {
-                            id: room.id,
-                            name: room.name,
-                            url: room.url,
-                            sort: room.sort,
-                        },
-                    })
-                }
-            }
-        },
-        addRoom: ({commit, getters}, data) => {
-            commit('ADD_ROOM', {
-                client: data.client,
-                room: {
-                    id: Uuid.generate(),
-                    name: data.room.name,
-                    url: data.room.url,
-                    sort: Number.MAX_SAFE_INTEGER,
-                },
-            })
-        },
         updateRoom: ({commit}, data) => {
             commit('UPDATE_ROOM', {
                 client: data.client,

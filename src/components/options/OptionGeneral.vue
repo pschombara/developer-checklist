@@ -1,3 +1,32 @@
+<script setup>
+
+import {computed, ref} from 'vue'
+import {useMainStorage} from '../../stores/mainStorage.js'
+import {value} from 'lodash/seq.js'
+
+defineEmits(['themeSchemaChanged', 'themeColorChanged'])
+
+const mainStorage = useMainStorage()
+
+const themeSchema = computed({
+    get: () => mainStorage.getThemeSchema,
+    set: (value) => mainStorage.setThemeSchema(value),
+})
+const themeColor = computed({
+    get: () => mainStorage.getThemeColor,
+    set: (value) => mainStorage.setThemeColor(value),
+})
+const modules = computed(() => mainStorage.getModules)
+
+const switchChanged = (modul, event) => {
+    mainStorage.switchModule(modul, event.target.checked)
+}
+
+const test = () => {
+    console.log('test')
+}
+</script>
+
 <template>
     <v-card flat class="mt-5">
         <v-card-text>
@@ -28,6 +57,7 @@
                         :items="['system', 'light', 'dark']"
                         variant="underlined"
                         class="mt-3"
+                        @update:model-value="$emit('themeSchemaChanged')"
                     ></v-select>
                     <v-select
                         v-model="themeColor"
@@ -35,44 +65,10 @@
                         :items="['blue', 'orange', 'green', 'yellow']"
                         variant="underlined"
                         class="mt-2"
+                        @update:model-value="$emit('themeColorChanged')"
                     ></v-select>
                 </v-col>
             </v-row>
         </v-card-text>
     </v-card>
 </template>
-
-<script>
-export default {
-    name: 'OptionGeneral',
-    emits: ['themeSchemaChanged', 'themeColorChanged'],
-    computed: {
-        modules() {
-            return this.$store.getters['modules']
-        },
-        themeSchema: {
-            get() {
-                return this.$store.getters['themeSchema']
-            },
-            set(value) {
-                this.$store.dispatch('changeThemeSchema', value)
-                this.$emit('themeSchemaChanged', value)
-            },
-        },
-        themeColor: {
-            get() {
-                return this.$store.getters['themeColor']
-            },
-            set(value) {
-                this.$store.dispatch('changeThemeColor', value)
-                this.$emit('themeColorChanged', value)
-            },
-        },
-    },
-    methods: {
-        switchChanged: function (module, event) {
-            this.$store.dispatch('switchModule', {module, value: event.target.checked})
-        },
-    },
-}
-</script>
