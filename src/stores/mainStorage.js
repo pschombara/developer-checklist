@@ -1,6 +1,5 @@
 import {defineStore} from 'pinia'
 import Migration from '../mixins/migration.js'
-import {th} from 'vuetify/locale'
 
 const migration = new Migration()
 

@@ -123,26 +123,7 @@ export default {
 
             Helper.sortBefore(state.clients[data.client].rooms, current, reference, 'id')
         },
-        SORT_MESSAGE_AFTER: (state, data) => {
-            if (undefined === state.clients[data.client]) {
-                return
-            }
 
-            const current = state.clients[data.client].messages.find(message => message.id === data.current)
-            const reference = state.clients[data.client].messages.find(message => message.id === data.ref)
-
-            Helper.sortAfter(state.clients[data.client].messages, current, reference, 'id')
-        },
-        SORT_MESSAGE_BEFORE: (state, data) => {
-            if (undefined === state.clients[data.client]) {
-                return
-            }
-
-            const current = state.clients[data.client].messages.find(message => message.id === data.current)
-            const reference = state.clients[data.client].messages.find(message => message.id === data.ref)
-
-            Helper.sortBefore(state.clients[data.client].messages, current, reference, 'id')
-        },
         STATUS_READY: state => {
             state.status = STATUS_READY
         },

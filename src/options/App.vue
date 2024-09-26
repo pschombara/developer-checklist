@@ -3,6 +3,7 @@ import {computed, ref} from 'vue'
 import Theme from '../mixins/theme'
 import {useMainStorage} from '../stores/mainStorage'
 import OptionGeneral from '../components/options/OptionGeneral.vue'
+import ChatOptionsView from '../components/options/ChatOptionsView.vue'
 
 const loading = ref(true)
 
@@ -218,24 +219,24 @@ loading.value = false
                                 <v-window-item value="general">
                                     <OptionGeneral @theme-color-changed="themeColorChanged" @theme-schema-changed="themeSchemaChanged"></OptionGeneral>
                                 </v-window-item>
-<!--                                <v-window-item value="jira">-->
+                                <v-window-item value="jira">
 <!--                                    <jira></jira>-->
-<!--                                </v-window-item>-->
-<!--                                <v-window-item value="jenkins">-->
+                                </v-window-item>
+                                <v-window-item value="jenkins">
 <!--                                    <jenkins></jenkins>-->
-<!--                                </v-window-item>-->
-<!--                                <v-window-item value="gitLab">-->
+                                </v-window-item>
+                                <v-window-item value="gitLab">
 <!--                                    <git-lab></git-lab>-->
-<!--                                </v-window-item>-->
-<!--                                <v-window-item value="chat">-->
-<!--                                    <chat></chat>-->
-<!--                                </v-window-item>-->
-<!--                                <v-window-item value="cheatSheet">-->
+                                </v-window-item>
+                                <v-window-item value="chat">
+                                    <ChatOptionsView />
+                                </v-window-item>
+                                <v-window-item value="cheatSheet">
 <!--                                    <cheat-sheet></cheat-sheet>-->
-<!--                                </v-window-item>-->
-<!--                                <v-window-item value="about">-->
+                                </v-window-item>
+                                <v-window-item value="about">
 <!--                                    <about></about>-->
-<!--                                </v-window-item>-->
+                                </v-window-item>
                             </v-window>
                         </v-card-text>
                     </v-col>

@@ -1,3 +1,38 @@
+<script setup>
+import {useChatStorage} from '../../stores/chat.js'
+import {ref} from 'vue'
+import ChatRooms from './Chat/Rooms.vue'
+import ChatMessages from './Chat/ChatMessages.vue'
+import ChatGeneral from './Chat/ChatGeneral.vue'
+
+const chatStorage = useChatStorage()
+
+const clients = [
+    {
+        id: 0,
+        name: 'google',
+        icon: 'fas fa-comment',
+        urlStart: 'https://chat.googleapis.com/v1',
+    },
+    {
+        id: 1,
+        name: 'discord',
+        icon: 'fab fa-discord',
+        urlStart: 'https://discord.com/api/webhooks/',
+    },
+]
+
+const selectedClient = ref()
+
+const text = {
+    rooms: chrome.i18n.getMessage('Rooms'),
+    messages: chrome.i18n.getMessage('Messages'),
+    general: chrome.i18n.getMessage('General'),
+}
+
+chatStorage.load()
+</script>
+
 <template>
     <v-card flat class="mt-5">
         <v-card-title>Chat</v-card-title>
@@ -23,19 +58,19 @@
                                             <v-expansion-panel>
                                                 <v-expansion-panel-title>{{ text.general }}</v-expansion-panel-title>
                                                 <v-expansion-panel-text>
-                                                    <General :client="client.name"></General>
+                                                    <ChatGeneral :client="client.name"></ChatGeneral>
                                                 </v-expansion-panel-text>
                                             </v-expansion-panel>
-                                            <v-expansion-panel>
-                                                <v-expansion-panel-title>{{ text.rooms }}</v-expansion-panel-title>
-                                                <v-expansion-panel-text>
-                                                    <Rooms :url-start="client.urlStart" :client="client.name"></Rooms>
-                                                </v-expansion-panel-text>
-                                            </v-expansion-panel>
+<!--                                            <v-expansion-panel>-->
+<!--                                                <v-expansion-panel-title>{{ text.rooms }}</v-expansion-panel-title>-->
+<!--                                                <v-expansion-panel-text>-->
+<!--                                                    <ChatRooms :url-start="client.urlStart" :client="client.name"></ChatRooms>-->
+<!--                                                </v-expansion-panel-text>-->
+<!--                                            </v-expansion-panel>-->
                                             <v-expansion-panel>
                                                 <v-expansion-panel-title>{{ text.messages }}</v-expansion-panel-title>
                                                 <v-expansion-panel-text>
-                                                    <Messages :client="client.name"></Messages>
+                                                    <ChatMessages :client="client.name"></ChatMessages>
                                                 </v-expansion-panel-text>
                                             </v-expansion-panel>
                                         </v-expansion-panels>
@@ -49,6 +84,7 @@
     </v-card>
 </template>
 
+<!--
 <script>
 
 import General from './Chat/General.vue'
@@ -89,3 +125,4 @@ export default {
     },
 }
 </script>
+-->

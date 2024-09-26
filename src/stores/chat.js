@@ -1,20 +1,47 @@
 import {defineStore} from 'pinia'
-import {th} from 'vuetify/locale'
 import Helper from '../mixins/helper.js'
 import {Uuid} from '../mixins/uuid.js'
+import {th} from 'vuetify/locale'
 
 const STATUS_READY = 'ready'
 const STATUS_SUCCESS = 'success'
 const STATUS_ERROR = 'error'
 const STATUS_PROGRESS = 'progress'
 
-export const useChat = defineStore('chat', {
-    state: {
+export const useChatStorage = defineStore('chat', {
+    state: () => ({
         clients: {},
         status: STATUS_READY,
+    }),
+    getters: {
+        isMain: state => {
+            return client => {
+                return state.clients[client].main ?? false
+            }
+        },
+        isEnabled: state => {
+            return client => {
+                return state.clients[client].enabled ?? false
+            }
+        },
+        getName: state => {
+            return client => {
+                return state.clients[client].name ?? ''
+            }
+        },
+        getMessages: state => {
+            return client => {
+                return state.clients[client].messages ?? []
+            }
+        },
     },
     actions: {
-        init: (options) => {
+        async load (){
+            const options = await chrome.storage.local.get('optionsChat')
+
+            this.init(options.optionsChat)
+        },
+        init(options) {
             this.clear()
 
             for (const [client, data] of Object.entries(options)) {
@@ -25,11 +52,11 @@ export const useChat = defineStore('chat', {
                     this.updateMain(client)
                 }
 
-                options.rooms.forEach(room => {this.addRoom(client, room.id, room.name, room.url, room.sort)})
-                options.messages.forEach(message => {this.addRoom(client, message.id, message.name, message.content, message.sort)})
+                data.rooms.forEach(room => {this.addRoom(client, room.id, room.name, room.url, room.sort)})
+                data.messages.forEach(message => {this.addRoom(client, message.id, message.name, message.content, message.sort)})
             }
         },
-        clear: () => {
+        clear(){
             this.clients = {
                 google: {
                     enabled: false,
@@ -49,25 +76,22 @@ export const useChat = defineStore('chat', {
 
             this.status = STATUS_READY
         },
-        updateEnabled: (client, status) => {
-            if (false === this.clientExists(client)) {
+        updateEnabled(client, status) {
+            if (undefined === this.clients[client]) {
                 return
             }
 
             this.clients[client].enabled = status
         },
-        updateName: (client, name) => {
-            if (false === this.clientExists(client)) {
+        updateName(client, name) {
+            if (undefined === this.clients[client]) {
                 return
             }
 
             this.clients[client].name = name
         },
-        clientExists: client => {
-            return undefined === this.clients[client]
-        },
-        updateMain: mainClient => {
-            if (false === this.clientExists(mainClient)) {
+        updateMain(mainClient) {
+            if (undefined === this.clients[mainClient]) {
                 return
             }
 
@@ -75,8 +99,8 @@ export const useChat = defineStore('chat', {
                 this.clients[client].main = client === mainClient
             })
         },
-        addRoom: (client, id, name, url, sort) => {
-            if (false === this.clientExists(client)) {
+        addRoom(client, id, name, url, sort) {
+            if (undefined === this.clients[client]) {
                 return
             }
 
@@ -89,8 +113,8 @@ export const useChat = defineStore('chat', {
 
             Helper.resort(this.clients[client].rooms)
         },
-        addMessage: (client, id, name, content, sort) => {
-            if (false === this.clientExists(client)) {
+        addMessage(client, id, name, content, sort) {
+            if (undefined === this.clients[client]) {
                 return
             }
 
@@ -103,7 +127,7 @@ export const useChat = defineStore('chat', {
 
             Helper.resort(this.clients[client].messages)
         },
-        createRoom: (client, name, url) => {
+        createRoom (client, name, url){
             this.addRoom(
                 client,
                 Uuid.generate(),
@@ -112,7 +136,7 @@ export const useChat = defineStore('chat', {
                 Number.MAX_SAFE_INTEGER,
             )
         },
-        createMessage: (client, name, content) => {
+        createMessage(client, name, content) {
             this.addMessage(
                 client,
                 Uuid.generate(),
@@ -121,6 +145,25 @@ export const useChat = defineStore('chat', {
                 Number.MAX_SAFE_INTEGER,
             )
         },
+        messageSortBefore(client, ref, current) {
+            if (undefined === this.clients[client]) {
+                return
+            }
+
+            const currentMessage = this.clients[client].messages.find(message => message.id === current)
+            const refMessage = this.clients[client].messages.find(message => message.id === ref)
+
+            Helper.sortBefore(this.clients[client].messages, currentMessage, refMessage, 'id')
+        },
+        messageSortAfter(client, ref, current) {
+            if (undefined === this.clients[client]) {
+                return
+            }
+
+            const currentMessage = this.clients[client].messages.find(message => message.id === current)
+            const refMessage = this.clients[client].messages.find(message => message.id === ref)
+
+            Helper.sortAfter(this.clients[client].messages, currentMessage, refMessage, 'id')
+        },
     },
-    getters: {},
 })
