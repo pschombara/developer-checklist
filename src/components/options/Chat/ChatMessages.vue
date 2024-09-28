@@ -21,32 +21,34 @@ const text = {
     content: i18n.getMessage('TextContent'),
 }
 
-const sortMessage = ref(null)
-const editMessage = ref({
+const defaultDeleteMsg = {
+    open: false,
+    id: null,
+    name: '',
+}
+
+const defaultEditMsg = {
     open: false,
     id: null,
     name: '',
     content: '',
-})
+    saveButton: text.add,
+}
 
-const deleteMessage = ref({
-    open: false,
-    id: null,
-    name: '',
-})
+const sortMessage = ref(null)
+const editMessage = ref({...defaultEditMsg})
+const deleteMessage = ref({...defaultDeleteMsg})
 
 const nameRules = [
     value => !!value || chrome.i18n.getMessage('errNotBlank'),
     value => value.length <= 20 || chrome.i18n.getMessage('errMaxLength', '20'),
-    value => false === this.checkDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
+    value => false === checkDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
 ]
 
 const contentRules = [
     value => !!value || chrome.i18n.getMessage('errNotBlank'),
     value => value.length <= 200 || chrome.i18n.getMessage('errMaxLength', '200'),
 ]
-
-const formValid = ref(false)
 
 const chatStorage = useChatStorage()
 
@@ -90,19 +92,59 @@ const openMessage = item => {
 }
 
 const closeMessage = () => {
-    editMessage.value = {
-        open: false,
-        id: null,
-        name: '',
-        content: '',
-        title: '',
-        saveButton: text.add,
-    }
+    editMessage.value = {...defaultEditMsg}
 }
 
 const openAddMessage = () => {
     closeMessage()
     editMessage.value.open = true
+}
+
+const openDeleteMessage = item => {
+    deleteMessage.value = {
+        open: true,
+        id: item.id,
+        name: item.name,
+    }
+}
+
+const closeDeleteMessage = () => {
+    deleteMessage.value = {...defaultDeleteMsg}
+}
+
+const checkDuplicated = value => {
+    const msg = chatStorage.getMessages(props.client).find(item => item.name === value)
+
+    if (undefined === msg) {
+        return false
+    }
+
+    if (null === editMessage.value.id) {
+        return true
+    }
+
+    return editMessage.value.name !== value
+}
+
+const removeMessage = () => {
+    chatStorage.removeMessage(props.client, deleteMessage.value.id)
+    closeDeleteMessage()
+}
+
+const saveMessage = async event => {
+    const result = await event
+
+    if (false === result) {
+        return
+    }
+
+    if (null === editMessage.value.id) {
+        chatStorage.createMessage(props.client, editMessage.value.name, editMessage.value.content)
+    } else {
+
+    }
+
+    closeMessage()
 }
 // export default {
 //     methods: {
@@ -114,13 +156,6 @@ const openAddMessage = () => {
 //             }
 //
 //             if (null === this.editMessage.id) {
-//                 this.$store.dispatch('chat/addMessage', {
-//                     client: this.client,
-//                     message: {
-//                         name: this.editMessage.name,
-//                         content: this.editMessage.content,
-//                     },
-//                 })
 //             } else {
 //                 this.$store.dispatch('chat/updateMessage', {
 //                     client: this.client,
@@ -133,41 +168,6 @@ const openAddMessage = () => {
 //             }
 //
 //             this.closeMessage()
-//         },
-//         openDeleteMessage: function (item) {
-//             this.deleteMessage = {
-//                 open: true,
-//                 id: item.id,
-//                 name: item.name,
-//             }
-//         },
-//         closeDeleteMessage: function () {
-//             this.deleteMessage = {
-//                 open: false,
-//                 id: null,
-//                 name: '',
-//             }
-//         },
-//         removeMessage: function () {
-//             this.$store.dispatch('chat/removeMessage', {
-//                 client: this.client,
-//                 id: this.deleteMessage.id,
-//             })
-//
-//             this.closeDeleteMessage()
-//         },
-//         checkDuplicated: function (value) {
-//             const message = this.$store.getters['chat/listMessages'](this.client).find(item => item.name === value)
-//
-//             if (undefined === message) {
-//                 return false
-//             }
-//
-//             if (null === this.editMessage.id) {
-//                 return true
-//             }
-//
-//             return this.editMessage.name !== value
 //         },
 //     },
 // }

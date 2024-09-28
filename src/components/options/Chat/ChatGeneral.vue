@@ -1,5 +1,5 @@
 <script setup>
-import {computed, ref} from 'vue'
+import {computed} from 'vue'
 import {useChatStorage} from '../../../stores/chat.js'
 
 const props = defineProps({

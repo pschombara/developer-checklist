@@ -115,7 +115,6 @@
 <script>
 import _ from 'lodash'
 import CopiedToClipboard from './mixed/CopiedToClipboard.vue'
-import {th} from 'vuetify/locale'
 
 export default {
     name: 'PopupGitLab',

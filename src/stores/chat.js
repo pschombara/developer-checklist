@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia'
 import Helper from '../mixins/helper.js'
 import {Uuid} from '../mixins/uuid.js'
-import {th} from 'vuetify/locale'
+import {toRaw} from 'vue'
 
 const STATUS_READY = 'ready'
 const STATUS_SUCCESS = 'success'
@@ -10,7 +10,22 @@ const STATUS_PROGRESS = 'progress'
 
 export const useChatStorage = defineStore('chat', {
     state: () => ({
-        clients: {},
+        clients: {
+            google: {
+                enabled: false,
+                messages: [],
+                rooms: [],
+                main: true,
+                name: '',
+            },
+            discord: {
+                enabled: false,
+                messages: [],
+                rooms: [],
+                main: false,
+                name: '',
+            },
+        },
         status: STATUS_READY,
     }),
     getters: {
@@ -34,6 +49,11 @@ export const useChatStorage = defineStore('chat', {
                 return state.clients[client].messages ?? []
             }
         },
+        getRooms: state => {
+            return client => {
+                return state.clients[client].rooms ?? []
+            }
+        },
     },
     actions: {
         async load (){
@@ -42,39 +62,26 @@ export const useChatStorage = defineStore('chat', {
             this.init(options.optionsChat)
         },
         init(options) {
-            this.clear()
-
             for (const [client, data] of Object.entries(options)) {
-                this.updateEnabled(client, data.enabled)
-                this.updateName(client, data.name)
-
-                if (data.main) {
-                    this.updateMain(client)
+                this.clients[client] = {
+                    enabled: data.enabled,
+                    name: data.name,
+                    main: data.main,
+                    rooms: [],
+                    messages: [],
                 }
 
-                data.rooms.forEach(room => {this.addRoom(client, room.id, room.name, room.url, room.sort)})
-                data.messages.forEach(message => {this.addRoom(client, message.id, message.name, message.content, message.sort)})
-            }
-        },
-        clear(){
-            this.clients = {
-                google: {
-                    enabled: false,
-                    messages: [],
-                    rooms: [],
-                    main: true,
-                    name: '',
-                },
-                discord: {
-                    enabled: false,
-                    messages: [],
-                    rooms: [],
-                    main: false,
-                    name: '',
-                },
-            }
+                data.rooms.forEach(room => {
+                    this.clients[client].rooms.push({id: data.id, name: room.name, url: room.url, sort: room.sort})
+                })
 
-            this.status = STATUS_READY
+                data.messages.forEach(msg => {
+                    this.clients[client].messages.push({id: msg.id, name: msg.name, content: msg.content, sort: msg.sort})
+                })
+
+                Helper.resort(this.clients[client].rooms)
+                Helper.resort(this.clients[client].messages)
+            }
         },
         updateEnabled(client, status) {
             if (undefined === this.clients[client]) {
@@ -164,6 +171,22 @@ export const useChatStorage = defineStore('chat', {
             const refMessage = this.clients[client].messages.find(message => message.id === ref)
 
             Helper.sortAfter(this.clients[client].messages, currentMessage, refMessage, 'id')
+        },
+        removeMessage(client, id) {
+            if (undefined === this.clients[client]) {
+                return
+            }
+
+            const index = this.clients[client].messages.findIndex(message => message.id === id)
+
+            if (-1 !== index) {
+                this.clients[client].messages.splice(index, 1)
+            }
+
+            Helper.resort(this.clients[client].messages)
+        },
+        async save() {
+            await chrome.storage.local.set({optionsChat: toRaw(this.clients)})
         },
     },
 })
