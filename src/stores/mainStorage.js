@@ -30,8 +30,6 @@ export const useMainStorage = defineStore('mainStorage', {
             { id: 'gitLab', name: 'GitLab', icon: 'fab fa-gitlab', settings: true },
             { id: 'chat', name: 'Chat', icon: 'fas fa-comment', settings: true },
             { id: 'cheatSheet', name: 'Cheat Sheet', icon: 'fas fa-terminal', settings: true },
-            // { id: 'chrome', name: 'Chrome', icon: 'fab fa-chrome', settings: true },
-            { id: 'about', name: 'About', icon: 'fas fa-info-circle', settings: false },
         ],
     }),
     getters: {

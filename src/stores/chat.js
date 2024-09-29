@@ -106,51 +106,33 @@ export const useChatStorage = defineStore('chat', {
                 this.clients[client].main = client === mainClient
             })
         },
-        addRoom(client, id, name, url, sort) {
-            if (undefined === this.clients[client]) {
-                return
-            }
-
-            this.clients[client].rooms.push({
-                id: id,
-                name: name,
-                url: url,
-                sort: sort,
-            })
-
-            Helper.resort(this.clients[client].rooms)
-        },
-        addMessage(client, id, name, content, sort) {
+        createMessage(client, name, content) {
             if (undefined === this.clients[client]) {
                 return
             }
 
             this.clients[client].messages.push({
-                id: id,
+                id: Uuid.generate(),
                 name: name,
                 content: content,
-                sort: sort,
+                sort: Number.MAX_SAFE_INTEGER,
             })
 
             Helper.resort(this.clients[client].messages)
         },
-        createRoom (client, name, url){
-            this.addRoom(
-                client,
-                Uuid.generate(),
-                name,
-                url,
-                Number.MAX_SAFE_INTEGER,
-            )
-        },
-        createMessage(client, name, content) {
-            this.addMessage(
-                client,
-                Uuid.generate(),
-                name,
-                content,
-                Number.MAX_SAFE_INTEGER,
-            )
+        updateMessage(client, id, name, content) {
+            if (undefined === this.clients[client]) {
+                return
+            }
+
+            const msg = this.clients[client].messages.find(msg => msg.id === id)
+
+            if (undefined === msg) {
+                return
+            }
+
+            msg.name = name
+            msg.content = content
         },
         messageSortBefore(client, ref, current) {
             if (undefined === this.clients[client]) {
@@ -184,6 +166,67 @@ export const useChatStorage = defineStore('chat', {
             }
 
             Helper.resort(this.clients[client].messages)
+        },
+        createRoom (client, name, url){
+            if (undefined === this.clients[client]) {
+                return
+            }
+
+            this.clients[client].rooms.push({
+                id: Uuid.generate(),
+                name: name,
+                url: url,
+                sort: Number.MAX_SAFE_INTEGER,
+            })
+
+            Helper.resort(this.clients[client].rooms)
+        },
+        updateRoom(client, id, name, url) {
+            if (undefined === this.clients[client]) {
+                return
+            }
+
+            const room = this.clients[client].find(item => item.id === id)
+
+            if (undefined === room) {
+                return
+            }
+
+            room.name = name
+            room.url = url
+        },
+        roomSortBefore(client, ref, current) {
+            if (undefined === this.clients[client]) {
+                return
+            }
+
+            const currentRoom = this.clients[client].rooms.find(room => room.id === current)
+            const refRoom = this.clients[client].rooms.find(room => room.id === ref)
+
+            Helper.sortBefore(this.clients[client].rooms, currentRoom, refRoom, 'id')
+        },
+        roomSortAfter(client, ref, current) {
+            if (undefined === this.clients[client]) {
+                return
+            }
+
+            const currentRoom = this.clients[client].rooms.find(room => room.id === current)
+            const refRoom = this.clients[client].rooms.find(room => room.id === ref)
+
+            Helper.sortAfter(this.clients[client].rooms, currentRoom, refRoom, 'id')
+        },
+        removeRoom(client, id) {
+            if (undefined === this.clients[client]) {
+                return
+            }
+
+            const index = this.clients[client].rooms.findIndex(room => room.id === id)
+
+            if (-1 !== index) {
+                this.clients[client].rooms.splice(index, 1)
+            }
+
+            Helper.resort(this.clients[client].rooms)
         },
         async save() {
             await chrome.storage.local.set({optionsChat: toRaw(this.clients)})

@@ -1,3 +1,265 @@
+<script setup>
+import Helper from '../../mixins/helper'
+import {useGitLabStorage} from '../../stores/gitlab.js'
+import {computed, ref} from 'vue'
+
+const gitLabStorage = useGitLabStorage()
+
+let init = false
+const i18n = chrome.i18n
+
+const text = {
+    host: i18n.getMessage('Host'),
+    categories: i18n.getMessage('Categories'),
+    category: i18n.getMessage('Category'),
+    newCategory: i18n.getMessage('NewCategory'),
+    projects: i18n.getMessage('Projects'),
+    project: i18n.getMessage('Project'),
+    newProject: i18n.getMessage('NewProject'),
+    save: i18n.getMessage('Save'),
+    cancel: i18n.getMessage('Cancel'),
+    delete: i18n.getMessage('Delete'),
+    search: i18n.getMessage('Search'),
+    subTitleDeleteCategory: i18n.getMessage('SubTitleDeleteCategory'),
+    add: i18n.getMessage('Add'),
+    name: i18n.getMessage('Name'),
+    ciBuild: i18n.getMessage('CiBuild'),
+}
+
+const hostRules = [
+    value => Helper.isURL(value) || i18n.getMessage('errUrlInvalid'),
+]
+
+const domainRules = [
+    value => !!value || i18n.getMessage('errNotBlank'),
+]
+
+const projectRules = [
+    value => !!value || i18n.getMessage('errNotBlank'),
+    value => false === checkProjectDuplicated(value) || i18n.getMessage('errDuplicated'),
+]
+const categoryRules = [
+    value => !!value || i18n.getMessage('errNotBlank'),
+    value => false === checkCategoryDuplicated(value) || i18n.getMessage('errDuplicated'),
+]
+
+const host = computed({
+    get() {
+        return  gitLabStorage.getHost
+    },
+    set(value) {
+        if (null === value || Helper.isURL(value)) {
+            gitLabStorage.setHost(value)
+        }
+    },
+})
+
+const projects = computed(() => {
+    return gitLabStorage.getProjects
+})
+
+const categories = computed(() => {
+    return gitLabStorage.getCategories.map(category => {
+        return {name: category}
+    })
+})
+
+const defaultCategory = {
+    name: '',
+}
+
+const defaultProject = {
+    domain: null,
+    project: null,
+    uuid: null,
+    ciBuild: null,
+}
+
+const defaultDialogCategory = {
+    open: false,
+    title: '',
+    item: {...defaultCategory},
+    current: null,
+    saveButton: '',
+}
+
+const defaultDialogProject = {
+    open: false,
+    title: '',
+    item: {...defaultProject},
+    current: null,
+    saveButton: '',
+}
+
+const dialogCategory = ref({...defaultDialogCategory})
+const dialogDeleteCategory = ref(false)
+const dialogDeleteProject = ref(false)
+const searchCategory = ref('')
+const searchProject = ref('')
+const dialogProject = ref({...defaultDialogProject})
+const deleteCategory = ref({})
+const deleteProject= ref({})
+
+const categoriesHeader = [
+    { title: text.category, key: 'name' },
+    { title: '', key: 'actions', sortable: false, align: 'end' },
+]
+
+const projectsHeader = [
+    { title: text.project, key: 'project', groupable: false },
+    { title: '', key: 'actions', sortable: false, align: 'end', groupable: false },
+]
+
+const removeCategory = item => {
+
+}
+
+const removeProject = item => {
+
+}
+
+const openDialogDeleteCategory = item => {
+    dialogDeleteCategory.value = true
+    deleteCategory.value = {...item}
+}
+
+const closeDialogDeleteCategory = () => {
+    dialogDeleteCategory.value = false
+    deleteCategory.value = {}
+}
+
+const openDialogDeleteProject = item => {
+    deleteProject.value = item
+    dialogDeleteProject.value = true
+}
+
+const closeDialogDeleteProject = () => {
+    dialogDeleteProject.value = false
+    deleteProject.value = {}
+}
+
+const closeDialogCategory = () => {
+    dialogCategory.value.open = false
+    dialogCategory.value.current = null
+}
+
+const openNewCategory = () => {
+    dialogCategory.value = {
+        open: true,
+        title: text.newCategory,
+        item: {...defaultCategory},
+        current: null,
+        saveButton: text.add,
+    }
+}
+
+const openNewProject = () => {
+    dialogProject.value = {
+        open: true,
+        title: text.newProject,
+        item: {...defaultProject},
+        current: null,
+        saveButton: text.add,
+    }
+}
+
+const openCategory = category => {
+    dialogCategory.value = {
+        open: true,
+        title: i18n.getMessage('TitleUpdate', category.name),
+        item: {...category},
+        current: category,
+        saveButton: text.save,
+    }
+}
+
+const openProject = project => {
+    dialogProject.value = {
+        open: true,
+        title: i18n.getMessage('TitleUpdate', project.project),
+        item: {...project},
+        current: project,
+        saveButton: text.save,
+    }
+}
+
+const closeProject = () => {
+    dialogProject.value.open = false
+    dialogProject.value.current = null
+}
+
+const checkCategoryDuplicated = value => {
+    if (false === gitLabStorage.getCategories.map(x => x.toLowerCase()).includes(value.toLowerCase())) {
+        return false
+    }
+
+    if (null === dialogCategory.value.current) {
+        return true
+    }
+
+    return value !== dialogCategory.value.current.name
+}
+const checkProjectDuplicated = value => {
+    const projects = gitLabStorage.getProjects
+
+    if (null === value) {
+        return false
+    }
+
+    let searchResult = projects.find(project => project.domain === dialogProject.value.item.domain && dialogProject.value.item.project.toLowerCase() === value.toLowerCase())
+
+    if (undefined === searchResult) {
+        return false
+    }
+
+    if (null === dialogProject.value.current) {
+        return true
+    }
+
+    return searchResult.uuid !== dialogProject.value.item.uuid || dialogProject.value.current.uuid !== dialogProject.value.item.uuid
+}
+
+const saveCategory = async event => {
+    const result = await event
+
+    if (false === result.valid) {
+        return
+    }
+
+    if (null === dialogCategory.value.current) {
+
+    } else {
+
+    }
+
+    closeDialogCategory()
+}
+
+const saveProject = async event => {
+    const result = await event
+
+    if (false === result.valid) {
+        return
+    }
+
+    if (null === dialogProject.value.current) {
+
+    } else {
+
+    }
+
+    closeProject()
+}
+
+gitLabStorage.$subscribe(() => {
+    if (init) {
+
+    }
+})
+
+gitLabStorage.load().then(() => init = true)
+</script>
+
 <template>
     <v-card flat class="mt-5">
         <v-card-text>
@@ -60,13 +322,13 @@
                                                                 :rules="projectRules"
                                                                 :label="text.project"
                                                             ></v-text-field>
-                                                        <v-autocomplete
-                                                            v-model="dialogProject.item.ciBuild"
-                                                            :items="ciProjects"
-                                                            :label="text.ciBuild"
-                                                            item-title="name"
-                                                            item-value="uuid"
-                                                        ></v-autocomplete>
+<!--                                                        <v-autocomplete-->
+<!--                                                            v-model="dialogProject.item.ciBuild"-->
+<!--                                                            :items="ciProjects"-->
+<!--                                                            :label="text.ciBuild"-->
+<!--                                                            item-title="name"-->
+<!--                                                            item-value="uuid"-->
+<!--                                                        ></v-autocomplete>-->
                                                     </v-card-text>
                                                     <v-card-actions>
                                                         <v-spacer></v-spacer>
@@ -209,259 +471,3 @@
         </v-card-text>
     </v-card>
 </template>
-
-<script>
-import Helper from '../../mixins/helper'
-
-export default {
-    name: 'OptionGitLab',
-    data() {
-        return {
-            dialogCategory: {
-                open: false,
-                title: '',
-                item: {
-                    name: null,
-                },
-                current: null,
-                saveButton: '',
-            },
-            dialogDeleteCategory: false,
-            searchCategory: '',
-            dialogProject: {
-                open: false,
-                title: '',
-                item: {
-                    domain: null,
-                    project: null,
-                    uuid: null,
-                    ciBuild: null,
-                },
-                current: null,
-                saveButton: '',
-            },
-            dialogDeleteProject: false,
-            searchProject: '',
-            hostRules: [
-                value => Helper.isURL(value) || chrome.i18n.getMessage('errUrlInvalid'),
-            ],
-            domainRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-            ],
-            projectRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-                value => false === this.checkProjectDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
-            ],
-            categoryRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-                value => false === this.checkCategoryDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
-            ],
-            text: {
-                host: chrome.i18n.getMessage('Host'),
-                categories: chrome.i18n.getMessage('Categories'),
-                category: chrome.i18n.getMessage('Category'),
-                newCategory: chrome.i18n.getMessage('NewCategory'),
-                projects: chrome.i18n.getMessage('Projects'),
-                project: chrome.i18n.getMessage('Project'),
-                newProject: chrome.i18n.getMessage('NewProject'),
-                save: chrome.i18n.getMessage('Save'),
-                cancel: chrome.i18n.getMessage('Cancel'),
-                delete: chrome.i18n.getMessage('Delete'),
-                search: chrome.i18n.getMessage('Search'),
-                subTitleDeleteCategory: chrome.i18n.getMessage('SubTitleDeleteCategory'),
-                add: chrome.i18n.getMessage('Add'),
-                name: chrome.i18n.getMessage('Name'),
-                ciBuild: chrome.i18n.getMessage('CiBuild'),
-            },
-            i18n: chrome.i18n,
-            deleteCategory: {},
-            deleteProject: {},
-            defaultCategory: {
-                name: '',
-            },
-            defaultProject: {
-                domain: null,
-                project: null,
-                uuid: null,
-                ciBuild: null,
-            },
-        }
-    },
-    computed: {
-        host: {
-            get() {
-                return this.$store.getters['gitLab/getHost']
-            },
-            set(value) {
-                if (null === value || Helper.isURL(value)) {
-                    this.$store.dispatch('gitLab/updateHost', value ?? '')
-                }
-            },
-        },
-        categories() {
-            return this.$store.getters['gitLab/getCategories']
-        },
-        projects() {
-            return this.$store.getters['gitLab/getProjects']
-        },
-        ciProjects() {
-            return this.$store.getters['jenkins/getBuilds']
-        },
-        categoriesHeader() {
-            return [
-                { title: this.text.category, key: 'name' },
-                { title: '', key: 'actions', sortable: false, align: 'end' },
-            ]
-        },
-        projectsHeader() {
-            return [
-                { title: this.text.project, key: 'project', groupable: false },
-                { title: '', key: 'actions', sortable: false, align: 'end', groupable: false },
-            ]
-        },
-    },
-    methods: {
-        removeCategory: function (item) {
-            this.$store.dispatch('gitLab/removeCategory', item.name)
-            this.closeDialogDeleteCategory()
-        },
-        removeProject: function (item) {
-            this.$store.dispatch('gitLab/removeProject', item)
-            this.closeDialogDeleteProject()
-        },
-        openDialogDeleteCategory: function (item) {
-            this.dialogDeleteCategory = true
-            this.deleteCategory = Object.assign({}, item)
-        },
-        closeDialogDeleteCategory: function () {
-            this.dialogDeleteCategory = false
-            this.deleteCategory = {}
-        },
-        openDialogDeleteProject: function (item) {
-            this.deleteProject = item
-            this.dialogDeleteProject = true
-        },
-        closeDialogDeleteProject: function () {
-            this.dialogDeleteProject = false
-            this.deleteProject = {}
-        },
-        closeDialogCategory: function () {
-            this.dialogCategory.open = false
-            this.dialogCategory.current = null
-        },
-        openNewCategory: function() {
-            this.dialogCategory = {
-                open: true,
-                title: this.text.newCategory,
-                item: Object.assign({}, this.defaultCategory),
-                current: null,
-                saveButton: this.text.add,
-            }
-        },
-        openNewProject: function() {
-            this.dialogProject = {
-                open: true,
-                title: this.text.newProject,
-                item: Object.assign({}, this.defaultProject),
-                current: null,
-                saveButton: this.text.add,
-            }
-        },
-        openCategory: function (category) {
-            this.dialogCategory = {
-                open: true,
-                title: this.i18n.getMessage('TitleUpdate', category.name),
-                item: Object.assign({}, category),
-                current: category,
-                saveButton: this.text.save,
-            }
-        },
-        openProject: function (project) {
-            this.dialogProject = {
-                open: true,
-                title: this.i18n.getMessage('TitleUpdate', project.project),
-                item: Object.assign({}, project),
-                current: project,
-                saveButton: this.text.save,
-            }
-        },
-        closeProject: function () {
-            this.dialogProject.open = false
-            this.dialogProject.current = null
-        },
-        async saveCategory (event) {
-            const result = await event
-
-            if (false === result.valid) {
-                return
-            }
-
-            if (null === this.dialogCategory.current) {
-                this.$store.dispatch('gitLab/addCategory', this.dialogCategory.item.name)
-            } else {
-                this.$store.dispatch(
-                    'gitLab/updateCategory',
-                    {
-                        previousName: this.dialogCategory.current.name,
-                        newName: this.dialogCategory.item.name,
-                    },
-                )
-            }
-
-            this.closeDialogCategory()
-        },
-        checkCategoryDuplicated: function (value) {
-            if (false === this.$store.getters['gitLab/getCategoryNames'].map(x => x.toLowerCase()).includes(value.toLowerCase())) {
-                return false
-            }
-
-            if (null === this.dialogCategory.current) {
-                return true
-            }
-
-            return value !== this.dialogCategory.current.name
-        },
-        checkProjectDuplicated: function (value) {
-            let projects = this.$store.getters['gitLab/getProjects']
-            let item = this.dialogProject.item
-
-            if (null === value) {
-                return false
-            }
-
-            let searchResult = projects.find(project => project.domain === item.domain && project.project.toLowerCase() === value.toLowerCase())
-
-            if (undefined === searchResult) {
-                return false
-            }
-
-            if (null === this.dialogProject.current) {
-                return true
-            }
-
-            return searchResult.uuid !== item.uuid || this.dialogProject.current.uuid !== item.uuid
-        },
-        async saveProject (event) {
-            const result = await event
-
-            if (false === result.valid) {
-                return
-            }
-
-            if (null === this.dialogProject.current) {
-                this.$store.dispatch('gitLab/addProject', this.dialogProject.item)
-            } else {
-                this.$store.dispatch(
-                    'gitLab/updateProject',
-                    {
-                        previous: this.dialogProject.current,
-                        project: this.dialogProject.item,
-                    },
-                )
-            }
-
-            this.closeProject()
-        },
-    },
-}
-</script>

@@ -1,8 +1,7 @@
 <script setup>
 
-import {computed, ref} from 'vue'
+import {computed} from 'vue'
 import {useMainStorage} from '../../stores/mainStorage.js'
-import {value} from 'lodash/seq.js'
 
 defineEmits(['themeSchemaChanged', 'themeColorChanged'])
 
@@ -22,9 +21,6 @@ const switchChanged = (modul, event) => {
     mainStorage.switchModule(modul, event.target.checked)
 }
 
-const test = () => {
-    console.log('test')
-}
 </script>
 
 <template>
@@ -45,9 +41,6 @@ const test = () => {
                     <v-switch color="primary" :model-value="modules.cheatSheet" @change="switchChanged('cheatSheet', $event)">
                         <template #label><v-icon icon="fas fa-terminal" class="mx-2" /> Cheat Sheet</template>
                     </v-switch>
-<!--                    <v-switch color="primary" :model-value="modules.chrome" @change="switchChanged('chrome', $event)">
-                        <template v-slot:label><v-icon icon="fab fa-chrome" class="mx-2" /> Chrome</template>
-                    </v-switch>-->
                 </v-col>
                 <v-col cols="4">
                     <h3>Theme</h3>

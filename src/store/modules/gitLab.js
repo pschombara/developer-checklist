@@ -11,13 +11,7 @@ const state = {
 }
 
 export default {
-    strict: import.meta.env.NODE_ENV !== 'production',
-    namespaced: true,
-    state,
     mutations: {
-        SET_HOST: (state, host) => {
-            state.host = host
-        },
         ADD_CATEGORY: (state, category) => {
             state.categories.push(category)
         },
@@ -57,11 +51,6 @@ export default {
                 state.projects.splice(index, 1, data.project)
             }
         },
-        CLEAR: state => {
-            state.host = ''
-            state.categories = []
-            state.projects = []
-        },
         SET_CURRENT_PROJECT: (state, project) => {
             state.currentProject = project
         },
@@ -73,27 +62,6 @@ export default {
         },
     },
     actions: {
-        // options
-        init: ({commit}, options) => {
-            return new Promise(resolve => {
-                commit('CLEAR')
-
-                commit('SET_HOST', options.host)
-
-                for (let category of options.categories) {
-                    commit('ADD_CATEGORY', category)
-                }
-
-                for (let project of options.projects) {
-                    commit('ADD_PROJECT', project)
-                }
-
-                resolve()
-            })
-        },
-        updateHost: ({commit}, value) => {
-            commit('SET_HOST', value)
-        },
         removeCategory: ({commit, state}, category) => {
             commit('REMOVE_CATEGORY', category)
 
@@ -199,18 +167,6 @@ export default {
         },
     },
     getters: {
-        getHost: state => state.host,
-        getCategories: state => {
-            let categories = []
-
-            for (let category of state.categories) {
-                categories.push({name: category})
-            }
-
-            return categories
-        },
-        getCategoryNames: state => state.categories,
-        getProjects: state => state.projects,
         getProject: state => id => {
             for (let project of state.projects) {
                 if (id === project.uuid) {

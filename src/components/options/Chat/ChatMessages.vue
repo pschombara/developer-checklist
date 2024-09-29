@@ -35,19 +35,19 @@ const defaultEditMsg = {
     saveButton: text.add,
 }
 
-const sortMessage = ref(null)
-const editMessage = ref({...defaultEditMsg})
-const deleteMessage = ref({...defaultDeleteMsg})
+const sortMsg = ref(null)
+const editMsg = ref({...defaultEditMsg})
+const deleteMsg = ref({...defaultDeleteMsg})
 
 const nameRules = [
-    value => !!value || chrome.i18n.getMessage('errNotBlank'),
-    value => value.length <= 20 || chrome.i18n.getMessage('errMaxLength', '20'),
-    value => false === checkDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
+    value => !!value || i18n.getMessage('errNotBlank'),
+    value => value.length <= 20 || i18n.getMessage('errMaxLength', '20'),
+    value => false === checkDuplicated(value) || i18n.getMessage('errDuplicated'),
 ]
 
 const contentRules = [
-    value => !!value || chrome.i18n.getMessage('errNotBlank'),
-    value => value.length <= 200 || chrome.i18n.getMessage('errMaxLength', '200'),
+    value => !!value || i18n.getMessage('errNotBlank'),
+    value => value.length <= 200 || i18n.getMessage('errMaxLength', '200'),
 ]
 
 const chatStorage = useChatStorage()
@@ -65,23 +65,23 @@ const messagesHeader = computed(() => {
 })
 
 const startSort = item => {
-    sortMessage.value = item
+    sortMsg.value = item
 }
 
 const closeSort = () => {
-    sortMessage.value = null
+    sortMsg.value = null
 }
 
 const sortBefore = item => {
-    chatStorage.messageSortBefore(props.client, item.id, sortMessage.value.id)
+    chatStorage.messageSortBefore(props.client, item.id, sortMsg.value.id)
 }
 
 const sortAfter = item => {
-    chatStorage.messageSortAfter(props.client, item.id, sortMessage.value.id)
+    chatStorage.messageSortAfter(props.client, item.id, sortMsg.value.id)
 }
 
 const openMessage = item => {
-    editMessage.value = {
+    editMsg.value = {
         open: true,
         id: item.id,
         name: item.name,
@@ -92,16 +92,16 @@ const openMessage = item => {
 }
 
 const closeMessage = () => {
-    editMessage.value = {...defaultEditMsg}
+    editMsg.value = {...defaultEditMsg}
 }
 
 const openAddMessage = () => {
     closeMessage()
-    editMessage.value.open = true
+    editMsg.value.open = true
 }
 
 const openDeleteMessage = item => {
-    deleteMessage.value = {
+    deleteMsg.value = {
         open: true,
         id: item.id,
         name: item.name,
@@ -109,7 +109,7 @@ const openDeleteMessage = item => {
 }
 
 const closeDeleteMessage = () => {
-    deleteMessage.value = {...defaultDeleteMsg}
+    deleteMsg.value = {...defaultDeleteMsg}
 }
 
 const checkDuplicated = value => {
@@ -119,15 +119,15 @@ const checkDuplicated = value => {
         return false
     }
 
-    if (null === editMessage.value.id) {
+    if (null === editMsg.value.id) {
         return true
     }
 
-    return editMessage.value.name !== value
+    return editMsg.value.name !== value
 }
 
 const removeMessage = () => {
-    chatStorage.removeMessage(props.client, deleteMessage.value.id)
+    chatStorage.removeMessage(props.client, deleteMsg.value.id)
     closeDeleteMessage()
 }
 
@@ -138,39 +138,14 @@ const saveMessage = async event => {
         return
     }
 
-    if (null === editMessage.value.id) {
-        chatStorage.createMessage(props.client, editMessage.value.name, editMessage.value.content)
+    if (null === editMsg.value.id) {
+        chatStorage.createMessage(props.client, editMsg.value.name, editMsg.value.content)
     } else {
-
+        chatStorage.updateMessage(props.client, editMsg.value.id, editMsg.value.name, editMsg.value.content)
     }
 
     closeMessage()
 }
-// export default {
-//     methods: {
-//         async saveMessage (event) {
-//             const result = await event
-//
-//             if (false === result) {
-//                 return
-//             }
-//
-//             if (null === this.editMessage.id) {
-//             } else {
-//                 this.$store.dispatch('chat/updateMessage', {
-//                     client: this.client,
-//                     message: {
-//                         id: this.editMessage.id,
-//                         name: this.editMessage.name,
-//                         content: this.editMessage.content,
-//                     },
-//                 })
-//             }
-//
-//             this.closeMessage()
-//         },
-//     },
-// }
 </script>
 
 <template>
@@ -193,19 +168,19 @@ const saveMessage = async event => {
                             @click="openAddMessage">{{ text.add }}
                         </v-btn>
                     </v-toolbar>
-                    <v-dialog v-model="editMessage.open" max-width="600">
+                    <v-dialog v-model="editMsg.open" max-width="600">
                         <v-form validate-on="input" @submit.prevent="saveMessage">
                             <v-card>
-                                <v-card-title>{{ editMessage.title }}</v-card-title>
+                                <v-card-title>{{ editMsg.title }}</v-card-title>
                                 <v-card-text>
                                     <v-text-field
-                                        v-model="editMessage.name"
+                                        v-model="editMsg.name"
                                         :label="text.name"
                                         counter="20"
                                         :rules="nameRules"
                                     ></v-text-field>
                                     <v-textarea
-                                        v-model="editMessage.content"
+                                        v-model="editMsg.content"
                                         :label="text.content"
                                         counter="200"
                                         :rules="contentRules"
@@ -221,17 +196,17 @@ const saveMessage = async event => {
                                     <v-btn
                                         type="submit"
                                         color="primary"
-                                        variant="plain">{{ editMessage.saveButton }}
+                                        variant="plain">{{ editMsg.saveButton }}
                                     </v-btn>
                                     <v-spacer></v-spacer>
                                 </v-card-actions>
                             </v-card>
                         </v-form>
                     </v-dialog>
-                    <v-dialog v-model="deleteMessage.open" max-width="450">
+                    <v-dialog v-model="deleteMsg.open" max-width="450">
                         <v-card>
                             <v-card-title>
-                                {{ i18n.getMessage('TitleDelete', deleteMessage.name) }}
+                                {{ i18n.getMessage('TitleDelete', deleteMsg.name) }}
                             </v-card-title>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
@@ -244,14 +219,14 @@ const saveMessage = async event => {
                 </template>
                 <template #item.actions="{item}">
                     <v-btn
-                        v-if="!sortMessage"
+                        v-if="!sortMsg"
                         variant="plain"
                         icon="fas fa-edit"
                         size="small"
                         @click="openMessage(item)">
                     </v-btn>
                     <v-btn
-                        v-if="!sortMessage"
+                        v-if="!sortMsg"
                         variant="plain"
                         icon="fas fa-sort"
                         size="small"
@@ -259,7 +234,7 @@ const saveMessage = async event => {
                         @click="startSort(item)">
                     </v-btn>
                     <v-btn
-                        v-if="!sortMessage"
+                        v-if="!sortMsg"
                         variant="plain"
                         icon="fas fa-trash"
                         size="small"
@@ -267,21 +242,21 @@ const saveMessage = async event => {
                         @click="openDeleteMessage(item)">
                     </v-btn>
                     <v-btn
-                        v-if="sortMessage && sortMessage.id !== item.id"
+                        v-if="sortMsg && sortMsg.id !== item.id"
                         variant="plain"
                         icon="fas fa-sort-up"
                         size="small"
-                        :disabled="item.sort - 1 === sortMessage.sort"
+                        :disabled="item.sort - 1 === sortMsg.sort"
                         @click="sortBefore(item)"></v-btn>
                     <v-btn
-                        v-if="sortMessage && sortMessage.id !== item.id"
+                        v-if="sortMsg && sortMsg.id !== item.id"
                         variant="plain"
                         icon="fas fa-sort-down"
                         size="small"
-                        :disabled="item.sort + 1 === sortMessage.sort"
+                        :disabled="item.sort + 1 === sortMsg.sort"
                         @click="sortAfter(item)"></v-btn>
                     <v-btn
-                        v-if="sortMessage && sortMessage.id === item.id"
+                        v-if="sortMsg && sortMsg.id === item.id"
                         variant="plain"
                         icon="fas fa-times"
                         size="small"

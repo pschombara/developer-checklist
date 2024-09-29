@@ -1,3 +1,149 @@
+<script setup>
+
+import {computed, ref} from 'vue'
+import {useCheatSheetStorage} from '../../stores/cheatSheet.js'
+
+const i18n = chrome.i18n
+let init = false
+
+const text = {
+    search: i18n.getMessage('Search'),
+    add: i18n.getMessage('Add'),
+    save: i18n.getMessage('Save'),
+    cancel: i18n.getMessage('Cancel'),
+    delete: i18n.getMessage('Delete'),
+    label: i18n.getMessage('Label'),
+    commandOrContent: i18n.getMessage('commandOrContent'),
+    hint: {
+        command: i18n.getMessage('hintCommand'),
+        label: i18n.getMessage('hintCommandLabel'),
+    },
+}
+
+const searchCommand = ref('')
+
+const labelRules = [
+    value => !!value || i18n.getMessage('errNotBlank'),
+    value => value.length <= 30 || i18n.getMessage('errMaxLength', '30'),
+    value => false === checkDuplicated(value) || i18n.getMessage('errDuplicated'),
+]
+
+const commandRules = [
+    value => !!value || i18n.getMessage('errNotBlank'),
+    value => value.length <= 128 || i18n.getMessage('errMaxLength', '128'),
+]
+
+const defaultCommand = {
+    label: '',
+    command: '',
+}
+
+const deleteCommand = ref({...defaultCommand})
+
+const defaultDialog = {
+    open: false,
+    valid: false,
+    title: '',
+    item: {...defaultCommand},
+    current: null,
+    saveButton: text.add,
+}
+const dialogCommand = ref({...defaultDialog})
+
+const dialogDeleteCommand = ref(false)
+
+const cheatSheetStorage = useCheatSheetStorage()
+
+const items = computed(() => {
+    return cheatSheetStorage.getItems
+})
+
+const headers = [
+    {title: text.label, key: 'label'},
+    {title: text.commandOrContent, key: 'command'},
+    {title: '', key: 'actions', align: 'end'},
+]
+
+const openCommand = command => {
+    dialogCommand.value = {
+        open: true,
+        valid: true,
+        title: i18n.getMessage('TitleUpdate', command.label),
+        item: {...command},
+        current: command,
+        saveButton: text.save,
+    }
+}
+
+const openNewCommand = () => {
+    dialogCommand.value = {
+        open: true,
+        valid: false,
+        title: i18n.getMessage('TitleCreate'),
+        item: {...defaultCommand},
+        current: null,
+        saveButton: text.add,
+    }
+}
+
+const closeCommand = () => {
+    dialogCommand.value = {...defaultDialog}
+}
+
+const openDialogDeleteCommand = command => {
+    deleteCommand.value = {...command}
+    dialogDeleteCommand.value = true
+}
+
+const closeDialogDeleteCommand = () => {
+    deleteCommand.value = {...defaultCommand}
+    dialogDeleteCommand.value = false
+}
+
+const removeCommand = command => {
+    cheatSheetStorage.removeCommand(command.label)
+    closeDialogDeleteCommand()
+}
+
+const saveCommand = async event => {
+    const result = await event
+
+    if (false === result.valid) {
+        return
+    }
+
+    if (null === dialogCommand.value.current) {
+        cheatSheetStorage.addCommand(dialogCommand.value.item.label, dialogCommand.value.item.command)
+    } else {
+        cheatSheetStorage.updateCommand(dialogCommand.value.current.label, dialogCommand.value.item.label, dialogCommand.value.item.command)
+    }
+
+    closeCommand()
+}
+
+const checkDuplicated = value => {
+    let command = cheatSheetStorage.getItems.find(item => item.label === value)
+
+    if (undefined === command) {
+        return false
+    }
+
+    if (null === dialogCommand.value.current) {
+        return true
+    }
+
+    return dialogCommand.value.current.label !== value
+}
+
+cheatSheetStorage.$subscribe(() => {
+    if (init) {
+        cheatSheetStorage.save()
+    }
+})
+
+cheatSheetStorage.load().then(() => init = true)
+</script>
+
 <template>
     <v-card flat class="mt-5">
         <v-data-table
@@ -90,151 +236,3 @@
         </v-data-table>
     </v-card>
 </template>
-
-<script>
-
-export default {
-    name: 'OptionCheatSheet',
-    data() {
-        return {
-            searchCommand: '',
-            text: {
-                search: chrome.i18n.getMessage('Search'),
-                add: chrome.i18n.getMessage('Add'),
-                save: chrome.i18n.getMessage('Save'),
-                cancel: chrome.i18n.getMessage('Cancel'),
-                delete: chrome.i18n.getMessage('Delete'),
-                label: chrome.i18n.getMessage('Label'),
-                commandOrContent: chrome.i18n.getMessage('commandOrContent'),
-                hint: {
-                    command: chrome.i18n.getMessage('hintCommand'),
-                    label: chrome.i18n.getMessage('hintCommandLabel'),
-                },
-            },
-            i18n: chrome.i18n,
-            labelRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-                value => value.length <= 30 || chrome.i18n.getMessage('errMaxLength', '30'),
-                value => false === this.checkDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
-            ],
-            commandRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-                value => value.length <= 128 || chrome.i18n.getMessage('errMaxLength', '128'),
-            ],
-            dialogCommand: {
-                open: false,
-                valid: false,
-                title: '',
-                item: {
-                    label: '',
-                    command: '',
-                },
-                current: null,
-            },
-            dialogDeleteCommand: false,
-            deleteCommand: {
-                label: '',
-                command: '',
-            },
-            defaultCommand: {
-                label: '',
-                command: '',
-            },
-        }
-    },
-    computed: {
-        items() {
-            return this.$store.getters['cheatSheet/getItems']
-        },
-        headers() {
-            return [
-                {title: this.text.label, key: 'label'},
-                {title: this.text.commandOrContent, key: 'command'},
-                {title: '', key: 'actions', align: 'end'},
-            ]
-        },
-    },
-    methods: {
-        openCommand: function (command) {
-            this.dialogCommand = {
-                open: true,
-                valid: true,
-                title: this.i18n.getMessage('TitleUpdate', command.label),
-                item: Object.assign({}, command),
-                current: command,
-                saveButton: this.text.save,
-            }
-        },
-        openNewCommand: function () {
-            this.dialogCommand = {
-                open: true,
-                valid: false,
-                title: this.i18n.getMessage('TitleCreate'),
-                item: Object.assign({}, this.defaultCommand),
-                current: null,
-                saveButton: this.text.add,
-            }
-        },
-        closeCommand: function () {
-            this.dialogCommand = {
-                open: false,
-                valid: false,
-                title: '',
-                item: Object.assign({}, this.defaultCommand),
-                current: null,
-                saveButton: this.text.add,
-            }
-        },
-        openDialogDeleteCommand: function (command) {
-            this.deleteCommand = Object.assign({}, command)
-
-            this.dialogDeleteCommand = true
-        },
-        closeDialogDeleteCommand: function () {
-            this.deleteCommand = Object.assign({}, this.defaultCommand)
-
-            this.dialogDeleteCommand = false
-        },
-        removeCommand: function (command) {
-            this.$store.dispatch('cheatSheet/removeCommand', command)
-
-            this.closeDialogDeleteCommand()
-        },
-        async saveCommand (event) {
-            const result = await event
-
-            if (false === result.valid) {
-                return
-            }
-
-            if (null === this.dialogCommand.current) {
-                this.$store.dispatch('cheatSheet/addCommand', this.dialogCommand.item)
-            } else {
-                this.$store.dispatch(
-                    'cheatSheet/updateCommand',
-                    {
-                        previous: this.dialogCommand.current,
-                        item: this.dialogCommand.item,
-                    },
-                )
-            }
-
-            this.closeCommand()
-        },
-        checkDuplicated: function (value) {
-            let commands = this.$store.getters['cheatSheet/getItems']
-            let result = commands.find(command => command.label === value)
-
-            if (undefined === result) {
-                return false
-            }
-
-            if (null === this.dialogCommand.current) {
-                return true
-            }
-
-            return this.dialogCommand.current.label !== value
-        },
-    },
-}
-</script>

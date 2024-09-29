@@ -4,20 +4,24 @@ import Theme from '../mixins/theme'
 import {useMainStorage} from '../stores/mainStorage'
 import OptionGeneral from '../components/options/OptionGeneral.vue'
 import ChatOptionsView from '../components/options/ChatOptionsView.vue'
+import CheatSheet from '../components/options/CheatSheet.vue'
+import GitLab from '../components/options/GitLab.vue'
 
 const loading = ref(true)
 
+const i18n = chrome.i18n
+
 const text = {
-    title: chrome.i18n.getMessage('extOptionsTitle'),
-    save: chrome.i18n.getMessage('Save'),
-    export: chrome.i18n.getMessage('Export'),
-    import: chrome.i18n.getMessage('Import'),
-    restore: chrome.i18n.getMessage('Restore'),
-    reset: chrome.i18n.getMessage('Reset'),
-    cancel: chrome.i18n.getMessage('Cancel'),
-    close: chrome.i18n.getMessage('Close'),
-    importWrongType: chrome.i18n.getMessage('importWrongType'),
-    settingsSaved: chrome.i18n.getMessage('settingsSaved'),
+    title: i18n.getMessage('extOptionsTitle'),
+    save: i18n.getMessage('Save'),
+    export: i18n.getMessage('Export'),
+    import: i18n.getMessage('Import'),
+    restore: i18n.getMessage('Restore'),
+    reset: i18n.getMessage('Reset'),
+    cancel: i18n.getMessage('Cancel'),
+    close: i18n.getMessage('Close'),
+    importWrongType: i18n.getMessage('importWrongType'),
+    settingsSaved: i18n.getMessage('settingsSaved'),
 }
 
 const exportModules = ref([])
@@ -98,12 +102,6 @@ loading.value = false
                     <v-img src="icons/48.png" max-height="24" max-width="24" class="ml-4"></v-img>
                     <v-toolbar-title>{{ text.title }}</v-toolbar-title>
                     <v-spacer></v-spacer>
-                    <v-tooltip location="bottom">
-                        <template #activator="{ props }">
-                            <v-btn class="mr-2" color="success" fab icon="fas fa-save" v-bind="props" @click="save"></v-btn>
-                        </template>
-                        <span>{{text.save}}</span>
-                    </v-tooltip>
                     <v-tooltip location="bottom">
                         <template #activator="{ props }">
                             <v-btn class="mr-2" fab icon="fas fa-download" v-bind="props" @click="saveExportStart"></v-btn>
@@ -217,7 +215,7 @@ loading.value = false
                         <v-card-text>
                             <v-window v-model="tab">
                                 <v-window-item value="general">
-                                    <OptionGeneral @theme-color-changed="themeColorChanged" @theme-schema-changed="themeSchemaChanged"></OptionGeneral>
+                                    <option-general @theme-color-changed="themeColorChanged" @theme-schema-changed="themeSchemaChanged" />
                                 </v-window-item>
                                 <v-window-item value="jira">
 <!--                                    <jira></jira>-->
@@ -226,16 +224,13 @@ loading.value = false
 <!--                                    <jenkins></jenkins>-->
                                 </v-window-item>
                                 <v-window-item value="gitLab">
-<!--                                    <git-lab></git-lab>-->
+                                    <git-lab />
                                 </v-window-item>
                                 <v-window-item value="chat">
-                                    <ChatOptionsView />
+                                    <chat-options-view />
                                 </v-window-item>
                                 <v-window-item value="cheatSheet">
-<!--                                    <cheat-sheet></cheat-sheet>-->
-                                </v-window-item>
-                                <v-window-item value="about">
-<!--                                    <about></about>-->
+                                    <cheat-sheet />
                                 </v-window-item>
                             </v-window>
                         </v-card-text>
@@ -263,13 +258,12 @@ loading.value = false
 <!--import CheatSheet from '../components/options/CheatSheet.vue'-->
 <!--import About from '../components/options/About.vue'-->
 <!--import Theme from '../mixins/theme'-->
-<!--/* import Chrome from '../components/options/Chrome.vue' */-->
 <!--import semver from 'semver'-->
 <!--import Migration from '../mixins/migration'-->
 
 <!--export default {-->
 <!--    name: 'App',-->
-<!--    components: {General, Jira, Jenkins, GitLab, Chat, CheatSheet, /*Chrome,*/ About },-->
+<!--    components: {General, Jira, Jenkins, GitLab, Chat, CheatSheet,  About },-->
 <!--    computed: {-->
 <!--        modules()  {-->
 <!--            return this.$store.getters['modules']-->

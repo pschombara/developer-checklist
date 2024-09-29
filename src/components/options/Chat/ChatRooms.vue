@@ -1,7 +1,6 @@
 <script setup>
 
 import {computed, ref} from 'vue'
-import chrome from '../Chrome.vue'
 import Helper from '../../../mixins/helper.js'
 import {useChatStorage} from '../../../stores/chat.js'
 
@@ -18,20 +17,6 @@ const props = defineProps({
 
 const sortRoom = ref(null)
 
-const editRoom = ref({
-    open: false,
-    id: null,
-    name: '',
-    url: '',
-    title: '',
-})
-
-const deleteRoom = ref({
-    open: false,
-    id: null,
-    name: '',
-})
-
 const i18n = chrome.i18n
 
 const text = {
@@ -42,10 +27,28 @@ const text = {
     name: i18n.getMessage('Name'),
 }
 
+const defaultRoom = {
+    open: false,
+    id: null,
+    name: '',
+    url: '',
+    title: '',
+    saveButton: text.add,
+}
+
+const defaultDelete = {
+    open: false,
+    id: null,
+    name: '',
+}
+
+const editRoom = ref({...defaultRoom})
+const deleteRoom = ref({...defaultDelete})
+
 const nameRules = [
     value => !!value || i18n.getMessage('errNotBlank'),
     value => value.length <= 20 || i18n.getMessage('errMaxLength', '20'),
-    value => false === this.checkDuplicated(value) || i18n.getMessage('errDuplicated'),
+    value => false === checkDuplicated(value) || i18n.getMessage('errDuplicated'),
 ]
 
 const urlRules = [
@@ -53,8 +56,6 @@ const urlRules = [
     value => Helper.isURL(value, this.urlStart) || i18n.getMessage('errUrlInvalid'),
     value => value.length <= 500 || i18n.getMessage('errMaxLength', '500'),
 ]
-
-const formValid = ref(false)
 
 const roomsHeader = [
     {title: 'Name', key: 'name', sortable: false, width: '15%'},
@@ -68,124 +69,87 @@ const rooms = computed(() => {
     return chatStorage.getRooms(props.client)
 })
 
-// export default {
-//     methods: {
-//         startSort: function (item) {
-//             this.sortRoom = item
-//         },
-//         closeSort: function () {
-//             this.sortRoom = null
-//         },
-//         sortBefore: function (item) {
-//             this.$store.dispatch('chat/roomSortBefore', {
-//                 client: this.client,
-//                 ref: item.id,
-//                 current: this.sortRoom.id,
-//             })
-//         },
-//         sortAfter: function (item) {
-//             this.$store.dispatch('chat/roomSortAfter', {
-//                 client: this.client,
-//                 ref: item.id,
-//                 current: this.sortRoom.id,
-//             })
-//         },
-//         itemRowSortActiveClass: function (item) {
-//             if (null === this.sortRoom) {
-//                 return ''
-//             }
-//
-//             return item.id === this.sortRoom.id ? 'primary' : ''
-//         },
-//         openRoom: function (item) {
-//             this.editRoom = {
-//                 open: true,
-//                 id: item.id,
-//                 name: item.name,
-//                 url: item.url,
-//                 title: this.i18n.getMessage('TitleUpdate', item.name),
-//                 saveButton: this.text.save,
-//             }
-//         },
-//         openAddRoom: function () {
-//             this.closeRoom()
-//             this.editRoom.open = true
-//         },
-//         closeRoom: function () {
-//             this.editRoom = {
-//                 open: false,
-//                 id: null,
-//                 name: '',
-//                 url: '',
-//                 title: '',
-//                 saveButton: this.text.add,
-//             }
-//         },
-//         async saveRoom (event) {
-//             const result = await event
-//
-//             if (false === result.valid) {
-//                 return
-//             }
-//
-//             if (null === this.editRoom.id) {
-//                 this.$store.dispatch('chat/addRoom', {
-//                     client: this.client,
-//                     room: {
-//                         name: this.editRoom.name,
-//                         url: this.editRoom.url,
-//                     },
-//                 })
-//             } else {
-//                 this.$store.dispatch('chat/updateRoom', {
-//                     client: this.client,
-//                     room: {
-//                         id: this.editRoom.id,
-//                         name: this.editRoom.name,
-//                         url: this.editRoom.url,
-//                     },
-//                 })
-//             }
-//
-//             this.closeRoom()
-//         },
-//         openDeleteRoom: function (item) {
-//             this.deleteRoom = {
-//                 open: true,
-//                 id: item.id,
-//                 name: item.name,
-//             }
-//         },
-//         closeDeleteRoom: function () {
-//             this.deleteRoom = {
-//                 open: false,
-//                 id: null,
-//                 name: '',
-//             }
-//         },
-//         removeRoom: function () {
-//             this.$store.dispatch('chat/removeRoom', {
-//                 client: this.client,
-//                 id: this.deleteRoom.id,
-//             })
-//
-//             this.closeDeleteRoom()
-//         },
-//         checkDuplicated: function (value) {
-//             const room = this.$store.getters['chat/listRooms'](this.client).find(item => item.name === value)
-//
-//             if (undefined === room) {
-//                 return false
-//             }
-//
-//             if (null === this.editRoom.id) {
-//                 return true
-//             }
-//
-//             return this.editRoom.name !== value
-//         },
-//     },
-// }
+const startSort = item => {
+    sortRoom.value = item
+}
+
+const closeSort = () => {
+    sortRoom.value = null
+}
+
+const sortBefore = item => {
+    chatStorage.roomSortBefore(props.client, item.id, sortRoom.value.id)
+}
+
+const sortAfter = item => {
+    chatStorage.roomSortAfter(props.client, item.id, sortRoom.value.id)
+}
+
+const openRoom = item => {
+    editRoom.value = {
+        open: true,
+        id: item.id,
+        name: item.name,
+        url: item.url,
+        title: i18n.getMessage('TitleUpdate', item.name),
+        saveButton: text.save,
+    }
+}
+
+const closeRoom = () => {
+    editRoom.value = {...defaultRoom}
+}
+
+const openAddRoom = () => {
+    closeRoom()
+    editRoom.value.open = true
+}
+
+const saveRoom = async event => {
+    const result = await event
+
+    if (false === result.valid) {
+        return
+    }
+
+    if (null === editRoom.value.id) {
+        chatStorage.createRoom(props.client, editRoom.value.name, editRoom.value.url)
+    } else {
+        chatStorage.updateRoom(props.client, editRoom.value.id, editRoom.value.name, editRoom.value.url)
+    }
+
+    closeRoom()
+}
+
+const openDeleteRoom = item => {
+    deleteRoom.value = {
+        open: true,
+        id: item.id,
+        name: item.name,
+    }
+}
+
+const closeDeleteRoom = () => {
+    deleteRoom.value = {...defaultDelete}
+}
+
+const removeRoom = () => {
+    chatStorage.removeRoom(props.client, deleteRoom.value.id)
+}
+
+const checkDuplicate = value => {
+    const room = chatStorage.getRooms(props.client).find(room => room.name === value)
+
+    if (undefined === room) {
+        return false
+    }
+
+    if (null === editRoom.value.id) {
+        return true
+    }
+
+    return editRoom.value.name !== value
+}
 </script>
 
 <template>
