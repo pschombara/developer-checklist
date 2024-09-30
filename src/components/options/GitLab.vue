@@ -2,8 +2,10 @@
 import Helper from '../../mixins/helper'
 import {useGitLabStorage} from '../../stores/gitlab.js'
 import {computed, ref} from 'vue'
+import {useJenkinsStorage} from '../../stores/jenkins.js'
 
 const gitLabStorage = useGitLabStorage()
+const jenkinsStorage = useJenkinsStorage()
 
 let init = false
 const i18n = chrome.i18n
@@ -45,7 +47,7 @@ const categoryRules = [
 
 const host = computed({
     get() {
-        return  gitLabStorage.getHost
+        return gitLabStorage.getHost
     },
     set(value) {
         if (null === value || Helper.isURL(value)) {
@@ -62,6 +64,10 @@ const categories = computed(() => {
     return gitLabStorage.getCategories.map(category => {
         return {name: category}
     })
+})
+
+const ciProjects = computed(() => {
+    return jenkinsStorage.getBuilds
 })
 
 const defaultCategory = {
@@ -98,24 +104,26 @@ const searchCategory = ref('')
 const searchProject = ref('')
 const dialogProject = ref({...defaultDialogProject})
 const deleteCategory = ref({})
-const deleteProject= ref({})
+const deleteProject = ref({})
 
 const categoriesHeader = [
-    { title: text.category, key: 'name' },
-    { title: '', key: 'actions', sortable: false, align: 'end' },
+    {title: text.category, key: 'name'},
+    {title: '', key: 'actions', sortable: false, align: 'end'},
 ]
 
 const projectsHeader = [
-    { title: text.project, key: 'project', groupable: false },
-    { title: '', key: 'actions', sortable: false, align: 'end', groupable: false },
+    {title: text.project, key: 'project', groupable: false},
+    {title: '', key: 'actions', sortable: false, align: 'end', groupable: false},
 ]
 
 const removeCategory = item => {
-
+    gitLabStorage.removeCategory(item.name)
+    closeDialogDeleteCategory()
 }
 
 const removeProject = item => {
-
+    gitLabStorage.removeProject(item.uuid)
+    closeDialogDeleteProject()
 }
 
 const openDialogDeleteCategory = item => {
@@ -227,9 +235,9 @@ const saveCategory = async event => {
     }
 
     if (null === dialogCategory.value.current) {
-
+        gitLabStorage.addCategory(dialogCategory.value.item.name)
     } else {
-
+        gitLabStorage.renameCategory(dialogCategory.value.current.name, dialogCategory.value.item.name)
     }
 
     closeDialogCategory()
@@ -243,9 +251,18 @@ const saveProject = async event => {
     }
 
     if (null === dialogProject.value.current) {
-
+        gitLabStorage.addProject(
+            dialogProject.value.item.ciBuild,
+            dialogProject.value.item.domain,
+            dialogProject.value.item.project,
+        )
     } else {
-
+        gitLabStorage.updateProject(
+            dialogProject.value.item.uuid,
+            dialogProject.value.item.ciBuild,
+            dialogProject.value.item.domain,
+            dialogProject.value.item.project,
+        )
     }
 
     closeProject()
@@ -253,11 +270,11 @@ const saveProject = async event => {
 
 gitLabStorage.$subscribe(() => {
     if (init) {
-
+        gitLabStorage.save()
     }
 })
 
-gitLabStorage.load().then(() => init = true)
+Promise.all([gitLabStorage.load(), jenkinsStorage.load()]).then(() => init = true)
 </script>
 
 <template>
@@ -265,13 +282,15 @@ gitLabStorage.load().then(() => init = true)
         <v-card-text>
             <v-row>
                 <v-col cols="12" sm="6" md="3">
-                    <v-text-field v-model="host" :label="text.host" :rules="hostRules" clearable clear-icon="fas fa-times"></v-text-field>
+                    <v-text-field
+v-model="host" :label="text.host" :rules="hostRules" clearable
+                                  clear-icon="fas fa-times"></v-text-field>
                 </v-col>
             </v-row>
             <v-row>
                 <v-col cols="12" md="7">
                     <v-card>
-                        <v-card-title>{{text.projects}}</v-card-title>
+                        <v-card-title>{{ text.projects }}</v-card-title>
                         <v-card-text>
                             <v-data-table
                                 :headers="projectsHeader"
@@ -295,66 +314,73 @@ gitLabStorage.load().then(() => init = true)
                                                 clearable
                                             ></v-text-field>
                                         </v-toolbar-title>
-                                        <v-spacer></v-spacer>
+                                        <v-spacer/>
                                         <v-btn
                                             variant="plain"
                                             prepend-icon="fas fa-plus"
                                             color="primary"
-                                            @click="openNewProject">{{text.add}}</v-btn>
+                                            @click="openNewProject">{{ text.add }}
+                                        </v-btn>
                                         <v-dialog v-model="dialogProject.open" max-width="450">
                                             <v-form
                                                 validate-on="input"
                                                 @submit.prevent="saveProject">
                                                 <v-card>
-                                                    <v-card-title>{{dialogProject.title}}</v-card-title>
+                                                    <v-card-title>{{ dialogProject.title }}</v-card-title>
                                                     <v-card-text>
-                                                            <v-autocomplete
-                                                                v-model="dialogProject.item.domain"
-                                                                :items="categories"
-                                                                :label="text.category"
-                                                                item-title="name"
-                                                                item-value="name"
-                                                                :rules="domainRules"
-                                                                @change="$refs.projectForm.validate()"
-                                                            ></v-autocomplete>
-                                                            <v-text-field
-                                                                v-model="dialogProject.item.project"
-                                                                :rules="projectRules"
-                                                                :label="text.project"
-                                                            ></v-text-field>
-<!--                                                        <v-autocomplete-->
-<!--                                                            v-model="dialogProject.item.ciBuild"-->
-<!--                                                            :items="ciProjects"-->
-<!--                                                            :label="text.ciBuild"-->
-<!--                                                            item-title="name"-->
-<!--                                                            item-value="uuid"-->
-<!--                                                        ></v-autocomplete>-->
+                                                        <v-autocomplete
+                                                            v-model="dialogProject.item.domain"
+                                                            :items="categories"
+                                                            :label="text.category"
+                                                            item-title="name"
+                                                            item-value="name"
+                                                            :rules="domainRules"
+                                                            @change="$refs.projectForm.validate()"
+                                                        />
+                                                        <v-text-field
+                                                            v-model="dialogProject.item.project"
+                                                            :rules="projectRules"
+                                                            :label="text.project"
+                                                        />
+                                                        <v-autocomplete
+                                                            v-model="dialogProject.item.ciBuild"
+                                                            :items="ciProjects"
+                                                            :label="text.ciBuild"
+                                                            item-title="name"
+                                                            item-value="uuid"
+                                                        />
                                                     </v-card-text>
                                                     <v-card-actions>
-                                                        <v-spacer></v-spacer>
+                                                        <v-spacer/>
                                                         <v-btn
                                                             color="secondary"
                                                             variant="plain"
-                                                            @click="closeProject">{{ text.cancel }}</v-btn>
+                                                            @click="closeProject">{{ text.cancel }}
+                                                        </v-btn>
                                                         <v-btn
                                                             type="submit"
                                                             color="primary"
-                                                            variant="plain">{{ dialogProject.saveButton }}</v-btn>
-                                                        <v-spacer></v-spacer>
+                                                            variant="plain">{{ dialogProject.saveButton }}
+                                                        </v-btn>
+                                                        <v-spacer/>
                                                     </v-card-actions>
                                                 </v-card>
                                             </v-form>
                                         </v-dialog>
                                         <v-dialog v-model="dialogDeleteProject" max-width="450">
                                             <v-card>
-                                                <v-card-title class="headline">{{ i18n.getMessage('TitleDelete', deleteProject.project) }}</v-card-title>
+                                                <v-card-title class="headline">
+                                                    {{ i18n.getMessage('TitleDelete', deleteProject.project) }}
+                                                </v-card-title>
                                                 <v-card-actions>
-                                                    <v-spacer></v-spacer>
+                                                    <v-spacer/>
                                                     <v-btn color="secondary" plain @click="closeDialogDeleteProject()">
-                                                        {{ text.cancel }}</v-btn>
+                                                        {{ text.cancel }}
+                                                    </v-btn>
                                                     <v-btn color="tertiary" plain @click="removeProject(deleteProject)">
-                                                        {{ text.delete }}</v-btn>
-                                                    <v-spacer></v-spacer>
+                                                        {{ text.delete }}
+                                                    </v-btn>
+                                                    <v-spacer/>
                                                 </v-card-actions>
                                             </v-card>
                                         </v-dialog>
@@ -365,13 +391,13 @@ gitLabStorage.load().then(() => init = true)
                                         variant="plain"
                                         icon="fas fa-edit"
                                         size="small"
-                                        @click="openProject(item)"> </v-btn>
+                                        @click="openProject(item)"/>
                                     <v-btn
                                         variant="plain"
                                         icon="fas fa-trash"
                                         size="small"
                                         color="tertiary"
-                                        @click="openDialogDeleteProject(item)"></v-btn>
+                                        @click="openDialogDeleteProject(item)"/>
                                 </template>
                             </v-data-table>
                         </v-card-text>
@@ -379,7 +405,7 @@ gitLabStorage.load().then(() => init = true)
                 </v-col>
                 <v-col cols="12" md="5">
                     <v-card>
-                        <v-card-title>{{text.categories}}</v-card-title>
+                        <v-card-title>{{ text.categories }}</v-card-title>
                         <v-card-text>
                             <v-data-table
                                 :headers="categoriesHeader"
@@ -398,14 +424,15 @@ gitLabStorage.load().then(() => init = true)
                                                 single-line
                                                 hide-details
                                                 clearable
-                                            ></v-text-field>
+                                            />
                                         </v-toolbar-title>
-                                        <v-spacer></v-spacer>
+                                        <v-spacer/>
                                         <v-btn
                                             variant="plain"
                                             prepend-icon="fas fa-plus"
                                             color="primary"
-                                            @click="openNewCategory">{{text.add}}</v-btn>
+                                            @click="openNewCategory">{{ text.add }}
+                                        </v-btn>
                                         <v-dialog v-model="dialogCategory.open" max-width="450">
                                             <v-form
                                                 validate-on="input"
@@ -413,38 +440,46 @@ gitLabStorage.load().then(() => init = true)
                                                 <v-card>
                                                     <v-card-title>{{ dialogCategory.title }}</v-card-title>
                                                     <v-card-text>
-                                                            <v-text-field
-                                                                v-model="dialogCategory.item.name"
-                                                                :rules="categoryRules"
-                                                                :label="text.name"
-                                                            ></v-text-field>
+                                                        <v-text-field
+                                                            v-model="dialogCategory.item.name"
+                                                            :rules="categoryRules"
+                                                            :label="text.name"
+                                                        />
                                                     </v-card-text>
                                                     <v-card-actions>
-                                                        <v-spacer></v-spacer>
+                                                        <v-spacer/>
                                                         <v-btn
                                                             color="secondary"
                                                             variant="plain"
-                                                            @click="closeDialogCategory">{{ text.cancel }}</v-btn>
+                                                            @click="closeDialogCategory">{{ text.cancel }}
+                                                        </v-btn>
                                                         <v-btn
                                                             type="submit"
                                                             color="primary"
-                                                            variant="plain">{{ dialogCategory.saveButton }}</v-btn>
-                                                        <v-spacer></v-spacer>
+                                                            variant="plain">{{ dialogCategory.saveButton }}
+                                                        </v-btn>
+                                                        <v-spacer/>
                                                     </v-card-actions>
                                                 </v-card>
                                             </v-form>
                                         </v-dialog>
                                         <v-dialog v-model="dialogDeleteCategory" max-width="450">
                                             <v-card>
-                                                <v-card-title class="headline">{{ i18n.getMessage('TitleDelete', deleteCategory.name) }}</v-card-title>
+                                                <v-card-title class="headline">
+                                                    {{ i18n.getMessage('TitleDelete', deleteCategory.name) }}
+                                                </v-card-title>
                                                 <v-card-text>{{ text.subTitleDeleteCategory }}</v-card-text>
                                                 <v-card-actions>
-                                                    <v-spacer></v-spacer>
+                                                    <v-spacer/>
                                                     <v-btn color="secondary" plain @click="closeDialogDeleteCategory()">
-                                                        {{ text.cancel }}</v-btn>
-                                                    <v-btn color="tertiary" plain @click="removeCategory(deleteCategory)">
-                                                        {{ text.delete }}</v-btn>
-                                                    <v-spacer></v-spacer>
+                                                        {{ text.cancel }}
+                                                    </v-btn>
+                                                    <v-btn
+color="tertiary" plain
+                                                           @click="removeCategory(deleteCategory)">
+                                                        {{ text.delete }}
+                                                    </v-btn>
+                                                    <v-spacer/>
                                                 </v-card-actions>
                                             </v-card>
                                         </v-dialog>
@@ -455,13 +490,13 @@ gitLabStorage.load().then(() => init = true)
                                         variant="plain"
                                         icon="fas fa-edit"
                                         size="small"
-                                        @click="openCategory(item)"></v-btn>
+                                        @click="openCategory(item)"/>
                                     <v-btn
                                         variant="plain"
                                         icon="fas fa-trash"
                                         size="small"
                                         color="tertiary"
-                                        @click="openDialogDeleteCategory(item)"> </v-btn>
+                                        @click="openDialogDeleteCategory(item)"/>
                                 </template>
                             </v-data-table>
                         </v-card-text>

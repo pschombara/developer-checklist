@@ -1,3 +1,161 @@
+<script setup>
+import {computed, ref} from 'vue'
+import {useJenkinsStorage} from '../../../stores/jenkins.js'
+
+const i18n = chrome.i18n
+const jenkinsStore = useJenkinsStorage()
+
+const buildNameRules = [
+    value => !!value || i18n.getMessage('errNotBlank'),
+    value => false === checkBuildDuplicated(value) || i18n.getMessage('errDuplicated'),
+]
+
+const buildJobRules = [
+    value => !!value || i18n.getMessage('errNotBlank'),
+]
+
+const buildTypeRules = [
+    value => !!value || i18n.getMessage('errNotBlank'),
+]
+
+const text = {
+    category: i18n.getMessage('Category'),
+    newCategory: i18n.getMessage('NewCategory'),
+    newBuild: i18n.getMessage('NewBuild'),
+    search: i18n.getMessage('Search'),
+    add: i18n.getMessage('Add'),
+    save: i18n.getMessage('Save'),
+    cancel: i18n.getMessage('Cancel'),
+    delete: i18n.getMessage('Delete'),
+    label: i18n.getMessage('Label'),
+    name: i18n.getMessage('Name'),
+    build: i18n.getMessage('Build'),
+    builds: i18n.getMessage('Builds'),
+    job: i18n.getMessage('Job'),
+}
+
+const buildHeaders = [
+    {title: text.name, key: 'name', groupable: false},
+    {title: text.label, key: 'label', groupable: false},
+    {title: text.job, key: 'job', groupable: false},
+    {title: '', key: 'actions', sortable: false, align: 'end', groupable: false},
+]
+
+const searchBuild = ref('')
+const dialogDeleteBuild = ref(false)
+
+const defaultBuild = {
+    uuid: null,
+    type: null,
+    job: null,
+    label: '',
+    name: '',
+}
+
+const dialogBuild = ref({
+    open: false,
+    title: '',
+    current: null,
+    item: {...defaultBuild},
+    saveButton: '',
+})
+
+const deleteBuild = ref({})
+
+const builds = computed(() => {
+    return jenkinsStore.getBuilds
+})
+
+const categories = computed(() => {
+    return jenkinsStore.getCategories
+})
+
+const openBuild = build => {
+    dialogBuild.value = {
+        open: true,
+        title: i18n.getMessage('TitleUpdate', build.name),
+        current: build,
+        item: {...build},
+        saveButton: text.save,
+    }
+}
+
+const openNewBuild = () => {
+    dialogBuild.value = {
+        open: true,
+        title: text.newBuild,
+        current: null,
+        item: {...defaultBuild},
+        saveButton: text.add,
+    }
+}
+
+const openDialogDeleteBuild = build => {
+    dialogDeleteBuild.value = true
+    deleteBuild.value = {...build}
+}
+
+const closeDialogBuild = () => {
+    dialogBuild.value.open = false
+    dialogBuild.value.current = null
+}
+
+const saveBuild = async event => {
+    const result = await event
+
+    if (false === result.valid) {
+        return
+    }
+
+    if (null === dialogBuild.value.item.uuid) {
+        jenkinsStore.addBuild(
+            dialogBuild.value.item.type,
+            dialogBuild.value.item.job,
+            dialogBuild.value.item.label,
+            dialogBuild.value.item.name,
+        )
+    } else {
+        jenkinsStore.updateBuild(
+            dialogBuild.value.item.uuid,
+            dialogBuild.value.item.type,
+            dialogBuild.value.item.job,
+            dialogBuild.value.item.label,
+            dialogBuild.value.item.name,
+        )
+    }
+
+    closeDialogBuild()
+}
+
+const removeBuild = build => {
+    jenkinsStore.removeBuild(build.uuid)
+}
+
+const closeDialogDeleteBuild = () => {
+    dialogDeleteBuild.value = false
+    deleteBuild.value = {}
+}
+
+const checkBuildDuplicated = value => {
+    if (null === value) {
+        return false
+    }
+
+    const item = dialogBuild.value.item
+    const search = jenkinsStore.getBuilds.find(build => build.type === item.type && build.name.toLowerCase() === item.name.toLowerCase())
+
+    if (undefined === search) {
+        return false
+    }
+
+    if (null === dialogBuild.value.current) {
+        return true
+    }
+
+    return search.uuid !== item.uuid || dialogBuild.value.current.uuid !== item.uuid
+}
+</script>
+
 <template>
     <v-card flat class="ml-5">
         <v-card-title>{{ text.builds }}</v-card-title>
@@ -113,157 +271,3 @@
         </v-card-text>
     </v-card>
 </template>
-<script>
-
-export default {
-    name: 'JenkinsBuilds',
-    data() {
-        return {
-            buildNameRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-                value => false === this.checkBuildDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
-            ],
-            buildJobRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-            ],
-            buildTypeRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-            ],
-            i18n: chrome.i18n,
-            text: {
-                category: chrome.i18n.getMessage('Category'),
-                newCategory: chrome.i18n.getMessage('NewCategory'),
-                newBuild: chrome.i18n.getMessage('NewBuild'),
-                search: chrome.i18n.getMessage('Search'),
-                add: chrome.i18n.getMessage('Add'),
-                save: chrome.i18n.getMessage('Save'),
-                cancel: chrome.i18n.getMessage('Cancel'),
-                delete: chrome.i18n.getMessage('Delete'),
-                label: chrome.i18n.getMessage('Label'),
-                name: chrome.i18n.getMessage('Name'),
-                build: chrome.i18n.getMessage('Build'),
-                builds: chrome.i18n.getMessage('Builds'),
-                job: chrome.i18n.getMessage('Job'),
-            },
-            searchBuild: '',
-            dialogDeleteBuild: false,
-            dialogBuild: {
-                open: false,
-                title: '',
-                current: null,
-                item: {
-                    uuid: null,
-                    type: null,
-                    job: null,
-                    label: '',
-                    name: '',
-                },
-                saveButton: '',
-            },
-            defaultBuild: {
-                uuid: null,
-                type: null,
-                job: null,
-                label: '',
-                name: '',
-            },
-            deleteBuild: {},
-        }
-    },
-    computed: {
-        builds() {
-            return this.$store.getters['jenkins/getBuilds']
-        },
-        buildHeaders() {
-            return [
-                {title: this.text.name, key: 'name', groupable: false},
-                {title: this.text.label, key: 'label', groupable: false},
-                {title: this.text.job, key: 'job', groupable: false},
-                {title: '', key: 'actions', sortable: false, align: 'end', groupable: false},
-            ]
-        },
-        categories() {
-            return this.$store.getters['jenkins/getCategories']
-        },
-    },
-    methods: {
-        openBuild: function (build) {
-            this.dialogBuild = {
-                open: true,
-                title: this.i18n.getMessage('TitleUpdate', build.name),
-                valid: true,
-                current: build,
-                item: Object.assign({}, build),
-                saveButton: this.text.save,
-            }
-        },
-        openNewBuild: function () {
-            this.dialogBuild = {
-                open: true,
-                title: this.text.newBuild,
-                valid: false,
-                current: null,
-                item: Object.assign({}, this.defaultBuild),
-                saveButton: this.text.add,
-            }
-        },
-        openDialogDeleteBuild: function (build) {
-            this.dialogDeleteBuild = true
-            this.deleteBuild = Object.assign({}, build)
-        },
-        closeDialogBuild: function () {
-            this.dialogBuild.open = false
-            this.dialogBuild.current = null
-        },
-        async saveBuild (event) {
-            const result = await event
-
-            if (false === result.valid) {
-                return
-            }
-
-            if (null === this.dialogBuild.item.uuid) {
-                this.$store.dispatch('jenkins/addBuild', this.dialogBuild.item)
-            } else {
-                this.$store.dispatch(
-                    'jenkins/updateBuild',
-                    {
-                        previous: this.dialogBuild.current,
-                        build: this.dialogBuild.item,
-                    },
-                )
-            }
-
-            this.closeDialogBuild()
-        },
-        removeBuild: function (build) {
-            this.$store.dispatch('jenkins/removeBuild', build)
-            this.closeDialogDeleteBuild()
-        },
-        closeDialogDeleteBuild: function () {
-            this.dialogDeleteBuild = false
-            this.deleteBuild = {}
-        },
-        checkBuildDuplicated: function (value) {
-            if (null === value) {
-                return false
-            }
-
-            let item = this.dialogBuild.item
-            let builds = this.$store.getters['jenkins/getBuilds']
-
-            let searchResult = builds.find(build => build.type === item.type && build.name.toLowerCase() === item.name.toLowerCase())
-
-            if (undefined === searchResult) {
-                return false
-            }
-
-            if (null === this.dialogBuild.current) {
-                return true
-            }
-
-            return searchResult.uuid !== item.uuid || this.dialogBuild.current.uuid !== item.uuid
-        },
-    },
-}
-</script>

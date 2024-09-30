@@ -1,3 +1,32 @@
+<script setup>
+
+import {ref} from 'vue'
+import {useJenkinsStorage} from '../../stores/jenkins.js'
+import JenkinsGeneral from './Jenkins/JenkinsGeneral.vue'
+import JenkinsCategories from './Jenkins/JenkinsCategories.vue'
+import JenkinsBuilds from './Jenkins/JenkinsBuilds.vue'
+
+const i18n = chrome.i18n
+const tab = ref(null)
+let init = false
+
+const text = {
+    general: i18n.getMessage('General'),
+    categories: i18n.getMessage('Categories'),
+    builds: i18n.getMessage('Builds'),
+}
+
+const jenkinsStorage = useJenkinsStorage()
+
+jenkinsStorage.$subscribe(() => {
+    if (init) {
+        jenkinsStorage.save()
+    }
+})
+
+jenkinsStorage.load().then(() => init = true)
+</script>
+
 <template>
     <v-card fluid class="mt-5">
         <div class="d-flex flex-row">
@@ -36,38 +65,15 @@
 
             <v-window v-model="tab" class="flex-fill">
                 <v-window-item>
-                    <general></general>
+                    <JenkinsGeneral />
                 </v-window-item>
                 <v-window-item>
-                    <builds></builds>
+                  <JenkinsBuilds />
                 </v-window-item>
                 <v-window-item>
-                    <categories></categories>
+                    <JenkinsCategories />
                 </v-window-item>
             </v-window>
         </div>
     </v-card>
 </template>
-
-<script>
-
-import Builds from './Jenkins/Builds.vue'
-import Categories from './Jenkins/Categories.vue'
-import General from './Jenkins/General.vue'
-
-export default {
-    name: 'OptionJenkins',
-    components: {Builds, Categories, General},
-    data() {
-        return {
-            i18n: chrome.i18n,
-            text: {
-                general: chrome.i18n.getMessage('General'),
-                categories: chrome.i18n.getMessage('Categories'),
-                builds: chrome.i18n.getMessage('Builds'),
-            },
-            tab: null,
-        }
-    },
-}
-</script>
