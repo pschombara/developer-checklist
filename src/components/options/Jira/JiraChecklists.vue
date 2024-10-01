@@ -1,3 +1,17 @@
+<script setup>
+import {computed, ref} from 'vue'
+import {useJiraStorage} from '../../../stores/jira.js'
+import ChecklistData from './Checklists/ChecklistData.vue'
+
+const tab = ref(null)
+const jiraStorage = useJiraStorage()
+
+const checklists = computed(() => {
+    return jiraStorage.getChecklists
+})
+</script>
+
+
 <template>
     <v-card flat class="ml-5">
         <v-card-text>
@@ -20,28 +34,9 @@
                     v-for="checklist in checklists"
                     :key="checklist.uuid"
                 >
-                    <Checklist :uuid="checklist.uuid"></Checklist>
+                    <ChecklistData :uuid="checklist.uuid" />
                 </v-window-item>
             </v-window>
         </v-card-text>
     </v-card>
 </template>
-
-<script>
-import Checklist from './Checklists/Checklist.vue'
-
-export default {
-    name: 'JiraChecklists',
-    components: {Checklist},
-    data() {
-        return {
-            tab: null,
-        }
-    },
-    computed: {
-        checklists() {
-            return this.$store.getters['jira/getChecklists']
-        },
-    },
-}
-</script>

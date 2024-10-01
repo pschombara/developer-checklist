@@ -7,6 +7,7 @@ import ChatOptionsView from '../components/options/ChatOptionsView.vue'
 import CheatSheet from '../components/options/CheatSheet.vue'
 import GitLab from '../components/options/GitLab.vue'
 import JenkinsOptionsView from '../components/options/JenkinsOptionsView.vue'
+import JiraOptionsView from '../components/options/JiraOptionsView.vue'
 
 const loading = ref(true)
 
@@ -219,7 +220,7 @@ loading.value = false
                                     <option-general @theme-color-changed="themeColorChanged" @theme-schema-changed="themeSchemaChanged" />
                                 </v-window-item>
                                 <v-window-item value="jira">
-<!--                                    <jira></jira>-->
+                                    <JiraOptionsView />
                                 </v-window-item>
                                 <v-window-item value="jenkins">
                                     <JenkinsOptionsView />

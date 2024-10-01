@@ -1,3 +1,33 @@
+<script setup>
+import Issues from './Jira/Issues.vue'
+import {ref} from 'vue'
+import {useJiraStorage} from '../../stores/jira.js'
+import JiraChecklists from './Jira/JiraChecklists.vue'
+import JiraGeneral from './Jira/JiraGeneral.vue'
+import JiraTemplates from './Jira/JiraTemplates.vue'
+
+const jiraStorage = useJiraStorage()
+const i18n = chrome.i18n
+let init = false
+
+const text = {
+    general: chrome.i18n.getMessage('General'),
+    checklists: chrome.i18n.getMessage('Checklists'),
+    templates: chrome.i18n.getMessage('Templates'),
+    issues: 'Issues',
+}
+
+const tab = ref(null)
+
+jiraStorage.$subscribe(() => {
+    if (init) {
+        jiraStorage.save()
+    }
+})
+
+jiraStorage.load().then(() => init = true)
+</script>
+
 <template>
     <v-card fluid class="mt-5">
         <div class="d-flex flex-row">
@@ -50,13 +80,13 @@
 
             <v-window v-model="tab" class="flex-fill">
                 <v-window-item value="general">
-                    <general></general>
+                    <JiraGeneral />
                 </v-window-item>
                 <v-window-item value="checklists">
-                    <checklists></checklists>
+                    <JiraChecklists />
                 </v-window-item>
                 <v-window-item value="templates">
-                    <templates></templates>
+                    <JiraTemplates />
                 </v-window-item>
                 <v-window-item value="issues">
                     <issues></issues>
@@ -65,26 +95,3 @@
         </div>
     </v-card>
 </template>
-
-<script>
-import General from './Jira/General.vue'
-import Checklists from './Jira/Checklists.vue'
-import Templates from './Jira/Templates.vue'
-import Issues from './Jira/Issues.vue'
-
-export default {
-    name: 'OptionJira',
-    components: {Issues, General, Checklists, Templates},
-    data: function() {
-        return {
-            text: {
-                general: chrome.i18n.getMessage('General'),
-                checklists: chrome.i18n.getMessage('Checklists'),
-                templates: chrome.i18n.getMessage('Templates'),
-                issues: 'Issues',
-            },
-            tab: null,
-        }
-    },
-}
-</script>

@@ -1,3 +1,178 @@
+<script setup>
+import Helper from '../../../mixins/helper'
+import {computed, ref} from 'vue'
+import {useJiraStorage} from '../../../stores/jira.js'
+
+const jiraStorage = useJiraStorage()
+const i18n = chrome.i18n
+const text = {
+    host: i18n.getMessage('Host'),
+    issues: i18n.getMessage('IssuesInProgress'),
+    cleanup: i18n.getMessage('CleanupInterval'),
+    search: i18n.getMessage('Search'),
+    add: i18n.getMessage('Add'),
+    save: i18n.getMessage('Save'),
+    cancel: i18n.getMessage('Cancel'),
+    delete: i18n.getMessage('Delete'),
+    boardKey: i18n.getMessage('BoardKey'),
+    boards: i18n.getMessage('Boards'),
+    newBoard: i18n.getMessage('NewBoard'),
+    default: i18n.getMessage('Default'),
+    hint: {
+        cleanup: i18n.getMessage('hintJiraCleanup'),
+        issues: i18n.getMessage('hintJiraIssues'),
+    },
+}
+
+const boardHeaders = [
+    { title: text.boardKey, key: 'key'},
+    { title: text.default, key: 'default', sortable: false},
+    { title: '', key: 'actions', sortable: false, align: 'end'},
+]
+
+const urlRules = [
+    value => Helper.isURL(value) || i18n.getMessage('errUrlInvalid'),
+]
+
+const boardKeyRules = [
+    value => !!value || i18n.getMessage('errNotBlank'),
+    value => value.length <= 10 || i18n.getMessage('errMaxLength', '10'),
+    value => false === checkBoardKeyDuplicated(value) || i18n.getMessage('errDuplicated'),
+]
+
+const defaultBoard = {
+    key: '',
+    default: false,
+}
+
+const searchBoards = ref('')
+const dialogDeleteBoard = ref(false)
+const deleteBoard = ref({})
+const dialogBoard = ref({
+    open: false,
+    title: '',
+    item: {...defaultBoard},
+    current: null,
+    saveButton: '',
+})
+
+const host = computed({
+    get() {
+        return jiraStorage.getUrl
+    },
+    set(value) {
+        if (null === value || Helper.isURL(value)) {
+            jiraStorage.updateUrl(value)
+        }
+    },
+})
+
+const cleanup = computed({
+    get() {
+        return jiraStorage.cleanup
+    },
+    set(value) {
+        jiraStorage.updateCleanup(value)
+    },
+})
+
+const issues = computed({
+    get() {
+        return jiraStorage.maximumIssues
+    },
+    set(value) {
+        jiraStorage.updateMaximumIssues(value)
+    },
+})
+
+const boards = computed(() => {
+    return jiraStorage.getBoards
+})
+
+const openNewBoard = () => {
+    dialogBoard.value = {
+        open: true,
+        title: text.newBoard,
+        item: {...defaultBoard},
+        current: null,
+        saveButton: text.add,
+    }
+}
+
+const openBoard = board => {
+    dialogBoard.value = {
+        open: true,
+        title: i18n.getMessage('TitleUpdate', board.key),
+        item: {...board},
+        current: board,
+        saveButton: text.save,
+    }
+}
+
+const closeBoard = () => {
+    dialogBoard.value = {
+        open: false,
+        title: '',
+        item: {...defaultBoard},
+        current: null,
+        saveButton: text.add,
+    }
+}
+
+const saveBoard = async event => {
+    const result = await event
+
+    if (false === result.valid) {
+        return
+    }
+
+    if (null === dialogBoard.value.current) {
+        jiraStorage.addBoard(dialogBoard.value.item.key, dialogBoard.value.item.default)
+    } else {
+        jiraStorage.updateBoard(
+            dialogBoard.value.current.key,
+            dialogBoard.value.item.key,
+            dialogBoard.value.item.default,
+        )
+    }
+
+    closeBoard()
+}
+
+const closeDialogDeleteBoard = () => {
+    deleteBoard.value = {}
+    dialogDeleteBoard.value = false
+}
+
+const removeBoard = () => {
+    jiraStorage.removeBoard(deleteBoard.value.key)
+    closeDialogDeleteBoard()
+}
+
+const openDialogDeleteBoard = board => {
+    deleteBoard.value = board
+    dialogDeleteBoard.value = true
+}
+
+const checkBoardKeyDuplicated = value => {
+    if (null === value) {
+        return false
+    }
+
+    const searchResult = jiraStorage.getBoards.find(board => board.key.toLowerCase() === value.toLowerCase())
+
+    if (undefined === searchResult) {
+        return false
+    }
+
+    if (null === dialogBoard.value.current) {
+        return true
+    }
+
+    return value !== dialogBoard.value.current.key
+}
+</script>
+
 <template>
     <v-card flat class="ml-5">
         <v-card-text>
@@ -150,183 +325,3 @@
         </v-card-text>
     </v-card>
 </template>
-
-<script>
-import Helper from '../../../mixins/helper'
-
-export default {
-    name: 'JiraGeneral',
-    data() {
-        return {
-            text: {
-                host: chrome.i18n.getMessage('Host'),
-                issues: chrome.i18n.getMessage('IssuesInProgress'),
-                cleanup: chrome.i18n.getMessage('CleanupInterval'),
-                search: chrome.i18n.getMessage('Search'),
-                add: chrome.i18n.getMessage('Add'),
-                save: chrome.i18n.getMessage('Save'),
-                cancel: chrome.i18n.getMessage('Cancel'),
-                delete: chrome.i18n.getMessage('Delete'),
-                boardKey: chrome.i18n.getMessage('BoardKey'),
-                boards: chrome.i18n.getMessage('Boards'),
-                newBoard: chrome.i18n.getMessage('NewBoard'),
-                default: chrome.i18n.getMessage('Default'),
-                hint: {
-                    cleanup: chrome.i18n.getMessage('hintJiraCleanup'),
-                    issues: chrome.i18n.getMessage('hintJiraIssues'),
-                },
-            },
-            urlRules: [
-                value => Helper.isURL(value) || chrome.i18n.getMessage('errUrlInvalid'),
-            ],
-            boardIdRules: [
-                value => (!!value || 0 === value) || chrome.i18n.getMessage('errNotBlank'),
-                value => value >= 0 || chrome.i18n.getMessage('errMinimum', '0'),
-            ],
-            boardKeyRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-                value => value.length <= 10 || chrome.i18n.getMessage('errMaxLength', '10'),
-                value => false === this.checkBoardKeyDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
-            ],
-            i18n: chrome.i18n,
-            searchBoards: '',
-            dialogDeleteBoard: false,
-            deleteBoard: {},
-            dialogBoard: {
-                open: false,
-                title: '',
-                item: {
-                    identifier: 0,
-                    key: '',
-                    default: false,
-                },
-                current: null,
-                valid: false,
-                saveButton: '',
-            },
-            defaultBoard: {
-                identifier: 0,
-                key: '',
-                default: false,
-            },
-        }
-    },
-    computed: {
-        host: {
-            get() {
-                return this.$store.getters['jira/getUrl']
-            },
-            set(value) {
-                if (null === value || Helper.isURL(value)) {
-                    this.$store.dispatch('jira/updateUrl', value)
-                }
-            },
-        },
-        cleanup: {
-            get() {
-                return this.$store.getters['jira/getCleanup']
-            },
-            set(value) {
-                this.$store.dispatch('jira/updateCleanup', value)
-            },
-        },
-        issues: {
-            get() {
-                return this.$store.getters['jira/getMaximumIssues']
-            },
-            set(value) {
-                this.$store.dispatch('jira/updateMaximumIssues', value)
-            },
-        },
-        boards() {
-            return this.$store.getters['jira/getBoards']
-        },
-        boardHeaders() {
-            return [
-                { title: this.text.boardKey, key: 'key'},
-                { title: this.text.default, key: 'default', sortable: false},
-                { title: '', key: 'actions', sortable: false, align: 'end'},
-            ]
-        },
-    },
-    methods: {
-        openNewBoard: function() {
-            this.dialogBoard = {
-                open: true,
-                title: this.text.newBoard,
-                item: Object.assign({}, this.defaultBoard),
-                current: null,
-                saveButton: this.text.add,
-            }
-        },
-        openBoard: function (board) {
-            this.dialogBoard = {
-                open: true,
-                title: this.i18n.getMessage('TitleUpdate', board.key),
-                item: Object.assign({}, board),
-                current: board,
-                saveButton: this.text.save,
-            }
-        },
-        closeBoard: function () {
-            this.dialogBoard = {
-                open: false,
-                title: '',
-                item: Object.assign({}, this.defaultBoard),
-                current: null,
-                saveButton: this.text.add,
-            }
-        },
-        async saveBoard (event) {
-            const result = await event
-
-            if (false === result.valid) {
-                return
-            }
-
-            if (null === this.dialogBoard.current) {
-                this.$store.dispatch('jira/addBoard', this.dialogBoard.item)
-            } else {
-                this.$store.dispatch(
-                    'jira/updateBoard',
-                    {
-                        previous: this.dialogBoard.current,
-                        board: this.dialogBoard.item,
-                    },
-                )
-            }
-
-            this.closeBoard()
-        },
-        removeBoard: function () {
-            this.$store.dispatch('jira/removeBoard', this.deleteBoard)
-            this.closeDialogDeleteBoard()
-        },
-        openDialogDeleteBoard: function (board) {
-            this.deleteBoard = board
-            this.dialogDeleteBoard = true
-        },
-        closeDialogDeleteBoard: function () {
-            this.deleteBoard = {}
-            this.dialogDeleteBoard = false
-        },
-        checkBoardKeyDuplicated: function (value) {
-            if (null === value) {
-                return false
-            }
-
-            let searchResult = this.$store.getters['jira/getBoards'].find(board => board.key.toLowerCase() === value.toLowerCase())
-
-            if (undefined === searchResult) {
-                return false
-            }
-
-            if (null === this.dialogBoard.current) {
-                return true
-            }
-
-            return value !== this.dialogBoard.current.key
-        },
-    },
-}
-</script>

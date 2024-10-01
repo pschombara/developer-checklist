@@ -1,3 +1,219 @@
+<script setup>
+
+import InnerList from './InnerList.vue'
+import {computed, ref} from 'vue'
+import {useJiraStorage} from '../../../../stores/jira.js'
+import {useIconStorage} from '../../../../stores/icons.js'
+
+const i18n = chrome.i18n
+const text = {
+    name: i18n.getMessage('Name'),
+    cancel: i18n.getMessage('Cancel'),
+    save: i18n.getMessage('Save'),
+    enabled: i18n.getMessage('ChecklistEnabled'),
+    buttons: i18n.getMessage('Buttons'),
+    buttonEnabled: i18n.getMessage('ButtonEnabled'),
+    success: i18n.getMessage('Success'),
+    failed: i18n.getMessage('Failed'),
+    text: i18n.getMessage('Text'),
+    comment: i18n.getMessage('comment'),
+    sendCommentImmediately: i18n.getMessage('SendCommentImmediately'),
+    listCompletelyChecked: i18n.getMessage('ListCompletelyChecked'),
+    checklists: i18n.getMessage('Checklists'),
+    add: i18n.getMessage('Add'),
+    delete: i18n.getMessage('Delete'),
+}
+
+const textRules = [
+    value => value.length <= 15 || i18n.getMessage('errMaxLength', '15'),
+]
+
+const props = defineProps({
+    uuid: {
+        type: String,
+        required: true,
+    },
+})
+
+const jiraStorage = useJiraStorage()
+const iconStorage = useIconStorage()
+
+const checklist = jiraStorage.getChecklist(props.uuid)
+const sortChecklist = ref(null)
+const openChecklistDialog = ref(false)
+const categoryId = ref(null)
+
+const dialogBtnSuccess = ref({
+    open: false,
+    item: {
+        enabled: false,
+        text: '',
+        comment: '',
+        autoComment: false,
+        successRequiredAll: false,
+    },
+})
+
+const dialogBtnFailed = ref({
+    open: false,
+    item: {
+        enabled: false,
+        text: '',
+        comment: '',
+        autoComment: false,
+    },
+})
+
+const defaultDeleteCategory = {
+    uid: null,
+    title: '',
+    open: false,
+}
+
+const deleteCategory = ref({...defaultDeleteCategory})
+
+const categoriesHeader = [
+    {title: text.name, key: 'title', sortable: false},
+    {title: '', key: 'actions', align: 'end', sortable: false},
+]
+
+const name = computed({
+    get() {
+        return checklist.name
+    },
+    set(value) {
+        jiraStorage.updateChecklistName(props.uuid, value)
+    },
+})
+
+const icon = computed({
+    get() {
+        return checklist.icon
+    },
+    set(value) {
+        jiraStorage.updateChecklistIcon(props.uuid, value ?? '')
+    },
+})
+
+const categories = computed(() => {
+    return checklist.checklist
+})
+
+const enabled = computed({
+    get() {
+        return checklist.enabled
+    },
+    set(value) {
+        jiraStorage.updateChecklistEnabled(props.uuid, value)
+    },
+})
+
+const icons = computed(() => {
+    return iconStorage.getIcons
+})
+
+const templates = computed(() => {
+    return jiraStorage.getTemplates
+})
+
+const openButtonSuccessDialog = () => {
+    dialogBtnSuccess.value.open = true
+    dialogBtnSuccess.value.item = {...checklist.buttons.success}
+    dialogBtnSuccess.value.item.successRequiredAll = checklist.successRequiredAll
+}
+
+const closeButtonSuccessDialog = () => {
+    dialogBtnSuccess.value.open = false
+}
+
+const formBtnSuccess = ref()
+const formBtnFailed = ref()
+
+const saveButtonSuccess = () => {
+    if (formBtnSuccess.value.validate()) {
+        jiraStorage.updateBtnSuccess(
+            props.uuid,
+            dialogBtnSuccess.value.item.enabled,
+            dialogBtnSuccess.value.item.text,
+            dialogBtnSuccess.value.item.comment,
+            dialogBtnSuccess.value.item.autoComment,
+            dialogBtnSuccess.value.item.successRequiredAll,
+        )
+    }
+
+    closeButtonSuccessDialog()
+}
+
+const openButtonFailedDialog = () => {
+    dialogBtnFailed.value.open = true
+    dialogBtnFailed.value.item = {...checklist.buttons.failed}
+}
+
+const closeButtonFailedDialog = () => dialogBtnFailed.value.open = false
+
+const saveButtonFailed = () => {
+    if (formBtnFailed.value.validate()) {
+        jiraStorage.updateBtnFailed(
+            props.uuid,
+            dialogBtnFailed.value.item.enabled,
+            dialogBtnFailed.value.item.text,
+            dialogBtnFailed.value.item.comment,
+            dialogBtnFailed.value.item.autoComment,
+        )
+    }
+
+    closeButtonFailedDialog()
+}
+
+const openDialogDeleteCategory = category => {
+    deleteCategory.value = {
+        uid: category.uid,
+        title: category.title,
+        open: true,
+    }
+}
+
+const closeDialogDeleteCategory = () => deleteCategory.value = {...defaultDeleteCategory}
+
+const removeCategory = () => {
+    jiraStorage.removeCategory(props.uuid, deleteCategory.value.uid)
+    closeDialogDeleteCategory()
+}
+
+export default {
+    methods: {
+        categoryStartSort: function (checklist) {
+            this.sortChecklist = checklist
+        },
+        categoryCancelSort: function () {
+            this.sortChecklist = null
+        },
+        categoryInsertBefore: function (item) {
+            this.$store.dispatch('jira/categoryMoveBefore', {
+                uuid: this.uuid,
+                current: this.sortChecklist.uid,
+                ref: item.uid,
+            })
+        },
+        categoryInsertAfter: function (item) {
+            this.$store.dispatch('jira/categoryMoveAfter', {
+                uuid: this.uuid,
+                current: this.sortChecklist.uid,
+                ref: item.uid,
+            })
+        },
+        openCategory: function (uid) {
+            this.categoryId = uid
+            this.openChecklistDialog = true
+        },
+        closeCategory: function () {
+            this.categoryId = null
+            this.openChecklistDialog = false
+        },
+    },
+}
+</script>
+
 <template>
     <v-card flat>
         <v-card-text>
@@ -27,9 +243,9 @@
                             <v-icon :icon="'fas fa-' + item.value"></v-icon>
                             <span class="ms-2">{{item.value}}</span>
                         </template>
-                        <template #item="{props, item}">
+                        <template #item="{bindProps, item}">
                             <v-list-item
-                                v-bind="props"
+                                v-bind="bindProps"
                                 :prepend-icon="'fas fa-' + item.value"
                                 :title="item.value"></v-list-item>
                         </template>
@@ -177,7 +393,6 @@
                         :headers="categoriesHeader"
                         :sort-by="[{key: 'sort', order: 'asc'}]"
                         :items-per-page=-1
-                        :item-class="itemRowSortActiveClass"
                         :hide-default-footer=true
                     >
                         <template #top>
@@ -263,224 +478,3 @@
         </v-card-text>
     </v-card>
 </template>
-
-<script>
-
-import InnerList from './InnerList.vue'
-
-export default {
-    name: 'ChecklistsChecklist',
-    components: {InnerList},
-    props: {
-        uuid: {
-            type: String,
-            required: true,
-        },
-    },
-    data() {
-        return {
-            text: {
-                name: chrome.i18n.getMessage('Name'),
-                cancel: chrome.i18n.getMessage('Cancel'),
-                save: chrome.i18n.getMessage('Save'),
-                enabled: chrome.i18n.getMessage('ChecklistEnabled'),
-                buttons: chrome.i18n.getMessage('Buttons'),
-                buttonEnabled: chrome.i18n.getMessage('ButtonEnabled'),
-                success: chrome.i18n.getMessage('Success'),
-                failed: chrome.i18n.getMessage('Failed'),
-                text: chrome.i18n.getMessage('Text'),
-                comment: chrome.i18n.getMessage('comment'),
-                sendCommentImmediately: chrome.i18n.getMessage('SendCommentImmediately'),
-                listCompletelyChecked: chrome.i18n.getMessage('ListCompletelyChecked'),
-                checklists: chrome.i18n.getMessage('Checklists'),
-                add: chrome.i18n.getMessage('Add'),
-                delete: chrome.i18n.getMessage('Delete'),
-            },
-            i18n: chrome.i18n,
-            checklist: {},
-            dialogBtnSuccess: {
-                open: false,
-                item: {
-                    enabled: false,
-                    text: '',
-                    comment: '',
-                    autoComment: false,
-                    successRequiredAll: false,
-                },
-                valid: true,
-            },
-            dialogBtnFailed: {
-                open: false,
-                item: {
-                    enabled: false,
-                    text: '',
-                    comment: '',
-                    autoComment: false,
-                },
-                valid: true,
-            },
-            textRules: [
-                value => value.length <= 15 || chrome.i18n.getMessage('errMaxLength', '15'),
-            ],
-            sortChecklist: null,
-            openChecklistDialog: false,
-            categoryId: null,
-            deleteCategory: {
-                uid: null,
-                title: '',
-                open: false,
-            },
-        }
-    },
-    computed: {
-        name: {
-            get() {
-                return this.checklist.name
-            },
-            set(value) {
-                if (this.$refs.name.validate()) {
-                    this.$store.dispatch('jira/updateChecklistName', {uuid: this.uuid, name: value})
-                }
-            },
-        },
-        icon: {
-            get() {
-                return this.checklist.icon
-            },
-            set(value) {
-                this.$store.dispatch(
-                    'jira/updateChecklistIcon',
-                    {uuid: this.uuid, icon: value ?? ''},
-                )
-            },
-        },
-        categories: {
-            get() {
-                return this.checklist.checklist
-            },
-        },
-        categoriesHeader() {
-            return [
-                {title: this.text.name, key: 'title', sortable: false},
-                {title: '', key: 'actions', align: 'end', sortable: false},
-            ]
-        },
-        enabled: {
-            get() {
-                return this.checklist.enabled
-            },
-            set(value) {
-                this.$store.dispatch(
-                    'jira/updateChecklistEnabled',
-                    {uuid: this.uuid, enabled: value},
-                )
-            },
-        },
-        icons: {
-            get() {
-                return this.$store.getters['icons/getIcons']
-            },
-        },
-        templates() {
-            return this.$store.getters['jira/templates']
-        },
-    },
-    created() {
-        this.checklist = this.$store.getters['jira/getChecklist'](this.uuid)
-    },
-    methods: {
-        openButtonSuccessDialog: function () {
-            this.dialogBtnSuccess.open = true
-            this.dialogBtnSuccess.item = Object.assign({}, this.checklist.buttons.success)
-            this.dialogBtnSuccess.item.successRequiredAll = this.checklist.successRequiredAll
-        },
-        closeButtonSuccessDialog: function () {
-            this.dialogBtnSuccess.open = false
-        },
-        saveButtonSuccess: function () {
-            if (this.$refs.formBtnSuccess.validate()) {
-                this.$store.dispatch('jira/updateButtonSuccess', {
-                    uuid: this.uuid,
-                    button: this.dialogBtnSuccess.item,
-                })
-            }
-
-            this.closeButtonSuccessDialog()
-        },
-        openButtonFailedDialog: function () {
-            this.dialogBtnFailed.open = true
-            this.dialogBtnFailed.item = Object.assign({}, this.checklist.buttons.failed)
-        },
-        closeButtonFailedDialog: function () {
-            this.dialogBtnFailed.open = false
-        },
-        saveButtonFailed: function () {
-            if (this.$refs.formBtnFailed.validate()) {
-                this.$store.dispatch('jira/updateButtonFailed', {
-                    uuid: this.uuid,
-                    button: this.dialogBtnFailed.item,
-                })
-            }
-
-            this.closeButtonFailedDialog()
-        },
-        openDialogDeleteCategory: function (category) {
-            this.deleteCategory = {
-                uid: category.uid,
-                title: category.title,
-                open: true,
-            }
-        },
-        closeDialogDeleteCategory: function () {
-            this.deleteCategory = {
-                uid: null,
-                title: '',
-                open: false,
-            }
-        },
-        removeCategory: function () {
-            this.$store.dispatch('jira/removeCategory', {
-                uuid: this.uuid,
-                uid: this.deleteCategory.uid,
-            })
-
-            this.closeDialogDeleteCategory()
-        },
-        categoryStartSort: function (checklist) {
-            this.sortChecklist = checklist
-        },
-        categoryCancelSort: function () {
-            this.sortChecklist = null
-        },
-        categoryInsertBefore: function (item) {
-            this.$store.dispatch('jira/categoryMoveBefore', {
-                uuid: this.uuid,
-                current: this.sortChecklist.uid,
-                ref: item.uid,
-            })
-        },
-        categoryInsertAfter: function (item) {
-            this.$store.dispatch('jira/categoryMoveAfter', {
-                uuid: this.uuid,
-                current: this.sortChecklist.uid,
-                ref: item.uid,
-            })
-        },
-        itemRowSortActiveClass: function (item) {
-            if (null === this.sortChecklist) {
-                return ''
-            }
-
-            return item.uid === this.sortChecklist.uid ? 'primary' : ''
-        },
-        openCategory: function (uid) {
-            this.categoryId = uid
-            this.openChecklistDialog = true
-        },
-        closeCategory: function () {
-            this.categoryId = null
-            this.openChecklistDialog = false
-        },
-    },
-}
-</script>

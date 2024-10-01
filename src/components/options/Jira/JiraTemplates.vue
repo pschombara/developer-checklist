@@ -1,3 +1,178 @@
+<script setup>
+
+import {computed, ref} from 'vue'
+import {useJiraStorage} from '../../../stores/jira.js'
+
+const jiraStorage = useJiraStorage()
+
+const i18n = chrome.i18n
+const text = {
+    template: i18n.getMessage('Template'),
+    templates: i18n.getMessage('Templates'),
+    save: i18n.getMessage('Save'),
+    cancel: i18n.getMessage('Cancel'),
+    delete: i18n.getMessage('Delete'),
+    add: i18n.getMessage('Add'),
+    newTemplate: i18n.getMessage('NewTemplate'),
+    createNewTemplate: i18n.getMessage('CreateNewTemplate'),
+}
+
+const defaultTemplate = {
+    currentTitle: i18n.getMessage('NewTemplate'),
+    text: '',
+    id: null,
+    title: '',
+    subTitle: '',
+    content: '',
+    position: {
+        start: -1,
+        end: -1,
+    },
+    sort: -1,
+}
+
+const editTemplate = ref({...defaultTemplate})
+const newTemplate = ref({...defaultTemplate})
+
+const templateToRemove = ref({
+    title: '',
+    id: null,
+})
+
+const titleRules = [
+    value => !!value || i18n.getMessage('errNotBlank'),
+    value => value.length <= 25 || i18n.getMessage('errMaxLength', '25'),
+    value => false === checkDuplicated(value) || i18n.getMessage('errDuplicated'),
+]
+
+const subTitleRules = [
+    value => value.length <= 50 || i18n.getMessage('errMaxLength', '50'),
+]
+
+const contentRules = [
+    value => !!value || i18n.getMessage('errNotBlank'),
+    value => value.length <= 500 || i18n.getMessage('errMaxLength', '500'),
+]
+
+const dialogEditTemplate = ref(false)
+const deleteTemplate = ref(false)
+const sortTemplate = ref(null)
+
+const templates = computed(() => {
+    return jiraStorage.getTemplates
+})
+
+const templateHeaders = [
+    { title: text.template, key: 'template', sortable: false},
+    { title: '', key: 'actions', align: 'end', sortable: false},
+]
+
+const openTemplate = template => {
+    editTemplate.value = {
+        currentTitle: null === template.id ? template.currentTitle : template.title,
+        text: null === template.id ? text.add : text.save,
+        id: template.id,
+        title: template.title,
+        subTitle: template.subTitle,
+        content: template.content,
+        position: {
+            start: -1,
+            end: -1,
+        },
+        sort: template.sort,
+    }
+
+    dialogEditTemplate.value = true
+}
+
+const closeTemplate = () => dialogEditTemplate.value = false
+
+const saveTemplate = async event => {
+    const result = await event
+
+    if (false === result.valid) {
+        return
+    }
+
+    if (null === editTemplate.value.id) {
+        jiraStorage.addTemplate(
+            editTemplate.value.title,
+            editTemplate.value.subTitle,
+            editTemplate.value.content,
+        )
+    } else {
+        jiraStorage.updateTemplate(
+            editTemplate.value.id,
+            editTemplate.value.title,
+            editTemplate.value.subTitle,
+            editTemplate.value.content,
+        )
+    }
+
+    closeTemplate()
+}
+
+const openRemoveTemplate = template => {
+    templateToRemove.value = {title: template.title, id: template.id}
+    deleteTemplate.value = true
+}
+
+const closeRemoveTemplate = () => {
+    deleteTemplate.value = false
+    templateToRemove.value = {id: null, title: ''}
+}
+
+const removeTemplate = () => {
+    jiraStorage.removeTemplate(templateToRemove.value.id)
+    closeRemoveTemplate()
+}
+
+const checkDuplicated = value => {
+    const template = jiraStorage.getTemplates.find(template => template.title === value)
+
+    if (undefined === template) {
+        return false
+    }
+
+    if (null === editTemplate.value.id) {
+        return true
+    }
+
+    return editTemplate.value.title !== value
+}
+
+const keyUpTemplateContent = e => {
+    editTemplate.value.position = {
+        start: e.target.selectionStart,
+        end: e.target.selectionEnd,
+    }
+}
+
+const addToContent = text => {
+    if (-1 === editTemplate.value.content
+        && editTemplate.value.position.start === editTemplate.value.position.end
+    ) {
+        editTemplate.value.content += text
+    } else {
+        const a = editTemplate.value.content
+
+        editTemplate.value.content = a.substring(0, editTemplate.value.position.start)
+            + text
+            + a.substring(editTemplate.value.position.end)
+    }
+}
+
+const startSort = template => sortTemplate.value = template
+const cancelSort = () => sortTemplate.value = null
+
+const insertBefore = template => {
+    jiraStorage.templateSortBefore(sortTemplate.value.id, template.id)
+}
+const insertAfter = template => {
+    jiraStorage.templateSortAfter(sortTemplate.value.id, template.id)
+}
+</script>
+
 <template>
     <v-card flat class="ml-5">
         <v-card-text>
@@ -7,7 +182,6 @@
                         :items="templates"
                         :headers="templateHeaders"
                         :items-per-page="-1"
-                        :item-class="activeSortClass"
                         :hide-default-footer="true"
                         :sort-by="[{key: 'sort', order: 'asc'}]"
                     >
@@ -145,204 +319,3 @@
         </v-card-text>
     </v-card>
 </template>
-
-<script>
-
-export default {
-    name: 'JiraTemplates',
-    data() {
-        return {
-            text: {
-                template: chrome.i18n.getMessage('Template'),
-                templates: chrome.i18n.getMessage('Templates'),
-                save: chrome.i18n.getMessage('Save'),
-                cancel: chrome.i18n.getMessage('Cancel'),
-                delete: chrome.i18n.getMessage('Delete'),
-                add: chrome.i18n.getMessage('Add'),
-                newTemplate: chrome.i18n.getMessage('NewTemplate'),
-                createNewTemplate: chrome.i18n.getMessage('CreateNewTemplate'),
-            },
-            i18n: chrome.i18n,
-            editTemplate: {
-                currentTitle: chrome.i18n.getMessage('NewTemplate'),
-                text: '',
-                id: null,
-                title: '',
-                subTitle: '',
-                content: '',
-                position: {
-                    start: -1,
-                    end: -1,
-                },
-                sort: -1,
-            },
-            newTemplate: {
-                currentTitle: chrome.i18n.getMessage('NewTemplate'),
-                raw: {
-                    id: null,
-                    text: '',
-                    title: '',
-                    subTitle: '',
-                    content: '',
-                },
-                position: {
-                    start: -1,
-                    end: -1,
-                },
-                sort: -1,
-            },
-            templateToRemove: {
-                title: '',
-                id: null,
-            },
-            titleRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-                value => value.length <= 25 || chrome.i18n.getMessage('errMaxLength', '25'),
-                value => false === this.checkDuplicated(value) || chrome.i18n.getMessage('errDuplicated'),
-            ],
-            subTitleRules: [
-                value => value.length <= 50 || chrome.i18n.getMessage('errMaxLength', '50'),
-            ],
-            contentRules: [
-                value => !!value || chrome.i18n.getMessage('errNotBlank'),
-                value => value.length <= 500 || chrome.i18n.getMessage('errMaxLength', '500'),
-            ],
-            dialogEditTemplate: false,
-            deleteTemplate: false,
-            sortTemplate: null,
-        }
-    },
-    computed: {
-        templates: function () {
-            return this.$store.getters['jira/templates']
-        },
-        templateHeaders: function () {
-            return [
-                { title: this.text.template, key: 'template', sortable: false},
-                { title: '', key: 'actions', align: 'end', sortable: false},
-            ]
-        },
-    },
-    methods: {
-        openTemplate: function (template) {
-            this.editTemplate = {
-                currentTitle: null === template.id ? template.currentTitle : template.title,
-                text: null === template.id ? this.text.add : this.text.save,
-                id: template.id,
-                title: template.title,
-                subTitle: template.subTitle,
-                content: template.content,
-                position: {
-                    start: -1,
-                    end: -1,
-                },
-                sort: template.sort,
-            }
-
-            this.dialogEditTemplate = true
-        },
-        async saveTemplate (event) {
-            const result = await event
-
-            if (false === result.valid) {
-                return
-            }
-
-            if (null === this.editTemplate.id) {
-                this.$store.dispatch('jira/addTemplate', {
-                    title: this.editTemplate.title,
-                    subTitle: this.editTemplate.subTitle,
-                    content: this.editTemplate.content,
-                })
-            } else {
-                this.$store.dispatch('jira/updateTemplate', {
-                    id: this.editTemplate.id,
-                    title: this.editTemplate.title,
-                    subTitle: this.editTemplate.subTitle,
-                    content: this.editTemplate.content,
-                })
-            }
-
-            this.closeTemplate()
-        },
-        closeTemplate: function () {
-            this.dialogEditTemplate = false
-        },
-        openRemoveTemplate: function (template) {
-            this.templateToRemove = {
-                title: template.title,
-                id: template.id,
-            }
-            this.deleteTemplate = true
-        },
-        closeRemoveTemplate: function () {
-            this.deleteTemplate = false
-            this.templateToRemove = {
-                id: null,
-                title: '',
-            }
-        },
-        removeTemplate: function () {
-            this.$store.dispatch('jira/removeTemplate', this.templateToRemove.id)
-            this.closeRemoveTemplate()
-        },
-        checkDuplicated: function (value) {
-            let templates = this.$store.getters['jira/templates']
-            let result = templates.find(template => template.title === value)
-
-            if (undefined === result) {
-                return false
-            }
-
-            if (null === this.editTemplate.id) {
-                return true
-            }
-
-            return this.editTemplate.title !== value
-        },
-        keyUpTemplateContent: function (e) {
-            this.editTemplate.position = {
-                start: e.target.selectionStart,
-                end: e.target.selectionEnd,
-            }
-        },
-        addToContent: function (text) {
-            if (-1 === this.editTemplate.content
-                && this.editTemplate.position.start === this.editTemplate.position.end) {
-                this.editTemplate.content += text
-            } else {
-                let a = this.editTemplate.content
-
-                this.editTemplate.content = a.substring(0, this.editTemplate.position.start)
-                    + text
-                    + a.substring(this.editTemplate.position.end)
-            }
-        },
-        startSort: function (template) {
-            this.sortTemplate = template
-        },
-        insertBefore: function (template) {
-            this.$store.dispatch('jira/templateSortBefore', {
-                current: this.sortTemplate.value,
-                ref: template.value,
-            })
-        },
-        insertAfter: function (template) {
-            this.$store.dispatch('jira/templateSortAfter', {
-                current: this.sortTemplate.value,
-                ref: template.value,
-            })
-        },
-        cancelSort: function () {
-            this.sortTemplate = null
-        },
-        activeSortClass: function (template) {
-            if (null === this.sortTemplate) {
-                return ''
-            }
-
-            return template.value === this.sortTemplate.value ? 'primary' : ''
-        },
-    },
-}
-</script>
