@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia'
 
 export const useIconStorage = defineStore('icons', {
-    state: {
+    state: () => ({
         icons: [
             'ad',
             'address-book',
@@ -1003,7 +1003,7 @@ export const useIconStorage = defineStore('icons', {
             'yen-sign',
             'yin-yang',
         ],
-    },
+    }),
     getters: {
         getIcons: state => state.icons,
     },

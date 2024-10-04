@@ -1,10 +1,10 @@
 <script setup>
-import Issues from './Jira/Issues.vue'
 import {ref} from 'vue'
 import {useJiraStorage} from '../../stores/jira.js'
 import JiraChecklists from './Jira/JiraChecklists.vue'
 import JiraGeneral from './Jira/JiraGeneral.vue'
 import JiraTemplates from './Jira/JiraTemplates.vue'
+import IssueList from './Jira/IssueList.vue'
 
 const jiraStorage = useJiraStorage()
 const i18n = chrome.i18n
@@ -89,7 +89,7 @@ jiraStorage.load().then(() => init = true)
                     <JiraTemplates />
                 </v-window-item>
                 <v-window-item value="issues">
-                    <issues></issues>
+                    <IssueList />
                 </v-window-item>
             </v-window>
         </div>

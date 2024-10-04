@@ -1,3 +1,49 @@
+<script setup>
+
+import Helper from '../../../mixins/helper'
+import {useIssueStorage} from '../../../stores/issues.js'
+import {computed, ref} from 'vue'
+
+const issueStorage = useIssueStorage()
+const issueHeader = [
+    {title: 'Identifier', key: 'key', sortable: false},
+    {title: 'Title', key: 'title', sortable: false},
+    {title: 'Last Update', key: 'date', align: 'end', sortable: false},
+    {title: '', key: 'pinned', sortable: false},
+    {title: '', key: 'action', align: 'end', sortable: false},
+]
+
+const i18n = chrome.i18n
+
+const text = {
+    reload: i18n.getMessage('Reload'),
+    cancel: i18n.getMessage('Cancel'),
+    delete: i18n.getMessage('Delete'),
+}
+
+const load = ref(false)
+const deleteIssue = ref({open: false, issue: null})
+const issues = computed(() => issueStorage.getIssues)
+const dateFormat = date => Helper.localeDate(date)
+const reload = async () => {
+    load.value = true
+    await issueStorage.reloadFromStorage()
+    load.value = false
+}
+
+const pin = issue => issueStorage.pin(issue.key)
+const unpin = issue => issueStorage.unpin(issue.key)
+
+const openDelete = item => deleteIssue.value = {open: true, issue: item.key}
+const closeDelete = () => deleteIssue.value = {open: false, issue: null}
+const remove = () => {
+    issueStorage.removeIssue(deleteIssue.value.issue)
+    closeDelete()
+}
+
+issueStorage.load()
+</script>
+
 <template>
     <v-card flat class="ml-5">
         <v-card-text>
@@ -61,77 +107,6 @@
         </v-card-text>
     </v-card>
 </template>
-
-<script>
-
-import Helper from '../../../mixins/helper'
-
-export default {
-    name: 'JiraIssues',
-    data: () => {
-        return {
-            text: {
-                reload: chrome.i18n.getMessage('Reload'),
-                cancel: chrome.i18n.getMessage('Cancel'),
-                delete: chrome.i18n.getMessage('Delete'),
-            },
-            load: false,
-            deleteIssue: {
-                open: false,
-                issue: null,
-            },
-            i18n: chrome.i18n,
-        }
-    },
-    computed: {
-        issueHeader() {
-            return [
-                {title: 'Identifier', key: 'name', sortable: false},
-                {title: 'Title', key: 'title', sortable: false},
-                {title: 'Last Update', key: 'date', align: 'end', sortable: false},
-                {title: '', key: 'pinned', sortable: false},
-                {title: '', key: 'action', align: 'end', sortable: false},
-            ]
-        },
-        issues() {
-            return this.$store.getters['issues/list']
-        },
-    },
-    methods: {
-        reload: function () {
-            this.load = true
-            this.$store.dispatch('issues/reloadFromStorage').then(() => {
-                this.load = false
-            })
-        },
-        pin: function (issue) {
-            this.$store.dispatch('issues/pin', issue.name)
-        },
-        unpin: function (issue) {
-            this.$store.dispatch('issues/unpin', issue.name)
-        },
-        openDelete: function (item) {
-            this.deleteIssue = {
-                open: true,
-                issue: item.name,
-            }
-        },
-        closeDelete: function () {
-            this.deleteIssue = {
-                open: false,
-                issue: null,
-            }
-        },
-        remove: function () {
-            this.$store.dispatch('issues/removeIssue', this.deleteIssue.issue)
-            this.closeDelete()
-        },
-        dateFormat: function (date) {
-            return Helper.localeDate(date)
-        },
-    },
-}
-</script>
 
 <style>
 .rotate--45-inverted {

@@ -1,4 +1,3 @@
-import IssueMigration from '../../mixins/issueMigration'
 import _ from 'lodash'
 
 const state = {
@@ -9,9 +8,6 @@ const migration = new IssueMigration()
 const date = Math.floor(Date.now() / 1000)
 
 export default {
-    strict: import.meta.env.NODE_ENV !== 'production',
-    namespaced: true,
-    state,
     mutations: {
         ADD_ISSUE: (state, issue) => {
             const index = state.issues.findIndex(cmp => cmp.name === issue.name)
@@ -20,35 +16,11 @@ export default {
                 state.issues.push(issue)
             }
         },
-        REMOVE_ISSUE: (state, key) => {
-            const index = state.issues.findIndex(issue => issue.name === key)
-
-            if (-1 !== index) {
-                state.issues.splice(index, 1)
-            }
-        },
         UPDATE_ISSUE: (state, updatedIssue) => {
             const index = state.issues.findIndex(issue => issue.name === updatedIssue.name)
 
             if (-1 !== index) {
                 state.issues.splice(index, 1, updatedIssue)
-            }
-        },
-        CLEAR_ISSUES: state => {
-            state.issues = []
-        },
-        PIN_ISSUE: (state, issue) => {
-            const pinIssue = state.issues.find(elem => elem.name === issue)
-
-            if (undefined !== pinIssue) {
-                pinIssue.pinned = true
-            }
-        },
-        UNPIN_ISSUE: (state, issue) => {
-            const pinIssue = state.issues.find(elem => elem.name === issue)
-
-            if (undefined !== pinIssue) {
-                pinIssue.pinned = false
             }
         },
         START_WORK: (state, issueKey) => {
@@ -289,22 +261,6 @@ export default {
                 }
             }
         },
-        reloadFromStorage: ({commit, getters}) => {
-            commit('CLEAR_ISSUES')
-
-            return new Promise(resolve => {
-                chrome.storage.local.get(null, storageData => {
-                    for (let [key, issue] of Object.entries(storageData)) {
-                        if (getters['issueRegex'].test(key)) {
-                            issue.name = key
-                            commit('ADD_ISSUE', issue)
-                        }
-                    }
-
-                    resolve()
-                })
-            })
-        },
         updateStorage: ({commit, getters}, issueName, updateDate = true) => {
             if (updateDate) {
                 commit('UPDATE_DATE', issueName)
@@ -325,14 +281,6 @@ export default {
             storeObject[key] = copy
 
             chrome.storage.local.set(storeObject)
-        },
-        pin: ({commit, dispatch}, issue) => {
-            commit('PIN_ISSUE', issue)
-            dispatch('updateStorage', issue)
-        },
-        unpin: ({commit, dispatch}, issue) => {
-            commit('UNPIN_ISSUE', issue)
-            dispatch('updateStorage', issue)
         },
         initChecklists: ({rootGetters}, issue) => {
             const checklists = rootGetters['jira/getChecklists']

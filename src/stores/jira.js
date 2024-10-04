@@ -2,6 +2,7 @@ import {defineStore} from 'pinia'
 import Helper from '../mixins/helper.js'
 import {toRaw} from 'vue'
 import {Uuid} from '../mixins/uuid.js'
+import checklist from '../components/popup/Jira/Checklist.vue'
 
 export const useJiraStorage = defineStore('jira', {
     state: () => ({
@@ -21,7 +22,14 @@ export const useJiraStorage = defineStore('jira', {
         getMaximumIssues: state => state.maximumIssues,
         getChecklist: state => {
             return uuid => {
-                state.checklists.find(checklist => checklist.uuid === uuid)
+                return state.checklists.find(checklist => checklist.uuid === uuid)
+            }
+        },
+        getCategory: state => {
+            return (uuid, uid) => {
+                const checklist = state.checklists.find(checklist => checklist.uuid === uuid)
+
+                return checklist.checklist.find(category => category.uid === uid)
             }
         },
     },
@@ -219,6 +227,30 @@ export const useJiraStorage = defineStore('jira', {
             if (-1 !== index) {
                 checklist.category.splice(index, 1)
             }
+        },
+        categorySortBefore(checklistUuid, currentId, refId) {
+            const checklist = this.checklists.find(checklist => checklist.uuid === checklistUuid)
+
+            if (undefined === checklist) {
+                return
+            }
+
+            const current = checklist.checklist.find(item => item.uid === currentId)
+            const ref = checklist.checklist.find(item => item.uid === refId)
+
+            Helper.sortBefore(checklist.checklist, current, ref, 'uid')
+        },
+        categorySortAfter(checklistUuid, currentId, refId) {
+            const checklist = this.checklists.find(checklist => checklist.uuid === checklistUuid)
+
+            if (undefined === checklist) {
+                return
+            }
+
+            const current = checklist.checklist.find(item => item.uid === currentId)
+            const ref = checklist.checklist.find(item => item.uid === refId)
+
+            Helper.sortAfter(checklist.checklist, current, ref, 'uid')
         },
     },
 })

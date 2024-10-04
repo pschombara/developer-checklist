@@ -38,7 +38,6 @@ const props = defineProps({
 const jiraStorage = useJiraStorage()
 const iconStorage = useIconStorage()
 
-const checklist = jiraStorage.getChecklist(props.uuid)
 const sortChecklist = ref(null)
 const openChecklistDialog = ref(false)
 const categoryId = ref(null)
@@ -77,35 +76,8 @@ const categoriesHeader = [
     {title: '', key: 'actions', align: 'end', sortable: false},
 ]
 
-const name = computed({
-    get() {
-        return checklist.name
-    },
-    set(value) {
-        jiraStorage.updateChecklistName(props.uuid, value)
-    },
-})
-
-const icon = computed({
-    get() {
-        return checklist.icon
-    },
-    set(value) {
-        jiraStorage.updateChecklistIcon(props.uuid, value ?? '')
-    },
-})
-
-const categories = computed(() => {
-    return checklist.checklist
-})
-
-const enabled = computed({
-    get() {
-        return checklist.enabled
-    },
-    set(value) {
-        jiraStorage.updateChecklistEnabled(props.uuid, value)
-    },
+const checklist = computed(() => {
+    return jiraStorage.getChecklist(props.uuid)
 })
 
 const icons = computed(() => {
@@ -118,8 +90,8 @@ const templates = computed(() => {
 
 const openButtonSuccessDialog = () => {
     dialogBtnSuccess.value.open = true
-    dialogBtnSuccess.value.item = {...checklist.buttons.success}
-    dialogBtnSuccess.value.item.successRequiredAll = checklist.successRequiredAll
+    dialogBtnSuccess.value.item = {...checklist.value.buttons.success}
+    dialogBtnSuccess.value.item.successRequiredAll = checklist.value.successRequiredAll
 }
 
 const closeButtonSuccessDialog = () => {
@@ -146,7 +118,7 @@ const saveButtonSuccess = () => {
 
 const openButtonFailedDialog = () => {
     dialogBtnFailed.value.open = true
-    dialogBtnFailed.value.item = {...checklist.buttons.failed}
+    dialogBtnFailed.value.item = {...checklist.value.buttons.failed}
 }
 
 const closeButtonFailedDialog = () => dialogBtnFailed.value.open = false
@@ -180,37 +152,25 @@ const removeCategory = () => {
     closeDialogDeleteCategory()
 }
 
-export default {
-    methods: {
-        categoryStartSort: function (checklist) {
-            this.sortChecklist = checklist
-        },
-        categoryCancelSort: function () {
-            this.sortChecklist = null
-        },
-        categoryInsertBefore: function (item) {
-            this.$store.dispatch('jira/categoryMoveBefore', {
-                uuid: this.uuid,
-                current: this.sortChecklist.uid,
-                ref: item.uid,
-            })
-        },
-        categoryInsertAfter: function (item) {
-            this.$store.dispatch('jira/categoryMoveAfter', {
-                uuid: this.uuid,
-                current: this.sortChecklist.uid,
-                ref: item.uid,
-            })
-        },
-        openCategory: function (uid) {
-            this.categoryId = uid
-            this.openChecklistDialog = true
-        },
-        closeCategory: function () {
-            this.categoryId = null
-            this.openChecklistDialog = false
-        },
-    },
+const categoryStartSort = checklist => sortChecklist.value = checklist
+const categoryCancelSort = () => sortChecklist.value = null
+
+const openCategory = uid => {
+    categoryId.value = uid
+    openChecklistDialog.value = true
+}
+
+const closeCategory = () => {
+    categoryId.value = null
+    openChecklistDialog.value = false
+}
+
+const categoryInsertBefore = item => {
+    jiraStorage.categorySortBefore(props.uuid, sortChecklist.value.uid, item.uid)
+}
+
+const categoryInsertAfter = item => {
+    jiraStorage.categorySortAfter(props.uuid, sortChecklist.value.uid, item.uid)
 }
 </script>
 
@@ -220,7 +180,7 @@ export default {
             <v-row>
                 <v-col cols="12" sm="4" md="3">
                     <v-switch
-                        v-model="enabled"
+                        v-model="checklist.enabled"
                         :label="text.enabled"
                         color="primary"
                     ></v-switch>
@@ -228,20 +188,20 @@ export default {
                 <v-col cols="12" sm="4" md="3">
                     <v-text-field
                         ref="name"
-                        v-model="name"
+                        v-model="checklist.name"
                         :label="text.name"
                         counter="20"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="4" md="3">
                     <v-combobox
-                        v-model="icon"
+                        v-model="checklist.icon"
                         :items="icons"
                         label="Icon"
                     >
                         <template #selection="{ item }">
                             <v-icon :icon="'fas fa-' + item.value"></v-icon>
-                            <span class="ms-2">{{item.value}}</span>
+                            <span class="ms-2">{{ item.value }}</span>
                         </template>
                         <template #item="{bindProps, item}">
                             <v-list-item
@@ -284,7 +244,7 @@ export default {
                                     <v-select
                                         v-model="dialogBtnSuccess.item.comment"
                                         :label="text.comment"
-                                        :items="templates"
+                                        :items="checklist.templates"
                                         item-title="title"
                                         item-value="id"
                                         :menu-props="{closeOnContentClick: true}"
@@ -316,12 +276,14 @@ export default {
                                     variant="plain"
                                     color="secondary"
                                     plain
-                                    @click="closeButtonSuccessDialog">{{ text.cancel }}</v-btn>
+                                    @click="closeButtonSuccessDialog">{{ text.cancel }}
+                                </v-btn>
                                 <v-btn
                                     variant="plain"
                                     color="primary"
                                     :disabled="!dialogBtnSuccess.valid"
-                                    @click="saveButtonSuccess">{{ text.save }}</v-btn>
+                                    @click="saveButtonSuccess">{{ text.save }}
+                                </v-btn>
                                 <v-spacer></v-spacer>
                             </v-card-actions>
                         </v-card>
@@ -369,12 +331,16 @@ export default {
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn variant="plain" color="grey" @click="closeButtonFailedDialog">{{ text.cancel }}</v-btn>
+                                <v-btn variant="plain" color="grey" @click="closeButtonFailedDialog">{{
+                                        text.cancel
+                                    }}
+                                </v-btn>
                                 <v-btn
                                     variant="plain"
                                     color="primary"
                                     :disabled="!dialogBtnFailed.valid"
-                                    @click="saveButtonFailed">{{ text.save }}</v-btn>
+                                    @click="saveButtonFailed">{{ text.save }}
+                                </v-btn>
                                 <v-spacer></v-spacer>
                             </v-card-actions>
                         </v-card>
@@ -389,7 +355,7 @@ export default {
             <v-row>
                 <v-col cols="12">
                     <v-data-table
-                        :items="categories"
+                        :items="checklist.checklist"
                         :headers="categoriesHeader"
                         :sort-by="[{key: 'sort', order: 'asc'}]"
                         :items-per-page=-1
@@ -423,8 +389,12 @@ export default {
                                         </v-card-title>
                                         <v-card-actions>
                                             <v-spacer></v-spacer>
-                                            <v-btn variant="plain" color="secondary" @click="closeDialogDeleteCategory">{{ text.cancel }}</v-btn>
-                                            <v-btn variant="plain" color="tertiary" @click="removeCategory">{{ text.delete }}</v-btn>
+                                            <v-btn variant="plain" color="secondary" @click="closeDialogDeleteCategory">
+                                                {{ text.cancel }}
+                                            </v-btn>
+                                            <v-btn variant="plain" color="tertiary" @click="removeCategory">
+                                                {{ text.delete }}
+                                            </v-btn>
                                             <v-spacer></v-spacer>
                                         </v-card-actions>
                                     </v-card>
@@ -470,7 +440,7 @@ export default {
                                 variant="plain"
                                 icon="fas fa-times"
                                 size="small"
-                                @click="categoryCancelSort"> </v-btn>
+                                @click="categoryCancelSort"></v-btn>
                         </template>
                     </v-data-table>
                 </v-col>

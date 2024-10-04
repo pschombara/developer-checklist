@@ -1,7 +1,6 @@
 import Helper from '../../mixins/helper'
 import {Uuid} from '../..//mixins/uuid'
 import {toRaw} from 'vue'
-import checklists from '../../components/options/Jira/Checklists.vue'
 
 export default {
     strict: import.meta.env.NODE_ENV !== 'production',
@@ -213,18 +212,6 @@ export default {
         },
     },
     actions: {
-        init: ({commit}, options) => {
-
-        },
-        updateUrl: ({commit}, url) => {
-            commit('SET_URL', url)
-        },
-        updateCleanup: ({commit}, cleanup) => {
-            commit('SET_CLEANUP', cleanup)
-        },
-        updateMaximumIssues: ({commit}, issues) => {
-            commit('SET_MAXIMUM_ISSUES', issues)
-        },
         removeBoard: ({commit}, board) => {
             commit('REMOVE_BOARD', board)
         },
