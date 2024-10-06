@@ -1,14 +1,18 @@
 <script setup>
 
-import {ref} from 'vue'
+import {computed, ref} from 'vue'
 import {useJenkinsStorage} from '../../stores/jenkins.js'
 import JenkinsGeneral from './Jenkins/JenkinsGeneral.vue'
 import JenkinsCategories from './Jenkins/JenkinsCategories.vue'
 import JenkinsBuilds from './Jenkins/JenkinsBuilds.vue'
+import Debounce from '../../mixins/debounce.js'
 
+const jenkinsStorage = useJenkinsStorage()
 const i18n = chrome.i18n
 const tab = ref(null)
-let init = false
+const loaded = computed(() => {
+    return jenkinsStorage.isLoaded
+})
 
 const text = {
     general: i18n.getMessage('General'),
@@ -16,15 +20,15 @@ const text = {
     builds: i18n.getMessage('Builds'),
 }
 
-const jenkinsStorage = useJenkinsStorage()
+const debounce = new Debounce()
 
 jenkinsStorage.$subscribe(() => {
-    if (init) {
-        jenkinsStorage.save()
+    if (loaded.value) {
+        debounce.debounce(jenkinsStorage.save)
     }
 })
 
-jenkinsStorage.load().then(() => init = true)
+jenkinsStorage.load()
 </script>
 
 <template>

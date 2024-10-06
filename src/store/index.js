@@ -193,14 +193,6 @@ const store = createStore({
             commit('SET_TAB_CONFIG_MAIN', tab)
             chrome.storage.local.set({'optionsTab': tab})
         },
-        changeThemeSchema: async ({commit, dispatch}, schema) => {
-            commit('CHANGE_THEME_SCHEMA', schema)
-            return dispatch('storeTheme')
-        },
-        changeThemeColor: async ({commit, dispatch}, color) => {
-            commit('CHANGE_THEME_COLOR', color)
-            return dispatch('storeTheme')
-        },
         storeTheme: ({state}) => {
             chrome.storage.local.set({theme: {schema: state.themeSchema, color: state.themeColor}})
         },

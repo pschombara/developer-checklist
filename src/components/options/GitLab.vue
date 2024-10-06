@@ -3,11 +3,14 @@ import Helper from '../../mixins/helper'
 import {useGitLabStorage} from '../../stores/gitlab.js'
 import {computed, ref} from 'vue'
 import {useJenkinsStorage} from '../../stores/jenkins.js'
+import Debounce from '../../mixins/debounce.js'
 
 const gitLabStorage = useGitLabStorage()
 const jenkinsStorage = useJenkinsStorage()
 
-let init = false
+const loaded = computed(() => {
+    return gitLabStorage.isLoaded
+})
 const i18n = chrome.i18n
 
 const text = {
@@ -268,13 +271,16 @@ const saveProject = async event => {
     closeProject()
 }
 
+const debounce = new Debounce()
+
 gitLabStorage.$subscribe(() => {
-    if (init) {
-        gitLabStorage.save()
+    if (loaded.value) {
+        debounce.debounce(gitLabStorage.save)
     }
 })
 
-Promise.all([gitLabStorage.load(), jenkinsStorage.load()]).then(() => init = true)
+gitLabStorage.load()
+jenkinsStorage.load()
 </script>
 
 <template>

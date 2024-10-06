@@ -7,14 +7,22 @@ export const useGitLabStorage = defineStore('gitLab', {
         categories: [],
         projects: [],
         host: '',
+        loaded: false,
     }),
     getters: {
         getHost: state => state.host,
         getProjects: state => state.projects,
         getCategories: state => state.categories,
+        isLoaded: state => state.loaded,
     },
     actions: {
-        async load() {
+        async load(reload = false) {
+            if (this.loaded && false === reload) {
+                return
+            }
+
+            this.loaded = false
+
             const options = await chrome.storage.local.get('optionsGitLab')
 
             this.host = options.optionsGitLab.host

@@ -1,3 +1,71 @@
+<script setup>
+
+import Theme from '../mixins/theme'
+import QuickList from '../components/popup/QuickList.vue'
+import Jenkins from '../components/popup/Jenkins.vue'
+import GitLab from '../components/popup/GitLab.vue'
+import Chat from '../components/popup/Chat.vue'
+import CheatSheet from '../components/popup/CheatSheet.vue'
+import {computed, ref} from 'vue'
+import {useMainStorage} from '../stores/mainStorage.js'
+import {usePopupStorage} from '../stores/popup.js'
+import JiraPopup from '../components/popup/JiraPopup.vue'
+
+const i18n = chrome.i18n
+const loading = ref(true)
+const title = i18n.getMessage('extName')
+
+const mainStorage = useMainStorage()
+const popupStorage = usePopupStorage()
+
+const tabs = [
+    { id: 'bookmark', name: 'Quick Select', icon: 'fas fa-bookmark' },
+    { id: 'jira', name: 'Jira', icon: 'fab fa-jira' },
+    { id: 'jenkins', name: 'Jenkins', icon: 'fab fa-jenkins' },
+    { id: 'gitLab', name: 'GitLab', icon: 'fab fa-gitlab' },
+    { id: 'chat', name: 'Chat', icon: 'fas fa-comment' },
+    { id: 'cheatSheet', name: 'Cheat Sheet', icon: 'fas fa-terminal' },
+]
+
+const tab = ref(null)
+const optionsValid = computed(() => {
+    return popupStorage.hasValidOptions
+})
+
+const modules = computed(() => {
+    return mainStorage.getModules
+})
+
+const openOptions = async tab => {
+    await chrome.storage.local.set({'optionsTab': tab})
+    chrome.runtime.openOptionsPage()
+}
+
+const showTab = tab => {
+    return modules.value[tab.id] ?? true
+}
+
+const checkSwitchTab = () => {
+    if (null === popupStorage.getSwitchTab) {
+        return
+    }
+
+    tab.value = popupStorage.getSwitchTab
+}
+
+const theme = new Theme()
+theme.registerThemeChanged(mainStorage.getThemeSchema, mainStorage.getThemeColor)
+
+const load = async () => {
+    await mainStorage.load()
+    await popupStorage.checkOptions()
+    await popupStorage.checkUrl()
+    await checkSwitchTab()
+}
+
+load().then(() => loading.value = false)
+</script>
+
 <template>
     <v-app>
         <v-container fluid>
@@ -36,10 +104,10 @@
 
                         <v-window v-model="tab">
                             <v-window-item value="bookmark">
-                                <quick-list></quick-list>
+                                <QuickList />
                             </v-window-item>
                             <v-window-item value="jira">
-                                <Jira></Jira>
+                                <JiraPopup />
                             </v-window-item>
                             <v-window-item value="jenkins">
                                 <Jenkins></Jenkins>
@@ -74,89 +142,6 @@
         </v-container>
     </v-app>
 </template>
-
-<script>
-
-import Theme from '../mixins/theme'
-import QuickList from '../components/popup/QuickList.vue'
-import Jira from '../components/popup/Jira.vue'
-import Jenkins from '../components/popup/Jenkins.vue'
-import GitLab from '../components/popup/GitLab.vue'
-import Chat from '../components/popup/Chat.vue'
-import CheatSheet from '../components/popup/CheatSheet.vue'
-
-export default {
-    name: 'App',
-    components: {CheatSheet, Chat, GitLab, Jenkins, Jira, QuickList },
-    data() {
-        return {
-            loading: true,
-            title: chrome.i18n.getMessage('extName'),
-            tabs: [
-                { id: 'bookmark', name: 'Quick Select', icon: 'fas fa-bookmark' },
-                { id: 'jira', name: 'Jira', icon: 'fab fa-jira' },
-                { id: 'jenkins', name: 'Jenkins', icon: 'fab fa-jenkins' },
-                { id: 'gitLab', name: 'GitLab', icon: 'fab fa-gitlab' },
-                { id: 'chat', name: 'Chat', icon: 'fas fa-comment' },
-                { id: 'cheatSheet', name: 'Cheat Sheet', icon: 'fas fa-terminal' },
-            ],
-            tab: null,
-            optionsValid: false,
-            optionsUrl: '',
-            i18n: chrome.i18n,
-        }
-    },
-    computed: {
-        modules()  {
-            return this.$store.getters['modules']
-        },
-    },
-    created() {
-        this.load()
-
-        const theme = new Theme()
-        theme.registerThemeChanged(this, this.$store.getters['themeSchema'], this.$store.getters['themeColor'])
-    },
-    methods: {
-        load() {
-            this.$store.dispatch('load').then(() => {
-                this.validateOptions()
-            })
-        },
-        validateOptions: function () {
-            this.optionsValid = this.$store.getters['optionsValid']
-
-            if (this.optionsValid) {
-                this.checkUrl()
-            } else {
-                this.loading = false
-            }
-        },
-        checkUrl: function () {
-            this.$store.dispatch('checkUrl').then(() => {
-                this.checkSwitchTab()
-
-                this.loading = false
-            })
-        },
-        checkSwitchTab: function () {
-            this.tab = this.$store.getters['switchTab'] ?? 'bookmark'
-        },
-        showTab: function (tab) {
-            if (Object.prototype.hasOwnProperty.call(this.modules, tab.id)) {
-                return this.modules[tab.id]
-            } else {
-                return true
-            }
-        },
-        openOptions: function (tab) {
-            chrome.storage.local.set({'optionsTab': tab}, () => {
-                chrome.runtime.openOptionsPage()
-            })
-        },
-    },
-}
-</script>
 
 <style>
 html {

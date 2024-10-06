@@ -2,6 +2,7 @@
 
 import {computed, ref} from 'vue'
 import {useCheatSheetStorage} from '../../stores/cheatSheet.js'
+import Debounce from '../../mixins/debounce.js'
 
 const i18n = chrome.i18n
 let init = false
@@ -135,9 +136,11 @@ const checkDuplicated = value => {
     return dialogCommand.value.current.label !== value
 }
 
+const debounce = new Debounce()
+
 cheatSheetStorage.$subscribe(() => {
     if (init) {
-        cheatSheetStorage.save()
+        debounce.debounce(cheatSheetStorage.save)
     }
 })
 

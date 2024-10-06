@@ -1,3 +1,60 @@
+<script setup>
+import {useJiraStorage} from '../../stores/jira.js'
+import {computed, ref} from 'vue'
+import {usePopupStorage} from '../../stores/popup.js'
+import {useIssueStorage} from '../../stores/issues.js'
+import {useMainStorage} from '../../stores/mainStorage.js'
+import JiraChecklist from './Jira/JiraChecklist.vue'
+
+const jiraStorage = useJiraStorage()
+const popupStorage = usePopupStorage()
+const issueStorage = useIssueStorage()
+
+const i18n = chrome.i18n
+const text = {
+    openWithIssue: chrome.i18n.getMessage('openWithIssue'),
+    startWork: chrome.i18n.getMessage('startWork'),
+    stopWork: chrome.i18n.getMessage('stopWork'),
+    helpWork: chrome.i18n.getMessage('helpWork'),
+    helpPin: chrome.i18n.getMessage('helpPin'),
+}
+
+const checklists = computed(() => jiraStorage.getChecklists.filter(checklist => checklist.enabled))
+
+const tab = ref(0)
+const checked = ref([])
+const issueName = computed(() => popupStorage.getCurrentIssue)
+const issue = computed(() => {
+    const issueKey = popupStorage.getCurrentIssue
+
+    if (null === issueKey) {
+        return null
+    }
+
+    return issueStorage.getIssue(issueKey)
+})
+
+const pin = issue => issueStorage.pin(issue)
+const unpin = issue => issueStorage.unpin(issue)
+const startWork = issue => issueStorage.startWork(issue)
+const stopWork = issue => issueStorage.stopWork(issue)
+
+const openOptions = tab => {
+    useMainStorage().changeMainTab(tab)
+    chrome.runtime.openOptionsPage()
+}
+
+// export default {
+//     methods: {
+//         openOptions: function (tab) {
+//             this.$store.dispatch('changeMainTab', tab)
+//             chrome.runtime.openOptionsPage()
+//         },
+
+//     },
+// }
+</script>
+
 <template>
     <v-card v-if="issueName">
         <v-card-title>
@@ -92,11 +149,11 @@
 
                 <v-window v-model="tab" class="flex-grow-1">
                     <v-window-item v-for="checklist in checklists" :key="checklist.uuid" :value="checklist.uuid">
-                        <checklist :uuid="checklist.uuid" :issue="issueName"></checklist>
+                        <JiraChecklist :uuid="checklist.uuid" :issue="issueName" />
                     </v-window-item>
-                    <v-window-item value="templates">
-                        <templates></templates>
-                    </v-window-item>
+<!--                    <v-window-item value="templates">-->
+<!--                        <templates></templates>-->
+<!--                    </v-window-item>-->
                 </v-window>
             </div>
         </v-card-text>
@@ -122,66 +179,10 @@
             </v-row>
         </v-card-title>
         <v-card-item>
-            <templates></templates>
+<!--            <templates></templates>-->
         </v-card-item>
     </v-card>
 </template>
-
-<script>
-import Checklist from './Jira/Checklist.vue'
-import Templates from './Jira/Templates.vue'
-
-export default {
-    name: 'PopupJira',
-    components: {Templates, Checklist},
-    data: () => {
-        return {
-            tab: 0,
-            checklists: [],
-            checked: [],
-            issueName: null,
-            text: {
-                openWithIssue: chrome.i18n.getMessage('openWithIssue'),
-                startWork: chrome.i18n.getMessage('startWork'),
-                stopWork: chrome.i18n.getMessage('stopWork'),
-                helpWork: chrome.i18n.getMessage('helpWork'),
-                helpPin: chrome.i18n.getMessage('helpPin'),
-            },
-        }
-    },
-    computed: {
-        issue: function () {
-            if (!this.issueName) {
-                return null
-            }
-
-            return this.$store.getters['issues/issue'](this.issueName)
-        },
-    },
-    created() {
-        this.checklists = this.$store.getters['jira/getChecklists'].filter(checklist => checklist.enabled)
-        this.issueName = this.$store.getters['currentIssue']
-    },
-    methods: {
-        pin: function (issue) {
-            this.$store.dispatch('issues/pin', issue)
-        },
-        unpin: function (issue) {
-            this.$store.dispatch('issues/unpin', issue)
-        },
-        openOptions: function (tab) {
-            this.$store.dispatch('changeMainTab', tab)
-            chrome.runtime.openOptionsPage()
-        },
-        startWork: function (issue) {
-            this.$store.dispatch('issues/startWork', issue)
-        },
-        stopWork: function (issue) {
-            this.$store.dispatch('issues/stopWork', issue)
-        },
-    },
-}
-</script>
 
 <style>
 .rotate--45-inverted {

@@ -1,3 +1,64 @@
+<script setup>
+
+import {computed, ref} from 'vue'
+import {useJiraStorage} from '../../../stores/jira.js'
+import {useIssueStorage} from '../../../stores/issues.js'
+
+const props = defineProps({
+    uuid: {
+        type: String,
+        required: true,
+    },
+    issue: {
+        type: String,
+        required: true,
+    },
+})
+
+const jiraStorage = useJiraStorage()
+const issueStorage = useIssueStorage()
+
+const checklist = computed(() => jiraStorage.getChecklist(props.uuid))
+const checked = computed(() => issueStorage.getIssue(props.issue).checklist)
+
+const isChecked = uuid => {
+    if (null === checked.value || undefined === checked.value[props.uuid]) {
+        return false
+    }
+
+    return checked.value[props.uuid].includes(uuid)
+}
+
+const checkGroupCompleted = uuid => {
+    if (null === checked.value || undefined === checked.value[props.uuid]) {
+        return false
+    }
+
+    const data = Object.values(checklist.value.checklist).find(item => item.uid === uuid)
+    const entries = Object.values(data.items).map(item => item.id)
+
+    return entries.every(val => checked.value[props.uuid].includes(val))
+}
+
+// export default {
+//     methods: {
+//         toggleCheck: function (id) {
+//             this.$store.dispatch('issues/toggleChecklistEntry', {
+//                 issue: this.issue,
+//                 uuid: this.uuid,
+//                 id,
+//             })
+//         },
+//         addComment: function (button) {
+//             this.$store.dispatch('jira/addComment', {
+//                 uuid: button.comment,
+//                 autoComment: button.autoComment,
+//             })
+//         },
+//     },
+// }
+</script>
+
 <template>
     <v-card class="mx-auto" flat>
         <v-card-text>
@@ -7,9 +68,9 @@
                     :key="item.uid"
                     :value="item.title"
                 >
-                    <template #activator="{ props }">
+                    <template #activator="{ data }">
                         <v-list-item
-                            v-bind="props"
+                            v-bind="data"
                         >
                             <template #prepend>
                                 <v-icon v-if="checkGroupCompleted(item.uid)" small color="success">fas fa-check</v-icon>
@@ -70,68 +131,6 @@
         </v-card-actions>
     </v-card>
 </template>
-
-<script>
-
-export default {
-    name: 'JiraChecklist',
-    props: {
-        uuid: {
-            type: String,
-            required: true,
-        },
-        issue: {
-            type: String,
-            required: true,
-        },
-    },
-    data: () => {
-        return {
-            activeItem: null,
-        }
-    },
-    computed: {
-        checklist: function () {
-            return this.$store.getters['jira/getChecklist'](this.uuid)
-        },
-        checked: function () {
-            return this.$store.getters['issues/issue'](this.issue).checklist
-        },
-    },
-    methods: {
-        isChecked: function (uuid) {
-            if (null === this.checked || false === Object.prototype.hasOwnProperty.call(this.checked, this.uuid)) {
-                return false
-            }
-
-            return this.checked[this.uuid].includes(uuid)
-        },
-        checkGroupCompleted: function (uuid) {
-            if (null === this.checked || false === Object.prototype.hasOwnProperty.call(this.checked, this.uuid)) {
-                return false
-            }
-
-            const checklist = Object.values(this.checklist.checklist).find(elem => elem.uid === uuid)
-            const entries = Object.values(checklist.items).map(elem => elem.id)
-
-            return entries.every(val => this.checked[this.uuid].includes(val))
-        },
-        toggleCheck: function (id) {
-            this.$store.dispatch('issues/toggleChecklistEntry', {
-                issue: this.issue,
-                uuid: this.uuid,
-                id,
-            })
-        },
-        addComment: function (button) {
-            this.$store.dispatch('jira/addComment', {
-                uuid: button.comment,
-                autoComment: button.autoComment,
-            })
-        },
-    },
-}
-</script>
 
 <style scoped>
     .cursor-pointer {

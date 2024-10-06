@@ -5,7 +5,7 @@ export default class Migration {
         this._version = '0.10.0'
     }
 
-    migrate = async (storeInStorage = true) => {
+    migrate = async () => {
         chrome.storage.local.get(null, async data => {
             let version = data.version || data.options.version
 

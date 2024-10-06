@@ -282,19 +282,6 @@ export default {
 
             chrome.storage.local.set(storeObject)
         },
-        initChecklists: ({rootGetters}, issue) => {
-            const checklists = rootGetters['jira/getChecklists']
-
-            return new Promise(resolve => {
-                for (let checklist of checklists) {
-                    if (false === Object.prototype.hasOwnProperty.call(issue.checklist, checklist.uuid)) {
-                        issue.checklist[checklist.uuid] = []
-                    }
-                }
-
-                resolve(issue)
-            })
-        },
         toggleChecklistEntry: ({commit, dispatch}, data) => {
             commit('TOGGLE_CHECKLIST_CHECK', {
                 issue: data.issue,

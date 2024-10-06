@@ -1,5 +1,6 @@
 import {defineStore} from 'pinia'
 import Migration from '../mixins/migration.js'
+import {usePopupStorage} from './popup.js'
 
 const migration = new Migration()
 
@@ -10,17 +11,12 @@ export const useMainStorage = defineStore('mainStorage', {
             cheatSheet: false,
             gitLab: false,
             jenkins: false,
-            // chrome: false,
+            openTab: null,
         },
         version: migration.version,
         configTabs: {
             main: 'general',
         },
-        optionsValid: false,
-        currentIssue: null,
-        currentUrl: '',
-        switchTab: null,
-        openTab: null,
         themeSchema: 'system',
         themeColor: 'blue',
         optionTabs: [
@@ -60,7 +56,7 @@ export const useMainStorage = defineStore('mainStorage', {
                 }
             })
 
-            migration.migrate()
+            await migration.migrate()
 
             chrome.storage.local.get('optionsMain', result => {
                 this.modules = result.optionsMain.modules
@@ -72,15 +68,12 @@ export const useMainStorage = defineStore('mainStorage', {
         async autoChangeOpenTab () {
             for (const tab of this.optionTabs) {
                 if (tab.id === this.configTabs.main) {
-                    this.openTab = tab.id
+                    this.changeOpenTab(tab.id)
                     chrome.storage.local.set({'optionsTab': ''})
 
                     break
                 }
             }
-        },
-        changeOpenTab (tab) {
-            this.openTab = tab
         },
         switchModule (module, checked) {
             if (undefined === this.modules[module]) {
@@ -106,6 +99,13 @@ export const useMainStorage = defineStore('mainStorage', {
                     color: this.themeColor,
                 },
             }})
+        },
+        changeOpenTab (tab) {
+            this.openTab = tab
+        },
+        changeMainTab (tab) {
+            this.configTabs.main = tab
+            chrome.storage.local.set({'optionsTab': tab})
         },
     },
 })

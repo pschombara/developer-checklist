@@ -4,6 +4,7 @@ import {ref} from 'vue'
 import ChatMessages from './Chat/ChatMessages.vue'
 import ChatGeneral from './Chat/ChatGeneral.vue'
 import ChatRooms from './Chat/ChatRooms.vue'
+import Debounce from '../../mixins/debounce.js'
 
 const chatStorage = useChatStorage()
 
@@ -32,9 +33,10 @@ const text = {
     general: chrome.i18n.getMessage('General'),
 }
 
+const debounce = new Debounce()
 chatStorage.$subscribe(() => {
     if (init) {
-        chatStorage.save()
+        debounce.debounce(chatStorage.save)
     }
 })
 

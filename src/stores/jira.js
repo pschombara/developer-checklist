@@ -2,22 +2,22 @@ import {defineStore} from 'pinia'
 import Helper from '../mixins/helper.js'
 import {toRaw} from 'vue'
 import {Uuid} from '../mixins/uuid.js'
-import checklist from '../components/popup/Jira/Checklist.vue'
 
 export const useJiraStorage = defineStore('jira', {
     state: () => ({
-        url: '',
+        host: '',
         cleanup: 7,
         maximumIssues: 6,
         boards: [],
         checklists: [],
         templates: [],
+        loaded: false,
     }),
     getters: {
         getChecklists: state => state.checklists,
         getBoards: state => state.boards,
         getTemplates: state => state.templates,
-        getUrl: state => state.url,
+        getUrl: state => state.host,
         getCleanup: state => state.cleanup,
         getMaximumIssues: state => state.maximumIssues,
         getChecklist: state => {
@@ -32,9 +32,16 @@ export const useJiraStorage = defineStore('jira', {
                 return checklist.checklist.find(category => category.uid === uid)
             }
         },
+        isLoaded: state => state.loaded,
     },
     actions: {
-        async load() {
+        async load(reload = false) {
+            if (this.loaded && false === reload) {
+                return
+            }
+
+            this.loaded = false
+
             const options = await chrome.storage.local.get('optionsJira')
 
             this.host = options.optionsJira.host
@@ -72,10 +79,12 @@ export const useJiraStorage = defineStore('jira', {
             })
 
             Helper.resort(this.templates)
+
+            this.loaded = true
         },
         async save() {
             await chrome.storage.local.set({optionsJira: {
-                url: toRaw(this.host),
+                host: toRaw(this.host),
                 cleanup: toRaw(this.cleanup),
                 maximumIssues: toRaw(this.maximumIssues),
                 boards: toRaw(this.boards),
@@ -84,7 +93,7 @@ export const useJiraStorage = defineStore('jira', {
             }})
         },
         updateUrl(url) {
-            this.url = url
+            this.host = url
         },
         updateCleanup(cleanup) {
             this.cleanup = cleanup

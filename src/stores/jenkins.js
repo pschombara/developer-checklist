@@ -7,18 +7,27 @@ export const useJenkinsStorage = defineStore('jenkins', {
         host: '',
         categories: [],
         builds: [],
+        loaded: false,
     }),
     getters: {
         getHost: state => state.host,
         getCategories: state => state.categories,
         getBuilds: state => state.builds,
+        isLoaded: state => state.loaded,
     },
     actions: {
-        async load() {
+        async load(reload = false) {
+            if (this.loaded && false === reload) {
+                return
+            }
+
+            this.loaded = false
+
             const options = await chrome.storage.local.get('optionsJenkins')
 
             this.host = options.optionsJenkins.host
             this.categories = options.optionsJenkins.categories
+            this.builds = []
 
             options.optionsJenkins.builds.forEach(build => {
                 this.builds.push({
@@ -29,6 +38,8 @@ export const useJenkinsStorage = defineStore('jenkins', {
                     uuid: build.uuid,
                 })
             })
+
+            this.loaded = true
         },
         async save() {
             await chrome.storage.local.set({optionsJenkins: {
