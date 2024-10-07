@@ -168,5 +168,22 @@ export const useIssueStorage = defineStore('issues', {
                 }
             }
         },
+        async toggleChecklistEntry(issueKey, checklistUuid, uid) {
+            const issue = this.getIssue(issueKey)
+
+            if (undefined === issue) {
+                return
+            }
+
+            issue.checklist[checklistUuid] ??= []
+
+            const index = issue.checklist[checklistUuid].findIndex(id => id === uid)
+
+            if (-1 === index) {
+                issue.checklist[checklistUuid].push(uid)
+            } else {
+                issue.checklist[checklistUuid].splice(index, 1)
+            }
+        },
     },
 })

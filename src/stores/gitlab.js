@@ -92,5 +92,18 @@ export const useGitLabStorage = defineStore('gitLab', {
                 },
             })
         },
+        buildUrl(id, number, source, withTag) {
+            const project = this.projects.find(item => item.uuid === id)
+
+            if (undefined === project) {
+                return null
+            }
+
+            if (false === withTag) {
+                return `${this.host}${project.domain}/${project.project}/merge_requests/${number}`
+            }
+
+            return `<a href="${this.host}${project.domain}/${project.project}/merge_requests/${number}">${project.project + ('' !== source ? `:${source}` : '')}</a>`
+        },
     },
 })

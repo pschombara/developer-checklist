@@ -96,5 +96,17 @@ export const useJenkinsStorage = defineStore('jenkins', {
                 this.builds.splice(index, 1)
             }
         },
+        buildUrl(job, build, withTag) {
+            const ciBuild = this.builds.find(item => item.job === job)
+
+            if (undefined === build) {
+                return null
+            }
+
+            const name = '' !== ciBuild.label ? ciBuild.label : ciBuild.name
+            const url = encodeURI(`${this.host}/view/${ciBuild.type}/job/${ciBuild.job}/${build}/`)
+
+            return withTag ? `<a href="${url}">${name}</a>` : url
+        },
     },
 })

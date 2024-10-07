@@ -5,6 +5,7 @@ import {usePopupStorage} from '../../stores/popup.js'
 import {useIssueStorage} from '../../stores/issues.js'
 import {useMainStorage} from '../../stores/mainStorage.js'
 import JiraChecklist from './Jira/JiraChecklist.vue'
+import PopupTemplates from './Jira/PopupTemplates.vue'
 
 const jiraStorage = useJiraStorage()
 const popupStorage = usePopupStorage()
@@ -151,9 +152,9 @@ const openOptions = tab => {
                     <v-window-item v-for="checklist in checklists" :key="checklist.uuid" :value="checklist.uuid">
                         <JiraChecklist :uuid="checklist.uuid" :issue="issueName" />
                     </v-window-item>
-<!--                    <v-window-item value="templates">-->
-<!--                        <templates></templates>-->
-<!--                    </v-window-item>-->
+                    <v-window-item value="templates">
+                        <PopupTemplates/>
+                    </v-window-item>
                 </v-window>
             </div>
         </v-card-text>
@@ -179,7 +180,7 @@ const openOptions = tab => {
             </v-row>
         </v-card-title>
         <v-card-item>
-<!--            <templates></templates>-->
+            <PopupTemplates />
         </v-card-item>
     </v-card>
 </template>

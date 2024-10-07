@@ -2,6 +2,10 @@ import {defineStore} from 'pinia'
 import Helper from '../mixins/helper.js'
 import {toRaw} from 'vue'
 import {Uuid} from '../mixins/uuid.js'
+import {useIssueStorage} from './issues.js'
+import {usePopupStorage} from './popup.js'
+import {useJenkinsStorage} from './jenkins.js'
+import {useGitLabStorage} from './gitlab.js'
 
 export const useJiraStorage = defineStore('jira', {
     state: () => ({
@@ -260,6 +264,81 @@ export const useJiraStorage = defineStore('jira', {
             const ref = checklist.checklist.find(item => item.uid === refId)
 
             Helper.sortAfter(checklist.checklist, current, ref, 'uid')
+        },
+        async addComment(templateId, autoComment) {
+            const template = this.templates.find(item => item.id === templateId)
+
+            if (undefined === template) {
+                return
+            }
+
+            const comment = await this.replacePlaceholdersInComment(template.content)
+
+            if (null === comment) {
+                return
+            }
+
+            const popupStorage = usePopupStorage()
+            const tab = await popupStorage.fetchCurrentTab()
+
+            chrome.scripting.executeScript({
+                target: {tabId: tab.id},
+                func: async (comment, autoComment) => {
+                    let commentArea = document.querySelector('.ak-editor-content-area > div[role=textbox]')
+
+                    if (null === commentArea) {
+                        document.dispatchEvent(new KeyboardEvent('keydown', {key: 'm'}))
+                        await new Promise(resolve => setTimeout(() => resolve(), 50))
+                        commentArea = document.querySelector('.ak-editor-content-area > div[role=textbox]')
+                    }
+
+                    if (null === commentArea) {
+                        return false
+                    }
+
+                    commentArea.innerHTML = comment
+
+                    if (false === autoComment) {
+                        return true
+                    }
+
+                    document.querySelector('button[data-testid="comment-save-button"]')?.click()
+
+                    return true
+                },
+                args: [comment, autoComment],
+            }, injectionResult => {
+                if (false === injectionResult[0].result) {
+                    throw new Error('Could not add comment.')
+                }
+            })
+        },
+        async replacePlaceholdersInComment(comment) {
+            const issueStorage = useIssueStorage()
+            const popupStorage = usePopupStorage()
+            const jenkinsStorage = useJenkinsStorage()
+            const gitlabStorage = useGitLabStorage()
+
+            const issue = issueStorage.getIssue(popupStorage.getCurrentIssue)
+
+            if (undefined === issue) {
+                return null
+            }
+
+            const mergeRequests = []
+            const ciBuilds = []
+
+            issue.mergeRequests?.forEach(mr => {
+                mergeRequests.push(`<li>${gitlabStorage.buildUrl(mr.id, mr.number, mr.source, true)}</li>`)
+            })
+
+            issue.ciBuilds?.forEach(ci => {
+                ciBuilds.push(`<li>${jenkinsStorage.buildUrl(ci.job, ci.build, true)}</li>`)
+            })
+
+            comment = comment.replace('[mergeRequests]', `<ul>${mergeRequests.join('\n')}</ul>`)
+
+            return comment.replace('[ciBuilds]', `<ul>${ciBuilds.join('\n')}</ul>`)
         },
     },
 })

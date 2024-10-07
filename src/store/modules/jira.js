@@ -407,46 +407,6 @@ export default {
                 })
             })
         },
-        commentReplacePlaceholders: ({rootGetters}, comment) => {
-            return new Promise(resolve => {
-                const currentIssue = rootGetters['currentIssue']
-                const issue = rootGetters['issues/issue'](currentIssue)
-                const mergeRequests = []
-                const ciBuilds = []
-
-                if (null === issue) {
-                    resolve(comment)
-
-                    return
-                }
-
-                for (let mergeRequest of issue.mergeRequests ?? []) {
-                    mergeRequests.push(
-
-                        '<li>' + rootGetters['gitLab/url'](
-                            mergeRequest.id,
-                            mergeRequest.number,
-                            mergeRequest.source,
-                            true,
-                        ) + '</li>',
-                    )
-                }
-
-                for (let ciBuild of issue.ciBuilds ?? []) {
-                    ciBuilds.push(
-                        '<li>' + rootGetters['jenkins/url'](
-                            ciBuild.job,
-                            ciBuild.build,
-                            true,
-                        ) + '</li>',
-                    )
-                }
-
-                comment = comment.replace('[mergeRequests]', `<ul>${mergeRequests.join('\n')}</ul>`)
-
-                resolve(comment.replace('[ciBuilds]', `<ul>${ciBuilds.join('\n')}</ul>`))
-            })
-        },
     },
     getters: {
         getUrl: state => state.url,

@@ -27,11 +27,10 @@ export const usePopupStorage = defineStore('popup', {
                 return
             }
 
-            const [tab] = await chrome.tabs.query({active: true, currentWindow: true})
             const jiraStorage = useJiraStorage()
             await jiraStorage.load()
 
-            const data = await tab
+            const data = await this.fetchCurrentTab()
             this.currentUrl = data.url
             const issueStorage = useIssueStorage()
 
@@ -52,11 +51,17 @@ export const usePopupStorage = defineStore('popup', {
                     await issueStorage.createIssue(this.currentIssue, data)
                 }
 
+                this.switchTab = 'jira'
+
                 return
             }
         },
         setCurrentIssue(issueKey) {
             this.currentIssue = issueKey
+        },
+        async fetchCurrentTab() {
+            const [tab] = await chrome.tabs.query({active: true, currentWindow: true})
+            return await tab
         },
     },
 })

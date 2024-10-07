@@ -1,3 +1,36 @@
+<script setup>
+import CopiedToClipboard from '../mixed/CopiedToClipboard.vue'
+import {computed, ref} from 'vue'
+import {useJiraStorage} from '../../../stores/jira.js'
+
+const i18n = chrome.i18n
+const jiraStorage = useJiraStorage()
+
+const text = {
+    templates: i18n.getMessage('Templates'),
+    preview: i18n.getMessage('Preview'),
+    comment: i18n.getMessage('Comment'),
+    copy: i18n.getMessage('Copy'),
+}
+
+const template = ref(null)
+const message = ref()
+
+const templates = computed(() => jiraStorage.getTemplates)
+
+if (templates.value.length > 0) {
+    template.value = templates.value[0]
+}
+
+const addComment = () => jiraStorage.addComment(template.value.id, false)
+
+const copyComment = async () => {
+    const blob = new Blob([await jiraStorage.replacePlaceholdersInComment(template.value.content)], {type: 'text/html'})
+    await navigator.clipboard.write([new ClipboardItem({['text/html']: blob})])
+    message.value.show()
+}
+</script>
+
 <template>
     <v-card class="mx-auto" flat>
         <v-card-text>
@@ -25,60 +58,6 @@
             <v-spacer></v-spacer>
         </v-card-actions>
 
-        <copied-to-clipboard ref="message"></copied-to-clipboard>
+        <copied-to-clipboard ref="message" />
     </v-card>
 </template>
-
-<script>
-import CopiedToClipboard from '../mixed/CopiedToClipboard.vue'
-
-export default {
-    name: 'JiraTemplates',
-    components: {CopiedToClipboard},
-    data() {
-        return {
-            text: {
-                templates: chrome.i18n.getMessage('Templates'),
-                preview: chrome.i18n.getMessage('Preview'),
-                comment: chrome.i18n.getMessage('Comment'),
-                copy: chrome.i18n.getMessage('Copy'),
-            },
-            template: null,
-        }
-    },
-    computed: {
-        templates: function () {
-            return this.$store.getters['jira/templates']
-        },
-    },
-    created() {
-        if (this.templates.length > 0) {
-            this.template = this.templates[0]
-        }
-    },
-    methods: {
-        addComment: function () {
-            this.$store.dispatch('jira/addComment', {
-                uuid: this.template.id,
-                autoComment: false,
-            })
-        },
-        copyComment: function () {
-            let comment = this.$store.getters['jira/getTemplate'](this.template.id).content
-
-            this.$store.dispatch('jira/commentReplacePlaceholders', comment)
-                .then(result => {
-                    let blob = new Blob([result], {type: 'text/html'})
-
-                    navigator.clipboard.write(
-                        [
-                            new ClipboardItem({[blob.type]: blob}),
-                        ],
-                    ).then(() => {
-                        this.$refs.message.show()
-                    })
-                })
-        },
-    },
-}
-</script>

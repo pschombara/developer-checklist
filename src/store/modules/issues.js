@@ -37,25 +37,6 @@ export default {
                 issue.work = false
             }
         },
-        TOGGLE_CHECKLIST_CHECK: (state, data) => {
-            const issue = state.issues.find(issue => issue.name === data.issue)
-
-            if (undefined === issue) {
-                return
-            }
-
-            if (false === Object.prototype.hasOwnProperty.call(issue.checklist, data.uuid)) {
-                issue.checklist[data.uuid] = []
-            }
-
-            const index = issue.checklist[data.uuid].findIndex(id => id === data.id)
-
-            if (-1 === index) {
-                issue.checklist[data.uuid].push(data.id)
-            } else {
-                issue.checklist[data.uuid].splice(index, 1)
-            }
-        },
         UPDATE_DATE: (state, issue) => {
             const found = state.issues.find(elem => elem.name === issue)
 

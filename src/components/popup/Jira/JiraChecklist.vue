@@ -1,10 +1,10 @@
 <script setup>
 
-import {computed, ref} from 'vue'
+import {computed} from 'vue'
 import {useJiraStorage} from '../../../stores/jira.js'
 import {useIssueStorage} from '../../../stores/issues.js'
 
-const props = defineProps({
+const property = defineProps({
     uuid: {
         type: String,
         required: true,
@@ -18,45 +18,30 @@ const props = defineProps({
 const jiraStorage = useJiraStorage()
 const issueStorage = useIssueStorage()
 
-const checklist = computed(() => jiraStorage.getChecklist(props.uuid))
-const checked = computed(() => issueStorage.getIssue(props.issue).checklist)
+const checklist = computed(() => jiraStorage.getChecklist(property.uuid))
+const checked = computed(() => issueStorage.getIssue(property.issue).checklist)
 
 const isChecked = uuid => {
-    if (null === checked.value || undefined === checked.value[props.uuid]) {
+    if (null === checked.value || undefined === checked.value[property.uuid]) {
         return false
     }
 
-    return checked.value[props.uuid].includes(uuid)
+    return checked.value[property.uuid].includes(uuid)
 }
 
 const checkGroupCompleted = uuid => {
-    if (null === checked.value || undefined === checked.value[props.uuid]) {
+    if (null === checked.value || undefined === checked.value[property.uuid]) {
         return false
     }
 
     const data = Object.values(checklist.value.checklist).find(item => item.uid === uuid)
     const entries = Object.values(data.items).map(item => item.id)
 
-    return entries.every(val => checked.value[props.uuid].includes(val))
+    return entries.every(val => checked.value[property.uuid].includes(val))
 }
 
-// export default {
-//     methods: {
-//         toggleCheck: function (id) {
-//             this.$store.dispatch('issues/toggleChecklistEntry', {
-//                 issue: this.issue,
-//                 uuid: this.uuid,
-//                 id,
-//             })
-//         },
-//         addComment: function (button) {
-//             this.$store.dispatch('jira/addComment', {
-//                 uuid: button.comment,
-//                 autoComment: button.autoComment,
-//             })
-//         },
-//     },
-// }
+const toggleCheck = id => issueStorage.toggleChecklistEntry(property.issue, property.uuid, id)
+const addComment = button => jiraStorage.addComment(button.comment, button.autoComment)
 </script>
 
 <template>
@@ -68,9 +53,9 @@ const checkGroupCompleted = uuid => {
                     :key="item.uid"
                     :value="item.title"
                 >
-                    <template #activator="{ data }">
+                    <template #activator="{ props }">
                         <v-list-item
-                            v-bind="data"
+                            v-bind="props"
                         >
                             <template #prepend>
                                 <v-icon v-if="checkGroupCompleted(item.uid)" small color="success">fas fa-check</v-icon>
@@ -101,7 +86,6 @@ const checkGroupCompleted = uuid => {
                             </span>
                         </template>
                     </v-list-item>
-
                 </v-list-group>
             </v-list>
         </v-card-text>
