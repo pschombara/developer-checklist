@@ -1,6 +1,5 @@
 import {defineStore} from 'pinia'
 import Migration from '../mixins/migration.js'
-import {usePopupStorage} from './popup.js'
 
 const migration = new Migration()
 
@@ -19,6 +18,7 @@ export const useMainStorage = defineStore('mainStorage', {
         },
         themeSchema: 'system',
         themeColor: 'blue',
+        defaultPopupItemsPerPage: -1,
         optionTabs: [
             { id: 'general', name: chrome.i18n.getMessage('general'), icon: 'fas fa-cogs', settings: true },
             { id: 'jira', name: 'Jira', icon: 'fab fa-jira', settings: true },
@@ -35,6 +35,7 @@ export const useMainStorage = defineStore('mainStorage', {
         getThemeSchema: (state) => state.themeSchema,
         getThemeColor: (state) => state.themeColor,
         getVersion: (state) => state.version,
+        getDefaultPopupItemsPerPage: (state) => state.defaultPopupItemsPerPage,
     },
     actions: {
         async load () {
@@ -62,6 +63,7 @@ export const useMainStorage = defineStore('mainStorage', {
                 this.modules = result.optionsMain.modules
                 this.themeSchema = result.optionsMain.theme.schema
                 this.themeColor = result.optionsMain.theme.color
+                this.defaultPopupItemsPerPage = result.optionsMain.defaultPopupItemsPerPage
                 window.dispatchEvent(new CustomEvent('themeChanged', {detail: {schema: this.themeSchema, color: this.themeColor}}))
             })
         },
@@ -98,6 +100,7 @@ export const useMainStorage = defineStore('mainStorage', {
                     schema: this.themeSchema,
                     color: this.themeColor,
                 },
+                defaultPopupItemsPerPage: this.defaultPopupItemsPerPage,
             }})
         },
         changeOpenTab (tab) {
@@ -106,6 +109,10 @@ export const useMainStorage = defineStore('mainStorage', {
         changeMainTab (tab) {
             this.configTabs.main = tab
             chrome.storage.local.set({'optionsTab': tab})
+        },
+        changeDefaultPopupItemsPerPage(items) {
+            this.defaultPopupItemsPerPage = items
+            this.updateInStorage()
         },
     },
 })

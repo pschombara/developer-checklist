@@ -2,7 +2,6 @@
 
 import Theme from '../mixins/theme'
 import QuickList from '../components/popup/QuickList.vue'
-import Jenkins from '../components/popup/Jenkins.vue'
 import GitLab from '../components/popup/GitLab.vue'
 import Chat from '../components/popup/Chat.vue'
 import CheatSheet from '../components/popup/CheatSheet.vue'
@@ -10,6 +9,7 @@ import {computed, ref} from 'vue'
 import {useMainStorage} from '../stores/mainStorage.js'
 import {usePopupStorage} from '../stores/popup.js'
 import JiraPopup from '../components/popup/JiraPopup.vue'
+import JenkinsPopup from '../components/popup/JenkinsPopup.vue'
 
 const i18n = chrome.i18n
 const loading = ref(true)
@@ -110,7 +110,7 @@ load().then(() => loading.value = false)
                                 <JiraPopup />
                             </v-window-item>
                             <v-window-item value="jenkins">
-                                <Jenkins></Jenkins>
+                                <JenkinsPopup />
                             </v-window-item>
                             <v-window-item value="gitLab">
                                 <GitLab></GitLab>

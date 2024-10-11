@@ -20,6 +20,7 @@ export default class Migration {
                 await chrome.storage.local.set({optionsMain: {
                     modules: data.options.general.modules,
                     theme: data.theme,
+                    defaultPopupItemsPerPage: -1,
                 }})
                 await chrome.storage.local.set({optionsGitLab: data.options.gitLab})
                 await chrome.storage.local.set({optionsJira: data.options.jira})

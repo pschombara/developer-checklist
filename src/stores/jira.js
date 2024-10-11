@@ -48,7 +48,7 @@ export const useJiraStorage = defineStore('jira', {
 
             const options = await chrome.storage.local.get('optionsJira')
 
-            this.host = options.optionsJira.host
+            this.host = options.optionsJira.url
             this.cleanup = options.optionsJira.cleanup
             this.maximumIssues = options.optionsJira.maximumIssues
 
@@ -88,7 +88,7 @@ export const useJiraStorage = defineStore('jira', {
         },
         async save() {
             await chrome.storage.local.set({optionsJira: {
-                host: toRaw(this.host),
+                url: toRaw(this.host),
                 cleanup: toRaw(this.cleanup),
                 maximumIssues: toRaw(this.maximumIssues),
                 boards: toRaw(this.boards),
@@ -240,6 +240,27 @@ export const useJiraStorage = defineStore('jira', {
             if (-1 !== index) {
                 checklist.category.splice(index, 1)
             }
+        },
+        updateCategory(uuid, category) {
+            const checklist = this.checklists.find(checklist => checklist.uuid = uuid)
+            const currentCategory = checklist?.find(cat => cat.uid = category.uid)
+
+            currentCategory.title = category.title
+            currentCategory.items = category.items
+
+            Helper.resort(currentCategory.items)
+        },
+        addCategory(uuid, category) {
+            const checklist = this.checklists.find(checklist => checklist.uuid = uuid)
+
+            checklist.checklist.push({
+                uid: Uuid.generate(),
+                title: category.title,
+                items: category.items,
+                sort: Number.MAX_SAFE_INTEGER,
+            })
+
+            Helper.resort(checklist.checklist)
         },
         categorySortBefore(checklistUuid, currentId, refId) {
             const checklist = this.checklists.find(checklist => checklist.uuid === checklistUuid)

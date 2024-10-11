@@ -1,6 +1,5 @@
 <script setup>
 import Helper from '../../../../mixins/helper'
-import _ from 'lodash'
 import {Uuid} from '../../../../mixins/uuid'
 import {ref, watch} from 'vue'
 import {useJiraStorage} from '../../../../stores/jira.js'
@@ -99,11 +98,14 @@ const insertAfter = item => Helper.sortAfter(checklist.value.items, sortItem.val
 const cancelSort = () => sortItem.value = null
 
 const saveCategory = () => {
-
+    jiraStorage.updateCategory(props.uuid, checklist.value)
     emits('close')
 }
 
 const addCategory = () => {
+    jiraStorage.addCategory(props.uuid, checklist.value)
+
+    checklist.value = {...defaultChecklist}
     emits('close')
 }
 
@@ -134,30 +136,8 @@ const addEntry = () => {
     Helper.resort(checklist.value.items)
     closeEntry()
 }
+
 getCategory()
-// export default  {
-//
-//     methods: {
-//         saveCategory: function () {
-//             this.$store.dispatch('jira/updateCategory', {
-//                 uuid: this.uuid,
-//                 category: this.checklist,
-//             })
-//
-//             this.$emit('close')
-//         },
-//         addCategory: function () {
-//             this.$store.dispatch('jira/addCategory', {
-//                 uuid: this.uuid,
-//                 category: this.checklist,
-//             })
-//
-//             this.checklist = _.cloneDeep(this.defaultChecklist)
-//
-//             this.$emit('close')
-//         },
-//     },
-// }
 </script>
 
 <template>

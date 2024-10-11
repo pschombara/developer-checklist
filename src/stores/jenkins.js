@@ -1,6 +1,7 @@
 import {defineStore} from 'pinia'
 import {toRaw} from 'vue'
 import {Uuid} from '../mixins/uuid.js'
+import {usePopupStorage} from './popup.js'
 
 export const useJenkinsStorage = defineStore('jenkins', {
     state: () => ({
@@ -8,12 +9,16 @@ export const useJenkinsStorage = defineStore('jenkins', {
         categories: [],
         builds: [],
         loaded: false,
+        currentJob: '',
+        currentBuild: null,
     }),
     getters: {
         getHost: state => state.host,
         getCategories: state => state.categories,
         getBuilds: state => state.builds,
         isLoaded: state => state.loaded,
+        getCurrentJob: state => state.currentJob,
+        getCurrentBuild: state => state.currentBuild,
     },
     actions: {
         async load(reload = false) {
@@ -107,6 +112,54 @@ export const useJenkinsStorage = defineStore('jenkins', {
             const url = encodeURI(`${this.host}/view/${ciBuild.type}/job/${ciBuild.job}/${build}/`)
 
             return withTag ? `<a href="${url}">${name}</a>` : url
+        },
+        async checkUrl() {
+            const popupStorage = usePopupStorage()
+            const tab = await popupStorage.fetchCurrentTab()
+            const url = tab.url
+
+            if ('' === this.host || false === url.startsWith(this.host)) {
+                return
+            }
+
+            const matches = url.match('/job/(?<job>[\\w-_\\+\\d]+)/(?<build>\\d*)')
+
+            if ('' === matches.groups.job) {
+                return
+            }
+
+            const job = this.builds.find(build => build.job === matches.groups.job)
+
+            if (undefined === job) {
+                return
+            }
+
+            this.currentJob = job.job
+
+            if ('' !== matches.groups.build) {
+                this.currentBuild = parseInt(matches.groups.build)
+
+                return
+            }
+
+            await new Promise(resolve => {
+                chrome.scripting.executeScript(
+                    {
+                        target: {tabId: tab.id},
+                        func: () => {
+                            const lastBuild = document.querySelector('[update-parent-class=".build-row"]')
+
+                            return parseInt(lastBuild.innerText.replace('#', ''))
+                        },
+                    },
+                    async injectionResult => {
+                        if (injectionResult.length > 0) {
+                            this.currentBuild = injectionResult[0].result
+                            resolve()
+                        }
+                    },
+                )
+            })
         },
     },
 })

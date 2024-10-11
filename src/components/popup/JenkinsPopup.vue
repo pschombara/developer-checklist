@@ -1,3 +1,152 @@
+<script setup>
+import _ from 'lodash'
+import CopiedToClipboard from './mixed/CopiedToClipboard.vue'
+import {computed, ref} from 'vue'
+import {useJenkinsStorage} from '../../stores/jenkins.js'
+import {useIssueStorage} from '../../stores/issues.js'
+import {useMainStorage} from '../../stores/mainStorage.js'
+
+const i18n = chrome.i18n
+const optionsValid = ref(false)
+const issue = ref(null)
+const message = ref()
+const copyBuildUrl = ref()
+const build = ref()
+const job = ref()
+
+const text = {
+    helpAddIssue: i18n.getMessage('helpAddIssue'),
+    helpReplaceIssue: i18n.getMessage('helpReplaceIssue'),
+}
+
+const issueHeader = [
+    { title: 'Job', key: 'job'},
+    { title: 'Build', key: 'build'},
+    { title: '', key: 'action', sortable: false, align: 'end'},
+]
+
+const jenkinsStorage = useJenkinsStorage()
+const issueStorage = useIssueStorage()
+const mainStorage = useMainStorage()
+
+const issues = computed(() => {
+    const data = _.cloneDeep(issueStorage.getIssues)
+
+    data.sort((a, b) => {
+        if (a.work || b.work) {
+            return a.work ? -1 : 1
+        }
+
+        if ((a.pinned || b.pinned) && (a.pinned !== b.pinned)) {
+            return a.pinned ? -1 : 1
+        }
+
+        return a.date > b.date ? -1 : 1
+    })
+
+    return data
+})
+
+const itemsPerPage = computed(() => mainStorage.getDefaultPopupItemsPerPage)
+
+const builds = computed(() => {
+    return jenkinsStorage.getBuilds
+})
+
+const readyToCopy = computed(() => {
+    const host = jenkinsStorage.getHost
+
+    return '' !== host && '' !== job.value && '' !== (build.value ?? '')
+})
+
+const issueData = computed(() => {
+    return issueStorage.getIssue(issue.value)
+})
+
+const buildUrl = computed(() => {
+    if (false === readyToCopy.value) {
+        return ''
+    }
+
+    return jenkinsStorage.buildUrl(job.value, build.value, true)
+})
+
+const load = async () => {
+    await issueStorage.load()
+    await jenkinsStorage.load()
+
+    optionsValid.value = jenkinsStorage.getHost && 0 < jenkinsStorage.getBuilds.length
+
+    if (false === optionsValid.value) {
+        return
+    }
+
+    await jenkinsStorage.checkUrl()
+
+    build.value = jenkinsStorage.getCurrentBuild
+    job.value = jenkinsStorage.getCurrentJob
+
+    if (issues.value.length > 0 ) {
+        issue.value = issues.value[0].key
+    }
+}
+
+const openOptions = tab => {
+    mainStorage.changeMainTab(tab)
+    chrome.runtime.openOptionsPage()
+}
+
+const copy = async () => {
+    if (readyToCopy.value) {
+        const blob = new Blob([copyBuildUrl.value.value], {type: 'text/html'})
+
+        await navigator.clipboard.write([new ClipboardItem({[blob.type]: blob})])
+
+        message.value.show()
+    }
+}
+
+const attachToIssue = () => issueStorage.addCiBuild(issue.value, job.value, build.value)
+const exchangeInIssue = () => issueStorage.exchangeCiBuild(issue.value, job.value, build.value)
+
+const removeFromIssue = (job, ciBuild) => issueStorage.removeCiBuild(issue.value, job, ciBuild)
+
+const jobName = job => {
+    const ciJob = builds.value.find(item => item.job === job)
+
+    if (undefined === ciJob) {
+        return ''
+    }
+
+    return '' !== ciJob.label ? ciJob.label : ciJob.name
+}
+
+const openBuild = (job, build) => {
+    const url = jenkinsStorage.buildUrl(job, build, false)
+
+    if ('' === url) {
+        return
+    }
+
+    chrome.tabs.create({url})
+}
+
+const copyBuild = async (job, build) => {
+    const url = jenkinsStorage.buildUrl(job, build, false)
+
+    if ('' === url) {
+        return
+    }
+
+    const blob = new Blob([url], {type: 'text/html'})
+
+    await navigator.clipboard.write([new ClipboardItem({[blob.type]: blob})])
+
+    message.value.show()
+}
+
+load()
+</script>
 <template>
     <v-card v-if="optionsValid">
         <v-card-title>
@@ -33,7 +182,7 @@
             <v-row class="mt-0">
                 <v-col cols="10">
                     <v-text-field
-                        ref="copyBuild"
+                        ref="copyBuildUrl"
                         readonly
                         :value="buildUrl"
                         :disabled="!readyToCopy"
@@ -57,7 +206,7 @@
                         v-if="issueData"
                         :items="issueData.ciBuilds"
                         :headers="issueHeader"
-                        :items-per-page="3"
+                        :items-per-page="itemsPerPage"
                         :footer-props="{disableItemsPerPage: true, itemsPerPageOptions:[3]}"
                     >
                         <template #top>
@@ -90,7 +239,7 @@
                                     <span>{{ text.helpAddIssue }}</span>
                                 </v-tooltip>
                                 <v-tooltip location="bottom">
-                                    <template #activator="{props}">
+                                    <template #activator="{}">
                                         <v-btn
                                             variant="plain"
                                             color="secondary"
@@ -101,19 +250,15 @@
                                     </template>
                                     <span>{{ text.helpReplaceIssue }}</span>
                                 </v-tooltip>
-
                             </v-toolbar>
                         </template>
                         <template #item.job="{item}">
-                            {{buildName(item.job)}}
+                            {{jobName(item.job)}}
                         </template>
                         <template #item.action="{item}">
-                            <v-btn variant="plain" icon="fas fa-copy" size="small" @click="copyBuild(item.job, item.build)">
-                            </v-btn>
-                            <v-btn variant="plain" icon="fas fa-external-link-alt" size="small" @click="openBuild(item.job, item.build)">
-                            </v-btn>
-                            <v-btn variant="plain" icon="fas fa-trash" size="small" color="tertiary" @click="removeFromIssue(item.job, item.build)">
-                            </v-btn>
+                            <v-btn variant="plain" icon="fas fa-copy" size="small" @click="copyBuild(item.job, item.build)" />
+                            <v-btn variant="plain" icon="fas fa-external-link-alt" size="small" @click="openBuild(item.job, item.build)" />
+                            <v-btn variant="plain" icon="fas fa-trash" size="small" color="tertiary" @click="removeFromIssue(item.job, item.build)" />
                         </template>
                     </v-data-table>
                 </v-col>
@@ -132,154 +277,3 @@
         </v-card-actions>
     </v-card>
 </template>
-
-<script>
-import _ from 'lodash'
-import CopiedToClipboard from './mixed/CopiedToClipboard.vue'
-
-export default {
-    name: 'PopupJenkins',
-    components: {CopiedToClipboard},
-    data: () => {
-        return {
-            job: '',
-            build: null,
-            i18n: chrome.i18n,
-            optionsValid: false,
-            issue: null,
-            issues: [],
-            text: {
-                helpAddIssue: chrome.i18n.getMessage('helpAddIssue'),
-                helpReplaceIssue: chrome.i18n.getMessage('helpReplaceIssue'),
-            },
-        }
-    },
-    computed: {
-        builds: function () {
-            return this.$store.getters['jenkins/getBuilds']
-        },
-        readyToCopy: function () {
-            const host = this.$store.getters['jenkins/getHost']
-
-            return '' !== host && '' !== this.job && null !== this.build && '' !== this.build
-        },
-        buildUrl: function () {
-            if (false === this.readyToCopy) {
-                return ''
-            }
-
-            return this.$store.getters['jenkins/url'](this.job, this.build, true)
-        },
-        issueData: function () {
-            return this.$store.getters['issues/issue'](this.issue)
-        },
-        issueHeader: function () {
-            return [
-                { title: 'Job', key: 'job'},
-                { title: 'Build', key: 'build'},
-                { title: '', key: 'action', sortable: false, align: 'end'},
-            ]
-        },
-    },
-    created() {
-        this.optionsValid = '' !== this.$store.getters['jenkins/getHost']
-            && 0 < this.$store.getters['jenkins/getBuilds'].length
-
-        if (false === this.optionsValid) {
-            return
-        }
-
-        this.$store.dispatch('jenkins/checkUrl').then(() => {
-            this.job = this.$store.getters['jenkins/currentJob']
-            this.build = this.$store.getters['jenkins/currentBuild']
-        })
-
-        this.issues = _.cloneDeep(this.$store.getters['issues/list'])
-
-        this.issues.sort(function (a, b) {
-            if (a.work || b.work) {
-                return a.work ? -1 : 1
-            }
-
-            if ((a.pinned || b.pinned) && a.pinned !== b.pinned) {
-                return a.pinned ? -1 : 1
-            }
-
-            return a.date > b.date ? -1 : 1
-        })
-
-        if (this.issues.length > 0) {
-            this.issue = this.issues[0].name
-        }
-    },
-    methods: {
-        openOptions: function (tab) {
-            this.$store.dispatch('changeMainTab', tab)
-            chrome.runtime.openOptionsPage()
-        },
-        copy: function () {
-            if (this.readyToCopy) {
-                let blob = new Blob([this.$refs.copyBuild.value], {type: 'text/html'})
-
-                navigator.clipboard.write([new ClipboardItem({[blob.type]: blob})])
-                    .then(() => {
-                        this.$refs.message.show()
-                    })
-            }
-        },
-        attachToIssue: function () {
-            this.$store.dispatch('issues/attachCiBuild', {
-                issue: this.issue,
-                job: this.job,
-                build: this.build,
-            })
-        },
-        exchangeInIssue: function () {
-            this.$store.dispatch('issues/exchangeCiBuild', {
-                issue: this.issue,
-                job: this.job,
-                build: this.build,
-            })
-        },
-        removeFromIssue: function (job, build) {
-            this.$store.dispatch('issues/removeCiBuild', {
-                issue: this.issue,
-                job,
-                build,
-            })
-        },
-        buildName: function (job) {
-            const ciJob = this.builds.find(build => build.job === job)
-
-            if (undefined === ciJob) {
-                return ''
-            }
-
-            return '' !== ciJob.label ? ciJob.label : ciJob.name
-        },
-        openBuild: function (job, build) {
-            const url = this.$store.getters['jenkins/url'](job, build,false)
-
-            if ('' === url) {
-                return
-            }
-
-            chrome.tabs.create({url})
-        },
-        copyBuild: function (job, build) {
-            const url = this.$store.getters['jenkins/url'](job, build,true)
-
-            if ('' === url) {
-                return
-            }
-
-            let blob = new Blob([url], {type: 'text/html'})
-
-            navigator.clipboard.write([new ClipboardItem({[blob.type]: blob})])
-                .then(() => {
-                    this.$refs.message.show()
-                })
-        },
-    },
-}
-</script>

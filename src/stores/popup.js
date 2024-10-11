@@ -2,6 +2,8 @@ import {defineStore} from 'pinia'
 import {useJiraStorage} from './jira.js'
 import Helper from '../mixins/helper.js'
 import {useIssueStorage} from './issues.js'
+import {useJenkinsStorage} from './jenkins.js'
+import {useGitLabStorage} from './gitlab.js'
 
 export const usePopupStorage = defineStore('popup', {
     state: () => ({
@@ -54,6 +56,22 @@ export const usePopupStorage = defineStore('popup', {
                 this.switchTab = 'jira'
 
                 return
+            }
+
+            const jenkinsStorage = useJenkinsStorage()
+            await jenkinsStorage.load()
+
+            if (this.currentUrl.startsWith(jenkinsStorage.getHost)) {
+                this.switchTab = 'jenkins'
+
+                return
+            }
+
+            const gitlabStorage = useGitLabStorage()
+            await gitlabStorage.load()
+
+            if (this.currentUrl.startsWith(gitlabStorage.getHost)) {
+                this.switchTab = 'gitLab'
             }
         },
         setCurrentIssue(issueKey) {

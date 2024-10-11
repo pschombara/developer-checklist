@@ -2,6 +2,7 @@ import {defineStore} from 'pinia'
 import {useJiraStorage} from './jira.js'
 import {usePopupStorage} from './popup.js'
 import _ from 'lodash'
+import {toRaw} from 'vue'
 
 export const useIssueStorage = defineStore('issues', {
     state: () => ({
@@ -184,6 +185,58 @@ export const useIssueStorage = defineStore('issues', {
             } else {
                 issue.checklist[checklistUuid].splice(index, 1)
             }
+        },
+        async addCiBuild(issueKey, job, build) {
+            const issue = this.getIssue(issueKey)
+
+            if (undefined === issue) {
+                return
+            }
+
+            if (-1 !== issue.ciBuilds.findIndex(cb => cb.job === job && cb.build === build)) {
+                return
+            }
+
+            issue.ciBuilds.push({
+                job: job,
+                build: build,
+            })
+
+            this.updateInStorage(issue)
+        },
+        async exchangeCiBuild(issueKey, job, buildId) {
+            const issue = this.getIssue(issueKey)
+
+            if (undefined === issue) {
+                return
+            }
+
+            for (const build of issue.ciBuilds) {
+                if (build.job === job) {
+                    build.build = buildId
+
+                    break
+                }
+            }
+
+            this.updateInStorage(issue)
+        },
+        async removeCiBuild(issueKey, job, build) {
+            const issue = this.getIssue(issueKey)
+
+            if (undefined === issue) {
+                return
+            }
+
+            const index = issue.ciBuilds.findIndex(cb => cb.job === job && cb.build === build)
+
+            if (-1 === index) {
+                return
+            }
+
+            issue.ciBuilds.splice(index, 1)
+
+            this.updateInStorage(issue)
         },
     },
 })
