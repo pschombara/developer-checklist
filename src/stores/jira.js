@@ -340,6 +340,9 @@ export const useJiraStorage = defineStore('jira', {
             const jenkinsStorage = useJenkinsStorage()
             const gitlabStorage = useGitLabStorage()
 
+            await jenkinsStorage.load()
+            await gitlabStorage.load()
+
             const issue = issueStorage.getIssue(popupStorage.getCurrentIssue)
 
             if (undefined === issue) {

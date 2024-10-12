@@ -103,7 +103,7 @@ export const useGitLabStorage = defineStore('gitLab', {
             const project = this.projects.find(item => item.uuid === id)
 
             if (undefined === project) {
-                return null
+                return ''
             }
 
             if (false === withTag) {

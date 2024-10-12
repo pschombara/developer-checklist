@@ -104,8 +104,8 @@ export const useJenkinsStorage = defineStore('jenkins', {
         buildUrl(job, build, withTag) {
             const ciBuild = this.builds.find(item => item.job === job)
 
-            if (undefined === build) {
-                return null
+            if (undefined === ciBuild) {
+                return ''
             }
 
             const name = '' !== ciBuild.label ? ciBuild.label : ciBuild.name
