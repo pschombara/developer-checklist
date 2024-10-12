@@ -1,6 +1,5 @@
 import {defineStore} from 'pinia'
 import Migration from '../mixins/migration.js'
-import semver from 'semver'
 
 const migration = new Migration()
 
@@ -136,12 +135,16 @@ export const useMainStorage = defineStore('mainStorage', {
 
             return exportConfig
         },
-        async importOptions(importData) {
-            if (semver.neq(migration.version, importData.version ?? '0.0.0')) {
-                throw new Error('Not supported')
+        async importOptions(importData, importModules) {
+            const storeOptions = {}
+
+            for (const module of importModules) {
+                const name = `options${module[0].toUpperCase()}${module.slice(1)}`
+
+                storeOptions[name] = importData[name]
             }
 
-            await chrome.storage.local.set(importData)
+            await chrome.storage.local.set(storeOptions)
         },
     },
 })

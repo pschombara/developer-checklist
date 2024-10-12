@@ -68,7 +68,7 @@ export const useIssueStorage = defineStore('issues', {
         },
         async reloadFromStorage(){
             this.issues = []
-            await this.load()
+            await this.load(true)
         },
         async pin(key) {
             const issue = this.issues.find(item => item.key === key)

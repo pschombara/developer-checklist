@@ -9,7 +9,7 @@
         <template #action="{ attrs }">
             <v-btn
                 color="blue"
-                text
+                variant="text"
                 v-bind="attrs"
                 @click="visible = false"
             >

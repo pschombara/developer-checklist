@@ -1,5 +1,5 @@
 <script setup>
-import {computed, ref, watch} from 'vue'
+import {computed, ref, toRaw, watch} from 'vue'
 import Theme from '../mixins/theme'
 import {useMainStorage} from '../stores/mainStorage'
 import OptionGeneral from '../components/options/OptionGeneral.vue'
@@ -114,6 +114,8 @@ const triggerExport = async () => {
 const openFileInput = () => importConfig.value.click()
 
 const fileSelected = async file => {
+    closeAlerts()
+
     if (file.size <= 0) {
         dialog.value.error.empty = true
 
@@ -168,6 +170,17 @@ const cancelImport = () => {
 
 const startImport = async () => {
     loading.value = true
+
+    await mainStorage.importOptions(toRaw(importOptions.value), importModules.value)
+
+    loading.value = false
+    window.location.reload()
+}
+
+const closeAlerts = () => {
+    dialog.value.error.type = false
+    dialog.value.error.empty = false
+    dialog.value.error.notSupported = false
 }
 
 const load = async () => {
@@ -222,7 +235,7 @@ load()
                                     <v-card-actions>
                                         <v-spacer></v-spacer>
                                         <v-btn color="secondary" plain @click="closeExport">{{text.cancel}}</v-btn>
-                                        <v-btn color="success" plain :disabled="0 === exportModules.length" @click="triggerExport">{{text.export}}</v-btn>
+                                        <v-btn color="primary" plain :disabled="0 === exportModules.length" @click="triggerExport">{{text.export}}</v-btn>
                                         <v-spacer></v-spacer>
                                     </v-card-actions>
                                 </v-card>
@@ -259,7 +272,7 @@ load()
                                     <v-card-actions>
                                         <v-spacer></v-spacer>
                                         <v-btn color="secondary" plain @click="cancelImport">{{text.cancel}}</v-btn>
-                                        <v-btn color="success" plain :disabled="0 === importModules.length" @click="startImport">{{text.import}}</v-btn>
+                                        <v-btn color="primary" plain :disabled="0 === importModules.length" @click="startImport">{{text.import}}</v-btn>
                                         <v-spacer></v-spacer>
                                     </v-card-actions>
                                 </v-card>
@@ -349,25 +362,3 @@ load()
     max-height: 5vh;
 }
 </style>
-<!--<script>-->
-
-<!--export default {-->
-
-<!--        closeAlerts: function () {-->
-<!--            this.alert.import.type = false-->
-<!--            this.alert.saved = false-->
-<!--        },-->
-<!--        storeImportedOptions: function () {-->
-<!--            this.dialog.import = false-->
-<!--            this.loading = true-->
-
-<!--            this.$store.dispatch('import', {-->
-<!--                options: this.importOptions,-->
-<!--                importSettings: this.importModules,-->
-<!--            }).then(() => {-->
-<!--                this.loading = false-->
-<!--            })-->
-<!--        },-->
-<!--    },-->
-<!--}-->
-<!--</script>-->

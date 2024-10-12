@@ -28,12 +28,13 @@ const defaultCategory = {name: ''}
 const searchCategory = ref('')
 const dialogDeleteCategory = ref(false)
 const deleteCategory = ref({})
-const dialogCategory = {
+const dialogCategory = ref({
     open: false,
     title: '',
     current: null,
     item: {...defaultCategory},
-}
+    saveButton: '',
+})
 
 const categoriesHeader = [
     { title: text.category, key: 'name' },
@@ -67,8 +68,8 @@ const openNewCategory = () => {
 }
 
 const closeDialogCategory = () => {
-    dialogCategory.open = false
-    dialogCategory.current = null
+    dialogCategory.value.open = false
+    dialogCategory.value.current = null
 }
 
 const saveCategory = async event => {
@@ -103,15 +104,15 @@ const closeDialogDeleteCategory = () => {
 }
 
 const checkCategoryDuplicated = value => {
-    if (false === jenkinsStorage.getCategories.max(x => x.toLowerCase()).includes(value.toLowerCase())) {
+    if (false === jenkinsStorage.getCategories.map(x => x.toLowerCase()).includes(value.toLowerCase())) {
         return false
     }
 
-    if (null === dialogCategory.current) {
+    if (null === dialogCategory.value.current) {
         return true
     }
 
-    return value !== dialogCategory.current.name
+    return value !== dialogCategory.value.current.name
 }
 </script>
 

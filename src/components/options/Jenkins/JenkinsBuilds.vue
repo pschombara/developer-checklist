@@ -129,6 +129,7 @@ const saveBuild = async event => {
 
 const removeBuild = build => {
     jenkinsStore.removeBuild(build.uuid)
+    closeDialogDeleteBuild()
 }
 
 const closeDialogDeleteBuild = () => {
