@@ -207,7 +207,6 @@ load()
                         :items="issueData.ciBuilds"
                         :headers="issueHeader"
                         :items-per-page="itemsPerPage"
-                        :footer-props="{disableItemsPerPage: true, itemsPerPageOptions:[3]}"
                     >
                         <template #top>
                             <v-toolbar flat>

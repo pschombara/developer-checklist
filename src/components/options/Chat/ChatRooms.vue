@@ -53,7 +53,7 @@ const nameRules = [
 
 const urlRules = [
     value => !!value || i18n.getMessage('errNotBlank'),
-    value => Helper.isURL(value, this.urlStart) || i18n.getMessage('errUrlInvalid'),
+    value => Helper.isURL(value, props.urlStart) || i18n.getMessage('errUrlInvalid'),
     value => value.length <= 500 || i18n.getMessage('errMaxLength', '500'),
 ]
 
@@ -137,7 +137,7 @@ const removeRoom = () => {
     chatStorage.removeRoom(props.client, deleteRoom.value.id)
 }
 
-const checkDuplicate = value => {
+const checkDuplicated = value => {
     const room = chatStorage.getRooms(props.client).find(room => room.name === value)
 
     if (undefined === room) {

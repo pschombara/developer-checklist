@@ -238,5 +238,43 @@ export const useIssueStorage = defineStore('issues', {
 
             this.updateInStorage(issue)
         },
+        async addMergeRequest(issueKey, id, number, source) {
+            const issue = this.getIssue(issueKey)
+
+            if (undefined === issue) {
+                return
+            }
+
+            const mergeRequest = issue.mergeRequests.find(mr => mr.id === id && mr.number === number)
+
+            if (undefined !== mergeRequest) {
+                return
+            }
+
+            issue.mergeRequests.push({
+                id: id,
+                number: number,
+                source: source,
+            })
+
+            await this.updateInStorage(issue)
+        },
+        async removeMergeRequest(issueKey, id, number) {
+            const issue = this.getIssue(issueKey)
+
+            if (undefined === issue) {
+                return
+            }
+
+            const index = issue.mergeRequests.findIndex(mr => mr.id === id && mr.number === number)
+
+            if (-1 === index) {
+                return
+            }
+
+            issue.mergeRequests.splice(index, 1)
+
+            await this.updateInStorage(issue)
+        },
     },
 })

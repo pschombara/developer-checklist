@@ -2,14 +2,14 @@
 
 import Theme from '../mixins/theme'
 import QuickList from '../components/popup/QuickList.vue'
-import GitLab from '../components/popup/GitLab.vue'
-import Chat from '../components/popup/Chat.vue'
-import CheatSheet from '../components/popup/CheatSheet.vue'
 import {computed, ref} from 'vue'
 import {useMainStorage} from '../stores/mainStorage.js'
 import {usePopupStorage} from '../stores/popup.js'
 import JiraPopup from '../components/popup/JiraPopup.vue'
 import JenkinsPopup from '../components/popup/JenkinsPopup.vue'
+import GitlabPopup from '../components/popup/GitlabPopup.vue'
+import ChatPopup from '../components/popup/ChatPopup.vue'
+import CheatSheetPopup from '../components/popup/CheatSheetPopup.vue'
 
 const i18n = chrome.i18n
 const loading = ref(true)
@@ -113,13 +113,13 @@ load().then(() => loading.value = false)
                                 <JenkinsPopup />
                             </v-window-item>
                             <v-window-item value="gitLab">
-                                <GitLab></GitLab>
+                                <GitlabPopup />
                             </v-window-item>
                             <v-window-item value="chat">
-                                <Chat></Chat>
+                                <ChatPopup />
                             </v-window-item>
                             <v-window-item value="cheatSheet">
-                                <CheatSheet></CheatSheet>
+                                <CheatSheetPopup />
                             </v-window-item>
                         </v-window>
                     </v-card>
@@ -145,11 +145,7 @@ load().then(() => loading.value = false)
 
 <style>
 html {
-  min-width: 600px;
-  max-width: 600px;
-}
-
-.v-application > .v-application__wrap {
-    min-height: fit-content;
+  min-width: 720px;
+  max-width: 720px;
 }
 </style>

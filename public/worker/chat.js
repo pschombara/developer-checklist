@@ -1,6 +1,7 @@
 self.addEventListener('message', message => {
     if ('' !== message.data.message) {
-        fetch(message.data.room.url, {
+        console.log(message.data)
+        fetch(message.data.room, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json; charset=utf-8',

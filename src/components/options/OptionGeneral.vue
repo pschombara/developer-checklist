@@ -81,6 +81,9 @@ color="primary" :model-value="modules.cheatSheet"
                         @update:model-value="$emit('themeColorChanged')"
                     ></v-select>
 
+                    <div class="my-4">
+                        <h3>Other Settings</h3>
+                    </div>
                     <v-slider
                         v-model="defaultPopupItemsPerPage"
                         min="-1"
@@ -89,7 +92,6 @@ color="primary" :model-value="modules.cheatSheet"
                         label="Items per Page (Popup)"
                         thumb-label="always"
                         thumb-size="24"
-                        class="mt-4"
                     >
                         <template #thumb-label="{ modelValue }">
                             {{-1 !== modelValue ? modelValue : 'All'}}

@@ -12,13 +12,11 @@ let init = false
 
 const clients = [
     {
-        id: 0,
         name: 'google',
         icon: 'fas fa-comment',
         urlStart: 'https://chat.googleapis.com/v1',
     },
     {
-        id: 1,
         name: 'discord',
         icon: 'fab fa-discord',
         urlStart: 'https://discord.com/api/webhooks/',
@@ -40,7 +38,14 @@ chatStorage.$subscribe(() => {
     }
 })
 
-chatStorage.load().then(() => init = true)
+const load = async () => {
+    await chatStorage.load()
+    init = true
+
+    selectedClient.value = chatStorage.getClients.find(item => item.main).client ?? 'google'
+}
+
+load()
 </script>
 
 <template>
@@ -48,7 +53,7 @@ chatStorage.load().then(() => init = true)
         <v-card-title>Chat</v-card-title>
         <v-card-text>
             <v-tabs v-model="selectedClient" vertical>
-                <v-tab v-for="client in clients" :key="client.id">
+                <v-tab v-for="client in clients" :key="client.name" :value="client.name">
                     <v-row align="center">
                         <v-col class="text-start">
                             <v-icon :icon="client.icon"/>
@@ -59,7 +64,7 @@ chatStorage.load().then(() => init = true)
             </v-tabs>
 
             <v-window v-model="selectedClient">
-                    <v-window-item v-for="client in clients" :key="client.id">
+                    <v-window-item v-for="client in clients" :key="client.name" :value="client.name">
                         <v-card>
                             <v-card-text>
                                 <v-row>

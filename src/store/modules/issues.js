@@ -46,29 +46,6 @@ export default {
 
             found.updateDate = Math.floor(Date.now() / 1000)
         },
-        ADD_MERGE_REQUEST: (state, data) => {
-            const issue = state.issues.find(issue => issue.name === data.issue)
-
-            if (undefined === issue) {
-                return
-            }
-
-            if (undefined === issue.mergeRequests) {
-                issue.mergeRequests = []
-            }
-
-            const mergeRequest = issue.mergeRequests.find(mr => mr.id === data.id && mr.number === data.number)
-
-            if (undefined !== mergeRequest) {
-                return
-            }
-
-            issue.mergeRequests.push({
-                id: data.id,
-                number: data.number,
-                source: data.source,
-            })
-        },
         REMOVE_MERGE_REQUEST: (state, data) => {
             const issue = state.issues.find(issue => issue.name === data.issue)
 
@@ -87,76 +64,6 @@ export default {
             }
 
             issue.mergeRequests.splice(index, 1)
-        },
-        ADD_CI_BUILD: (state, data) => {
-            const issue = state.issues.find(issue => issue.name === data.issue)
-
-            if (undefined === issue) {
-                return
-            }
-
-            if (undefined === issue.ciBuilds) {
-                issue.ciBuilds = []
-            }
-
-            const ciBuild = issue.ciBuilds.find(cb => cb.job === data.job && cb.build === data.build)
-
-            if (undefined !== ciBuild) {
-                return
-            }
-
-            issue.ciBuilds.push({
-                job: data.job,
-                build: data.build,
-            })
-        },
-        EXCHANGE_CI_BUILD: (state, data) => {
-            const issue = state.issues.find(issue => issue.name === data.issue)
-
-            if (undefined === issue) {
-                return
-            }
-
-            if (undefined === issue.ciBuilds) {
-                issue.ciBuilds = []
-            }
-
-            let replaced = false
-            let builds = []
-
-            for (let build of issue.ciBuilds) {
-                if (build.job === data.job && replaced) {
-                    continue
-                }
-
-                if (build.job === data.job) {
-                    build.build = data.build
-                    replaced = true
-                }
-
-                builds.push(build)
-            }
-
-            issue.ciBuilds = builds
-        },
-        REMOVE_CI_BUILD: (state, data) => {
-            const issue = state.issues.find(issue => issue.name === data.issue)
-
-            if (undefined === issue) {
-                return
-            }
-
-            if (undefined === issue.ciBuilds) {
-                return
-            }
-
-            const index = issue.ciBuilds.findIndex(cb => cb.job === data.job && cb.build === data.build)
-
-            if (-1 === index) {
-                return
-            }
-
-            issue.ciBuilds.splice(index, 1)
         },
     },
     actions: {

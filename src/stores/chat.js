@@ -2,11 +2,12 @@ import {defineStore} from 'pinia'
 import Helper from '../mixins/helper.js'
 import {Uuid} from '../mixins/uuid.js'
 import {toRaw} from 'vue'
+import ChatStatus from '../mixins/chat/status.js'
+import {useJiraStorage} from './jira.js'
+import {Google} from '../mixins/chat/google.js'
+import {Discord} from '../mixins/chat/discord.js'
 
-const STATUS_READY = 'ready'
-const STATUS_SUCCESS = 'success'
-const STATUS_ERROR = 'error'
-const STATUS_PROGRESS = 'progress'
+const chatWorker = new Worker('../../worker/chat.js')
 
 export const useChatStorage = defineStore('chat', {
     state: () => ({
@@ -26,7 +27,7 @@ export const useChatStorage = defineStore('chat', {
                 name: '',
             },
         },
-        status: STATUS_READY,
+        status: ChatStatus.READY,
     }),
     getters: {
         isMain: state => {
@@ -46,14 +47,26 @@ export const useChatStorage = defineStore('chat', {
         },
         getMessages: state => {
             return client => {
-                return state.clients[client].messages ?? []
+                return state.clients[client]?.messages ?? []
             }
         },
         getRooms: state => {
             return client => {
-                return state.clients[client].rooms ?? []
+                return state.clients[client]?.rooms ?? []
             }
         },
+        getClients: state => {
+            const enabledClients = []
+
+            for (let [client, data] of Object.entries(state.clients)) {
+                if (data.enabled) {
+                    enabledClients.push({client: client, main: data.main})
+                }
+            }
+
+            return enabledClients
+        },
+        getStatus: state => state.status,
     },
     actions: {
         async load (){
@@ -72,7 +85,7 @@ export const useChatStorage = defineStore('chat', {
                 }
 
                 data.rooms.forEach(room => {
-                    this.clients[client].rooms.push({id: data.id, name: room.name, url: room.url, sort: room.sort})
+                    this.clients[client].rooms.push({id: room.id, name: room.name, url: room.url, sort: room.sort})
                 })
 
                 data.messages.forEach(msg => {
@@ -186,7 +199,7 @@ export const useChatStorage = defineStore('chat', {
                 return
             }
 
-            const room = this.clients[client].find(item => item.id === id)
+            const room = this.clients[client].rooms.find(item => item.id === id)
 
             if (undefined === room) {
                 return
@@ -230,6 +243,38 @@ export const useChatStorage = defineStore('chat', {
         },
         async save() {
             await chrome.storage.local.set({optionsChat: toRaw(this.clients)})
+        },
+        async sendMessage(client, roomId, messageId, issueKeys) {
+            console.log(roomId, messageId, toRaw(issueKeys), client)
+
+            const jiraStorage = useJiraStorage()
+            await jiraStorage.load()
+
+            const url = jiraStorage.getUrl
+            let msg = ''
+
+            const msgItem = this.getMessages(client).find(item => item.id === messageId)
+            const name = this.clients[client].name ?? ''
+
+            const room = this.getRooms(client).find(item => item.id === roomId)
+
+            if ('google' === client) {
+                msg = Google.format(msgItem.content, toRaw(issueKeys), url, name)
+            } else if ('discord' === client) {
+                msg = Discord.format(msgItem.content, toRaw(issueKeys), url, name)
+            } else {
+                return
+            }
+
+            this.status = ChatStatus.PROGRESS
+
+            chatWorker.addEventListener('message', message => {
+                this.status = ChatStatus.SUCCESS() === message.data.type ? ChatStatus.SUCCESS : ChatStatus.ERROR
+
+                window.setTimeout(() => this.status = ChatStatus.READY, 1500)
+            })
+
+            chatWorker.postMessage({room: room.url, message: msg})
         },
     },
 })
