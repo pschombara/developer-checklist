@@ -188,7 +188,7 @@ const checkBoardKeyDuplicated = value => {
                             ></v-text-field>
                         </v-col>
                     </v-row>
-                    <v-row class="mt-4">
+                    <v-row class="mt-6">
                         <v-col cols="12">
                             <v-slider
                                 v-model="issues"
@@ -203,7 +203,7 @@ const checkBoardKeyDuplicated = value => {
                             ></v-slider>
                         </v-col>
                     </v-row>
-                    <v-row class="mt-4">
+                    <v-row class="mt-6">
                         <v-col cols="12">
                             <v-slider
                                 v-model="cleanup"

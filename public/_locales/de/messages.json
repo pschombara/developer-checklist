@@ -15,7 +15,7 @@
         "message": "Speichern"
     },
     "Export": {
-        "message": "Speichern & Einstellungen exportieren"
+        "message": "Einstellungen exportieren"
     },
     "Import": {
         "message": "Einstellungen importieren"
@@ -79,30 +79,6 @@
     },
     "Close": {
         "message": "Schließen"
-    },
-    "grey": {
-        "message": "Grau"
-    },
-    "blue": {
-        "message": "Blau"
-    },
-    "red":{
-        "message": "Rot"
-    },
-    "yellow": {
-        "message": "Gelb"
-    },
-    "green":{
-        "message": "Grün"
-    },
-    "pink": {
-        "message": "Rosa"
-    },
-    "purple":{
-        "message": "Violett"
-    },
-    "cyan": {
-        "message": "Cyan"
     },
     "errNotBlank": {
         "message": "Dieser Wert sollte nicht leer sein."

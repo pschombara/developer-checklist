@@ -1,5 +1,5 @@
 <script setup>
-import {computed, ref} from 'vue'
+import {computed, ref, watch} from 'vue'
 import Theme from '../mixins/theme'
 import {useMainStorage} from '../stores/mainStorage'
 import OptionGeneral from '../components/options/OptionGeneral.vue'
@@ -8,6 +8,8 @@ import CheatSheet from '../components/options/CheatSheet.vue'
 import GitLab from '../components/options/GitLab.vue'
 import JenkinsOptionsView from '../components/options/JenkinsOptionsView.vue'
 import JiraOptionsView from '../components/options/JiraOptionsView.vue'
+import semver from 'semver'
+import Migration from '../mixins/migration.js'
 
 const loading = ref(true)
 
@@ -23,12 +25,16 @@ const text = {
     cancel: i18n.getMessage('Cancel'),
     close: i18n.getMessage('Close'),
     importWrongType: i18n.getMessage('importWrongType'),
+    importEmptyFile: i18n.getMessage('importEmptyFile'),
+    importNotSupported: i18n.getMessage('importNotSupported'),
     settingsSaved: i18n.getMessage('settingsSaved'),
 }
 
 const exportModules = ref([])
 const importModules = ref([])
 const importAvailableModules = ref([])
+const exportLink = ref()
+const importConfig = ref()
 const importOptions = ref({})
 
 const dialog = ref({
@@ -38,14 +44,8 @@ const dialog = ref({
     error: {
         empty: false,
         type: false,
+        notSupported: false,
     },
-})
-
-const alert = ref({
-    import: {
-        type: false,
-    },
-    saved: false,
 })
 
 const mainStorage = useMainStorage()
@@ -53,9 +53,7 @@ const mainStorage = useMainStorage()
 const theme = new Theme()
 theme.registerThemeChanged(mainStorage.getThemeSchema, mainStorage.getThemeColor)
 
-const modules = computed(() => {
-    return mainStorage.getModules
-})
+const modules = computed(() => mainStorage.getModules)
 
 const tab = computed( {
     get() {
@@ -66,22 +64,26 @@ const tab = computed( {
     },
 })
 
-const tabs = computed(() => {
-    return mainStorage.getOptionTabs
+const tabs = computed(() => mainStorage.getOptionTabs)
+const settings = computed(() => tabs.value.filter(tab => tab.settings))
+
+watch(modules, () => {
+    for (const [module, active] of Object.entries(modules.value)) {
+        const index = exportModules.value.findIndex(entry => entry === module)
+
+        if (false === active && -1 !== index) {
+            exportModules.value.splice(index, 1)
+        }
+
+        if (active && -1 === index) {
+            exportModules.value.push(module)
+        }
+    }
 })
 
-const showTab = (tab) => {
-    return modules.value[tab.id] ?? true
-}
-
-const themeSchemaChanged = () => {
-    theme.changeSchema(mainStorage.getThemeSchema)
-}
-
-const themeColorChanged = () => {
-    theme.changeColor(mainStorage.getThemeColor)
-}
-
+const showTab = (tab) => modules.value[tab.id] ?? true
+const themeSchemaChanged = () => theme.changeSchema(mainStorage.getThemeSchema)
+const themeColorChanged = () => theme.changeColor(mainStorage.getThemeColor)
 const openRestore = () => dialog.value.restore = true
 const closeRestore = () => dialog.value.restore = false
 
@@ -95,8 +97,88 @@ const restore = async () => {
     window.location.reload()
 }
 
-mainStorage.load()
-loading.value = false
+const openExport = () => dialog.value.export = true
+const closeExport = () => dialog.value.export = false
+
+const triggerExport = async () => {
+    loading.value = true
+
+    const exportConfig = await mainStorage.exportOptions(exportModules.value)
+    exportLink.value.href = `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(exportConfig))}`
+    exportLink.value.click()
+
+    closeExport()
+    loading.value = false
+}
+
+const openFileInput = () => importConfig.value.click()
+
+const fileSelected = async file => {
+    if (file.size <= 0) {
+        dialog.value.error.empty = true
+
+        return
+    }
+
+    if ('application/json' !== file.type) {
+        dialog.value.error.type = true
+
+        return
+    }
+
+
+    const fileReader = new FileReader()
+
+    fileReader.addEventListener('load', e => {
+        const importedOptions = JSON.parse(e.target.result.toString())
+        const migration = new Migration()
+
+        if (semver.neq(migration.version, importedOptions.version ?? '0.0.0')) {
+            dialog.value.import.notSupported = true
+
+            return
+        }
+
+        importOptions.value = importedOptions
+        importAvailableModules.value = []
+        importModules.value = []
+
+        for (const module in importedOptions) {
+            if (false === module.startsWith('options')) {
+                continue
+            }
+
+            let moduleName = module.replace('options', '')
+            moduleName = moduleName[0].toLowerCase() + moduleName.slice(1)
+            importModules.value.push(moduleName)
+            importAvailableModules.value.push(moduleName)
+        }
+
+        dialog.value.import = true
+    })
+
+    fileReader.readAsText(file, 'utf-8')
+}
+
+const cancelImport = () => {
+    dialog.value.import = false
+    importConfig.value.reset()
+    importOptions.value = {}
+}
+
+const startImport = async () => {
+    loading.value = true
+}
+
+const load = async () => {
+    await mainStorage.load()
+    loading.value = false
+
+    exportModules.value.push('main')
+    exportModules.value.push('jira')
+}
+
+load()
 </script>
 
 <template>
@@ -106,13 +188,22 @@ loading.value = false
                 <v-overlay v-model="loading" opacity=".75" class="align-center justify-center">
                     <v-progress-circular size="256" width="10" color="primary" indeterminate=""></v-progress-circular>
                 </v-overlay>
+                <v-alert v-model="dialog.error.type" type="error" dismissible>
+                    {{text.importWrongType}}
+                </v-alert>
+                <v-alert v-model="dialog.error.empty" type="error" dismissible>
+                    {{text.importEmptyFile}}
+                </v-alert>
+                <v-alert v-model="dialog.error.notSupported" type="error" dismissible>
+                    {{text.importNotSupported}}
+                </v-alert>
                 <v-toolbar flat>
                     <v-img src="icons/48.png" max-height="24" max-width="24" class="ml-4"></v-img>
                     <v-toolbar-title>{{ text.title }}</v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-tooltip location="bottom">
                         <template #activator="{ props }">
-                            <v-btn class="mr-2" fab icon="fas fa-download" v-bind="props" @click="saveExportStart"></v-btn>
+                            <v-btn class="mr-2" fab icon="fas fa-download" v-bind="props" @click="openExport"></v-btn>
                             <v-dialog v-model="dialog.export" max-width="800">
                                 <v-card>
                                     <v-card-title>{{text.export}}</v-card-title>
@@ -130,8 +221,8 @@ loading.value = false
                                     </v-card-text>
                                     <v-card-actions>
                                         <v-spacer></v-spacer>
-                                        <v-btn color="grey" plain @click="cancelExport">{{text.cancel}}</v-btn>
-                                        <v-btn color="success" plain @click="saveExport">{{text.export}}</v-btn>
+                                        <v-btn color="secondary" plain @click="closeExport">{{text.cancel}}</v-btn>
+                                        <v-btn color="success" plain :disabled="0 === exportModules.length" @click="triggerExport">{{text.export}}</v-btn>
                                         <v-spacer></v-spacer>
                                     </v-card-actions>
                                 </v-card>
@@ -156,7 +247,7 @@ loading.value = false
                                         <p>Select settings to import</p>
                                         <template v-for="setting in settings" :key="setting.id">
                                             <v-switch
-                                                v-model="exportModules"
+                                                v-model="importModules"
                                                 color="primary"
                                                 :label="setting.name"
                                                 :value="setting.id"
@@ -168,7 +259,7 @@ loading.value = false
                                     <v-card-actions>
                                         <v-spacer></v-spacer>
                                         <v-btn color="secondary" plain @click="cancelImport">{{text.cancel}}</v-btn>
-                                        <v-btn color="success" plain :disabled="0 === importModules.length" @click="storeImportedOptions">{{text.import}}</v-btn>
+                                        <v-btn color="success" plain :disabled="0 === importModules.length" @click="startImport">{{text.import}}</v-btn>
                                         <v-spacer></v-spacer>
                                     </v-card-actions>
                                 </v-card>
@@ -209,6 +300,7 @@ loading.value = false
                 <v-row v-if="modules">
                     <v-col>
                         <v-card>
+                            <a v-show="false" ref="exportLink" download="developer-checklist-options"></a>
                             <v-tabs
                                 v-model="tab"
                                 show-arrows
@@ -222,7 +314,7 @@ loading.value = false
                         </v-card>
                         <v-card-text>
                             <v-window v-model="tab">
-                                <v-window-item value="general">
+                                <v-window-item value="main">
                                     <option-general @theme-color-changed="themeColorChanged" @theme-schema-changed="themeSchemaChanged" />
                                 </v-window-item>
                                 <v-window-item value="jira">
@@ -261,139 +353,6 @@ loading.value = false
 
 <!--export default {-->
 
-<!--    },-->
-<!--    methods: {-->
-<!--        load: function () {-->
-<!--            this.$store.dispatch('load').then(() => {-->
-<!--                this.loading = false-->
-
-<!--                this.exportModules.push('general')-->
-<!--                this.exportModules.push('jira')-->
-
-<!--                for (let [module, active] of Object.entries(this.modules)) {-->
-<!--                    if (active) {-->
-<!--                        this.exportModules.push(module)-->
-<!--                    }-->
-<!--                }-->
-<!--            })-->
-<!--        },-->
-<!--        showTab: function (tab) {-->
-<!--            if (Object.prototype.hasOwnProperty.call(this.modules, tab.id)) {-->
-<!--                return this.modules[tab.id]-->
-<!--            } else {-->
-<!--                return true-->
-<!--            }-->
-<!--        },-->
-<!--        themeSchemaChanged: function (schema) {-->
-<!--            this.theme.changeSchema(schema)-->
-<!--        },-->
-<!--        themeColorChanged: function (color) {-->
-<!--            this.theme.changeColor(color)-->
-<!--        },-->
-<!--        openRestore: function () {-->
-<!--            this.dialog.restore = true-->
-<!--        },-->
-<!--        closeRestore: function () {-->
-<!--            this.dialog.restore = false-->
-<!--        },-->
-<!--        restore: function () {-->
-<!--            this.loading = true-->
-<!--            this.closeRestore()-->
-
-<!--            this.$store.dispatch('restore').then(() => {-->
-<!--                this.load()-->
-<!--            })-->
-<!--        },-->
-<!--        save: function () {-->
-<!--            this.closeAlerts()-->
-<!--            this.loading = true-->
-
-<!--            this.$store.dispatch('saveOptions').then(() => {-->
-<!--                this.loading = false-->
-<!--                this.alert.saved = true-->
-<!--            })-->
-<!--        },-->
-<!--        saveExportStart: function () {-->
-<!--            this.closeAlerts()-->
-<!--            this.dialog.export = true-->
-<!--        },-->
-<!--        cancelExport: function () {-->
-<!--            this.dialog.export = false-->
-<!--        },-->
-<!--        cancelImport: function () {-->
-<!--            this.dialog.import = false-->
-<!--            this.$refs.importConfig.reset()-->
-<!--            this.importOptions = {}-->
-<!--        },-->
-<!--        saveExport: function () {-->
-<!--            this.loading = true-->
-
-<!--            this.$store.dispatch('saveExportOptions', this.exportModules).then(data => {-->
-<!--                const temp = document.createElement('a')-->
-<!--                temp.setAttribute(-->
-<!--                    'href',-->
-<!--                    'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data)),-->
-<!--                )-->
-
-<!--                temp.setAttribute('download', 'developer-checklist-options')-->
-<!--                temp.classList.add('d-none')-->
-
-<!--                document.body.appendChild(temp)-->
-<!--                temp.click()-->
-<!--                document.body.removeChild(temp)-->
-
-<!--                this.loading = false-->
-<!--                this.alert.saved = true-->
-<!--                this.dialog.export = false-->
-<!--            })-->
-<!--        },-->
-<!--        openFileInput: function () {-->
-<!--            this.closeAlerts()-->
-<!--            this.$refs.importConfig.click()-->
-<!--        },-->
-<!--        fileSelected: function (file) {-->
-<!--            if (file.size <= 0) {-->
-<!--                this.dialog.error.empty = true-->
-
-<!--                return-->
-<!--            }-->
-
-<!--            if ('application/json' !== file.type) {-->
-<!--                this.dialog.error.type = true-->
-
-<!--                return-->
-<!--            }-->
-
-<!--            const fileReader = new FileReader()-->
-
-<!--            fileReader.addEventListener('load', e => {-->
-<!--                try {-->
-<!--                    let data = JSON.parse(e.target.result.toString())-->
-<!--                    const migration = new Migration()-->
-
-<!--                    if (this.validateImportFile(data)) {-->
-<!--                        data = migration.migrate(data.options, data.exported, false)-->
-<!--                        this.importAvailableModules = data.exported-->
-<!--                        this.importModules = data.exported-->
-<!--                        this.importOptions = data.options-->
-<!--                        this.dialog.import = true-->
-<!--                    }-->
-<!--                } catch (e) {-->
-<!--                    // eslint-disable-next-line no-console-->
-<!--                    console.error(e)-->
-<!--                }-->
-<!--            })-->
-
-<!--            fileReader.readAsText(file, 'utf-8')-->
-<!--        },-->
-<!--        validateImportFile: function (data) {-->
-<!--            const manifest = chrome.runtime.getManifest()-->
-
-<!--            return typeof data === 'object'-->
-<!--                && Object.prototype.hasOwnProperty.call(data, 'exported')-->
-<!--                && Object.prototype.hasOwnProperty.call(data, 'options')-->
-<!--                && semver.lte('0.6.0', manifest.version, 1)-->
-<!--        },-->
 <!--        closeAlerts: function () {-->
 <!--            this.alert.import.type = false-->
 <!--            this.alert.saved = false-->

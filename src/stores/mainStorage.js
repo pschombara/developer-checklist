@@ -1,5 +1,6 @@
 import {defineStore} from 'pinia'
 import Migration from '../mixins/migration.js'
+import semver from 'semver'
 
 const migration = new Migration()
 
@@ -20,7 +21,7 @@ export const useMainStorage = defineStore('mainStorage', {
         themeColor: 'blue',
         defaultPopupItemsPerPage: -1,
         optionTabs: [
-            { id: 'general', name: chrome.i18n.getMessage('general'), icon: 'fas fa-cogs', settings: true },
+            { id: 'main', name: chrome.i18n.getMessage('general'), icon: 'fas fa-cogs', settings: true },
             { id: 'jira', name: 'Jira', icon: 'fab fa-jira', settings: true },
             { id: 'jenkins', name: 'Jenkins', icon: 'fab fa-jenkins', settings: true },
             { id: 'gitLab', name: 'GitLab', icon: 'fab fa-gitlab', settings: true },
@@ -120,6 +121,27 @@ export const useMainStorage = defineStore('mainStorage', {
 
             await chrome.storage.local.clear()
             await chrome.storage.local.set(config)
+        },
+        async exportOptions(exportModules) {
+            const exportConfig = {
+                version: migration.version,
+            }
+
+            for (const module of exportModules) {
+                const name = `options${module[0].toUpperCase()}${module.slice(1)}`
+                const config = await chrome.storage.local.get(name)
+
+                exportConfig[name] = config[name]
+            }
+
+            return exportConfig
+        },
+        async importOptions(importData) {
+            if (semver.neq(migration.version, importData.version ?? '0.0.0')) {
+                throw new Error('Not supported')
+            }
+
+            await chrome.storage.local.set(importData)
         },
     },
 })
