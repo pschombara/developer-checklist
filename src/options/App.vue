@@ -82,9 +82,21 @@ const themeColorChanged = () => {
     theme.changeColor(mainStorage.getThemeColor)
 }
 
+const openRestore = () => dialog.value.restore = true
+const closeRestore = () => dialog.value.restore = false
+
+const restore = async () => {
+    loading.value = true
+    closeRestore()
+
+    await mainStorage.restore()
+    loading.value = false
+
+    window.location.reload()
+}
+
 mainStorage.load()
 loading.value = false
-
 </script>
 
 <template>
@@ -92,14 +104,8 @@ loading.value = false
         <v-main>
             <v-container fluid>
                 <v-overlay v-model="loading" opacity=".75" class="align-center justify-center">
-                    <v-progress-circular size="256" width="10" color="orange" indeterminate=""></v-progress-circular>
+                    <v-progress-circular size="256" width="10" color="primary" indeterminate=""></v-progress-circular>
                 </v-overlay>
-                <v-alert v-model="alert.saved" type="success" dismissible>
-                    {{text.settingsSaved}}
-                </v-alert>
-                <v-alert v-model="alert.import.type" type="error" dismissible>
-                    {{text.importWrongType}}
-                </v-alert>
                 <v-toolbar flat>
                     <v-img src="icons/48.png" max-height="24" max-width="24" class="ml-4"></v-img>
                     <v-toolbar-title>{{ text.title }}</v-toolbar-title>
@@ -253,43 +259,8 @@ loading.value = false
 </style>
 <!--<script>-->
 
-<!--import Jira from '../components/options/Jira.vue'-->
-<!--import Jenkins from '../components/options/Jenkins.vue'-->
-<!--import GitLab from '../components/options/GitLab.vue'-->
-<!--import Chat from '../components/options/Chat.vue'-->
-<!--import CheatSheet from '../components/options/CheatSheet.vue'-->
-<!--import About from '../components/options/About.vue'-->
-<!--import Theme from '../mixins/theme'-->
-<!--import semver from 'semver'-->
-<!--import Migration from '../mixins/migration'-->
-
 <!--export default {-->
-<!--    name: 'App',-->
-<!--    components: {General, Jira, Jenkins, GitLab, Chat, CheatSheet,  About },-->
-<!--    computed: {-->
-<!--        modules()  {-->
-<!--            return this.$store.getters['modules']-->
-<!--        },-->
-<!--        tab: {-->
-<!--            get() {-->
-<!--                return this.$store.getters['openTab']-->
-<!--            },-->
-<!--            set(value) {-->
-<!--                this.$store.dispatch('openTab', value)-->
-<!--            },-->
-<!--        },-->
-<!--        tabs() {-->
-<!--            return this.$store.getters['optionTabs']-->
-<!--        },-->
-<!--        settings() {-->
-<!--            return this.$store.getters['optionTabs'].filter(tab => tab.settings)-->
-<!--        },-->
-<!--    },-->
-<!--    created() {-->
-<!--        this.load()-->
 
-<!--        this.theme = new Theme()-->
-<!--        this.theme.registerThemeChanged(this, this.$store.getters['themeSchema'], this.$store.getters['themeColor'])-->
 <!--    },-->
 <!--    methods: {-->
 <!--        load: function () {-->

@@ -106,13 +106,20 @@ export const useMainStorage = defineStore('mainStorage', {
         changeOpenTab (tab) {
             this.openTab = tab
         },
-        changeMainTab (tab) {
+        async changeMainTab (tab) {
             this.configTabs.main = tab
-            chrome.storage.local.set({'optionsTab': tab})
+            await chrome.storage.local.set({'optionsTab': tab})
         },
         changeDefaultPopupItemsPerPage(items) {
             this.defaultPopupItemsPerPage = items
             this.updateInStorage()
+        },
+        async restore(){
+            const configRequest = await fetch(chrome.runtime.getURL('config.json'))
+            const config = await configRequest.json()
+
+            await chrome.storage.local.clear()
+            await chrome.storage.local.set(config)
         },
     },
 })

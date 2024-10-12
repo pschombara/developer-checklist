@@ -1,26 +1,30 @@
 {
-    "version": "0.9.1",
-    "general": {
+    "version": "0.10.0",
+    "optionsMain": {
+        "defaultPopupItemsPerPage": -1,
         "modules": {
-            "jenkins":  false,
+            "chat": false,
             "cheatSheet": false,
-            "chat":  false,
             "gitLab": false,
-            "chrome": true
+            "jenkins": false
+        },
+        "theme": {
+            "color": "blue",
+            "schema": "system"
         }
     },
-    "cheatSheet": [],
-    "gitLab": {
+    "optionsCheatSheet": [],
+    "optionsGitLab": {
         "host": "",
         "projects": [],
         "categories": []
     },
-    "jenkins": {
+    "optionsJenkins": {
         "host": "",
         "categories": [],
         "builds": []
     },
-    "jira": {
+    "optionsJira": {
         "url": "",
         "cleanup": 2,
         "maximumIssues": 6,
@@ -374,18 +378,20 @@
         ],
         "templates": []
     },
-    "chat": {
+    "optionsChat": {
         "discord": {
             "enabled": false,
             "main": false,
-            "rooms": [],
-            "messages": []
+            "messages": [],
+            "name": "",
+            "rooms": []
         },
         "google": {
             "enabled": false,
             "main": true,
-            "rooms": [],
-            "messages": []
+            "messages": [],
+            "name": "",
+            "rooms": []
         }
     }
 }
