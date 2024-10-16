@@ -2,7 +2,6 @@ import {defineStore} from 'pinia'
 import {useJiraStorage} from './jira.js'
 import {usePopupStorage} from './popup.js'
 import _ from 'lodash'
-import {toRaw} from 'vue'
 
 export const useIssueStorage = defineStore('issues', {
     state: () => ({
@@ -81,8 +80,8 @@ export const useIssueStorage = defineStore('issues', {
             await this.updateInStorage(issue)
         },
         async startWork(key) {
-            const currentWork = this.issue.find(item => item.work)
-            const startWork = this.issue.find(item => item.key === key)
+            const currentWork = this.issues.find(item => item.work)
+            const startWork = this.issues.find(item => item.key === key)
 
             if (undefined !== currentWork) {
                 currentWork.work = false
@@ -185,6 +184,19 @@ export const useIssueStorage = defineStore('issues', {
             } else {
                 issue.checklist[checklistUuid].splice(index, 1)
             }
+
+            await this.updateInStorage(issue)
+        },
+        async clearChecklist(issueKey) {
+            const issue = this.getIssue(issueKey)
+
+            if (undefined === issue) {
+                return
+            }
+
+            issue.checklist = []
+            await this.initChecklist(issue)
+            await this.updateInStorage(issue)
         },
         async addCiBuild(issueKey, job, build) {
             const issue = this.getIssue(issueKey)
@@ -202,7 +214,7 @@ export const useIssueStorage = defineStore('issues', {
                 build: build,
             })
 
-            this.updateInStorage(issue)
+            await this.updateInStorage(issue)
         },
         async exchangeCiBuild(issueKey, job, buildId) {
             const issue = this.getIssue(issueKey)
@@ -219,7 +231,7 @@ export const useIssueStorage = defineStore('issues', {
                 }
             }
 
-            this.updateInStorage(issue)
+            await this.updateInStorage(issue)
         },
         async removeCiBuild(issueKey, job, build) {
             const issue = this.getIssue(issueKey)
@@ -236,7 +248,7 @@ export const useIssueStorage = defineStore('issues', {
 
             issue.ciBuilds.splice(index, 1)
 
-            this.updateInStorage(issue)
+            await this.updateInStorage(issue)
         },
         async addMergeRequest(issueKey, id, number, source) {
             const issue = this.getIssue(issueKey)

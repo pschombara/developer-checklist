@@ -43,6 +43,8 @@ export const useGitLabStorage = defineStore('gitLab', {
                     uuid: project.uuid,
                 })
             })
+
+            this.loaded = true
         },
         setHost(host) {
             this.host = host
@@ -114,8 +116,8 @@ export const useGitLabStorage = defineStore('gitLab', {
         },
         async checkUrl() {
             const popupStorage = usePopupStorage()
-            const currentTab = await popupStorage.fetchCurrentTab()
-            const url = currentTab.url
+            const tab = await popupStorage.fetchCurrentTab()
+            const url = tab.url
 
             if ('' === this.host || false === url.startsWith(this.host)) {
                 return
@@ -127,7 +129,11 @@ export const useGitLabStorage = defineStore('gitLab', {
                 return
             }
 
-            const matches = url.match('/merge_requests/(?<number>\\\\d+)')
+            const matches = url.match('/merge_requests/(?<number>\\d+)')
+
+            if (null === matches) {
+                return
+            }
 
             this.currentProject = project.uuid
             this.currentNumber = parseInt(matches.groups.number)
@@ -155,6 +161,24 @@ export const useGitLabStorage = defineStore('gitLab', {
                     },
                 )
             })
+        },
+        async autoDetect() {
+            const popupStorage = usePopupStorage()
+            const tab = await popupStorage.fetchCurrentTab()
+
+            const urlWithoutHost = tab.url.replace(this.host, '')
+            const matches = urlWithoutHost.match(/(?<category>[^\/]+)\/(?<project>[\w\W]+)\/-/)
+
+            if (null === matches
+                || false === this.categories.includes(matches.groups.category)
+            ) {
+                return null
+            }
+
+            return {
+                category: matches.groups.category,
+                project: matches.groups.project,
+            }
         },
     },
 })

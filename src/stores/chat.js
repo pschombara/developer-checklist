@@ -245,8 +245,6 @@ export const useChatStorage = defineStore('chat', {
             await chrome.storage.local.set({optionsChat: toRaw(this.clients)})
         },
         async sendMessage(client, roomId, messageId, issueKeys) {
-            console.log(roomId, messageId, toRaw(issueKeys), client)
-
             const jiraStorage = useJiraStorage()
             await jiraStorage.load()
 

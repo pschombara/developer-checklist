@@ -42,6 +42,7 @@ const checkGroupCompleted = uuid => {
 
 const toggleCheck = id => issueStorage.toggleChecklistEntry(property.issue, property.uuid, id)
 const addComment = button => jiraStorage.addComment(button.comment, button.autoComment)
+const redo = () => issueStorage.clearChecklist(property.issue)
 </script>
 
 <template>
@@ -109,7 +110,7 @@ const addComment = button => jiraStorage.addComment(button.comment, button.autoC
                 {{checklist.buttons.failed.text}}
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn color="grey" outlined>
+            <v-btn color="secondary" outlined @click="redo">
                 <v-icon left>fas fa-redo</v-icon>
             </v-btn>
         </v-card-actions>

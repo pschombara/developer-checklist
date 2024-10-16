@@ -4,6 +4,7 @@ import {useGitLabStorage} from '../../stores/gitlab.js'
 import {computed, ref} from 'vue'
 import {useJenkinsStorage} from '../../stores/jenkins.js'
 import Debounce from '../../mixins/debounce.js'
+import ProjectSettings from '../shared/GitLab/ProjectSettings.vue'
 
 const gitLabStorage = useGitLabStorage()
 const jenkinsStorage = useJenkinsStorage()
@@ -35,14 +36,6 @@ const hostRules = [
     value => Helper.isURL(value) || i18n.getMessage('errUrlInvalid'),
 ]
 
-const domainRules = [
-    value => !!value || i18n.getMessage('errNotBlank'),
-]
-
-const projectRules = [
-    value => !!value || i18n.getMessage('errNotBlank'),
-    value => false === checkProjectDuplicated(value) || i18n.getMessage('errDuplicated'),
-]
 const categoryRules = [
     value => !!value || i18n.getMessage('errNotBlank'),
     value => false === checkCategoryDuplicated(value) || i18n.getMessage('errDuplicated'),
@@ -59,18 +52,12 @@ const host = computed({
     },
 })
 
-const projects = computed(() => {
-    return gitLabStorage.getProjects
-})
+const projects = computed(() => gitLabStorage.getProjects)
 
 const categories = computed(() => {
     return gitLabStorage.getCategories.map(category => {
         return {name: category}
     })
-})
-
-const ciProjects = computed(() => {
-    return jenkinsStorage.getBuilds
 })
 
 const defaultCategory = {
@@ -210,25 +197,6 @@ const checkCategoryDuplicated = value => {
 
     return value !== dialogCategory.value.current.name
 }
-const checkProjectDuplicated = value => {
-    const projects = gitLabStorage.getProjects
-
-    if (null === value) {
-        return false
-    }
-
-    let searchResult = projects.find(project => project.domain === dialogProject.value.item.domain && dialogProject.value.item.project.toLowerCase() === value.toLowerCase())
-
-    if (undefined === searchResult) {
-        return false
-    }
-
-    if (null === dialogProject.value.current) {
-        return true
-    }
-
-    return searchResult.uuid !== dialogProject.value.item.uuid || dialogProject.value.current.uuid !== dialogProject.value.item.uuid
-}
 
 const saveCategory = async event => {
     const result = await event
@@ -246,41 +214,21 @@ const saveCategory = async event => {
     closeDialogCategory()
 }
 
-const saveProject = async event => {
-    const result = await event
-
-    if (false === result.valid) {
-        return
-    }
-
-    if (null === dialogProject.value.current) {
-        gitLabStorage.addProject(
-            dialogProject.value.item.ciBuild,
-            dialogProject.value.item.domain,
-            dialogProject.value.item.project,
-        )
-    } else {
-        gitLabStorage.updateProject(
-            dialogProject.value.item.uuid,
-            dialogProject.value.item.ciBuild,
-            dialogProject.value.item.domain,
-            dialogProject.value.item.project,
-        )
-    }
-
-    closeProject()
-}
-
 const debounce = new Debounce()
 
-gitLabStorage.$subscribe(() => {
+gitLabStorage.$subscribe(change => {
+
     if (loaded.value) {
         debounce.debounce(gitLabStorage.save)
     }
 })
 
-gitLabStorage.load()
-jenkinsStorage.load()
+const load = async () => {
+    await gitLabStorage.load()
+    await jenkinsStorage.load()
+}
+
+load()
 </script>
 
 <template>
@@ -328,50 +276,7 @@ v-model="host" :label="text.host" :rules="hostRules" clearable
                                             @click="openNewProject">{{ text.add }}
                                         </v-btn>
                                         <v-dialog v-model="dialogProject.open" max-width="450">
-                                            <v-form
-                                                validate-on="input"
-                                                @submit.prevent="saveProject">
-                                                <v-card>
-                                                    <v-card-title>{{ dialogProject.title }}</v-card-title>
-                                                    <v-card-text>
-                                                        <v-autocomplete
-                                                            v-model="dialogProject.item.domain"
-                                                            :items="categories"
-                                                            :label="text.category"
-                                                            item-title="name"
-                                                            item-value="name"
-                                                            :rules="domainRules"
-                                                            @change="$refs.projectForm.validate()"
-                                                        />
-                                                        <v-text-field
-                                                            v-model="dialogProject.item.project"
-                                                            :rules="projectRules"
-                                                            :label="text.project"
-                                                        />
-                                                        <v-autocomplete
-                                                            v-model="dialogProject.item.ciBuild"
-                                                            :items="ciProjects"
-                                                            :label="text.ciBuild"
-                                                            item-title="name"
-                                                            item-value="uuid"
-                                                        />
-                                                    </v-card-text>
-                                                    <v-card-actions>
-                                                        <v-spacer/>
-                                                        <v-btn
-                                                            color="secondary"
-                                                            variant="plain"
-                                                            @click="closeProject">{{ text.cancel }}
-                                                        </v-btn>
-                                                        <v-btn
-                                                            type="submit"
-                                                            color="primary"
-                                                            variant="plain">{{ dialogProject.saveButton }}
-                                                        </v-btn>
-                                                        <v-spacer/>
-                                                    </v-card-actions>
-                                                </v-card>
-                                            </v-form>
+                                            <project-settings :project="dialogProject" @close="closeProject"/>
                                         </v-dialog>
                                         <v-dialog v-model="dialogDeleteProject" max-width="450">
                                             <v-card>

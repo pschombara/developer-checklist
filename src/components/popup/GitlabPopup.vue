@@ -6,6 +6,7 @@ import {computed, ref} from 'vue'
 import {useMainStorage} from '../../stores/mainStorage.js'
 import {useIssueStorage} from '../../stores/issues.js'
 import {useJenkinsStorage} from '../../stores/jenkins.js'
+import ProjectSettings from '../shared/GitLab/ProjectSettings.vue'
 
 const gitlabStorage = useGitLabStorage()
 const mainStorage = useMainStorage()
@@ -16,6 +17,7 @@ const i18n = chrome.i18n
 const text = {
     openOptions: i18n.getMessage('openOptions'),
     project: i18n.getMessage('Project'),
+    add: i18n.getMessage('Add'),
 }
 
 const issueHeader = [
@@ -30,6 +32,20 @@ const number = ref(null)
 const issue = ref(null)
 const copyMergeUrl = ref()
 const message = ref()
+const autodetect = ref(false)
+const autoProject = ref()
+
+const defaultAutoProject = {
+    title: '',
+    item: {
+        domain: null,
+        project: null,
+        uuid: null,
+        ciBuild: null,
+    },
+    current: null,
+    saveButton: text.add,
+}
 
 const itemsPerPage = computed(() => mainStorage.getDefaultPopupItemsPerPage)
 const projects = computed(() => gitlabStorage.getProjects)
@@ -155,6 +171,27 @@ const hasCiBuild = projectId => {
     return undefined !== jenkinsStorage.getBuilds.find(item => item.uuid === project.ciBuild)
 }
 
+const openDetect = async () => {
+    autoProject.value = {...defaultAutoProject}
+
+    const detectedData = await gitlabStorage.autoDetect()
+
+    if (null === detectedData) {
+        return
+    }
+
+    autoProject.value.item.domain = detectedData.category
+    autoProject.value.item.project = detectedData.project
+
+    autodetect.value = true
+}
+
+const closeDetect = async () => {
+    await gitlabStorage.save()
+    await gitlabStorage.load(true)
+    autodetect.value = false
+}
+
 load()
 </script>
 
@@ -168,7 +205,7 @@ load()
                 </v-col>
             </v-row>
         </v-card-title>
-        <v-card-text>
+        <v-card-text v-if="!autodetect">
             <v-row>
                 <v-col cols="8">
                     <v-autocomplete
@@ -190,7 +227,7 @@ load()
                     ></v-text-field>
                 </v-col>
             </v-row>
-            <v-row class="mt-0">
+            <v-row v-if="project" class="mt-0">
                 <v-col cols="10">
                     <v-text-field
                         ref="copyMergeUrl"
@@ -210,6 +247,10 @@ load()
                         @click="copy"
                     ><v-icon small>fas fa-copy</v-icon></v-btn>
                 </v-col>
+            </v-row>
+            <v-row v-else>
+                <v-col cols="12"><h3>Project Not found?</h3></v-col>
+                <v-col class="mb-3" cols="12"><v-btn @click="openDetect">Autodetect</v-btn></v-col>
             </v-row>
             <v-row class="mt-0">
                 <v-col cols="12">
@@ -256,6 +297,9 @@ load()
                     </v-data-table>
                 </v-col>
             </v-row>
+        </v-card-text>
+        <v-card-text v-else>
+            <project-settings :project="autoProject" @close="closeDetect" />
         </v-card-text>
         <copied-to-clipboard ref="message"></copied-to-clipboard>
     </v-card>

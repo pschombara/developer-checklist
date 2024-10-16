@@ -23,7 +23,6 @@ const text = {
 const checklists = computed(() => jiraStorage.getChecklists.filter(checklist => checklist.enabled))
 
 const tab = ref(0)
-const checked = ref([])
 const issueName = computed(() => popupStorage.getCurrentIssue)
 const issue = computed(() => {
     const issueKey = popupStorage.getCurrentIssue
@@ -45,15 +44,11 @@ const openOptions = tab => {
     chrome.runtime.openOptionsPage()
 }
 
-// export default {
-//     methods: {
-//         openOptions: function (tab) {
-//             this.$store.dispatch('changeMainTab', tab)
-//             chrome.runtime.openOptionsPage()
-//         },
+const load = async () => {
+    await issueStorage.load()
+}
 
-//     },
-// }
+load()
 </script>
 
 <template>

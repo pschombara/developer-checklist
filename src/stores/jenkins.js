@@ -124,7 +124,7 @@ export const useJenkinsStorage = defineStore('jenkins', {
 
             const matches = url.match('/job/(?<job>[\\w-_\\+\\d]+)/(?<build>\\d*)')
 
-            if ('' === matches.groups.job) {
+            if ('' === (matches.groups.job ?? '')) {
                 return
             }
 
