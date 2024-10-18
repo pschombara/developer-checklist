@@ -162,6 +162,12 @@ export const useGitLabStorage = defineStore('gitLab', {
                 )
             })
         },
+        async onHost() {
+            const popupStorage = usePopupStorage()
+            const tab = await popupStorage.fetchCurrentTab()
+
+            return tab.url.startsWith(this.host)
+        },
         async autoDetect() {
             const popupStorage = usePopupStorage()
             const tab = await popupStorage.fetchCurrentTab()

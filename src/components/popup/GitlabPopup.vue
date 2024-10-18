@@ -34,6 +34,7 @@ const copyMergeUrl = ref()
 const message = ref()
 const autodetect = ref(false)
 const autoProject = ref()
+const onHost = ref(false)
 
 const defaultAutoProject = {
     title: '',
@@ -85,8 +86,6 @@ const issues = computed(() => {
     return data
 })
 
-
-
 const load = async () => {
     await gitlabStorage.load()
     await issueStorage.load()
@@ -99,6 +98,7 @@ const load = async () => {
         return
     }
 
+    onHost.value = await gitlabStorage.onHost()
     await gitlabStorage.checkUrl()
 
     project.value = gitlabStorage.currentProject
@@ -248,7 +248,7 @@ load()
                     ><v-icon small>fas fa-copy</v-icon></v-btn>
                 </v-col>
             </v-row>
-            <v-row v-else>
+            <v-row v-else-if="onHost">
                 <v-col cols="12"><h3>Project Not found?</h3></v-col>
                 <v-col class="mb-3" cols="12"><v-btn @click="openDetect">Autodetect</v-btn></v-col>
             </v-row>
