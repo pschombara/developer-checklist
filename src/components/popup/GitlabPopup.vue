@@ -126,7 +126,7 @@ const copy = async () => {
 
 const attachToIssue = () => issueStorage.addMergeRequest(issue.value, project.value, number.value, gitlabStorage.getCurrentSource ?? '')
 const removeFromIssue = (id, number) => issueStorage.removeMergeRequest(issue.value, id, number)
-const projectName = id => projects.value.find(item => item.uuid === id).project
+const projectName = id => gitlabStorage.getProject(id)?.project
 
 const openMergeRequest = (id, number) => {
     const url = gitlabStorage.buildUrl(id, number, '', false)
@@ -188,7 +188,10 @@ const openDetect = async () => {
 
 const closeDetect = async () => {
     await gitlabStorage.save()
-    await gitlabStorage.load(true)
+    await gitlabStorage.checkUrl()
+    project.value = gitlabStorage.currentProject
+    number.value = gitlabStorage.currentNumber
+
     autodetect.value = false
 }
 

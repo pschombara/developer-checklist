@@ -15,11 +15,11 @@ export default defineConfig({
             output: {
                 manualChunks: (id) => {
                     if (id.includes('node_modules/vuetify')) {
-                        return 'vue-frontend';
+                        return 'frontend';
                     }
 
                     if (id.includes('node_modules/vue') || id.includes('node_modules/@vue')) {
-                        return 'vue-backend';
+                        return 'backend';
                     }
 
                     if (id.includes('node_modules/semver') || id.includes('node_modules/lodash') || id.includes('node_modules/pinia')) {
@@ -53,8 +53,6 @@ export default defineConfig({
                     if (id.includes('src/components/shared')) {
                         return 'shared';
                     }
-                    console.log(id);
-
                 }
             },
         },

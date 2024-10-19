@@ -16,6 +16,9 @@ export const useGitLabStorage = defineStore('gitLab', {
     getters: {
         getHost: state => state.host,
         getProjects: state => state.projects,
+        getProject: state => {
+            return id => state.projects.find(project => project.uuid === id)
+        },
         getCategories: state => state.categories,
         isLoaded: state => state.loaded,
         getCurrentProject: state => state.currentProject,
@@ -166,7 +169,7 @@ export const useGitLabStorage = defineStore('gitLab', {
             const popupStorage = usePopupStorage()
             const tab = await popupStorage.fetchCurrentTab()
 
-            return tab.url.startsWith(this.host)
+            return tab.url.startsWith(this.host) && tab.url.match(/-\/merge_requests\/\d+/)
         },
         async autoDetect() {
             const popupStorage = usePopupStorage()

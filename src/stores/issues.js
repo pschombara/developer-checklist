@@ -2,6 +2,8 @@ import {defineStore} from 'pinia'
 import {useJiraStorage} from './jira.js'
 import {usePopupStorage} from './popup.js'
 import _ from 'lodash'
+import {useGitLabStorage} from './gitlab.js'
+import {useJenkinsStorage} from './jenkins.js'
 
 export const useIssueStorage = defineStore('issues', {
     state: () => ({
@@ -40,6 +42,12 @@ export const useIssueStorage = defineStore('issues', {
             const storageData = await chrome.storage.local.get(null)
             const regex = await this.getRegex
 
+            const gitLabStorage = useGitLabStorage()
+            await gitLabStorage.load()
+
+            const jenkinsStorage = useJenkinsStorage()
+            await jenkinsStorage.load()
+
             Object.entries(storageData).forEach(([key, issue]) => {
                 if (false === regex.test(key)) {
                     return
@@ -48,8 +56,8 @@ export const useIssueStorage = defineStore('issues', {
                 this.issues.push({
                     key: key,
                     checklist: issue.checklist,
-                    ciBuilds: issue.ciBuilds,
-                    mergeRequests: issue.mergeRequests,
+                    ciBuilds: issue.ciBuilds.filter(build => undefined !== jenkinsStorage.getBuild(build.job)),
+                    mergeRequests: issue.mergeRequests.filter(mr =>  undefined !== gitLabStorage.getProject(mr.id)),
                     openTab: issue.openTab,
                     pinned: issue.pinned,
                     title: issue.title,

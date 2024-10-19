@@ -16,6 +16,9 @@ export const useJenkinsStorage = defineStore('jenkins', {
         getHost: state => state.host,
         getCategories: state => state.categories,
         getBuilds: state => state.builds,
+        getBuild: state => {
+            return job => state.builds.find(build => build.job === job)
+        },
         isLoaded: state => state.loaded,
         getCurrentJob: state => state.currentJob,
         getCurrentBuild: state => state.currentBuild,
