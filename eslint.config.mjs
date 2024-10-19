@@ -27,7 +27,7 @@ export default [...compat.extends('plugin:vue/vue3-recommended', 'prettier'), {
             ...globals.webextensions,
         },
 
-        ecmaVersion: 13,
+        ecmaVersion: 'latest',
         sourceType: 'module',
     },
 
