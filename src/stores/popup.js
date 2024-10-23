@@ -79,7 +79,8 @@ export const usePopupStorage = defineStore('popup', {
         },
         async fetchCurrentTab() {
             const [tab] = await chrome.tabs.query({active: true, currentWindow: true})
-            return await tab
+
+            return tab
         },
     },
 })

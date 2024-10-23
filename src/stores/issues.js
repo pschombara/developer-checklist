@@ -65,8 +65,9 @@ export const useIssueStorage = defineStore('issues', {
                     work: issue.work,
                 })
 
-                if (issue.work) {
-                    const popupStorage = usePopupStorage()
+                const popupStorage = usePopupStorage()
+
+                if (issue.work && null === popupStorage.getCurrentIssue) {
                     popupStorage.setCurrentIssue(key)
                 }
             })

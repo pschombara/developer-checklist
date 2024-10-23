@@ -5,6 +5,7 @@ import {computed, ref} from 'vue'
 import {useJenkinsStorage} from '../../stores/jenkins.js'
 import {useIssueStorage} from '../../stores/issues.js'
 import {useMainStorage} from '../../stores/mainStorage.js'
+import BuildSettings from '../shared/Jenkins/BuildSettings.vue'
 
 const i18n = chrome.i18n
 const optionsValid = ref(false)
@@ -13,6 +14,17 @@ const message = ref()
 const copyBuildUrl = ref()
 const build = ref()
 const job = ref()
+const autodetect = ref(false)
+const autoJob = ref(null)
+const onHost = ref(false)
+
+const defaultBuild = {
+    uuid: null,
+    type: null,
+    job: null,
+    label: '',
+    name: '',
+}
 
 const text = {
     helpAddIssue: i18n.getMessage('helpAddIssue'),
@@ -81,6 +93,7 @@ const load = async () => {
         return
     }
 
+    onHost.value = await jenkinsStorage.onHost()
     await jenkinsStorage.checkUrl()
 
     build.value = jenkinsStorage.getCurrentBuild
@@ -145,6 +158,31 @@ const copyBuild = async (job, build) => {
     message.value.show()
 }
 
+const openDetect = async () => {
+    autoJob.value = {...defaultBuild}
+
+    const detectedData = await jenkinsStorage.autoDetect()
+
+    if (null === detectedData) {
+        return
+    }
+
+    autoJob.value.job = detectedData.job
+    autoJob.value.type = detectedData.category
+
+    autodetect.value = true
+}
+
+const closeDetect = async () => {
+    await jenkinsStorage.save()
+    await jenkinsStorage.checkUrl()
+
+    build.value = jenkinsStorage.getCurrentBuild
+    job.value = jenkinsStorage.getCurrentJob
+
+    autodetect.value = false
+}
+
 load()
 </script>
 <template>
@@ -157,7 +195,7 @@ load()
                 </v-col>
             </v-row>
         </v-card-title>
-        <v-card-text>
+        <v-card-text v-if="!autodetect">
             <v-row>
                 <v-col cols="8">
                     <v-autocomplete
@@ -179,7 +217,7 @@ load()
                     ></v-text-field>
                 </v-col>
             </v-row>
-            <v-row class="mt-0">
+            <v-row v-if="job" class="mt-0">
                 <v-col cols="10">
                     <v-text-field
                         ref="copyBuildUrl"
@@ -199,6 +237,10 @@ load()
                         @click="copy"
                     ><v-icon small>fas fa-copy</v-icon></v-btn>
                 </v-col>
+            </v-row>
+            <v-row v-else-if="onHost">
+                <v-col cols="12"><h3>Job Not found?</h3></v-col>
+                <v-col class="mb-3" cols="12"><v-btn @click="openDetect">Autodetect</v-btn></v-col>
             </v-row>
             <v-row class="mt-0">
                 <v-col cols="12">
@@ -262,6 +304,9 @@ load()
                     </v-data-table>
                 </v-col>
             </v-row>
+        </v-card-text>
+        <v-card-text v-else>
+            <build-settings :create="true" :build="autoJob" @close="closeDetect"/>
         </v-card-text>
         <copied-to-clipboard ref="message"></copied-to-clipboard>
     </v-card>

@@ -1,35 +1,18 @@
 <script setup>
 import {computed, ref} from 'vue'
 import {useJenkinsStorage} from '../../../stores/jenkins.js'
+import BuildSettings from '../../shared/Jenkins/BuildSettings.vue'
 
 const i18n = chrome.i18n
 const jenkinsStore = useJenkinsStorage()
 
-const buildNameRules = [
-    value => !!value || i18n.getMessage('errNotBlank'),
-    value => false === checkBuildDuplicated(value) || i18n.getMessage('errDuplicated'),
-]
-
-const buildJobRules = [
-    value => !!value || i18n.getMessage('errNotBlank'),
-]
-
-const buildTypeRules = [
-    value => !!value || i18n.getMessage('errNotBlank'),
-]
-
 const text = {
-    category: i18n.getMessage('Category'),
-    newCategory: i18n.getMessage('NewCategory'),
-    newBuild: i18n.getMessage('NewBuild'),
     search: i18n.getMessage('Search'),
     add: i18n.getMessage('Add'),
-    save: i18n.getMessage('Save'),
     cancel: i18n.getMessage('Cancel'),
     delete: i18n.getMessage('Delete'),
     label: i18n.getMessage('Label'),
     name: i18n.getMessage('Name'),
-    build: i18n.getMessage('Build'),
     builds: i18n.getMessage('Builds'),
     job: i18n.getMessage('Job'),
 }
@@ -54,10 +37,8 @@ const defaultBuild = {
 
 const dialogBuild = ref({
     open: false,
-    title: '',
     current: null,
     item: {...defaultBuild},
-    saveButton: '',
 })
 
 const deleteBuild = ref({})
@@ -66,27 +47,19 @@ const builds = computed(() => {
     return jenkinsStore.getBuilds
 })
 
-const categories = computed(() => {
-    return jenkinsStore.getCategories
-})
-
 const openBuild = build => {
     dialogBuild.value = {
         open: true,
-        title: i18n.getMessage('TitleUpdate', build.name),
         current: build,
         item: {...build},
-        saveButton: text.save,
     }
 }
 
 const openNewBuild = () => {
     dialogBuild.value = {
         open: true,
-        title: text.newBuild,
         current: null,
         item: {...defaultBuild},
-        saveButton: text.add,
     }
 }
 
@@ -100,33 +73,6 @@ const closeDialogBuild = () => {
     dialogBuild.value.current = null
 }
 
-const saveBuild = async event => {
-    const result = await event
-
-    if (false === result.valid) {
-        return
-    }
-
-    if (null === dialogBuild.value.item.uuid) {
-        jenkinsStore.addBuild(
-            dialogBuild.value.item.type,
-            dialogBuild.value.item.job,
-            dialogBuild.value.item.label,
-            dialogBuild.value.item.name,
-        )
-    } else {
-        jenkinsStore.updateBuild(
-            dialogBuild.value.item.uuid,
-            dialogBuild.value.item.type,
-            dialogBuild.value.item.job,
-            dialogBuild.value.item.label,
-            dialogBuild.value.item.name,
-        )
-    }
-
-    closeDialogBuild()
-}
-
 const removeBuild = build => {
     jenkinsStore.removeBuild(build.uuid)
     closeDialogDeleteBuild()
@@ -135,25 +81,6 @@ const removeBuild = build => {
 const closeDialogDeleteBuild = () => {
     dialogDeleteBuild.value = false
     deleteBuild.value = {}
-}
-
-const checkBuildDuplicated = value => {
-    if (null === value) {
-        return false
-    }
-
-    const item = dialogBuild.value.item
-    const search = jenkinsStore.getBuilds.find(build => build.type === item.type && build.name.toLowerCase() === item.name.toLowerCase())
-
-    if (undefined === search) {
-        return false
-    }
-
-    if (null === dialogBuild.value.current) {
-        return true
-    }
-
-    return search.uuid !== item.uuid || dialogBuild.value.current.uuid !== item.uuid
 }
 </script>
 
@@ -190,48 +117,7 @@ const checkBuildDuplicated = value => {
                             color="primary"
                             @click="openNewBuild">{{text.add}}</v-btn>
                         <v-dialog v-model="dialogBuild.open" max-width="450">
-                            <v-form
-                                validate-on="submit"
-                                @submit.prevent="saveBuild"
-                            >
-                                <v-card>
-                                    <v-card-title>{{ dialogBuild.title }}</v-card-title>
-                                    <v-card-text>
-                                            <v-autocomplete
-                                                v-model="dialogBuild.item.type"
-                                                :items="categories"
-                                                :rules="buildTypeRules"
-                                                :label="text.category"
-                                                item-title="name"
-                                                item-value="name"
-                                            ></v-autocomplete>
-                                            <v-text-field
-                                                v-model="dialogBuild.item.name"
-                                                :rules="buildNameRules"
-                                                :label="text.name"
-                                            ></v-text-field>
-                                            <v-text-field
-                                                v-model="dialogBuild.item.label"
-                                                :label="text.label"
-                                            ></v-text-field>
-                                            <v-text-field
-                                                v-model="dialogBuild.item.job"
-                                                :rules="buildJobRules"
-                                                :label="text.job"
-                                            ></v-text-field>
-                                    </v-card-text>
-                                    <v-card-actions>
-                                        <v-spacer></v-spacer>
-                                        <v-btn color="secondary" variant="plain" @click="closeDialogBuild">{{ text.cancel }}</v-btn>
-                                        <v-btn
-                                            type="submit"
-                                            color="primary"
-                                            variant="plain">{{ dialogBuild.saveButton }}
-                                        </v-btn>
-                                        <v-spacer></v-spacer>
-                                    </v-card-actions>
-                                </v-card>
-                            </v-form>
+                            <BuildSettings :build="dialogBuild.item" :create="null === dialogBuild.current" @close="closeDialogBuild"/>
                         </v-dialog>
                         <v-dialog v-model="dialogDeleteBuild" max-width="450">
                             <v-card>

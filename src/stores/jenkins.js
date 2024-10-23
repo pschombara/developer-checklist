@@ -3,6 +3,8 @@ import {toRaw} from 'vue'
 import {Uuid} from '../mixins/uuid.js'
 import {usePopupStorage} from './popup.js'
 
+const checkRegex = /(view\/(?<category>.+)\/)?job\/(?<job>[^\/]+)/
+
 export const useJenkinsStorage = defineStore('jenkins', {
     state: () => ({
         host: '',
@@ -163,6 +165,30 @@ export const useJenkinsStorage = defineStore('jenkins', {
                     },
                 )
             })
+        },
+        async onHost() {
+            const popupStorage = usePopupStorage()
+            const tab = await popupStorage.fetchCurrentTab()
+
+            return tab.url.startsWith(this.host) && tab.url.match(checkRegex)
+        },
+        async autoDetect() {
+            const popupStorage = usePopupStorage()
+            const tab = await popupStorage.fetchCurrentTab()
+
+            const urlWithoutHost = tab.url.replace(this.host, '')
+            const matches = urlWithoutHost.match(checkRegex)
+
+            if (null === matches) {
+                return null
+            }
+
+            const category = decodeURI(matches.groups.category ?? '')
+
+            return {
+                category: this.categories.includes(category) ? category : '',
+                job: decodeURI(matches.groups.job),
+            }
         },
     },
 })

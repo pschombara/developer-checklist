@@ -8,9 +8,13 @@ const text = {
 
 const visible = ref(false)
 
-const show = () => {
+const showMessage = () => {
     visible.value = true
 }
+
+defineExpose({
+    show: showMessage,
+})
 </script>
 
 <template>
