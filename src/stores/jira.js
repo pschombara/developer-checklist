@@ -107,7 +107,10 @@ export const useJiraStorage = defineStore('jira', {
         },
         addBoard(key, isDefault) {
             const currentDefault = this.boards.find(board => board.default)
-            currentDefault.default = !isDefault
+
+            if (undefined !== currentDefault) {
+                currentDefault.default = !isDefault
+            }
 
             this.boards.push({key: key, default: isDefault})
         },
@@ -119,7 +122,10 @@ export const useJiraStorage = defineStore('jira', {
                 const prevDefault = this.boards.find(board => board.default)
 
                 board.default = true
-                prevDefault.default = false
+
+                if (undefined !== prevDefault) {
+                    prevDefault.default = false
+                }
             }
         },
         removeBoard(key) {

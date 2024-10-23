@@ -169,7 +169,7 @@ const checkBoardKeyDuplicated = value => {
         return true
     }
 
-    return value !== dialogBoard.value.current.key
+    return value.toLowerCase() !== dialogBoard.value.current.key.toLowerCase()
 }
 </script>
 
