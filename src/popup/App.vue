@@ -62,7 +62,6 @@ const load = async () => {
 }
 
 const checkTabIsLoaded = async tab => {
-    console.log(tab)
     if ('complete' !== tab.status) {
         setTimeout(async () => checkTabIsLoaded(await popupStorage.fetchCurrentTab()), 500)
         return

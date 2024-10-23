@@ -50,8 +50,8 @@ export const useMainStorage = defineStore('mainStorage', {
                     if ('' === changes.optionsTab.newValue) {
                         return this.autoChangeOpenTab()
                     }
-                } else if (changes.optionsMain?.newValue.theme.color !== changes.optionsMain?.oldValue.theme.color
-                    || changes.optionsMain?.newValue.theme.schema !== changes.optionsMain?.oldValue.theme.schema
+                } else if (changes.optionsMain?.newValue.theme.color !== changes.optionsMain?.oldValue?.theme.color
+                    || changes.optionsMain?.newValue.theme.schema !== changes.optionsMain?.oldValue?.theme.schema
                 ) {
                     window.dispatchEvent(new CustomEvent('themeChanged', {detail: changes.optionsMain?.newValue.theme}))
                 }
@@ -59,13 +59,17 @@ export const useMainStorage = defineStore('mainStorage', {
 
             await migration.migrate()
 
-            chrome.storage.local.get('optionsMain', result => {
-                this.modules = result.optionsMain.modules
-                this.themeSchema = result.optionsMain.theme.schema
-                this.themeColor = result.optionsMain.theme.color
-                this.defaultPopupItemsPerPage = result.optionsMain.defaultPopupItemsPerPage
-                window.dispatchEvent(new CustomEvent('themeChanged', {detail: {schema: this.themeSchema, color: this.themeColor}}))
-            })
+            let result = await chrome.storage.local.get('optionsMain')
+
+            if (undefined === result.optionsMain) {
+                result = await this.restore()
+            }
+
+            this.modules = result.optionsMain.modules
+            this.themeSchema = result.optionsMain.theme.schema
+            this.themeColor = result.optionsMain.theme.color
+            this.defaultPopupItemsPerPage = result.optionsMain.defaultPopupItemsPerPage
+            window.dispatchEvent(new CustomEvent('themeChanged', {detail: {schema: this.themeSchema, color: this.themeColor}}))
         },
         async autoChangeOpenTab () {
             for (const tab of this.optionTabs) {
@@ -120,6 +124,8 @@ export const useMainStorage = defineStore('mainStorage', {
 
             await chrome.storage.local.clear()
             await chrome.storage.local.set(config)
+
+            return config
         },
         async exportOptions(exportModules) {
             const exportConfig = {

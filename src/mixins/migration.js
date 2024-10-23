@@ -7,6 +7,10 @@ export default class Migration {
 
     migrate = async () => {
         chrome.storage.local.get(null, async data => {
+            if (0 === Object.keys(data).length) {
+                return
+            }
+
             let version = data.version || data.options.version
 
             if (undefined === version || semver.lt(version, '0.9.1')) {
