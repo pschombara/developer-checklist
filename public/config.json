@@ -1,26 +1,30 @@
 {
-    "version": "0.9.1",
-    "general": {
+    "version": "0.10.0",
+    "optionsMain": {
+        "defaultPopupItemsPerPage": -1,
         "modules": {
-            "jenkins":  false,
+            "chat": false,
             "cheatSheet": false,
-            "chat":  false,
             "gitLab": false,
-            "chrome": true
+            "jenkins": false
+        },
+        "theme": {
+            "color": "blue",
+            "schema": "system"
         }
     },
-    "cheatSheet": [],
-    "gitLab": {
+    "optionsCheatSheet": [],
+    "optionsGitLab": {
         "host": "",
         "projects": [],
         "categories": []
     },
-    "jenkins": {
+    "optionsJenkins": {
         "host": "",
         "categories": [],
         "builds": []
     },
-    "jira": {
+    "optionsJira": {
         "url": "",
         "cleanup": 2,
         "maximumIssues": 6,
@@ -49,7 +53,7 @@
                 },
                 "checklist": [
                     {
-                        "id": 1,
+                        "uid": 1,
                         "items": [
                             {
                                 "text": "read the issue description carefully",
@@ -75,7 +79,7 @@
                         "title": "General"
                     },
                     {
-                        "id": 2,
+                        "uid": 2,
                         "items": [
                             {
                                 "text": "write down your ideas in a JIRA comment",
@@ -106,7 +110,7 @@
                         "title": "Planning"
                     },
                     {
-                        "id": 3,
+                        "uid": 3,
                         "items": [
                             {
                                 "text": "remember KISS, do what HAS to be done",
@@ -132,7 +136,7 @@
                         "title": "Coding"
                     },
                     {
-                        "id": 4,
+                        "uid": 4,
                         "items": [
                             {
                                 "text": "write unit tests (use identicalTo). Mock as little as possible.",
@@ -168,7 +172,7 @@
                         "title": "Testing"
                     },
                     {
-                        "id": 5,
+                        "uid": 5,
                         "items": [
                             {
                                 "text": "write test instructions in JIRA comment with linked merge requests",
@@ -176,24 +180,9 @@
                                 "id": "ac875c72-6f0b-41e4-876d-c72cbf8081ae"
                             },
                             {
-                                "text": "link also embeddable build status (Jens) in JIRA comment",
-                                "checked": false,
-                                "id": "fc8daf63-3964-4818-81bc-04844ea54c49"
-                            },
-                            {
                                 "text": "add fixed versions",
                                 "checked": false,
                                 "id": "60107e8c-0f72-496f-b850-2e6182b560b0"
-                            },
-                            {
-                                "text": "add news intern (eng) and extern (ger)",
-                                "checked": false,
-                                "id": "3488b74b-83b5-4abb-878c-6d2eaa372d6a"
-                            },
-                            {
-                                "text": "log time and inform scrum master if time was increased",
-                                "checked": false,
-                                "id": "94c0d4ff-3ee6-4867-9507-4a00aa06ae17"
                             },
                             {
                                 "text": "inform other teams about changes if needed",
@@ -237,7 +226,7 @@
                 },
                 "checklist": [
                     {
-                        "id": 1,
+                        "uid": 1,
                         "items": [
                             {
                                 "text": "check out all related branches (coa)",
@@ -306,7 +295,7 @@
                 },
                 "checklist": [
                     {
-                        "id": 1,
+                        "uid": 1,
                         "items": [
                             {
                                 "text": "check if changelog was added and if it is detailed enough",
@@ -314,7 +303,7 @@
                                 "id": "d0143282-39f3-4907-9187-7ce33e551ace"
                             },
                             {
-                                "text": "check if composer files were updated properly and make suggestions to change dev-feature branch to dev-master",
+                                "text": "check if composer files were updated properly and make suggestions to change dev-feature branch to dev-(master|main)",
                                 "checked": false,
                                 "id": "d469ebde-2898-4efe-831d-15a88b69dcba"
                             },
@@ -365,7 +354,7 @@
                 },
                 "checklist": [
                     {
-                        "id": 1,
+                        "uid": 1,
                         "items": [],
                         "title": "General"
                     }
@@ -374,18 +363,20 @@
         ],
         "templates": []
     },
-    "chat": {
+    "optionsChat": {
         "discord": {
             "enabled": false,
             "main": false,
-            "rooms": [],
-            "messages": []
+            "messages": [],
+            "name": "",
+            "rooms": []
         },
         "google": {
             "enabled": false,
             "main": true,
-            "rooms": [],
-            "messages": []
+            "messages": [],
+            "name": "",
+            "rooms": []
         }
     }
 }

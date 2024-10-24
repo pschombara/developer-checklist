@@ -15,7 +15,7 @@
         "message": "Save"
     },
     "Export": {
-        "message": "Save & Export options"
+        "message": "Export options"
     },
     "Import": {
         "message": "Import options"
@@ -86,30 +86,6 @@
     "Close": {
         "message": "Close"
     },
-    "grey": {
-        "message": "Grey"
-    },
-    "blue": {
-        "message": "Blue"
-    },
-    "red": {
-        "message": "Red"
-    },
-    "yellow": {
-        "message": "Yellow"
-    },
-    "green": {
-        "message": "Green"
-    },
-    "pink": {
-        "message": "Pink"
-    },
-    "purple": {
-        "message": "Purple"
-    },
-    "cyan": {
-        "message": "Cyan"
-    },
     "errNotBlank": {
         "message": "This value should not be blank."
     },
@@ -123,7 +99,7 @@
         "message": "The value should be minimum $1."
     },
     "General": {
-        "message": "general"
+        "message": "General"
     },
     "Checklists": {
         "message": "checklists"
@@ -235,6 +211,12 @@
     },
     "importWrongType": {
         "message": "The import file must be of type application/json."
+    },
+    "importEmptyFile": {
+        "message": "An empty file was selected."
+    },
+    "importNotSupported": {
+        "message": "The given JSON file is not supported."
     },
     "settingsSaved": {
         "message": "Settings saved."

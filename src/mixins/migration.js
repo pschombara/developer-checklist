@@ -1,42 +1,39 @@
 import semver from 'semver'
-import {V0_7_0} from './migrations/v0.7.0.js'
-import {V0_8_0} from './migrations/v0.8.0.js'
 
 export default class Migration {
     constructor () {
-        this._version = '0.9.1'
-        this.migrations = [
-            new V0_7_0(),
-            new V0_8_0(),
-        ]
+        this._version = '0.10.0'
     }
 
-    migrate = (options, exported, storeInStorage = true) => {
-
-        if (undefined === options.version || semver.lt(options.version, '0.5.0', 1)) {
-            throw Error('Unsupported version')
-        }
-
-        for (let migration of this.migrations) {
-            if (migration.supports(options.version)) {
-                migration.migrate(options, exported)
+    migrate = async () => {
+        chrome.storage.local.get(null, async data => {
+            if (0 === Object.keys(data).length) {
+                return
             }
-        }
 
-        options.version = this._version
+            let version = data.version || data.options.version
 
-        let obj = {}
+            if (undefined === version || semver.lt(version, '0.9.1')) {
+                throw Error('Unsupported version')
+            }
 
-        obj.options = options
+            if ('0.9.1' === version) {
+                await chrome.storage.local.set({version: '0.10.0'})
+                await chrome.storage.local.set({optionsChat: data.options.chat})
+                await chrome.storage.local.set({optionsCheatSheet: data.options.cheatSheet})
+                await chrome.storage.local.set({optionsMain: {
+                    modules: data.options.general.modules,
+                    theme: data.theme,
+                    defaultPopupItemsPerPage: -1,
+                }})
+                await chrome.storage.local.set({optionsGitLab: data.options.gitLab})
+                await chrome.storage.local.set({optionsJira: data.options.jira})
+                await chrome.storage.local.set({optionsJenkins: data.options.jenkins})
 
-        if (storeInStorage) {
-            chrome.storage.local.set(obj)
-        }
-
-        return {
-            options,
-            exported,
-        }
+                await chrome.storage.local.remove('options')
+                await chrome.storage.local.remove('theme')
+            }
+        })
     }
 
     get version () {

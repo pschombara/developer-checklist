@@ -1,3 +1,22 @@
+<script setup>
+import {ref} from 'vue'
+
+const text = {
+    close: chrome.i18n.getMessage('Close'),
+    copiedToClipboard: chrome.i18n.getMessage('copiedToClipboard'),
+}
+
+const visible = ref(false)
+
+const showMessage = () => {
+    visible.value = true
+}
+
+defineExpose({
+    show: showMessage,
+})
+</script>
+
 <template>
     <v-snackbar
         v-model="visible"
@@ -9,7 +28,7 @@
         <template #action="{ attrs }">
             <v-btn
                 color="blue"
-                text
+                variant="text"
                 v-bind="attrs"
                 @click="visible = false"
             >
@@ -18,26 +37,6 @@
         </template>
     </v-snackbar>
 </template>
-
-<script>
-export default {
-    name: 'CopiedToClipboard',
-    data: () => {
-        return {
-            text: {
-                close: chrome.i18n.getMessage('Close'),
-                copiedToClipboard: chrome.i18n.getMessage('copiedToClipboard'),
-            },
-            visible: false,
-        }
-    },
-    methods: {
-        show: function () {
-            this.visible = true
-        },
-    },
-}
-</script>
 
 <style scoped>
 

@@ -3,7 +3,3 @@ chrome.runtime.onInstalled.addListener(details => {
         chrome.runtime.openOptionsPage()
     }
 })
-
-chrome.storage.local.onChanged.addListener(changes => {
-    //console.log(changes)
-})

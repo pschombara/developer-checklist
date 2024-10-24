@@ -1,3 +1,58 @@
+<script setup>
+
+import {computed, ref} from 'vue'
+import {useIssueStorage} from '../../stores/issues.js'
+import {useJiraStorage} from '../../stores/jira.js'
+
+const i18n = chrome.i18n
+const text = {
+    lastOpened: i18n.getMessage('lastOpenedIssues'),
+    open: i18n.getMessage('openIssue'),
+    pinned: i18n.getMessage('pinned'),
+}
+const issueStorage = useIssueStorage()
+const jiraStorage = useJiraStorage()
+
+const issues = computed(() => {
+    let issues = [...issueStorage.getIssues]
+
+    issues = issues.sort((a, b) => {
+        if (a.pinned !== b.pinned) {
+            return a.pinned ? -1 : 1
+        }
+
+        return a.updateDate > b.updateDate ? -1 : 1
+    })
+
+    return issues.slice(0, jiraStorage.getMaximumIssues)
+})
+
+const maximumIssues = computed(() => jiraStorage.getMaximumIssues)
+const jiraUrl = computed(() => jiraStorage.getUrl)
+const boards = computed(() => jiraStorage.getBoards.map(board => board.key))
+const board = ref('')
+
+const openIssue = issueNumber => chrome.tabs.create({url: `${jiraUrl.value}/browse/${issueNumber}`})
+const issueNumber = ref(null)
+
+const checkButtonEnabled = () => '' !== (issueNumber.value ?? '') && boards.value.includes(board.value ?? '')
+
+const open = () => {
+    if (false === checkButtonEnabled()) {
+        return
+    }
+
+    openIssue(`${board.value}-${issueNumber.value}`)
+}
+
+board.value = jiraStorage.getBoards.find(board => board.default).key
+
+const buttonColor = item => item.pinned ? 'primary' : 'secondary'
+
+jiraStorage.load()
+issueStorage.load()
+</script>
+
 <template>
     <v-card>
         <v-card-text>
@@ -14,8 +69,8 @@
                         type="number"
                         min="1"
                         variant="underlined"
-                        autofocus=""
-                        @keypress.enter="open"
+                        autofocus="autofocus"
+                        @enter="open"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="2">
@@ -28,8 +83,8 @@
             <v-row  class="mt-3">
                 <template v-for="issue in issues" :key="issue.id">
                     <v-col cols="4">
-                        <v-btn :color="buttonColor(issue)" block="" @click="openIssue(issue.name)">
-                            {{issue.name}}
+                        <v-btn :color="buttonColor(issue)" block="block" @click="openIssue(issue.key)">
+                            {{issue.key}}
                         </v-btn>
                     </v-col>
                 </template>
@@ -37,76 +92,3 @@
         </v-card-text>
     </v-card>
 </template>
-
-<script>
-
-export default {
-    name: 'PopupQuickList',
-    data() {
-        return {
-            boards: [],
-            board: '',
-            jiraUrl: '',
-            text: {
-                lastOpened: chrome.i18n.getMessage('lastOpenedIssues'),
-                open: chrome.i18n.getMessage('openIssue'),
-                pinned: chrome.i18n.getMessage('pinned'),
-            },
-            issueNumber: null,
-        }
-    },
-    computed: {
-        issues() {
-            let issues = [...this.$store.getters['issues/list']] // create copy to not adjust original
-            const maximum = this.$store.getters['jira/getMaximumIssues']
-
-            issues = issues.sort((a, b) => {
-                if (a.pinned !== b.pinned) {
-                    return a.pinned ? -1 : 1
-                }
-
-                return a.updateDate > b.updateDate ? -1 : 1
-            })
-
-            return issues.slice(0, maximum)
-        },
-        maximumIssues() {
-            return this.$store.getters['jira/getMaximumIssues']
-        },
-    },
-    created() {
-        const boards = this.$store.getters['jira/getBoards']
-
-        for (let board of boards) {
-            this.boards.push(board.key)
-
-            if (board.default) {
-                this.board = board.key
-            }
-        }
-
-        this.jiraUrl = this.$store.getters['jira/getUrl']
-    },
-    methods: {
-        openIssue: function (issueNumber) {
-            chrome.tabs.create({url: `${this.jiraUrl}/browse/${issueNumber}`})
-        },
-        checkButtonEnabled: function () {
-            return null !== this.issueNumber
-                && '' !== this.issueNumber
-                && '' !== this.board
-                && this.boards.includes(this.board)
-        },
-        open: function () {
-            if (false === this.checkButtonEnabled()) {
-                return
-            }
-
-            this.openIssue(`${this.board}-${this.issueNumber}`)
-        },
-        buttonColor: function (item) {
-            return item.pinned ? 'primary' : 'secondary'
-        },
-    },
-}
-</script>
