@@ -10,15 +10,12 @@ export const useMainStorage = defineStore('mainStorage', {
             cheatSheet: false,
             gitLab: false,
             jenkins: false,
-            openTab: null,
         },
         version: migration.version,
-        configTabs: {
-            main: 'general',
-        },
         themeSchema: 'system',
         themeColor: 'blue',
         defaultPopupItemsPerPage: -1,
+        openTab: '',
         optionTabs: [
             { id: 'main', name: chrome.i18n.getMessage('general'), icon: 'fas fa-cogs', settings: true },
             { id: 'jira', name: 'Jira', icon: 'fab fa-jira', settings: true },
@@ -44,12 +41,8 @@ export const useMainStorage = defineStore('mainStorage', {
                     return
                 }
 
-                if (changes.optionsTab?.newValue) {
-                    this.configTabs.main = changes.optionsTab.newValue
-
-                    if ('' === changes.optionsTab.newValue) {
-                        return this.autoChangeOpenTab()
-                    }
+                if ('main' !== changes.optionsTab?.newValue) {
+                    this.openTab = changes.optionsTab.newValue
                 } else if (changes.optionsMain?.newValue.theme.color !== changes.optionsMain?.oldValue?.theme.color
                     || changes.optionsMain?.newValue.theme.schema !== changes.optionsMain?.oldValue?.theme.schema
                 ) {
@@ -70,16 +63,10 @@ export const useMainStorage = defineStore('mainStorage', {
             this.themeColor = result.optionsMain.theme.color
             this.defaultPopupItemsPerPage = result.optionsMain.defaultPopupItemsPerPage
             window.dispatchEvent(new CustomEvent('themeChanged', {detail: {schema: this.themeSchema, color: this.themeColor}}))
-        },
-        async autoChangeOpenTab () {
-            for (const tab of this.optionTabs) {
-                if (tab.id === this.configTabs.main) {
-                    this.changeOpenTab(tab.id)
-                    chrome.storage.local.set({'optionsTab': ''})
 
-                    break
-                }
-            }
+            const openTab = await chrome.storage.local.get('optionsTab')
+            this.openTab = openTab.optionsTab ?? 'main'
+            await chrome.storage.local.set({optionsTab: 'main'})
         },
         switchModule (module, checked) {
             if (undefined === this.modules[module]) {
@@ -111,8 +98,7 @@ export const useMainStorage = defineStore('mainStorage', {
             this.openTab = tab
         },
         async changeMainTab (tab) {
-            this.configTabs.main = tab
-            await chrome.storage.local.set({'optionsTab': tab})
+            await chrome.storage.local.set({optionsTab: tab})
         },
         changeDefaultPopupItemsPerPage(items) {
             this.defaultPopupItemsPerPage = items

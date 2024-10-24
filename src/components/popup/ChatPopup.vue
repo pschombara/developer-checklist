@@ -12,7 +12,9 @@ const issueStorage = useIssueStorage()
 const popUpStorage = usePopupStorage()
 const mainStorage = useMainStorage()
 
-const client = ref('')
+const i18n = chrome.i18n
+
+const client = ref(null)
 const room = ref(null)
 const message = ref(null)
 const attachedIssues = ref([])
@@ -25,7 +27,7 @@ const messages = computed(() => chatStorage.getMessages(client.value))
 const validClient = computed(() => rooms.value.length > 0 && messages.value.length > 0)
 
 const status = computed(() => chatStorage.getStatus)
-const sendReady = computed(() => '' !== client.value && null !== room.value && null !== message.value && ChatStatus.READY === chatStorage.getStatus)
+const sendReady = computed(() => null !== client.value && null !== room.value && null !== message.value && ChatStatus.READY === chatStorage.getStatus)
 
 const issues = computed(() => issueStorage.getIssues.map(issue => issue.key))
 
@@ -46,6 +48,10 @@ const load = async () => {
 
     if (null !== popUpStorage.getCurrentIssue) {
         attachedIssues.value.push(popUpStorage.getCurrentIssue)
+    }
+
+    if (null === client.value) {
+        return
     }
 
     message.value = messages.value[0].id ?? null
@@ -76,7 +82,7 @@ load()
                 </v-col>
             </v-row>
         </v-card-title>
-        <v-card-text>
+        <v-card-text v-if="client">
             <v-row>
                 <v-col cols="12">
                     <v-autocomplete
@@ -153,5 +159,13 @@ load()
                 </v-row>
             </div>
         </v-card-text>
+        <v-card-text v-else>
+            Missing Options
+        </v-card-text>
+        <v-card-actions v-if="!client">
+            <v-spacer></v-spacer>
+            <v-btn color="primary" plain @click="openOptions('chat')">{{i18n.getMessage('openOptions')}}</v-btn>
+            <v-spacer></v-spacer>
+        </v-card-actions>
     </v-card>
 </template>
