@@ -53,7 +53,7 @@
                 },
                 "checklist": [
                     {
-                        "id": 1,
+                        "uid": 1,
                         "items": [
                             {
                                 "text": "read the issue description carefully",
@@ -79,7 +79,7 @@
                         "title": "General"
                     },
                     {
-                        "id": 2,
+                        "uid": 2,
                         "items": [
                             {
                                 "text": "write down your ideas in a JIRA comment",
@@ -110,7 +110,7 @@
                         "title": "Planning"
                     },
                     {
-                        "id": 3,
+                        "uid": 3,
                         "items": [
                             {
                                 "text": "remember KISS, do what HAS to be done",
@@ -136,7 +136,7 @@
                         "title": "Coding"
                     },
                     {
-                        "id": 4,
+                        "uid": 4,
                         "items": [
                             {
                                 "text": "write unit tests (use identicalTo). Mock as little as possible.",
@@ -172,7 +172,7 @@
                         "title": "Testing"
                     },
                     {
-                        "id": 5,
+                        "uid": 5,
                         "items": [
                             {
                                 "text": "write test instructions in JIRA comment with linked merge requests",
@@ -226,7 +226,7 @@
                 },
                 "checklist": [
                     {
-                        "id": 1,
+                        "uid": 1,
                         "items": [
                             {
                                 "text": "check out all related branches (coa)",
@@ -295,7 +295,7 @@
                 },
                 "checklist": [
                     {
-                        "id": 1,
+                        "uid": 1,
                         "items": [
                             {
                                 "text": "check if changelog was added and if it is detailed enough",
@@ -354,7 +354,7 @@
                 },
                 "checklist": [
                     {
-                        "id": 1,
+                        "uid": 1,
                         "items": [],
                         "title": "General"
                     }
