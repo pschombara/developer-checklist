@@ -2,7 +2,7 @@ import semver from 'semver'
 
 export default class Migration {
     constructor () {
-        this._version = '0.10.0'
+        this._version = '0.10.1'
     }
 
     migrate = async () => {
@@ -18,7 +18,7 @@ export default class Migration {
             }
 
             if ('0.9.1' === version) {
-                await chrome.storage.local.set({version: '0.10.0'})
+                await chrome.storage.local.set({version: '0.10.1'})
                 await chrome.storage.local.set({optionsChat: data.options.chat})
                 await chrome.storage.local.set({optionsCheatSheet: data.options.cheatSheet})
                 await chrome.storage.local.set({optionsMain: {
@@ -33,6 +33,8 @@ export default class Migration {
                 await chrome.storage.local.remove('options')
                 await chrome.storage.local.remove('theme')
             }
+
+            await chrome.storage.local.set({version: '0.10.1'})
         })
     }
 

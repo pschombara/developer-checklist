@@ -269,8 +269,8 @@ load()
                                     <v-autocomplete
                                         v-model="issue"
                                         :items="issues"
-                                        item-title="name"
-                                        item-value="name"
+                                        item-title="key"
+                                        item-value="key"
                                         label="Attach to Issue"
                                         class="mt-5 align-center"
                                         density="comfortable"
@@ -298,6 +298,7 @@ load()
                             </v-btn>
                         </template>
                     </v-data-table>
+                    <v-alert v-else color="warning" text="No issue found" icon="$warning" />
                 </v-col>
             </v-row>
         </v-card-text>
