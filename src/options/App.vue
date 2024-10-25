@@ -135,8 +135,8 @@ const fileSelected = async file => {
         const importedOptions = JSON.parse(e.target.result.toString())
         const migration = new Migration()
 
-        if (semver.neq(migration.version, importedOptions.version ?? '0.0.0')) {
-            dialog.value.import.notSupported = true
+        if (false === migration.isSupported(importedOptions.version ?? '0.0.0')) {
+            dialog.value.error.notSupported = true
 
             return
         }
