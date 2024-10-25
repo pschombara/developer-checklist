@@ -2,10 +2,10 @@
 
 import InnerList from './InnerList.vue'
 import {computed, ref} from 'vue'
-import {useJiraStorage} from '../../../../stores/jira.js'
-import {useIconStorage} from '../../../../stores/icons.js'
+import {useJiraStorage} from '../../../../stores/jira.ts'
+import {useIconStorage} from '../../../../stores/icons.ts'
 
-const i18n = chrome.i18n
+const i18n = browser.i18n
 const text = {
     name: i18n.getMessage('Name'),
     cancel: i18n.getMessage('Cancel'),

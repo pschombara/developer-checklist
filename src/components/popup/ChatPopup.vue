@@ -1,18 +1,18 @@
 <script setup>
 
-import {useChatStorage} from '../../stores/chat.js'
+import {useChatStorage} from '../../stores/chat.ts'
 import {computed, ref, watch} from 'vue'
-import ChatStatus from '../../mixins/chat/status.js'
-import {useIssueStorage} from '../../stores/issues.js'
-import {usePopupStorage} from '../../stores/popup.js'
-import {useMainStorage} from '../../stores/mainStorage.js'
+import ChatStatus from '../../utils/chat/status.ts'
+import {useIssueStorage} from '../../stores/issues.ts'
+import {usePopupStorage} from '../../stores/popup.ts'
+import {useMainStorage} from '../../stores/mainStorage.ts'
 
 const chatStorage = useChatStorage()
 const issueStorage = useIssueStorage()
 const popUpStorage = usePopupStorage()
 const mainStorage = useMainStorage()
 
-const i18n = chrome.i18n
+const i18n = browser.i18n
 
 const client = ref(null)
 const room = ref(null)
@@ -64,7 +64,7 @@ const showSendButton = computed(() => {
 
 const openOptions = tab => {
     mainStorage.changeMainTab(tab)
-    chrome.runtime.openOptionsPage()
+    browser.runtime.openOptionsPage()
 }
 
 const send = async () => chatStorage.sendMessage(client.value, room.value, message.value, attachedIssues.value)

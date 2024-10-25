@@ -1,10 +1,10 @@
 <script setup>
-import Helper from '../../../mixins/helper'
+import Helper from '../../../utils/helper'
 import {computed, ref} from 'vue'
-import {useJiraStorage} from '../../../stores/jira.js'
+import {useJiraStorage} from '../../../stores/jira.ts'
 
 const jiraStorage = useJiraStorage()
-const i18n = chrome.i18n
+const i18n = browser.i18n
 const text = {
     host: i18n.getMessage('Host'),
     issues: i18n.getMessage('IssuesInProgress'),

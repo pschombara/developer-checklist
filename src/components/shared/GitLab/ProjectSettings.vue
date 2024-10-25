@@ -1,7 +1,7 @@
 <script setup>
 import {computed, ref} from 'vue'
-import {useJenkinsStorage} from '../../../stores/jenkins.js'
-import {useGitLabStorage} from '../../../stores/gitlab.js'
+import {useJenkinsStorage} from '../../../stores/jenkins.ts'
+import {useGitLabStorage} from '../../../stores/gitlab.ts'
 
 const props = defineProps({
     project: {
@@ -14,7 +14,7 @@ const emits = defineEmits(['close'])
 const jenkinsStorage = useJenkinsStorage()
 const gitLabStorage = useGitLabStorage()
 
-const i18n = chrome.i18n
+const i18n = browser.i18n
 
 const text = {
     category: i18n.getMessage('Category'),

@@ -2,8 +2,8 @@
 import {ref} from 'vue'
 
 const text = {
-    close: chrome.i18n.getMessage('Close'),
-    copiedToClipboard: chrome.i18n.getMessage('copiedToClipboard'),
+    close: browser.i18n.getMessage('Close'),
+    copiedToClipboard: browser.i18n.getMessage('copiedToClipboard'),
 }
 
 const visible = ref(false)

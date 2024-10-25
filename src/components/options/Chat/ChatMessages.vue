@@ -1,7 +1,7 @@
 <script setup>
 
 import {computed, ref} from 'vue'
-import {useChatStorage} from '../../../stores/chat.js'
+import {useChatStorage} from '../../../stores/chat.ts'
 
 const props = defineProps({
     client: {
@@ -10,7 +10,7 @@ const props = defineProps({
     },
 })
 
-const i18n = chrome.i18n
+const i18n = browser.i18n
 
 const text = {
     add: i18n.getMessage('Add'),

@@ -1,8 +1,8 @@
 <script setup>
-import Helper from '../../../../mixins/helper'
-import {Uuid} from '../../../../mixins/uuid'
+import Helper from '../../../../utils/helper'
+import {Uuid} from '../../../../utils/uuid'
 import {ref, watch} from 'vue'
-import {useJiraStorage} from '../../../../stores/jira.js'
+import {useJiraStorage} from '../../../../stores/jira.ts'
 
 const jiraStorage = useJiraStorage()
 
@@ -23,7 +23,7 @@ const props = defineProps({
 
 const emits = defineEmits(['close'])
 
-const i18n = chrome.i18n
+const i18n = browser.i18n
 
 const text = props.text
 const header = [

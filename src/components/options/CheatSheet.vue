@@ -1,10 +1,10 @@
 <script setup>
 
 import {computed, ref} from 'vue'
-import {useCheatSheetStorage} from '../../stores/cheatSheet.js'
-import Debounce from '../../mixins/debounce.js'
+import {useCheatSheetStorage} from '../../stores/cheatSheet.ts'
+import Debounce from '../../utils/debounce.ts'
 
-const i18n = chrome.i18n
+const i18n = browser.i18n
 let init = false
 
 const text = {

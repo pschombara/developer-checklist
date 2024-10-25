@@ -1,11 +1,11 @@
 <script setup>
 
 import {computed, ref} from 'vue'
-import {useJiraStorage} from '../../../stores/jira.js'
+import {useJiraStorage} from '../../../stores/jira.ts'
 
 const jiraStorage = useJiraStorage()
 
-const i18n = chrome.i18n
+const i18n = browser.i18n
 const text = {
     template: i18n.getMessage('Template'),
     templates: i18n.getMessage('Templates'),

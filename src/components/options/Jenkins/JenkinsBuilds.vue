@@ -1,9 +1,9 @@
 <script setup>
 import {computed, ref} from 'vue'
-import {useJenkinsStorage} from '../../../stores/jenkins.js'
+import {useJenkinsStorage} from '../../../stores/jenkins.ts'
 import BuildSettings from '../../shared/Jenkins/BuildSettings.vue'
 
-const i18n = chrome.i18n
+const i18n = browser.i18n
 const jenkinsStore = useJenkinsStorage()
 
 const text = {

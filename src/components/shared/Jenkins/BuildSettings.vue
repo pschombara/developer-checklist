@@ -1,5 +1,5 @@
 <script setup>
-import {useJenkinsStorage} from '../../../stores/jenkins.js'
+import {useJenkinsStorage} from '../../../stores/jenkins.ts'
 import {computed, ref} from 'vue'
 
 const jenkinsStore = useJenkinsStorage()
@@ -17,7 +17,7 @@ const props = defineProps({
 
 const emits = defineEmits(['close'])
 
-const i18n = chrome.i18n
+const i18n = browser.i18n
 
 const text = {
     cancel: i18n.getMessage('Cancel'),
