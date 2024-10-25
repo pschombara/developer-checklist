@@ -31,5 +31,8 @@ export default defineConfig({
         plugins: [
             vuetify()
         ],
-    })
+    }),
+    runner: {
+        disabled: true
+    }
 });
