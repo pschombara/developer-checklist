@@ -41,7 +41,7 @@ export const useMainStorage = defineStore('mainStorage', {
                     return
                 }
 
-                if ('main' !== changes.optionsTab?.newValue) {
+                if ('main' !== (changes.optionsTab?.newValue ?? 'main')) {
                     this.openTab = changes.optionsTab.newValue
                 } else if (changes.optionsMain?.newValue.theme.color !== changes.optionsMain?.oldValue?.theme.color
                     || changes.optionsMain?.newValue.theme.schema !== changes.optionsMain?.oldValue?.theme.schema
