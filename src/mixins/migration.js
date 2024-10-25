@@ -44,7 +44,7 @@ export default class Migration {
     }
 
     isSupported(version) {
-        return semver.lte(version, this._minimumVersion)
-            && semver.gte(version, this._version)
+        return semver.gte(version, this._minimumVersion)
+            && semver.lte(version, this._version)
     }
 }

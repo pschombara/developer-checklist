@@ -135,7 +135,7 @@ const fileSelected = async file => {
         const importedOptions = JSON.parse(e.target.result.toString())
         const migration = new Migration()
 
-        if (migration.isSupported(importedOptions.version ?? '0.0.0')) {
+        if (false === migration.isSupported(importedOptions.version ?? '0.0.0')) {
             dialog.value.error.notSupported = true
 
             return
