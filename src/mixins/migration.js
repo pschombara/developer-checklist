@@ -3,7 +3,7 @@ import semver from 'semver'
 export default class Migration {
     constructor () {
         this._version = '0.10.2'
-        this._minimumVersion = '0.9.1'
+        this._minimumVersion = '0.10.0'
     }
 
     migrate = async () => {
