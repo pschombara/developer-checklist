@@ -1,16 +1,22 @@
 import {defineStore} from 'pinia'
-import Migration from '../utils/migration.ts'
+import Migration from '@/utils/migration'
 
 const migration = new Migration()
+
+enum ModuleEnum {chat, cheatSheet, gitLab, jenkins}
+
+type Modules = {
+    [key in ModuleEnum]: boolean
+}
 
 export const useMainStorage = defineStore('mainStorage', {
     state: () => ({
         modules: {
-            chat: false,
-            cheatSheet: false,
-            gitLab: false,
-            jenkins: false,
-        },
+            [ModuleEnum.chat]: false,
+            [ModuleEnum.cheatSheet]: false,
+            [ModuleEnum.gitLab]: false,
+            [ModuleEnum.jenkins]: false,
+        } as Modules,
         version: migration.version,
         themeSchema: 'system',
         themeColor: 'blue',
@@ -68,19 +74,15 @@ export const useMainStorage = defineStore('mainStorage', {
             this.openTab = openTab.optionsTab ?? 'main'
             await browser.storage.local.set({optionsTab: 'main'})
         },
-        switchModule (module, checked) {
-            if (undefined === this.modules[module]) {
-                return
-            }
-
+        switchModule (module: ModuleEnum, checked: boolean) {
             this.modules[module] = checked
             this.updateInStorage()
         },
-        setThemeSchema(schema) {
+        setThemeSchema(schema: string) {
             this.themeSchema = schema
             this.updateInStorage()
         },
-        setThemeColor(color) {
+        setThemeColor(color: string) {
             this.themeColor = color
             this.updateInStorage()
         },
@@ -94,13 +96,13 @@ export const useMainStorage = defineStore('mainStorage', {
                 defaultPopupItemsPerPage: this.defaultPopupItemsPerPage,
             }})
         },
-        changeOpenTab (tab) {
+        changeOpenTab (tab: string) {
             this.openTab = tab
         },
-        async changeMainTab (tab) {
+        async changeMainTab (tab: string) {
             await browser.storage.local.set({optionsTab: tab})
         },
-        changeDefaultPopupItemsPerPage(items) {
+        changeDefaultPopupItemsPerPage(items: number) {
             this.defaultPopupItemsPerPage = items
             this.updateInStorage()
         },
@@ -113,7 +115,7 @@ export const useMainStorage = defineStore('mainStorage', {
 
             return config
         },
-        async exportOptions(exportModules) {
+        async exportOptions(exportModules: Array<string>) {
             const exportConfig = {
                 version: migration.version,
             }
@@ -127,7 +129,7 @@ export const useMainStorage = defineStore('mainStorage', {
 
             return exportConfig
         },
-        async importOptions(importData, importModules) {
+        async importOptions(importData, importModules: Array<string>) {
             const storeOptions = {}
 
             for (const module of importModules) {

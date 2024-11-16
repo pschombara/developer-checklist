@@ -1,13 +1,17 @@
-import vuetify from '../utils/plugins/vuetify.ts'
-import themes from '../utils/plugins/themes.ts'
+import vuetify from './plugins/vuetify.ts'
+import themes from 'plugins/themes.ts'
 
 export default class Theme {
+    private registered: boolean;
+    private schema: string;
+    private color: string;
+
     constructor() {
         this.registered = false
         this.schema = 'system'
         this.color = 'blue'
     }
-    registerThemeChanged(schema, color) {
+    registerThemeChanged(schema: string, color: string) {
         this.schema = schema
         this.color = color
 
@@ -22,11 +26,11 @@ export default class Theme {
         this.registered = true
     }
 
-    changeSchema(schema) {
+    changeSchema(schema: string) {
         this.schema = schema
     }
 
-    changeColor(color) {
+    changeColor(color: string) {
         this.color = color
     }
 }

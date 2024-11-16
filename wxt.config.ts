@@ -1,10 +1,9 @@
-import {defineConfig} from 'wxt'
-import vue from "@vitejs/plugin-vue"
+import {defineConfig, UserManifest} from 'wxt'
 import vuetify from "vite-plugin-vuetify";
 
 // See https://wxt.dev/api/config.html
 
-const manifest = {
+const manifest:UserManifest = {
     name: '__MSG_extName__',
     description: '__MSG_extDescription__',
     default_locale: 'en',

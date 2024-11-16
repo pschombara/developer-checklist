@@ -20,9 +20,10 @@ const vuetify = createVuetify({
         defaultTheme: 'blueLight',
         themes: themes,
     },
-    lang: {
-        locales: { en, de },
+    locale: {
         current: browser.i18n.getUILanguage(),
+        fallback: 'en',
+        messages: { en, de },
     },
 })
 

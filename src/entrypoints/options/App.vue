@@ -1,15 +1,14 @@
 <script lang="ts" setup>
 import {computed, ref, toRaw, watch} from 'vue'
-import Theme from '../../utils/theme'
-import {useMainStorage} from '../../stores/mainStorage'
-import OptionGeneral from '../../components/options/OptionGeneral.vue'
-import ChatOptionsView from '../../components/options/ChatOptionsView.vue'
-import CheatSheet from '../../components/options/CheatSheet.vue'
-import GitLab from '../../components/options/GitLab.vue'
-import JenkinsOptionsView from '../../components/options/JenkinsOptionsView.vue'
-import JiraOptionsView from '../../components/options/JiraOptionsView.vue'
-import semver from 'semver'
-import Migration from '../../utils/migration.ts'
+import Theme from '@/utils/theme'
+import {useMainStorage} from '@/stores/mainStorage'
+import OptionGeneral from '@/components/options/OptionGeneral.vue'
+import ChatOptionsView from '@/components/options/ChatOptionsView.vue'
+import CheatSheet from '@/components/options/CheatSheet.vue'
+import GitLab from '@/components/options/GitLab.vue'
+import JenkinsOptionsView from '@/components/options/JenkinsOptionsView.vue'
+import JiraOptionsView from '@/components/options/JiraOptionsView.vue'
+import Migration from '@/utils/migration'
 
 const loading = ref(true)
 
@@ -30,9 +29,9 @@ const text = {
     settingsSaved: i18n.getMessage('settingsSaved'),
 }
 
-const exportModules = ref([])
-const importModules = ref([])
-const importAvailableModules = ref([])
+const exportModules = ref<Array<string>>([])
+const importModules = ref<Array<string>>([])
+const importAvailableModules = ref<Array<string>>([])
 const exportLink = ref()
 const importConfig = ref()
 const importOptions = ref({})
@@ -81,7 +80,7 @@ watch(modules, () => {
     }
 })
 
-const showTab = (tab) => modules.value[tab.id] ?? true
+const showTab = tab => modules.value[tab.id] ?? true
 const themeSchemaChanged = () => theme.changeSchema(mainStorage.getThemeSchema)
 const themeColorChanged = () => theme.changeColor(mainStorage.getThemeColor)
 const openRestore = () => dialog.value.restore = true
@@ -132,9 +131,11 @@ const fileSelected = async file => {
     const fileReader = new FileReader()
 
     fileReader.addEventListener('load', e => {
-        const importedOptions = JSON.parse(e.target.result.toString())
+        const importedOptions = JSON.parse(e.target?.result?.toString() ?? '')
 
-        if (false === migration.isSupported(importedOptions.version ?? '0.0.0')) {
+        const migration = new Migration()
+
+        if (!migration.isSupported(importedOptions.version ?? '0.0.0')) {
             dialog.value.error.notSupported = true
 
             return
@@ -145,7 +146,7 @@ const fileSelected = async file => {
         importModules.value = []
 
         for (const module in importedOptions) {
-            if (false === module.startsWith('options')) {
+            if (!module.startsWith('options')) {
                 continue
             }
 

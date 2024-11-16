@@ -1,7 +1,7 @@
 <script setup>
 
 import {computed} from 'vue'
-import {useMainStorage} from '../../stores/mainStorage.ts'
+import {useMainStorage} from '@/stores/mainStorage'
 
 defineEmits(['themeSchemaChanged', 'themeColorChanged'])
 

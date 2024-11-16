@@ -1,11 +1,15 @@
 import semver from 'semver'
 
 export default class Migration {
+    private readonly _minimumVersion: string;
+    private readonly _version: string;
+
     constructor () {
-        this._version = '0.10.1'
+        this._version = '0.11.0'
+        this._minimumVersion = '0.10.0'
     }
 
-    migrate = async () => {
+    migrate = async () : Promise<void> => {
         browser.storage.local.get(null, async data => {
             if (0 === Object.keys(data).length) {
                 return
@@ -38,7 +42,12 @@ export default class Migration {
         })
     }
 
-    get version () {
+    get version (): string {
         return this._version
+    }
+
+    isSupported(version: string): boolean {
+        return semver.gte(version, this._minimumVersion)
+            && semver.lte(version, this._version)
     }
 }
