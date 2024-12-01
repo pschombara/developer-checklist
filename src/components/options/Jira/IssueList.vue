@@ -1,7 +1,7 @@
-<script setup>
+<script lang="ts" setup>
 
-import Helper from '../../../mixins/helper'
-import {useIssueStorage} from '../../../stores/issues.js'
+import Helper from '@/utils/helper'
+import {useIssueStorage} from '@/stores/issues'
 import {computed, ref} from 'vue'
 
 const issueStorage = useIssueStorage()
@@ -13,7 +13,7 @@ const issueHeader = [
     {title: '', key: 'action', align: 'end', sortable: false},
 ]
 
-const i18n = chrome.i18n
+const i18n = browser.i18n
 
 const text = {
     reload: i18n.getMessage('Reload'),

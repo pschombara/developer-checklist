@@ -1,14 +1,14 @@
-<script setup>
+<script lang="ts" setup>
 
 import {computed, ref} from 'vue'
-import {useJenkinsStorage} from '../../stores/jenkins.js'
+import {useJenkinsStorage} from '@/stores/jenkins'
 import JenkinsGeneral from './Jenkins/JenkinsGeneral.vue'
 import JenkinsCategories from './Jenkins/JenkinsCategories.vue'
 import JenkinsBuilds from './Jenkins/JenkinsBuilds.vue'
-import Debounce from '../../mixins/debounce.js'
+import Debounce from '../../utils/debounce.ts'
 
 const jenkinsStorage = useJenkinsStorage()
-const i18n = chrome.i18n
+const i18n = browser.i18n
 const tab = ref(null)
 const loaded = computed(() => {
     return jenkinsStorage.isLoaded

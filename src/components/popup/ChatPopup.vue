@@ -1,18 +1,18 @@
-<script setup>
+<script lang="ts" setup>
 
-import {useChatStorage} from '../../stores/chat.js'
+import {useChatStorage} from '@/stores/chat'
 import {computed, ref, watch} from 'vue'
-import ChatStatus from '../../mixins/chat/status.js'
-import {useIssueStorage} from '../../stores/issues.js'
-import {usePopupStorage} from '../../stores/popup.js'
-import {useMainStorage} from '../../stores/mainStorage.js'
+import {useIssueStorage} from '@/stores/issues'
+import {usePopupStorage} from '@/stores/popup'
+import {useMainStorage} from '@/stores/mainStorage'
+import {ChatStatusEnum} from "@/types/chat/enum/ChatStatusEnum";
 
 const chatStorage = useChatStorage()
 const issueStorage = useIssueStorage()
 const popUpStorage = usePopupStorage()
 const mainStorage = useMainStorage()
 
-const i18n = chrome.i18n
+const i18n = browser.i18n
 
 const client = ref(null)
 const room = ref(null)
@@ -27,7 +27,7 @@ const messages = computed(() => chatStorage.getMessages(client.value))
 const validClient = computed(() => rooms.value.length > 0 && messages.value.length > 0)
 
 const status = computed(() => chatStorage.getStatus)
-const sendReady = computed(() => null !== client.value && null !== room.value && null !== message.value && ChatStatus.READY === chatStorage.getStatus)
+const sendReady = computed(() => null !== client.value && null !== room.value && null !== message.value && ChatStatusEnum.Ready === chatStorage.getStatus)
 
 const issues = computed(() => issueStorage.getIssues.map(issue => issue.key))
 
@@ -59,12 +59,12 @@ const load = async () => {
 }
 
 const showSendButton = computed(() => {
-    return ChatStatus.READY === status.value || ChatStatus.PROGRESS === status.value
+    return ChatStatusEnum.Ready === status.value || ChatStatusEnum.Progress === status.value
 })
 
 const openOptions = tab => {
     mainStorage.changeMainTab(tab)
-    chrome.runtime.openOptionsPage()
+    browser.runtime.openOptionsPage()
 }
 
 const send = async () => chatStorage.sendMessage(client.value, room.value, message.value, attachedIssues.value)
@@ -128,11 +128,11 @@ load()
                             large
                             @click="send"
                         >
-                            <v-icon v-if="ChatStatus.READY === status">fas fa-play</v-icon>
-                            <v-icon v-if="ChatStatus.PROGRESS === status">fas fa-circle-notch fa-spin</v-icon>
+                            <v-icon v-if="ChatStatusEnum.Ready === status">fas fa-play</v-icon>
+                            <v-icon v-if="ChatStatusEnum.Progress === status">fas fa-circle-notch fa-spin</v-icon>
                         </v-btn>
-                        <v-icon v-if="ChatStatus.SUCCESS === status" color="success">fas fa-check</v-icon>
-                        <v-icon v-if="ChatStatus.ERROR === status" color="error">fas fa-times</v-icon>
+                        <v-icon v-if="ChatStatusEnum.Success === status" color="success">fas fa-check</v-icon>
+                        <v-icon v-if="ChatStatusEnum.Error === status" color="error">fas fa-times</v-icon>
                     </v-col>
                 </v-row>
                 <v-row>

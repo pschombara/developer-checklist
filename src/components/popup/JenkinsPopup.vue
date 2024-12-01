@@ -1,13 +1,14 @@
-<script setup>
+<script lang="ts" setup>
+
 import _ from 'lodash'
 import CopiedToClipboard from './mixed/CopiedToClipboard.vue'
 import {computed, ref} from 'vue'
-import {useJenkinsStorage} from '../../stores/jenkins.js'
-import {useIssueStorage} from '../../stores/issues.js'
-import {useMainStorage} from '../../stores/mainStorage.js'
+import {useJenkinsStorage} from '@/stores/jenkins.js'
+import {useIssueStorage} from '@/stores/issues.js'
+import {useMainStorage} from '@/stores/mainStorage.js'
 import BuildSettings from '../shared/Jenkins/BuildSettings.vue'
 
-const i18n = chrome.i18n
+const i18n = browser.i18n
 const optionsValid = ref(false)
 const issue = ref(null)
 const message = ref()
@@ -106,7 +107,7 @@ const load = async () => {
 
 const openOptions = tab => {
     mainStorage.changeMainTab(tab)
-    chrome.runtime.openOptionsPage()
+    browser.runtime.openOptionsPage()
 }
 
 const copy = async () => {
@@ -141,7 +142,7 @@ const openBuild = (job, build) => {
         return
     }
 
-    chrome.tabs.create({url})
+    browser.tabs.create({url})
 }
 
 const copyBuild = async (job, build) => {

@@ -1,23 +1,17 @@
-<script setup>
+<script lang="ts" setup>
 
 import {computed, ref} from 'vue'
-import Helper from '../../../mixins/helper.js'
-import {useChatStorage} from '../../../stores/chat.js'
+import Helper from '@/utils/helper.ts'
+import {useChatStorage} from '@/stores/chat.ts'
 
-const props = defineProps({
-    client: {
-        type: String,
-        required: true,
-    },
-    urlStart: {
-        type: String,
-        required: true,
-    },
-})
+const props = defineProps<{
+    client: string,
+    urlStart: string
+}>()
 
 const sortRoom = ref(null)
 
-const i18n = chrome.i18n
+const i18n = browser.i18n
 
 const text = {
     add: i18n.getMessage('Add'),

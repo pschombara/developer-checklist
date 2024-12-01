@@ -1,9 +1,10 @@
-<script setup>
-import {useJiraStorage} from '../../stores/jira.js'
+<script lang="ts" setup>
+
+import {useJiraStorage} from '@/stores/jira.js'
 import {computed, ref} from 'vue'
-import {usePopupStorage} from '../../stores/popup.js'
-import {useIssueStorage} from '../../stores/issues.js'
-import {useMainStorage} from '../../stores/mainStorage.js'
+import {usePopupStorage} from '@/stores/popup.js'
+import {useIssueStorage} from '@/stores/issues.js'
+import {useMainStorage} from '@/stores/mainStorage.js'
 import JiraChecklist from './Jira/JiraChecklist.vue'
 import PopupTemplates from './Jira/PopupTemplates.vue'
 
@@ -11,13 +12,13 @@ const jiraStorage = useJiraStorage()
 const popupStorage = usePopupStorage()
 const issueStorage = useIssueStorage()
 
-const i18n = chrome.i18n
+const i18n = browser.i18n
 const text = {
-    openWithIssue: chrome.i18n.getMessage('openWithIssue'),
-    startWork: chrome.i18n.getMessage('startWork'),
-    stopWork: chrome.i18n.getMessage('stopWork'),
-    helpWork: chrome.i18n.getMessage('helpWork'),
-    helpPin: chrome.i18n.getMessage('helpPin'),
+    openWithIssue: browser.i18n.getMessage('openWithIssue'),
+    startWork: browser.i18n.getMessage('startWork'),
+    stopWork: browser.i18n.getMessage('stopWork'),
+    helpWork: browser.i18n.getMessage('helpWork'),
+    helpPin: browser.i18n.getMessage('helpPin'),
 }
 
 const checklists = computed(() => jiraStorage.getChecklists.filter(checklist => checklist.enabled))
@@ -41,7 +42,7 @@ const stopWork = issue => issueStorage.stopWork(issue)
 
 const openOptions = tab => {
     useMainStorage().changeMainTab(tab)
-    chrome.runtime.openOptionsPage()
+    browser.runtime.openOptionsPage()
 }
 
 const load = async () => {

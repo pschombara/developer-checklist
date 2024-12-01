@@ -1,16 +1,13 @@
-<script setup>
+<script lang="ts" setup>
 
 import {computed, ref} from 'vue'
-import {useChatStorage} from '../../../stores/chat.js'
+import {useChatStorage} from '@/stores/chat'
 
-const props = defineProps({
-    client: {
-        type: String,
-        required: true,
-    },
-})
+const props = defineProps<{
+    client: string
+}>()
 
-const i18n = chrome.i18n
+const i18n = browser.i18n
 
 const text = {
     add: i18n.getMessage('Add'),
@@ -32,6 +29,7 @@ const defaultEditMsg = {
     id: null,
     name: '',
     content: '',
+    title: '',
     saveButton: text.add,
 }
 

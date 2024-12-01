@@ -1,8 +1,9 @@
-<script setup>
+<script lang="ts" setup>
+
 import CopiedToClipboard from './mixed/CopiedToClipboard.vue'
 import {computed, ref} from 'vue'
-import {useCheatSheetStorage} from '../../stores/cheatSheet.js'
-import {useMainStorage} from '../../stores/mainStorage.js'
+import {useCheatSheetStorage} from '@/stores/cheatSheet'
+import {useMainStorage} from '@/stores/mainStorage'
 
 const cheatSheetStorage = useCheatSheetStorage()
 const mainStorage = useMainStorage()
@@ -10,7 +11,7 @@ const mainStorage = useMainStorage()
 const message = ref()
 const search = ref('')
 
-const i18n = chrome.i18n
+const i18n = browser.i18n
 
 const text = {
     close: i18n.getMessage('Close'),
@@ -35,7 +36,7 @@ const load = async () => {
 
 const openOptions = tab => {
     mainStorage.changeMainTab(tab)
-    chrome.runtime.openOptionsPage()
+    browser.runtime.openOptionsPage()
 }
 
 const copy = async item => {

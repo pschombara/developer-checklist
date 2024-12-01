@@ -1,29 +1,21 @@
-<script setup>
-import Helper from '../../../../mixins/helper'
-import {Uuid} from '../../../../mixins/uuid'
+<script lang="ts" setup>
+
+import Helper from '@/utils/helper'
+import {Uuid} from '@/utils/uuid'
 import {ref, watch} from 'vue'
-import {useJiraStorage} from '../../../../stores/jira.js'
+import {useJiraStorage} from '@/stores/jira.ts'
 
 const jiraStorage = useJiraStorage()
 
-const props = defineProps({
-    uuid: {
-        type: String,
-        required: true,
-    },
-    uid: {
-        type: String,
-        required: true,
-    },
-    text: {
-        type: Object,
-        required: true,
-    },
-})
+const props = defineProps<{
+    uuid: string,
+    uid: string,
+    text: object
+}>()
 
 const emits = defineEmits(['close'])
 
-const i18n = chrome.i18n
+const i18n = browser.i18n
 
 const text = props.text
 const header = [
@@ -216,7 +208,7 @@ getCategory()
                         color="tertiary"
                         @click="openRemoveEntry(item)"></v-btn>
                     <v-btn
-                        v-if="sortItem && sortItem.id !== item.id"
+                        v-if="sortItem && sortItem?.id !== item.id"
                         variant="plain"
                         icon="fas fa-sort-up"
                         size="small"

@@ -1,22 +1,22 @@
-<script setup>
+<script lang="ts" setup>
 import {computed, ref} from 'vue'
-import {useJiraStorage} from '../../stores/jira.js'
+import {useJiraStorage} from '@/stores/jira'
 import JiraChecklists from './Jira/JiraChecklists.vue'
 import JiraGeneral from './Jira/JiraGeneral.vue'
 import JiraTemplates from './Jira/JiraTemplates.vue'
 import IssueList from './Jira/IssueList.vue'
-import Debounce from '../../mixins/debounce.js'
+import Debounce from '../../utils/debounce.ts'
 
 const jiraStorage = useJiraStorage()
-const i18n = chrome.i18n
+const i18n = browser.i18n
 const loaded = computed(() => {
     return jiraStorage.isLoaded
 })
 
 const text = {
-    general: chrome.i18n.getMessage('General'),
-    checklists: chrome.i18n.getMessage('Checklists'),
-    templates: chrome.i18n.getMessage('Templates'),
+    general: browser.i18n.getMessage('General'),
+    checklists: browser.i18n.getMessage('Checklists'),
+    templates: browser.i18n.getMessage('Templates'),
     issues: 'Issues',
 }
 

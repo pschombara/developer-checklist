@@ -1,11 +1,12 @@
-<script setup>
+<script lang="ts" setup>
+
 import _ from 'lodash'
 import CopiedToClipboard from './mixed/CopiedToClipboard.vue'
-import {useGitLabStorage} from '../../stores/gitlab.js'
+import {useGitLabStorage} from '@/stores/gitlab.js'
 import {computed, ref} from 'vue'
-import {useMainStorage} from '../../stores/mainStorage.js'
-import {useIssueStorage} from '../../stores/issues.js'
-import {useJenkinsStorage} from '../../stores/jenkins.js'
+import {useMainStorage} from '@/stores/mainStorage.js'
+import {useIssueStorage} from '@/stores/issues.js'
+import {useJenkinsStorage} from '@/stores/jenkins.js'
 import ProjectSettings from '../shared/GitLab/ProjectSettings.vue'
 
 const gitlabStorage = useGitLabStorage()
@@ -13,7 +14,7 @@ const mainStorage = useMainStorage()
 const issueStorage = useIssueStorage()
 const jenkinsStorage = useJenkinsStorage()
 
-const i18n = chrome.i18n
+const i18n = browser.i18n
 const text = {
     openOptions: i18n.getMessage('openOptions'),
     project: i18n.getMessage('Project'),
@@ -111,7 +112,7 @@ const load = async () => {
 
 const openOptions = tab => {
     mainStorage.changeMainTab(tab)
-    chrome.runtime.openOptionsPage()
+    browser.runtime.openOptionsPage()
 }
 
 const copy = async () => {
@@ -135,7 +136,7 @@ const openMergeRequest = (id, number) => {
         return
     }
 
-    chrome.tabs.create({url})
+    browser.tabs.create({url})
 }
 
 const copyMergeRequest = async (id, number, source) => {
@@ -162,7 +163,7 @@ const openJenkinsParamPage = (projectId, branch) => {
 
     const url = `${host}job/${ciBuild.job}/parambuild?delay=0sec&branch=${branch}`
 
-    chrome.tabs.create({url})
+    browser.tabs.create({url})
 }
 
 const hasCiBuild = projectId => {

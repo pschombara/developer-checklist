@@ -1,17 +1,15 @@
-<script setup>
-import {computed} from 'vue'
-import {useChatStorage} from '../../../stores/chat.js'
+<script lang="ts" setup>
 
-const props = defineProps({
-    client: {
-        type: String,
-        required: true,
-    },
-})
+import {computed} from 'vue'
+import {useChatStorage} from '@/stores/chat'
+
+const props = defineProps<{
+    client: string
+}>()
 
 const text = {
-    main: chrome.i18n.getMessage('MainClient'),
-    enabled: chrome.i18n.getMessage('ClientEnabled'),
+    main: browser.i18n.getMessage('MainClient'),
+    enabled: browser.i18n.getMessage('ClientEnabled'),
 }
 
 const chatStorage = useChatStorage()

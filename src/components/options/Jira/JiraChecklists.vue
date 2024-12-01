@@ -1,6 +1,7 @@
-<script setup>
+<script lang="ts" setup>
+
 import {computed, ref} from 'vue'
-import {useJiraStorage} from '../../../stores/jira.js'
+import {useJiraStorage} from '@/stores/jira'
 import ChecklistData from './Checklists/ChecklistData.vue'
 
 const tab = ref(null)

@@ -1,23 +1,18 @@
-<script setup>
-import {useJenkinsStorage} from '../../../stores/jenkins.js'
+<script lang="ts" setup>
+
+import {useJenkinsStorage} from '@/stores/jenkins.js'
 import {computed, ref} from 'vue'
 
 const jenkinsStore = useJenkinsStorage()
 
-const props = defineProps({
-    build: {
-        type: Object,
-        required: true,
-    },
-    create: {
-        type: Boolean,
-        required: true,
-    },
-})
+const props = defineProps<{
+    build: object,
+    create: boolean,
+}>()
 
 const emits = defineEmits(['close'])
 
-const i18n = chrome.i18n
+const i18n = browser.i18n
 
 const text = {
     cancel: i18n.getMessage('Cancel'),

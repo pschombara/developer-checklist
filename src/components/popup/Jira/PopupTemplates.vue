@@ -1,9 +1,10 @@
-<script setup>
+<script lang="ts" setup>
+
 import CopiedToClipboard from '../mixed/CopiedToClipboard.vue'
 import {computed, ref} from 'vue'
-import {useJiraStorage} from '../../../stores/jira.js'
+import {useJiraStorage} from '@/stores/jira'
 
-const i18n = chrome.i18n
+const i18n = browser.i18n
 const jiraStorage = useJiraStorage()
 
 const text = {

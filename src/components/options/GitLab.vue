@@ -1,9 +1,9 @@
-<script setup>
-import Helper from '../../mixins/helper'
-import {useGitLabStorage} from '../../stores/gitlab.js'
+<script lang="ts" setup>
+import Helper from '../../utils/helper'
+import {useGitLabStorage} from '@/stores/gitlab.js'
 import {computed, ref} from 'vue'
-import {useJenkinsStorage} from '../../stores/jenkins.js'
-import Debounce from '../../mixins/debounce.js'
+import {useJenkinsStorage} from '@/stores/jenkins.js'
+import Debounce from '../../utils/debounce.ts'
 import ProjectSettings from '../shared/GitLab/ProjectSettings.vue'
 
 const gitLabStorage = useGitLabStorage()
@@ -12,7 +12,7 @@ const jenkinsStorage = useJenkinsStorage()
 const loaded = computed(() => {
     return gitLabStorage.isLoaded
 })
-const i18n = chrome.i18n
+const i18n = browser.i18n
 
 const text = {
     host: i18n.getMessage('Host'),

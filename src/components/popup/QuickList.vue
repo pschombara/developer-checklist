@@ -1,10 +1,10 @@
-<script setup>
+<script lang="ts" setup>
 
 import {computed, ref} from 'vue'
-import {useIssueStorage} from '../../stores/issues.js'
-import {useJiraStorage} from '../../stores/jira.js'
+import {useIssueStorage} from '@/stores/issues.js'
+import {useJiraStorage} from '@/stores/jira.js'
 
-const i18n = chrome.i18n
+const i18n = browser.i18n
 const text = {
     lastOpened: i18n.getMessage('lastOpenedIssues'),
     open: i18n.getMessage('openIssue'),
@@ -32,7 +32,7 @@ const jiraUrl = computed(() => jiraStorage.getUrl)
 const boards = computed(() => jiraStorage.getBoards.map(board => board.key))
 const board = ref('')
 
-const openIssue = issueNumber => chrome.tabs.create({url: `${jiraUrl.value}/browse/${issueNumber}`})
+const openIssue = issueNumber => browser.tabs.create({url: `${jiraUrl.value}/browse/${issueNumber}`})
 const issueNumber = ref(null)
 
 const checkButtonEnabled = () => '' !== (issueNumber.value ?? '') && boards.value.includes(board.value ?? '')

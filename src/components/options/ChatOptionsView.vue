@@ -1,10 +1,10 @@
-<script setup>
-import {useChatStorage} from '../../stores/chat.js'
+<script lang="ts" setup>
+import {useChatStorage} from '@/stores/chat'
 import {ref} from 'vue'
 import ChatMessages from './Chat/ChatMessages.vue'
 import ChatGeneral from './Chat/ChatGeneral.vue'
 import ChatRooms from './Chat/ChatRooms.vue'
-import Debounce from '../../mixins/debounce.js'
+import Debounce from '../../utils/debounce.ts'
 
 const chatStorage = useChatStorage()
 
@@ -26,9 +26,9 @@ const clients = [
 const selectedClient = ref()
 
 const text = {
-    rooms: chrome.i18n.getMessage('Rooms'),
-    messages: chrome.i18n.getMessage('Messages'),
-    general: chrome.i18n.getMessage('General'),
+    rooms: browser.i18n.getMessage('Rooms'),
+    messages: browser.i18n.getMessage('Messages'),
+    general: browser.i18n.getMessage('General'),
 }
 
 const debounce = new Debounce()

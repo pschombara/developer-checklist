@@ -27,3 +27,7 @@ pnpm-debug.log*
 *.pub
 *.zip
 /artifacts
+
+# wxt
+.wxt
+.output

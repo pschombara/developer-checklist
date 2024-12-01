@@ -1,54 +1,44 @@
-import vue from 'eslint-plugin-vue'
-import prettier from 'eslint-plugin-prettier'
 import globals from 'globals'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import js from '@eslint/js'
-import { FlatCompat } from '@eslint/eslintrc'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all,
-})
+import jsLint from "@eslint/js"
+import tsLint from "typescript-eslint"
+import vueLint from "eslint-plugin-vue"
+import stylistic from "stylistic/eslint-plugin"
 
-export default [...compat.extends('plugin:vue/vue3-recommended', 'prettier'), {
-    files: ["**/*.js", "**/*.vue"],
-    plugins: {
-        vue,
-        prettier,
+
+export default [
+    {
+        files: ["**/*.{js,ts}"],
+        languageOptions: {
+            parser: "@typescript-eslint/parser",
+            parserOptions: {
+                sourceType: "module"
+            }
+        }
     },
-
-    languageOptions: {
-        globals: {
-            ...globals.node,
-            ...globals.webextensions,
-        },
-
-        ecmaVersion: 'latest',
-        sourceType: 'module',
+    {
+        files: ["**/*.vue"],
+        languageOptions: {
+            parser: "vue-eslint-parser",
+            parserOptions: {
+                parser: "@typescript-eslint/parser",
+                sourceType: "module"
+            }
+        }
     },
-
-    rules: {
-        'no-console': 'warn',
-        'no-debugger': 'warn',
-
-        indent: ['error', 4, {
-            SwitchCase: 1,
-        }],
-
-        'linebreak-style': ['error', 'unix'],
-        quotes: ['error', 'single'],
-        semi: ['error', 'never'],
-        'comma-dangle': ['error', 'always-multiline'],
-
-        'vue/valid-v-slot': ['error', {
-            allowModifiers: true,
-        }],
-
-        'vue/no-v-for-template-key-on-child': 2,
-        'vue/no-v-for-template-key': 0,
+    {
+        languageOptions: {
+            globals: {...globals.browser, ...globals.node}
+        }
     },
-}]
+    jsLint.configs.recommended,
+    ...tsLint.configs.recommended,
+    ...vueLint.configs["flat/essential"],
+    stylistic.configs["disable-legacy"],
+    stylistic.configs.customize({
+        indent: 4,
+        quotes: "single",
+        semi: false,
+        commaDangle: "never",
+    })
+]
