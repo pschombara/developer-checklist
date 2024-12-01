@@ -1,13 +1,11 @@
-<script setup>
-import {computed} from 'vue'
-import {useChatStorage} from '../../../stores/chat.ts'
+<script lang="ts" setup>
 
-const props = defineProps({
-    client: {
-        type: String,
-        required: true,
-    },
-})
+import {computed} from 'vue'
+import {useChatStorage} from '@/stores/chat'
+
+const props = defineProps<{
+    client: string
+}>()
 
 const text = {
     main: browser.i18n.getMessage('MainClient'),

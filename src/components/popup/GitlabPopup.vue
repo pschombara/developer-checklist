@@ -1,11 +1,12 @@
-<script setup>
+<script lang="ts" setup>
+
 import _ from 'lodash'
 import CopiedToClipboard from './mixed/CopiedToClipboard.vue'
-import {useGitLabStorage} from '../../stores/gitlab.ts'
+import {useGitLabStorage} from '@/stores/gitlab.js'
 import {computed, ref} from 'vue'
-import {useMainStorage} from '../../stores/mainStorage.ts'
-import {useIssueStorage} from '../../stores/issues.ts'
-import {useJenkinsStorage} from '../../stores/jenkins.ts'
+import {useMainStorage} from '@/stores/mainStorage.js'
+import {useIssueStorage} from '@/stores/issues.js'
+import {useJenkinsStorage} from '@/stores/jenkins.js'
 import ProjectSettings from '../shared/GitLab/ProjectSettings.vue'
 
 const gitlabStorage = useGitLabStorage()

@@ -1,14 +1,12 @@
-<script setup>
-import {computed, ref} from 'vue'
-import {useJenkinsStorage} from '../../../stores/jenkins.ts'
-import {useGitLabStorage} from '../../../stores/gitlab.ts'
+<script lang="ts" setup>
 
-const props = defineProps({
-    project: {
-        type: Object,
-        required: true,
-    },
-})
+import {computed, ref} from 'vue'
+import {useJenkinsStorage} from '@/stores/jenkins'
+import {useGitLabStorage} from '@/stores/gitlab'
+
+const props = defineProps<{
+    project: object
+}>()
 const emits = defineEmits(['close'])
 
 const jenkinsStorage = useJenkinsStorage()

@@ -1,8 +1,8 @@
-<script setup>
+<script lang="ts" setup>
 
-import Helper from '../../../utils/helper'
+import Helper from '@/utils/helper'
 import {computed} from 'vue'
-import {useJenkinsStorage} from '../../../stores/jenkins.ts'
+import {useJenkinsStorage} from '@/stores/jenkins.ts'
 
 const i18n = browser.i18n
 

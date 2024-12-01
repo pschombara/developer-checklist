@@ -1,19 +1,13 @@
-<script setup>
+<script lang="ts" setup>
 
 import {computed, ref} from 'vue'
-import Helper from '../../../utils/helper.ts'
-import {useChatStorage} from '../../../stores/chat.ts'
+import Helper from '@/utils/helper.ts'
+import {useChatStorage} from '@/stores/chat.ts'
 
-const props = defineProps({
-    client: {
-        type: String,
-        required: true,
-    },
-    urlStart: {
-        type: String,
-        required: true,
-    },
-})
+const props = defineProps<{
+    client: string,
+    urlStart: string
+}>()
 
 const sortRoom = ref(null)
 

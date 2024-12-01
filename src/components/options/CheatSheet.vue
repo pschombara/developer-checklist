@@ -1,7 +1,7 @@
-<script setup>
+<script lang="ts" setup>
 
 import {computed, ref} from 'vue'
-import {useCheatSheetStorage} from '../../stores/cheatSheet.ts'
+import {useCheatSheetStorage} from '@/stores/cheatSheet'
 import Debounce from '../../utils/debounce.ts'
 
 const i18n = browser.i18n

@@ -1,8 +1,8 @@
-<script setup>
+<script lang="ts" setup>
 
 import {computed, ref} from 'vue'
-import {useIssueStorage} from '../../stores/issues.ts'
-import {useJiraStorage} from '../../stores/jira.ts'
+import {useIssueStorage} from '@/stores/issues.js'
+import {useJiraStorage} from '@/stores/jira.js'
 
 const i18n = browser.i18n
 const text = {

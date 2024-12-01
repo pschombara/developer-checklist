@@ -1,6 +1,6 @@
-<script setup>
+<script lang="ts" setup>
 import {computed, ref} from 'vue'
-import {useJiraStorage} from '../../stores/jira.ts'
+import {useJiraStorage} from '@/stores/jira'
 import JiraChecklists from './Jira/JiraChecklists.vue'
 import JiraGeneral from './Jira/JiraGeneral.vue'
 import JiraTemplates from './Jira/JiraTemplates.vue'

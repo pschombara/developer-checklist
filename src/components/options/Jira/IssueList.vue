@@ -1,7 +1,7 @@
-<script setup>
+<script lang="ts" setup>
 
-import Helper from '../../../utils/helper'
-import {useIssueStorage} from '../../../stores/issues.ts'
+import Helper from '@/utils/helper'
+import {useIssueStorage} from '@/stores/issues'
 import {computed, ref} from 'vue'
 
 const issueStorage = useIssueStorage()

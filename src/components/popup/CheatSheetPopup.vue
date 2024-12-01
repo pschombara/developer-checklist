@@ -1,8 +1,9 @@
-<script setup>
+<script lang="ts" setup>
+
 import CopiedToClipboard from './mixed/CopiedToClipboard.vue'
 import {computed, ref} from 'vue'
-import {useCheatSheetStorage} from '../../stores/cheatSheet.ts'
-import {useMainStorage} from '../../stores/mainStorage.ts'
+import {useCheatSheetStorage} from '@/stores/cheatSheet'
+import {useMainStorage} from '@/stores/mainStorage'
 
 const cheatSheetStorage = useCheatSheetStorage()
 const mainStorage = useMainStorage()

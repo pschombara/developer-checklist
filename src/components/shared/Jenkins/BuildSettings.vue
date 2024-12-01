@@ -1,19 +1,14 @@
-<script setup>
-import {useJenkinsStorage} from '../../../stores/jenkins.ts'
+<script lang="ts" setup>
+
+import {useJenkinsStorage} from '@/stores/jenkins.js'
 import {computed, ref} from 'vue'
 
 const jenkinsStore = useJenkinsStorage()
 
-const props = defineProps({
-    build: {
-        type: Object,
-        required: true,
-    },
-    create: {
-        type: Boolean,
-        required: true,
-    },
-})
+const props = defineProps<{
+    build: object,
+    create: boolean,
+}>()
 
 const emits = defineEmits(['close'])
 

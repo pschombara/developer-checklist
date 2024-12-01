@@ -1,5 +1,5 @@
-<script setup>
-import {useChatStorage} from '../../stores/chat.ts'
+<script lang="ts" setup>
+import {useChatStorage} from '@/stores/chat'
 import {ref} from 'vue'
 import ChatMessages from './Chat/ChatMessages.vue'
 import ChatGeneral from './Chat/ChatGeneral.vue'

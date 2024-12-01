@@ -1,9 +1,10 @@
-<script setup>
-import {useJiraStorage} from '../../stores/jira.ts'
+<script lang="ts" setup>
+
+import {useJiraStorage} from '@/stores/jira.js'
 import {computed, ref} from 'vue'
-import {usePopupStorage} from '../../stores/popup.ts'
-import {useIssueStorage} from '../../stores/issues.ts'
-import {useMainStorage} from '../../stores/mainStorage.ts'
+import {usePopupStorage} from '@/stores/popup.js'
+import {useIssueStorage} from '@/stores/issues.js'
+import {useMainStorage} from '@/stores/mainStorage.js'
 import JiraChecklist from './Jira/JiraChecklist.vue'
 import PopupTemplates from './Jira/PopupTemplates.vue'
 

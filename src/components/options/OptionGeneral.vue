@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 
 import {computed} from 'vue'
 import {useMainStorage} from '@/stores/mainStorage'

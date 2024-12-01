@@ -1,11 +1,11 @@
-<script setup>
+<script lang="ts" setup>
 
-import {useChatStorage} from '../../stores/chat.ts'
+import {useChatStorage} from '@/stores/chat'
 import {computed, ref, watch} from 'vue'
-import ChatStatus from '../../utils/chat/status.ts'
-import {useIssueStorage} from '../../stores/issues.ts'
-import {usePopupStorage} from '../../stores/popup.ts'
-import {useMainStorage} from '../../stores/mainStorage.ts'
+import ChatStatus from '@/utils/chat/status.ts'
+import {useIssueStorage} from '@/stores/issues'
+import {usePopupStorage} from '@/stores/popup'
+import {useMainStorage} from '@/stores/mainStorage'
 
 const chatStorage = useChatStorage()
 const issueStorage = useIssueStorage()

@@ -1,7 +1,7 @@
-<script setup>
+<script lang="ts" setup>
 
 import {computed, ref} from 'vue'
-import {useJiraStorage} from '../../../stores/jira.ts'
+import {useJiraStorage} from '@/stores/jira'
 
 const jiraStorage = useJiraStorage()
 

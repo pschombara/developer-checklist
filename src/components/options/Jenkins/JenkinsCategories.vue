@@ -1,7 +1,7 @@
-<script setup>
+<script lang="ts" setup>
 
 import {computed, ref} from 'vue'
-import {useJenkinsStorage} from '../../../stores/jenkins.ts'
+import {useJenkinsStorage} from '@/stores/jenkins.ts'
 
 const i18n = browser.i18n
 const jenkinsStorage = useJenkinsStorage()
@@ -17,6 +17,7 @@ const text = {
     delete: i18n.getMessage('Delete'),
     label: i18n.getMessage('Label'),
     name: i18n.getMessage('Name'),
+    subTitleDeleteCategory: i18n.getMessage('SubTitleDeleteCategory')
 }
 
 const categoryRules = [

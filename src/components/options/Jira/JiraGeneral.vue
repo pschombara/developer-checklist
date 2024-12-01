@@ -1,7 +1,7 @@
-<script setup>
+<script lang="ts" setup>
 import Helper from '../../../utils/helper'
 import {computed, ref} from 'vue'
-import {useJiraStorage} from '../../../stores/jira.ts'
+import {useJiraStorage} from '@/stores/jira'
 
 const jiraStorage = useJiraStorage()
 const i18n = browser.i18n

@@ -1,9 +1,9 @@
-<script setup>
+<script lang="ts" setup>
 
 import InnerList from './InnerList.vue'
 import {computed, ref} from 'vue'
-import {useJiraStorage} from '../../../../stores/jira.ts'
-import {useIconStorage} from '../../../../stores/icons.ts'
+import {useJiraStorage} from '@/stores/jira.ts'
+import {useIconStorage} from '@/stores/icons.ts'
 
 const i18n = browser.i18n
 const text = {
@@ -28,19 +28,14 @@ const textRules = [
     value => value.length <= 15 || i18n.getMessage('errMaxLength', '15'),
 ]
 
-const props = defineProps({
-    uuid: {
-        type: String,
-        required: true,
-    },
-})
+const props = defineProps<{uuid: string}>()
 
 const jiraStorage = useJiraStorage()
 const iconStorage = useIconStorage()
 
 const sortChecklist = ref(null)
 const openChecklistDialog = ref(false)
-const categoryId = ref(null)
+const categoryId = ref<string>('')
 
 const dialogBtnSuccess = ref({
     open: false,
@@ -161,7 +156,7 @@ const openCategory = uid => {
 }
 
 const closeCategory = () => {
-    categoryId.value = null
+    categoryId.value = ''
     openChecklistDialog.value = false
 }
 
@@ -251,8 +246,8 @@ const categoryInsertAfter = item => {
                                     >
                                         <template #prepend-item>
                                             <v-list-item
-                                                v-if="null !== dialogBtnSuccess.item.comment"
-                                                @click="dialogBtnSuccess.item.comment = null"
+                                                v-if="'' !== dialogBtnSuccess.item.comment"
+                                                @click="dialogBtnSuccess.item.comment = ''"
                                             >
                                                 <v-list-item-title>No Comment (TODO)</v-list-item-title>
                                             </v-list-item>

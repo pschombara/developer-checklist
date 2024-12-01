@@ -1,6 +1,7 @@
-<script setup>
+<script lang="ts" setup>
+
 import {computed, ref} from 'vue'
-import {useJenkinsStorage} from '../../../stores/jenkins.ts'
+import {useJenkinsStorage} from '@/stores/jenkins'
 import BuildSettings from '../../shared/Jenkins/BuildSettings.vue'
 
 const i18n = browser.i18n

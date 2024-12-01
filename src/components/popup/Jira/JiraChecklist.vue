@@ -1,19 +1,13 @@
-<script setup>
+<script lang="ts" setup>
 
 import {computed} from 'vue'
-import {useJiraStorage} from '../../../stores/jira.ts'
-import {useIssueStorage} from '../../../stores/issues.ts'
+import {useJiraStorage} from '@/stores/jira.js'
+import {useIssueStorage} from '@/stores/issues.js'
 
-const property = defineProps({
-    uuid: {
-        type: String,
-        required: true,
-    },
-    issue: {
-        type: String,
-        required: true,
-    },
-})
+const property = defineProps<{
+    uuid: string,
+    issue: string
+}>()
 
 const jiraStorage = useJiraStorage()
 const issueStorage = useIssueStorage()

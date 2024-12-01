@@ -1,8 +1,8 @@
-<script setup>
+<script lang="ts" setup>
 import Helper from '../../utils/helper'
-import {useGitLabStorage} from '../../stores/gitlab.ts'
+import {useGitLabStorage} from '@/stores/gitlab.js'
 import {computed, ref} from 'vue'
-import {useJenkinsStorage} from '../../stores/jenkins.ts'
+import {useJenkinsStorage} from '@/stores/jenkins.js'
 import Debounce from '../../utils/debounce.ts'
 import ProjectSettings from '../shared/GitLab/ProjectSettings.vue'
 

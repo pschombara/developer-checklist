@@ -1,10 +1,11 @@
-<script setup>
+<script lang="ts" setup>
+
 import _ from 'lodash'
 import CopiedToClipboard from './mixed/CopiedToClipboard.vue'
 import {computed, ref} from 'vue'
-import {useJenkinsStorage} from '../../stores/jenkins.ts'
-import {useIssueStorage} from '../../stores/issues.ts'
-import {useMainStorage} from '../../stores/mainStorage.ts'
+import {useJenkinsStorage} from '@/stores/jenkins.js'
+import {useIssueStorage} from '@/stores/issues.js'
+import {useMainStorage} from '@/stores/mainStorage.js'
 import BuildSettings from '../shared/Jenkins/BuildSettings.vue'
 
 const i18n = browser.i18n

@@ -1,7 +1,7 @@
-<script setup>
+<script lang="ts" setup>
 
 import {computed, ref} from 'vue'
-import {useJenkinsStorage} from '../../stores/jenkins.ts'
+import {useJenkinsStorage} from '@/stores/jenkins'
 import JenkinsGeneral from './Jenkins/JenkinsGeneral.vue'
 import JenkinsCategories from './Jenkins/JenkinsCategories.vue'
 import JenkinsBuilds from './Jenkins/JenkinsBuilds.vue'
