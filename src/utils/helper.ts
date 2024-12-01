@@ -1,7 +1,7 @@
 import _ from 'lodash'
 
 export default class Helper {
-    static isURL(str, startsWith= null) {
+    static isURL(str: string, startsWith:string|null = null) {
         if ('' === str) {
             return true
         }

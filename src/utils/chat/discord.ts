@@ -1,5 +1,5 @@
 export class Discord {
-    static format (msg, issues, jiraUrl, name) {
+    static format (msg: string, issues: string[], jiraUrl: string, name: string) {
         const field = {
             name: 'Issues',
             value: '',

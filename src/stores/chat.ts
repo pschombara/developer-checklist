@@ -1,55 +1,68 @@
 import {defineStore} from 'pinia'
-import Helper from '../utils/helper.ts'
-import {Uuid} from '../utils/uuid.ts'
+import Helper from '@/utils/helper.ts'
+import {Uuid} from '@/utils/uuid.ts'
 import {toRaw} from 'vue'
-import ChatStatus from '../utils/chat/status.ts'
 import {useJiraStorage} from './jira.ts'
-import {Google} from '../utils/chat/google.ts'
-import {Discord} from '../utils/chat/discord.ts'
+import {Google} from '@/utils/chat/google.ts'
+import {Discord} from '@/utils/chat/discord.ts'
+import { Client } from '@/types/chat/client.js'
+import {ClientProviderEnum} from "@/types/chat/enum/ClientProviderEnum";
+import {ChatStatusEnum} from "@/types/chat/enum/ChatStatusEnum";
+
+type ClientList = {
+    [key in ClientProviderEnum]: Client
+}
+
+interface State {
+    clients: ClientList,
+    status: ChatStatusEnum
+}
 
 export const useChatStorage = defineStore('chat', {
-    state: () => ({
-        clients: {
-            google: {
-                enabled: false,
-                messages: [],
-                rooms: [],
-                main: true,
-                name: '',
+    state: (): State => {
+        return {
+            clients: {
+                [ClientProviderEnum.discord]: {
+                    enabled: false,
+                    messages: [],
+                    rooms: [],
+                    main: false,
+                    name: ''
+                },
+                [ClientProviderEnum.google]: {
+                    enabled: false,
+                    messages: [],
+                    rooms: [],
+                    main: false,
+                    name: ''
+                },
             },
-            discord: {
-                enabled: false,
-                messages: [],
-                rooms: [],
-                main: false,
-                name: '',
-            },
-        },
-        status: ChatStatus.READY,
-    }),
+            status: ChatStatusEnum.Ready
+        }
+    },
     getters: {
         isMain: state => {
-            return client => {
+            return (client: ClientProviderEnum) => {
                 return state.clients[client].main ?? false
             }
         },
         isEnabled: state => {
-            return client => {
+            return (client: ClientProviderEnum) => {
                 return state.clients[client].enabled ?? false
             }
         },
         getName: state => {
-            return client => {
+            return (client: ClientProviderEnum) => {
                 return state.clients[client].name ?? ''
             }
         },
         getMessages: state => {
-            return client => {
+            return (client: ClientProviderEnum) => {
                 return state.clients[client]?.messages ?? []
             }
         },
         getRooms: state => {
-            return client => {
+            return (client: ClientProviderEnum) => {
                 return state.clients[client]?.rooms ?? []
             }
         },
@@ -74,6 +87,8 @@ export const useChatStorage = defineStore('chat', {
         },
         init(options) {
             for (const [client, data] of Object.entries(options)) {
+                let clientKey;
+
                 this.clients[client] = {
                     enabled: data.enabled,
                     name: data.name,
@@ -94,21 +109,21 @@ export const useChatStorage = defineStore('chat', {
                 Helper.resort(this.clients[client].messages)
             }
         },
-        updateEnabled(client, status) {
+        updateEnabled(client: ClientProviderEnum, status: boolean) {
             if (undefined === this.clients[client]) {
                 return
             }
 
             this.clients[client].enabled = status
         },
-        updateName(client, name) {
+        updateName(client: ClientProviderEnum, name: string) {
             if (undefined === this.clients[client]) {
                 return
             }
 
             this.clients[client].name = name
         },
-        updateMain(mainClient) {
+        updateMain(mainClient: ClientProviderEnum) {
             if (undefined === this.clients[mainClient]) {
                 return
             }
@@ -117,7 +132,7 @@ export const useChatStorage = defineStore('chat', {
                 this.clients[client].main = client === mainClient
             })
         },
-        createMessage(client, name, content) {
+        createMessage(client: ClientProviderEnum, name: string, content: string) {
             if (undefined === this.clients[client]) {
                 return
             }
@@ -131,7 +146,7 @@ export const useChatStorage = defineStore('chat', {
 
             Helper.resort(this.clients[client].messages)
         },
-        updateMessage(client, id, name, content) {
+        updateMessage(client: ClientProviderEnum, id: string, name: string, content: string) {
             if (undefined === this.clients[client]) {
                 return
             }
@@ -145,7 +160,7 @@ export const useChatStorage = defineStore('chat', {
             msg.name = name
             msg.content = content
         },
-        messageSortBefore(client, ref, current) {
+        messageSortBefore(client: ClientProviderEnum, ref: string, current: string) {
             if (undefined === this.clients[client]) {
                 return
             }
@@ -155,7 +170,7 @@ export const useChatStorage = defineStore('chat', {
 
             Helper.sortBefore(this.clients[client].messages, currentMessage, refMessage, 'id')
         },
-        messageSortAfter(client, ref, current) {
+        messageSortAfter(client: ClientProviderEnum, ref: string, current: string) {
             if (undefined === this.clients[client]) {
                 return
             }
@@ -165,7 +180,7 @@ export const useChatStorage = defineStore('chat', {
 
             Helper.sortAfter(this.clients[client].messages, currentMessage, refMessage, 'id')
         },
-        removeMessage(client, id) {
+        removeMessage(client: ClientProviderEnum, id: string) {
             if (undefined === this.clients[client]) {
                 return
             }
@@ -178,7 +193,7 @@ export const useChatStorage = defineStore('chat', {
 
             Helper.resort(this.clients[client].messages)
         },
-        createRoom (client, name, url){
+        createRoom (client: ClientProviderEnum, name: string, url: string){
             if (undefined === this.clients[client]) {
                 return
             }
@@ -192,7 +207,7 @@ export const useChatStorage = defineStore('chat', {
 
             Helper.resort(this.clients[client].rooms)
         },
-        updateRoom(client, id, name, url) {
+        updateRoom(client: ClientProviderEnum, id: string, name: string, url: string) {
             if (undefined === this.clients[client]) {
                 return
             }
@@ -206,7 +221,7 @@ export const useChatStorage = defineStore('chat', {
             room.name = name
             room.url = url
         },
-        roomSortBefore(client, ref, current) {
+        roomSortBefore(client: ClientProviderEnum, ref: string, current: string) {
             if (undefined === this.clients[client]) {
                 return
             }
@@ -216,7 +231,7 @@ export const useChatStorage = defineStore('chat', {
 
             Helper.sortBefore(this.clients[client].rooms, currentRoom, refRoom, 'id')
         },
-        roomSortAfter(client, ref, current) {
+        roomSortAfter(client: ClientProviderEnum, ref: string, current: string) {
             if (undefined === this.clients[client]) {
                 return
             }
@@ -226,7 +241,7 @@ export const useChatStorage = defineStore('chat', {
 
             Helper.sortAfter(this.clients[client].rooms, currentRoom, refRoom, 'id')
         },
-        removeRoom(client, id) {
+        removeRoom(client: ClientProviderEnum, id: string) {
             if (undefined === this.clients[client]) {
                 return
             }
@@ -242,7 +257,7 @@ export const useChatStorage = defineStore('chat', {
         async save() {
             await browser.storage.local.set({optionsChat: toRaw(this.clients)})
         },
-        async sendMessage(client, roomId, messageId, issueKeys) {
+        async sendMessage(client: ClientProviderEnum, roomId: string, messageId: string, issueKeys: string[]) {
             const jiraStorage = useJiraStorage()
             await jiraStorage.load()
 
@@ -254,23 +269,34 @@ export const useChatStorage = defineStore('chat', {
 
             const room = this.getRooms(client).find(item => item.id === roomId)
 
-            if ('google' === client) {
+            if (ClientProviderEnum.google === client) {
                 msg = Google.format(msgItem.content, toRaw(issueKeys), url, name)
-            } else if ('discord' === client) {
+            } else if (ClientProviderEnum.discord === client) {
                 msg = Discord.format(msgItem.content, toRaw(issueKeys), url, name)
             } else {
                 return
             }
 
-            this.status = ChatStatus.PROGRESS
+            this.status = ChatStatusEnum.Progress
 
-            // chatWorker.addEventListener('message', message => {
-            //     this.status = ChatStatus.SUCCESS() === message.data.type ? ChatStatus.SUCCESS : ChatStatus.ERROR
-            //
-            //     window.setTimeout(() => this.status = ChatStatus.READY, 1500)
-            // })
-            //
-            // chatWorker.postMessage({room: room.url, message: msg})
+            if ('' === msg) {
+                return
+            }
+
+            const response = await fetch(room.url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                },
+                body: msg
+            });
+
+            this.status = response.ok ? ChatStatusEnum.Success : ChatStatusEnum.Error
+
+            window.setTimeout(
+                () => this.status = ChatStatusEnum.Ready,
+                1500
+            );
         },
     },
 })

@@ -1,5 +1,4 @@
 import vuetify from './plugins/vuetify.ts'
-import themes from 'plugins/themes.ts'
 
 export default class Theme {
     private registered: boolean;

@@ -1,5 +1,5 @@
 export class Google {
-    static format(msg, issues, jiraUrl, name) {
+    static format(msg: string, issues: string[], jiraUrl: string, name: string) {
         let formattedMessage = {
             text: msg,
         }
