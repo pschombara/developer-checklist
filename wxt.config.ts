@@ -15,7 +15,7 @@ const manifest:UserManifest = {
     ],
 }
 
-if ('production' === import.meta.env.MODE) {
+if ('production' === import.meta.env.NODE_ENV) {
     manifest.content_security_policy = {
         extension_pages: 'default-src \'self\';style-src \'unsafe-inline\'; connect-src https://chat.googleapis.com/ https://discord.com/api/webhooks/ ;'
     }
