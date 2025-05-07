@@ -70,7 +70,7 @@ issueStorage.load()
                         min="1"
                         variant="underlined"
                         autofocus="autofocus"
-                        @enter="open"
+                        @keyup.enter="open"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="2">

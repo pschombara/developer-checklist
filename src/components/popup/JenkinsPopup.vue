@@ -146,7 +146,7 @@ const openBuild = (job, build) => {
 }
 
 const copyBuild = async (job, build) => {
-    const url = jenkinsStorage.buildUrl(job, build, false)
+    const url = jenkinsStorage.buildUrl(job, build, true)
 
     if ('' === url) {
         return
