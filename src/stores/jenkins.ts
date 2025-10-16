@@ -152,9 +152,9 @@ export const useJenkinsStorage = defineStore('jenkins', {
                     {
                         target: {tabId: tab.id},
                         func: () => {
-                            const lastBuild = document.querySelector('[update-parent-class=".build-row"]')
+                            const lastBuild = document.querySelector('.job')
 
-                            return parseInt(lastBuild.innerText.replace('#', ''))
+                            return parseInt(lastBuild.dataset.runid)
                         },
                     },
                     async injectionResult => {

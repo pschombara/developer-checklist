@@ -35,7 +35,7 @@ window.addEventListener('themeChanged', e => {
         schema = 'Dark'
     }
 
-    vuetify.theme.global.name.value = e.detail.color + schema
-})
+    vuetify.theme.change(e.detail.color + schema);
+});
 
 export default vuetify
