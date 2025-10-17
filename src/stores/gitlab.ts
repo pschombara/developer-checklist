@@ -146,7 +146,7 @@ export const useGitLabStorage = defineStore('gitLab', {
                     {
                         target: {tabId: tab.id},
                         func: () => {
-                            const ref = document.querySelector('.ts-source-branch-copy')
+                            const ref = document.querySelector('.js-source-branch-copy')
 
                             if (null !== ref) {
                                 return ref.dataset.clipboardText
