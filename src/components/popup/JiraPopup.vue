@@ -32,6 +32,8 @@ const issue = computed(() => {
         return null
     }
 
+    console.log(issueStorage.getIssue(issueKey))
+
     return issueStorage.getIssue(issueKey)
 })
 
@@ -53,7 +55,7 @@ load()
 </script>
 
 <template>
-    <v-card v-if="issueName">
+    <v-card v-if="issue">
         <v-card-title>
             <v-row>
                 <v-col cols="5">{{ issueName }}</v-col>
