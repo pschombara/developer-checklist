@@ -13,11 +13,14 @@ const manifest:UserManifest = {
         'activeTab',
         'scripting'
     ],
+    optional_host_permissions: [
+        'https://*/*'
+    ]
 }
 
 if ('production' === import.meta.env.NODE_ENV) {
     manifest.content_security_policy = {
-        extension_pages: 'default-src \'self\';style-src \'unsafe-inline\'; connect-src https://chat.googleapis.com/ https://discord.com/api/webhooks/ ;'
+        extension_pages: 'default-src \'self\';style-src \'unsafe-inline\';'
     }
 }
 

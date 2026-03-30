@@ -8,6 +8,7 @@ import {Discord} from '@/utils/chat/discord.ts'
 import { Client } from '@/types/chat/client.js'
 import {ClientProviderEnum} from "@/types/chat/enum/ClientProviderEnum";
 import {ChatStatusEnum} from "@/types/chat/enum/ChatStatusEnum";
+import {Matrix} from "@/utils/chat/matrix";
 
 type ClientList = {
     [key in ClientProviderEnum]: Client
@@ -280,7 +281,28 @@ export const useChatStorage = defineStore('chat', {
                 msg = Google.format(msgItem.content, toRaw(issueKeys), url, name)
             } else if (ClientProviderEnum.discord === client) {
                 msg = Discord.format(msgItem.content, toRaw(issueKeys), url, name)
+            } else if (ClientProviderEnum.matrix === client) {
+                msg = Matrix.format(msgItem.content, toRaw(issueKeys), url, name)
             } else {
+                return
+            }
+
+            const permissionUrl = new URL(room.url)
+
+            let granted = await browser.permissions.contains({origins: [permissionUrl.origin + '/*']});
+
+            if (false === granted) {
+                granted = await browser.permissions.request({origins: [permissionUrl.origin + '/*']})
+            }
+
+            if (false === granted) {
+                this.status = ChatStatusEnum.Error;
+
+                window.setTimeout(
+                    () => this.status = ChatStatusEnum.Ready,
+                    1500
+                )
+
                 return
             }
 

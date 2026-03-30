@@ -151,7 +151,7 @@ load()
                                     closable="closable"
                                     @click:close="parent.selectItem(item)"
                                 >
-                                    {{item.title}}
+                                    {{item}}
                                 </v-chip>
                             </template>
                         </v-combobox>
