@@ -21,6 +21,11 @@ const clients = [
         icon: 'fab fa-discord',
         urlStart: 'https://discord.com/api/webhooks/',
     },
+    {
+        name: 'matrix',
+        prefix: '[m]',
+        urlStart: ''
+    }
 ]
 
 const selectedClient = ref()
@@ -56,7 +61,8 @@ load()
                 <v-tab v-for="client in clients" :key="client.name" :value="client.name">
                     <v-row align="center">
                         <v-col class="text-start">
-                            <v-icon :icon="client.icon"/>
+                            <v-icon :icon="client.icon" v-if="!!client.icon"/>
+                            <span v-else-if="!!client.prefix">{{client.prefix}}</span>
                         </v-col>
                         <v-col class="text-center">{{client.name}}</v-col>
                     </v-row>

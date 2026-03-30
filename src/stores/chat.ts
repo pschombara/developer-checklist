@@ -36,6 +36,13 @@ export const useChatStorage = defineStore('chat', {
                     main: false,
                     name: ''
                 },
+                [ClientProviderEnum.matrix]: {
+                    enabled: false,
+                    messages: [],
+                    rooms: [],
+                    main: false,
+                    name: '',
+                }
             },
             status: ChatStatusEnum.Ready
         }
