@@ -81,13 +81,11 @@ load()
             <div v-if="loading" class="text-center">
                 <v-progress-circular size="256" width="10" color="primary" indeterminate=""></v-progress-circular>
             </div>
-            <div v-else>
-                <v-row>
-                    <v-col>
-                        <v-img src="icon-48.png" width="20" aspect-ratio="1/1" class="d-inline-block me-1"></v-img>
-                        <h2 class="d-inline-block">{{ title }}</h2>
-                    </v-col>
-                </v-row>
+            <div class="d-grid ga-4" v-else>
+                <div class="d-flex ga-2 align-center">
+                  <v-img src="icon-48.png" :max-width="20" aspect-ratio="1/1" cover></v-img>
+                  <h2 class="d-inline-flex">{{ title }}</h2>
+                </div>
                 <v-row v-if="modules && optionsValid">
                     <v-col>
                         <v-card>

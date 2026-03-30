@@ -1,4 +1,5 @@
 export enum ClientProviderEnum {
     google = 'google',
-    discord = 'discord'
+    discord = 'discord',
+    matrix = 'matrix'
 }
