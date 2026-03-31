@@ -20,7 +20,11 @@ const manifest:UserManifest = {
 
 if ('production' === import.meta.env.NODE_ENV) {
     manifest.content_security_policy = {
-        extension_pages: 'default-src \'self\';style-src \'unsafe-inline\';'
+        extension_pages: 'default-src \'self\';style-src \'unsafe-inline\'; connect-src: https:'
+    }
+} else {
+    manifest.content_security_policy = {
+        extension_pages: 'default-src \'self\';style-src \'unsafe-inline\'; connect-src https: ws:'
     }
 }
 
