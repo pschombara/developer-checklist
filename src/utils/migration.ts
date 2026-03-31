@@ -5,7 +5,7 @@ export default class Migration {
     private readonly _version: string;
 
     constructor () {
-        this._version = '0.12.0'
+        this._version = '0.12.1'
         this._minimumVersion = '0.10.0'
     }
 
@@ -38,7 +38,7 @@ export default class Migration {
                 await browser.storage.local.remove('theme')
             }
 
-            await browser.storage.local.set({version: '0.12.0'})
+            await browser.storage.local.set({version: '0.12.1'})
         })
     }
 

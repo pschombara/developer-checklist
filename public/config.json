@@ -1,5 +1,5 @@
 {
-    "version": "0.12.0",
+    "version": "0.12.1",
     "optionsMain": {
         "defaultPopupItemsPerPage": -1,
         "modules": {
@@ -372,6 +372,13 @@
             "rooms": []
         },
         "google": {
+            "enabled": false,
+            "main": true,
+            "messages": [],
+            "name": "",
+            "rooms": []
+        },
+        "matrix": {
             "enabled": false,
             "main": true,
             "messages": [],
