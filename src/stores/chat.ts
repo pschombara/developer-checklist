@@ -5,7 +5,7 @@ import {toRaw} from 'vue'
 import {useJiraStorage} from './jira.ts'
 import {Google} from '@/utils/chat/google.ts'
 import {Discord} from '@/utils/chat/discord.ts'
-import { Client } from '@/types/chat/client.js'
+import type { Client } from '@/types/chat/client.ts'
 import {ClientProviderEnum} from "@/types/chat/enum/ClientProviderEnum";
 import {ChatStatusEnum} from "@/types/chat/enum/ChatStatusEnum";
 import {Matrix} from "@/utils/chat/matrix";

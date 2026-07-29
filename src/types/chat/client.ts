@@ -1,5 +1,5 @@
-import {Message} from "@/types/chat/message";
-import {Room} from "@/types/chat/room";
+import type {Message} from "@/types/chat/message";
+import type {Room} from "@/types/chat/room";
 
 export type Client = object & {
     enabled: boolean,
