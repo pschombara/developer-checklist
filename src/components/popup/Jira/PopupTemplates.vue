@@ -12,10 +12,12 @@ const text = {
     preview: i18n.getMessage('Preview'),
     comment: i18n.getMessage('Comment'),
     copy: i18n.getMessage('Copy'),
+    exportTicketData: i18n.getMessage('exportTicketData'),
 }
 
 const template = ref(null)
 const message = ref()
+const exportLink = ref()
 
 const templates = computed(() => jiraStorage.getTemplates)
 
@@ -29,6 +31,19 @@ const copyComment = async () => {
     const blob = new Blob([await jiraStorage.replacePlaceholdersInComment(template.value.content)], {type: 'text/html'})
     await navigator.clipboard.write([new ClipboardItem({['text/html']: blob})])
     message.value.show()
+}
+
+// a download without the downloads permission, the same way the options export hands out its file
+const exportTicketData = async () => {
+    const data = await jiraStorage.exportIssue()
+
+    if (null === data) {
+        return
+    }
+
+    exportLink.value.download = `developer-checklist-${data.key}.json`
+    exportLink.value.href = `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(data, null, 4))}`
+    exportLink.value.click()
 }
 </script>
 
@@ -56,9 +71,17 @@ const copyComment = async () => {
             <v-spacer></v-spacer>
             <v-btn variant="outlined" color="primary" @click="addComment">{{ text.comment }}</v-btn>
             <v-btn variant="outlined" color="secondary" @click="copyComment"><v-icon>fas fa-copy</v-icon></v-btn>
+            <v-btn
+                variant="outlined"
+                color="secondary"
+                :title="text.exportTicketData"
+                :aria-label="text.exportTicketData"
+                @click="exportTicketData"
+            ><v-icon>fas fa-file-export</v-icon></v-btn>
             <v-spacer></v-spacer>
         </v-card-actions>
 
+        <a v-show="false" ref="exportLink"></a>
         <copied-to-clipboard ref="message" />
     </v-card>
 </template>

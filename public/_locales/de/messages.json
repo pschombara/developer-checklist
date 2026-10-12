@@ -250,5 +250,8 @@
     },
     "ciBuild": {
         "message": "CI-Build"
+    },
+    "exportTicketData": {
+        "message": "Merge Requests und CI-Builds des Tickets als Datei exportieren"
     }
 }

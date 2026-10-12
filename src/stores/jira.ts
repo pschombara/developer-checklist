@@ -340,6 +340,48 @@ export const useJiraStorage = defineStore('jira', {
                 }
             })
         },
+        /**
+         * The data collected for the current issue as a plain object, so it can be handed to another tool:
+         * the merge requests and CI builds with their links.
+         */
+        async exportIssue() {
+            const issueStorage = useIssueStorage()
+            const popupStorage = usePopupStorage()
+            const jenkinsStorage = useJenkinsStorage()
+            const gitlabStorage = useGitLabStorage()
+
+            await jenkinsStorage.load()
+            await gitlabStorage.load()
+
+            const issue = issueStorage.getIssue(popupStorage.getCurrentIssue)
+
+            if (undefined === issue) {
+                return null
+            }
+
+            return {
+                key: issue.key,
+                title: issue.title ?? '',
+                url: '' === this.host ? '' : `${this.host.replace(/\/+$/, '')}/browse/${issue.key}`,
+                mergeRequests: (issue.mergeRequests ?? []).map(mr => ({
+                    project: gitlabStorage.getProject(mr.id)?.project ?? '',
+                    number: mr.number,
+                    source: mr.source,
+                    url: gitlabStorage.buildUrl(mr.id, mr.number, mr.source, false),
+                })),
+                ciBuilds: (issue.ciBuilds ?? []).map(ci => {
+                    const build = jenkinsStorage.getBuild(ci.job)
+
+                    return {
+                        job: ci.job,
+                        name: '' !== (build?.label ?? '') ? build.label : (build?.name ?? ''),
+                        build: ci.build,
+                        url: jenkinsStorage.buildUrl(ci.job, ci.build, false),
+                    }
+                }),
+                exportedAt: new Date().toISOString(),
+            }
+        },
         async replacePlaceholdersInComment(comment) {
             const issueStorage = useIssueStorage()
             const popupStorage = usePopupStorage()

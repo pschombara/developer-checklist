@@ -262,5 +262,8 @@
     },
     "ciBuild": {
         "message": "CI-Build"
+    },
+    "exportTicketData": {
+        "message": "Export the merge requests and CI builds of the issue as a file"
     }
 }
