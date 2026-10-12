@@ -72,6 +72,8 @@ export const useIssueStorage = defineStore('issues', {
                 }
             })
 
+            await this.cleanUp()
+
             this.loaded = true
         },
         async reloadFromStorage(){
@@ -120,6 +122,29 @@ export const useIssueStorage = defineStore('issues', {
 
             await browser.storage.local.set(storageData)
         },
+        /**
+         * Removes the issues that were not used for the number of days set in the options. Pinned issues and
+         * the issue that is being worked on stay.
+         */
+        async cleanUp() {
+            const jiraStorage = useJiraStorage()
+            await jiraStorage.load()
+
+            const days = Number(jiraStorage.getCleanup)
+
+            if (false === Number.isFinite(days) || days <= 0) {
+                return
+            }
+
+            const limit = Date.now() / 1000 - days * 86400
+            const outdated = this.issues.filter(issue => {
+                return !issue.pinned && !issue.work && issue.updateDate < limit
+            })
+
+            for (const issue of outdated) {
+                await this.removeIssue(issue.key)
+            }
+        },
         async removeIssue(key){
             const index = this.issues.findIndex(issue => issue.key === key)
 
@@ -128,7 +153,7 @@ export const useIssueStorage = defineStore('issues', {
             }
 
             this.issues.splice(index, 1)
-            await browser.storage.local.delete(key)
+            await browser.storage.local.remove(key)
         },
         async openIssue(key) {
             const issue = this.issues.find(item => item.key === key)
